@@ -166,7 +166,7 @@ namespace xeus
     void xpub_message::deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth)
     {
         zmq::message_t topic_msg = wire_msg.pop();
-        m_topic = std::string(topic_msg.data<const char>());
+        m_topic = std::string(topic_msg.data<const char>(), topic_msg.size());
         wire_msg.pop();
         xmessage_base::deserialize(wire_msg, auth);
     }
