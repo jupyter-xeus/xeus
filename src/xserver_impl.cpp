@@ -33,9 +33,7 @@ namespace xeus
           m_controller_pub(context, zmq::socket_type::pub),
           m_publisher(context, c.m_transport, c.m_ip, c.m_iopub_port),
           m_heartbeat(context, c.m_transport, c.m_ip, c.m_hb_port),
-          m_request_stop(false),
-          m_need_restart(false)
-
+          m_request_stop(false)
     {
         init_socket(m_shell, get_end_point(c.m_transport, c.m_ip, c.m_shell_port));
         init_socket(m_controller, get_end_point(c.m_transport, c.m_ip, c.m_control_port));
@@ -83,11 +81,6 @@ namespace xeus
         std::this_thread::sleep_for(50ms);
     }
 
-    bool xserver_impl::need_restart() const
-    {
-        return m_need_restart;
-    }
-
     void xserver_impl::send_shell_impl(zmq::multipart_t& message)
     {
         message.send(m_shell);
@@ -119,10 +112,9 @@ namespace xeus
         }
     }
 
-    void xserver_impl::stop_impl(bool restart)
+    void xserver_impl::stop_impl()
     {
         m_request_stop = true;
-        m_need_restart = restart;
     }
 
     void xserver_impl::stop_channels()

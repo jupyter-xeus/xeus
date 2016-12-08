@@ -28,7 +28,6 @@ namespace xeus
         virtual ~xserver_impl() = default;
 
         void run();
-        bool need_restart() const;
 
     private:
 
@@ -37,7 +36,7 @@ namespace xeus
         void publish_impl(zmq::multipart_t& message) override;
 
         void abort_queue_impl(const listener& l, long polling_interval) override;
-        void stop_impl(bool restart) override;
+        void stop_impl() override;
 
         void stop_channels();
 
@@ -51,7 +50,6 @@ namespace xeus
         xheartbeat m_heartbeat;
 
         bool m_request_stop;
-        bool m_need_restart;
     };
 
 }

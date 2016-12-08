@@ -39,7 +39,7 @@ namespace xeus
         void publish(zmq::multipart_t& message);
 
         void abort_queue(const listener& l, long polling_interval);
-        void stop(bool restart);
+        void stop();
 
         void register_shell_listener(const listener& l);
         void register_control_listener(const listener& l);
@@ -58,7 +58,7 @@ namespace xeus
         virtual void publish_impl(zmq::multipart_t& message) = 0;
 
         virtual void abort_queue_impl(const listener& l, long polling_interval) = 0;
-        virtual void stop_impl(bool restart) = 0;
+        virtual void stop_impl() = 0;
 
         listener m_shell_listener;
         listener m_control_listener;

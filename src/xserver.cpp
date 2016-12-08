@@ -31,9 +31,9 @@ namespace xeus
         abort_queue_impl(l, polling_interval);
     }
 
-    void xserver::stop(bool restart)
+    void xserver::stop()
     {
-        stop_impl(restart);
+        stop_impl();
     }
 
     void xserver::register_shell_listener(const listener& l)
