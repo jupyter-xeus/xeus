@@ -48,4 +48,9 @@ namespace xeus
         return comm_info_request_impl(target_name);
     }
 
+    xjson xinterpreter::kernel_info_request()
+    {
+        return kernel_info_request_impl();
+    }
+
 }

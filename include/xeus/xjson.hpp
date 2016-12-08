@@ -62,6 +62,9 @@ namespace xeus
         template <class char_type, std::size_t N>
         std::string get_string(const char_type(&name)[N], const std::string& default_value) const;
 
+        template <class char_type, std::size_t N>
+        const node_type* get_node(const char_type(&name)[N]) const;
+
         template <class char_type, std::size_t N, class T>
         void set_value(const char_type(&name)[N], T value);
 
@@ -142,6 +145,31 @@ namespace xeus
     }
 
     template <class char_type, std::size_t N>
+    inline auto xjson::get_node(const char_type(&name)[N]) const -> const node_type*
+    {
+        return rapidjson::Pointer(name).Get(m_document);
+    }
+
+    template <class char_type, std::size_t N, class T>
+    inline void xjson::set_value(const char_type(&name)[N], T value)
+    {
+        rapidjson::SetValueByPointer(m_document, name, value);
+    }
+
+    template <class char_type, std::size_t N>
+    inline void xjson::set_value(const char_type(&name)[N], const std::string& value)
+    {
+        rapidjson::SetValueByPointer(m_document, name, value);
+    }
+
+    template <class stream>
+    inline void xjson::write(stream& output) const
+    {
+        rapidjson::Writer<stream> writer(output);
+        m_document.Accept(writer);
+    }
+
+    template <class char_type, std::size_t N>
     inline auto xjson::get_bool_impl(const char_type(&name)[N]) const -> const node_type*
     {
         const node_type* node = rapidjson::GetValueByPointer(m_document, name);
@@ -172,25 +200,6 @@ namespace xeus
             throw std::runtime_error("Wrong type in JSON, expected string");
         }
         return node;
-    }
-
-    template <class char_type, std::size_t N, class T>
-    inline void xjson::set_value(const char_type(&name)[N], T value)
-    {
-        rapidjson::SetValueByPointer(m_document, name, value);
-    }
-
-    template <class char_type, std::size_t N>
-    inline void xjson::set_value(const char_type(&name)[N], const std::string& value)
-    {
-        rapidjson::SetValueByPointer(m_document, name, value);
-    }
-
-    template <class stream>
-    inline void xjson::write(stream& output) const
-    {
-        rapidjson::Writer<stream> writer(output);
-        m_document.Accept(writer);
     }
 
 }
