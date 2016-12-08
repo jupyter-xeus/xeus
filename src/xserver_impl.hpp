@@ -27,14 +27,13 @@ namespace xeus
 
         virtual ~xserver_impl() = default;
 
-        void run();
-
     private:
 
         void send_shell_impl(zmq::multipart_t& message) override;
         void send_control_impl(zmq::multipart_t& message) override;
         void publish_impl(zmq::multipart_t& message) override;
 
+        void start_impl() override;
         void abort_queue_impl(const listener& l, long polling_interval) override;
         void stop_impl() override;
 

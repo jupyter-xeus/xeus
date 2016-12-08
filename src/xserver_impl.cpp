@@ -42,7 +42,22 @@ namespace xeus
         init_socket(m_controller_pub, get_controller_end_point());
     }
 
-    void xserver_impl::run()
+    void xserver_impl::send_shell_impl(zmq::multipart_t& message)
+    {
+        message.send(m_shell);
+    }
+
+    void xserver_impl::send_control_impl(zmq::multipart_t& message)
+    {
+        message.send(m_controller);
+    }
+
+    void xserver_impl::publish_impl(zmq::multipart_t& message)
+    {
+        message.send(m_publisher_pub);
+    }
+
+    void xserver_impl::start_impl()
     {
         std::thread iopub_thread(&xpublisher::run, &m_publisher);
         iopub_thread.detach();
@@ -79,21 +94,6 @@ namespace xeus
         stop_channels();
 
         std::this_thread::sleep_for(50ms);
-    }
-
-    void xserver_impl::send_shell_impl(zmq::multipart_t& message)
-    {
-        message.send(m_shell);
-    }
-
-    void xserver_impl::send_control_impl(zmq::multipart_t& message)
-    {
-        message.send(m_controller);
-    }
-
-    void xserver_impl::publish_impl(zmq::multipart_t& message)
-    {
-        message.send(m_publisher_pub);
     }
 
     void xserver_impl::abort_queue_impl(const listener& l, long polling_interval)

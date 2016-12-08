@@ -26,6 +26,11 @@ namespace xeus
         publish_impl(message);
     }
 
+    void xserver::start()
+    {
+        start_impl();
+    }
+
     void xserver::abort_queue(const listener& l, long polling_interval)
     {
         abort_queue_impl(l, polling_interval);
