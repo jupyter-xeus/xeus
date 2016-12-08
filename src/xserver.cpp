@@ -7,6 +7,7 @@
 ****************************************************************************/
 
 #include "xserver.hpp"
+#include "xserver_impl.hpp"
 
 namespace xeus
 {
@@ -53,6 +54,12 @@ namespace xeus
     void xserver::notify_control_listener(zmq::multipart_t& message)
     {
         m_control_listener(message);
+    }
+
+    std::unique_ptr<xserver> make_xserver(zmq::context_t& context,
+                                          const xconfiguration& config)
+    {
+        return std::make_unique<xserver_impl>(context, config);
     }
 
 }

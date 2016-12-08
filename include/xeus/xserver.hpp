@@ -10,9 +10,11 @@
 #define XSERVER_HPP
 
 #include <functional>
+#include <memory>
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
 #include "xeus_export.hpp"
+#include "xconfiguration.hpp"
 
 namespace xeus
 {
@@ -61,6 +63,10 @@ namespace xeus
         listener m_shell_listener;
         listener m_control_listener;
     };
+
+    XEUS_API
+    std::unique_ptr<xserver> make_xserver(zmq::context_t& context,
+                                          const xconfiguration& config);
 
 }
 
