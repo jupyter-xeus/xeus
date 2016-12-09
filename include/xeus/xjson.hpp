@@ -74,6 +74,9 @@ namespace xeus
         void parse(const char* buffer, std::size_t length);
         
         template <class stream>
+        void parse(stream& input);
+
+        template <class stream>
         void write(stream& output) const;
 
     private:
@@ -160,6 +163,12 @@ namespace xeus
     inline void xjson::set_value(const char_type(&name)[N], const std::string& value)
     {
         rapidjson::SetValueByPointer(m_document, name, value);
+    }
+
+    template <class stream>
+    inline void xjson::parse(stream& input)
+    {
+        m_document.ParseStream(input);
     }
 
     template <class stream>

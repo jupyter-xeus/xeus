@@ -28,6 +28,8 @@ namespace xeus
         std::string m_key;
     };
 
+    XEUS_API
+    xconfiguration load_configuration(const std::string& file_name);
 }
 
 #endif
