@@ -142,8 +142,9 @@ std::mutex cout_mutex;
 
             xeus::xpub_message msg;
             msg.deserialize(wire_msg, *p_io_authentication);
-            size_t topic_size = msg.topic().size();
-            if (msg.topic().substr(topic_size - 6, topic_size) == "status")
+            const std::string& topic = msg.topic();
+            size_t topic_size = topic.size();
+            if (topic.substr(topic_size - 6, topic_size) == "status")
             {
                 const xeus::xjson& content = msg.content();
                 const xeus::xjson::node_type* status_ptr = content.get_node("/execution_state");

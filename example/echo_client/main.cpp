@@ -23,8 +23,8 @@ int main(int argc, char* argv[])
     config.m_iopub_port = "40885";
     config.m_hb_port = "42540";
     config.m_signature_scheme = "";
-    //config.m_signature_scheme = "hmac-sha256";
-    //config.m_key = "a0436f6c-1916-498b-8eb9-e81ab9368e84";
+    config.m_signature_scheme = "hmac-sha256";
+    config.m_key = "a0436f6c-1916-498b-8eb9-e81ab9368e84";
 
     std::string user_name = "jmabille";
     int nb_msg = 4;
@@ -36,7 +36,14 @@ int main(int argc, char* argv[])
 
     for (int i = 0; i < nb_msg; ++i)
     {
-        client.send_code("double x = std::sqrt(5.2);");
+        client.send_code("double x = std::sqrt(" + std::to_string(i) + ");");
+        std::this_thread::sleep_for(50ms);
     }
     client.send_stop();
+
+    // Gives time to publish thread so it can log
+    // remaining messages
+    std::this_thread::sleep_for(50ms);
+
+    return 0;
 }

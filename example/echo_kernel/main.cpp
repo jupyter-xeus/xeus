@@ -22,8 +22,8 @@ int main(int atgc, char* argv[])
     config.m_iopub_port = "40885";
     config.m_hb_port = "42540";
     config.m_signature_scheme = "";
-    //config.m_signature_scheme = "hmac-sha256";
-    //config.m_key = "a0436f6c-1916-498b-8eb9-e81ab9368e84";
+    config.m_signature_scheme = "hmac-sha256";
+    config.m_key = "a0436f6c-1916-498b-8eb9-e81ab9368e84";
 
     using interpreter_ptr = std::unique_ptr<echo_kernel::echo_interpreter>;
     interpreter_ptr interpreter = interpreter_ptr(new echo_kernel::echo_interpreter());
