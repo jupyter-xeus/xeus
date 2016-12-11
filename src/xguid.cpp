@@ -7,6 +7,7 @@
 ****************************************************************************/
 
 #include "xguid.hpp"
+#include "xstring_utils.hpp"
 
 #ifdef GUID_LIBUUID
 #include <uuid/uuid.h>
@@ -40,7 +41,7 @@ namespace xeus
 
     std::string xguid::to_string() const
     {
-        std::string res(buffer(), buffer() + buffer_size());
+        std::string res = hex_string(m_buffer);
         return res;
     }
 

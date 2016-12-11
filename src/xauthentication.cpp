@@ -7,10 +7,9 @@
 ****************************************************************************/
 
 #include <array>
-#include <sstream>
 #include <cstddef>
-#include <iomanip>
 #include "xauthentication.hpp"
+#include "xstring_utils.hpp"
 #include "dll.h"
 #include "sha.h"
 #include "hmac.h"
@@ -97,18 +96,6 @@ namespace xeus
             return std::make_unique<xauthentication_impl<CryptoPP::SHA256>>(key);
         }
         return std::make_unique<no_xauthentication>();
-    }
-
-    template <size_t N>
-    std::string hex_string(const std::array<byte, N>& buffer)
-    {
-        std::ostringstream oss;
-        oss << std::hex;
-        for (size_t i = 0; i < N; ++i)
-        {
-            oss << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i]);
-        }
-        return oss.str();
     }
 
     template <class T>
