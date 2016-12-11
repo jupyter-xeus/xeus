@@ -6,8 +6,11 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xauthentication.hpp"
 #include <array>
+#include <sstream>
+#include <cstddef>
+#include <iomanip>
+#include "xauthentication.hpp"
 #include "dll.h"
 #include "sha.h"
 #include "hmac.h"
@@ -22,7 +25,7 @@ namespace xeus
     public:
 
         using hmac_type = CryptoPP::HMAC<T>;
-        using signature_type = std::array<unsigned char, hmac_type::DIGESTSIZE>;
+        using signature_type = std::array<byte, hmac_type::DIGESTSIZE>;
 
         explicit xauthentication_impl(const std::string& key);
         virtual ~xauthentication_impl() = default;
@@ -42,7 +45,6 @@ namespace xeus
 
     private:
 
-        std::string m_key;
         mutable hmac_type m_hmac;
     };
 
@@ -97,11 +99,22 @@ namespace xeus
         return std::make_unique<no_xauthentication>();
     }
 
+    template <size_t N>
+    std::string hex_string(const std::array<byte, N>& buffer)
+    {
+        std::ostringstream oss;
+        oss << std::hex;
+        for (size_t i = 0; i < N; ++i)
+        {
+            oss << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i]);
+        }
+        return oss.str();
+    }
+
     template <class T>
     xauthentication_impl<T>::xauthentication_impl(const std::string& key)
-        : m_key(key)
     {
-        m_hmac = hmac_type(reinterpret_cast<const unsigned char*>(m_key.c_str()), m_key.size());
+        m_hmac = hmac_type(reinterpret_cast<const byte*>(key.c_str()), key.size());
     }
 
     template <class T>
@@ -114,9 +127,11 @@ namespace xeus
         m_hmac.Update(parent_header.data<const unsigned char>(), parent_header.size());
         m_hmac.Update(meta_data.data<const unsigned char>(), meta_data.size());
         m_hmac.Update(content.data<const unsigned char>(), content.size());
-        signature_type res;
-        m_hmac.Final(res.data());
-        return zmq::message_t(res.begin(), res.end());
+        signature_type sig;
+        m_hmac.Final(sig.data());
+        // Signature message must be the hexdigest, not the digest
+        std::string hex_sig = hex_string(sig);
+        return zmq::message_t(hex_sig.begin(), hex_sig.end());
     }
 
     template <class T>
@@ -130,7 +145,15 @@ namespace xeus
         m_hmac.Update(parent_header.data<const unsigned char>(), parent_header.size());
         m_hmac.Update(meta_data.data<const unsigned char>(), meta_data.size());
         m_hmac.Update(content.data<const unsigned char>(), content.size());
-        return m_hmac.Verify(signature.data<const unsigned char>());
+        signature_type sig;
+        m_hmac.Final(sig.data());
+        std::string hex_sig = hex_string(sig);
+
+        // Reduces the vulnerability to timing attacks.
+        bool res = CryptoPP::VerifyBufsEqual((const byte*)hex_sig.c_str(),
+                                             signature.data<const unsigned char>(),
+                                             hex_sig.size());
+        return res;
     }
 
     zmq::message_t no_xauthentication::sign_impl(const zmq::message_t& /*header*/,
