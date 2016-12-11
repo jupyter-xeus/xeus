@@ -23,6 +23,7 @@ namespace xeus
         : m_kernel_id(std::move(kernel_id)),
           m_user_name(std::move(user_name)),
           m_session_id(std::move(session_id)),
+          m_execution_counter(0),
           p_auth(std::move(auth)),
           p_server(server),
           p_interpreter(interpreter)
