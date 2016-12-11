@@ -65,6 +65,9 @@ namespace xeus
         template <class char_type, std::size_t N>
         const node_type* get_node(const char_type(&name)[N]) const;
 
+        template <class char_type, std::size_t N>
+        void create_value(const char_type(&name)[N]);
+
         template <class char_type, std::size_t N, class T>
         void set_value(const char_type(&name)[N], T value);
 
@@ -151,6 +154,12 @@ namespace xeus
     inline auto xjson::get_node(const char_type(&name)[N]) const -> const node_type*
     {
         return rapidjson::Pointer(name).Get(m_document);
+    }
+
+    template <class char_type, std::size_t N>
+    void xjson::create_value(const char_type(&name)[N])
+    {
+        rapidjson::CreateValueByPointer(m_document, name);
     }
 
     template <class char_type, std::size_t N, class T>

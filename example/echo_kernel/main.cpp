@@ -7,6 +7,7 @@
 ****************************************************************************/
 
 #include <memory>
+#include <iostream>
 #include "xeus/xconfiguration.hpp"
 #include "xeus/xkernel.hpp"
 #include "echo_interpreter.hpp"
@@ -19,6 +20,7 @@ int main(int argc, char* argv[])
     using interpreter_ptr = std::unique_ptr<echo_kernel::echo_interpreter>;
     interpreter_ptr interpreter = interpreter_ptr(new echo_kernel::echo_interpreter());
     xeus::xkernel kernel(config, "jmabille", std::move(interpreter));
+    std::cout << "starting kernel" << std::endl;
     kernel.start();
 
     return 0;

@@ -34,8 +34,8 @@ namespace xeus
         using authentication_ptr = xkernel_core::authentication_ptr;
         authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
 
-        xkernel_core kernel_core(kernel_id, m_user_name, session_id,
-                                 std::move(auth), server.get(), p_interpreter.get());
+        xkernel_core core(kernel_id, m_user_name, session_id,
+                          std::move(auth), server.get(), p_interpreter.get());
 
         server->start();
     }

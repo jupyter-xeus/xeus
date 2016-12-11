@@ -73,7 +73,9 @@ namespace echo_kernel
         std::cout << "pattern: " << args.m_pattern << std::endl;
         std::cout << "unique: " << args.m_unique << std::endl;
         std::cout << std::endl;
-        return xjson();
+        xjson result;
+        result.create_value("/history/0");
+        return result;
     }
 
     xjson echo_interpreter::is_complete_request_impl(const std::string& code)

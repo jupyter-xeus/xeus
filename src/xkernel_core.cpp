@@ -7,6 +7,7 @@
 ****************************************************************************/
 
 #include "xkernel_core.hpp"
+#include <iostream>
 
 using namespace std::placeholders;
 
@@ -40,6 +41,8 @@ namespace xeus
         p_server->register_shell_listener(std::bind(&xkernel_core::dispatch_shell, this, _1));
         p_server->register_control_listener(std::bind(&xkernel_core::dispatch_control, this, _1));
 
+        // TODO : this message can't be sent because
+        // server is not started yet
         // Status
         publish_status("starting", xjson());
     }
@@ -61,9 +64,10 @@ namespace xeus
         {
             msg.deserialize(wire_msg, *p_auth);
         }
-        catch (std::exception&)
+        catch (std::exception& e)
         {
-            // TODO : log
+            std::cout << "ERROR: could not deserialize message" << std::endl;
+            std::cout << e.what() << std::endl;;
             return;
         }
 
@@ -74,7 +78,7 @@ namespace xeus
         handler_type handler = get_handler(msg_type);
         if (handler == nullptr)
         {
-            // TODO : log received unknown message
+            std::cout << "ERROR: received unknown message" << std::endl;
         }
         else
         {
@@ -84,7 +88,7 @@ namespace xeus
             }
             catch (std::exception&)
             {
-                // TODO : log received bqd messqge
+                std::cout << "ERROR: received bad message" << std::endl;
             }
         }
 
