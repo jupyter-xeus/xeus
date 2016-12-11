@@ -75,6 +75,9 @@ namespace echo_kernel
         std::cout << std::endl;
         xjson result;
         result.create_value("/history/0");
+        result.set_value("/history/0/0", args.m_session);
+        result.set_value("/history/0/1", 0);
+        result.set_value("/history/0/2", "");
         return result;
     }
 
