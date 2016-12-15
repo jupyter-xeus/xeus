@@ -37,6 +37,10 @@ namespace xeus
         void dispatch_shell(zmq::multipart_t& wire_msg);
         void dispatch_control(zmq::multipart_t& wire_msg);
 
+        void publish_message(const std::string& msg_type,
+                             xjson metadata,
+                             xjson content);
+
     private:
 
         enum class channel
@@ -60,14 +64,10 @@ namespace xeus
         void kernel_info_request(const xmessage& request, channel c);
         void shutdown_request(const xmessage& request, channel c);
 
-        void publish_status(const std::string& status,
-                            xjson parent);
+        void publish_status(const std::string& status);
 
         void publish_execute_input(const std::string& code,
-                                   int execution_count,
-                                   xjson parent);
-
-        void publish_shutdown(xjson parent, xjson content);
+                                   int execution_count);
 
         void send_reply(const xmessage& request,
                         const std::string& reply_type,
@@ -77,8 +77,11 @@ namespace xeus
 
         void abort_request(zmq::multipart_t& wire_msg);
 
-        std::string get_topic(const std::string& status) const;
+        std::string get_topic(const std::string& msg_type) const;
         xjson get_metadata() const;
+
+        void set_parent(const xjson& parent);
+        xjson get_parent() const;
 
         std::string m_kernel_id;
         std::string m_user_name;
@@ -90,6 +93,8 @@ namespace xeus
 
         server_ptr p_server;
         interpreter_ptr p_interpreter;
+
+        xjson m_parent;
     };
 
 }

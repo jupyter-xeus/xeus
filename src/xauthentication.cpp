@@ -137,7 +137,7 @@ namespace xeus
         std::string hex_sig = hex_string(sig);
 
         // Reduces the vulnerability to timing attacks.
-        bool res = CryptoPP::VerifyBufsEqual((const byte*)hex_sig.c_str(),
+        bool res = CryptoPP::VerifyBufsEqual(reinterpret_cast<const byte*>(hex_sig.c_str()),
                                              signature.data<const unsigned char>(),
                                              hex_sig.size());
         return res;
