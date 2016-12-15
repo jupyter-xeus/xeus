@@ -43,6 +43,9 @@ namespace xeus
         p_server->register_shell_listener(std::bind(&xkernel_core::dispatch_shell, this, _1));
         p_server->register_control_listener(std::bind(&xkernel_core::dispatch_control, this, _1));
 
+        // Interpreter settings
+        p_interpreter->register_publisher(std::bind(&xkernel_core::publish_message, this, _1, _2, _3));
+
         // TODO : this message can't be sent because
         // server is not started yet
         // Status
@@ -139,7 +142,8 @@ namespace xeus
                 publish_execute_input(code, m_execution_counter);
             }
 
-            xjson reply = p_interpreter->execute_request(code,
+            xjson reply = p_interpreter->execute_request(m_execution_counter,
+                                                         code,
                                                          silent,
                                                          store_history,
                                                          user_expression,

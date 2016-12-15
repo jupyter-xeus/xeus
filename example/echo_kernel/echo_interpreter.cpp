@@ -13,18 +13,25 @@
 namespace echo_kernel
 {
 
-    xjson echo_interpreter::execute_request_impl(const std::string& code,
+    xjson echo_interpreter::execute_request_impl(int execution_counter,
+                                                 const std::string& code,
                                                  bool silent,
                                                  bool store_history,
                                                  const xjson::node_type* user_expressions,
                                                  bool allow_stdin)
     {
         std::cout << "Received execute_request" << std::endl;
-        std::cout << "code: " << code << std::endl;
+        std::cout << "execution_counter: " << execution_counter << std::endl;
+        std::cout << "code: " << code;
         std::cout << "silent: " << silent << std::endl;
         std::cout << "store_history: " << store_history << std::endl;
         std::cout << "allow_stdin: " << allow_stdin << std::endl;
         std::cout << std::endl;
+
+        xjson pub_data;
+        pub_data.add_member("text/plain", code);
+        publish_execution_result(execution_counter, std::move(pub_data), xjson());
+        
         xjson result;
         result.set_value("/status", "ok");
         return result;

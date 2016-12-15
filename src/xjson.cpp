@@ -28,4 +28,11 @@ namespace xeus
         m_document.Parse(buffer, length);
     }
 
+    void xjson::init_root()
+    {
+        if (!m_document.IsObject())
+        {
+            m_document.SetObject();
+        }
+    }
 }

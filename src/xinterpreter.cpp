@@ -11,13 +11,15 @@
 namespace xeus
 {
 
-    xjson xinterpreter::execute_request(const std::string& code,
+    xjson xinterpreter::execute_request(int execution_counter,
+                                        const std::string& code,
                                         bool silent,
                                         bool store_history,
                                         const xjson::node_type* user_expressions,
                                         bool allow_stdin)
     {
-        return execute_request_impl(code, silent, store_history, user_expressions, allow_stdin);
+        return execute_request_impl(execution_counter,code, silent,
+                                    store_history, user_expressions, allow_stdin);
     }
 
     xjson xinterpreter::complete_request(const std::string& code,
@@ -53,4 +55,62 @@ namespace xeus
         return kernel_info_request_impl();
     }
 
+    void xinterpreter::register_publisher(const publisher& pub)
+    {
+        m_publisher = pub;
+    }
+
+    void xinterpreter::publish_stream(const std::string& name, const std::string& text)
+    {
+        xjson content;
+        content.set_value("/name", name);
+        content.set_value("/text", text);
+        m_publisher("stream", xjson(), std::move(content));
+    }
+
+    void xinterpreter::display_data(xjson data, xjson metadata, xjson transient)
+    {
+        m_publisher("display_data", xjson(),
+                    build_display_content(std::move(data),
+                                          std::move(metadata), 
+                                          std::move(transient)));
+    }
+
+    void xinterpreter::update_display_data(xjson data, xjson metadata, xjson transient)
+    {
+        m_publisher("display_data", xjson(),
+                    build_display_content(std::move(data),
+                                          std::move(metadata),
+                                          std::move(transient)));
+    }
+
+    void xinterpreter::publish_execution_result(int execution_count, xjson data, xjson metadata)
+    {
+        xjson content;
+        content.set_value("/execution_count", execution_count);
+        content.add_subtree("data", data);
+        content.add_subtree("metadata", metadata);
+        m_publisher("execute_result", xjson(), std::move(content));
+    }
+
+    void xinterpreter::publish_execution_error()
+    {
+        // TODO
+    }
+
+    void xinterpreter::clear_output(bool wait)
+    {
+        xjson content;
+        content.set_value("/wait", wait);
+        m_publisher("clear_output", xjson(), std::move(content));
+    }
+
+    xjson xinterpreter::build_display_content(xjson data, xjson metadata, xjson transient)
+    {
+        xjson res;
+        res.add_subtree("data", data);
+        res.add_subtree("metadata", metadata);
+        res.add_subtree("transient", transient);
+        return res;
+    }
 }

@@ -14,6 +14,7 @@
 #endif
 
 #include <cstddef>
+#include <iostream>
 #include "xeus_export.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/pointer.h"
@@ -29,7 +30,7 @@ namespace xeus
 
         using document_type = rapidjson::Document;
         using node_type = document_type::ValueType;
-
+        
         xjson() = default;
         xjson(document_type&& document);
         ~xjson() = default;
@@ -74,6 +75,12 @@ namespace xeus
         template <class char_type, std::size_t N>
         void set_value(const char_type(&name)[N], const std::string& value);
 
+        template <class char_type, std::size_t N>
+        void add_subtree(const char_type(&name)[N], xjson& subtree);
+
+        template <class char_type, std::size_t N>
+        void add_member(const char_type(&name)[N], const std::string& value);
+
         void parse(const char* buffer, std::size_t length);
         
         template <class stream>
@@ -83,6 +90,11 @@ namespace xeus
         void write(stream& output) const;
 
     private:
+
+        // Calls SetObject on m_document if it hasn't been called yet.
+        // This is required by methods adding members to the DOM without
+        // passing through the "ByPointer" interface.
+        void init_root();
 
         template <class char_type, std::size_t N>
         const node_type* get_bool_impl(const char_type(&name)[N]) const;
@@ -172,6 +184,20 @@ namespace xeus
     inline void xjson::set_value(const char_type(&name)[N], const std::string& value)
     {
         rapidjson::SetValueByPointer(m_document, name, value);
+    }
+
+    template <class char_type, std::size_t N>
+    inline void xjson::add_subtree(const char_type(&name)[N], xjson& subtree)
+    {
+        init_root();
+        m_document.AddMember(name, subtree.m_document, m_document.GetAllocator());
+    }
+
+    template <class char_type, std::size_t N>
+    inline void xjson::add_member(const char_type(&name)[N], const std::string& value)
+    {
+        init_root();
+        m_document.AddMember(name, value, m_document.GetAllocator());
     }
 
     template <class stream>

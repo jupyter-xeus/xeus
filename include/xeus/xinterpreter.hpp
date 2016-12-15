@@ -10,6 +10,7 @@
 #define XINTERPRETER_HPP
 
 #include <string>
+#include <functional>
 #include "xeus_export.hpp"
 #include "xjson.hpp"
 
@@ -34,6 +35,9 @@ namespace xeus
 
     public:
 
+        // publish(msg_type, metadata, content) 
+        using publisher = std::function<void(const std::string&, xjson, xjson)>;
+
         xinterpreter() = default;
         virtual ~xinterpreter() = default;
 
@@ -43,7 +47,8 @@ namespace xeus
         xinterpreter(xinterpreter&&) = delete;
         xinterpreter& operator=(xinterpreter&&) = delete;
 
-        xjson execute_request(const std::string& code,
+        xjson execute_request(int execution_counter,
+                              const std::string& code,
                               bool silent,
                               bool store_history,
                               const xjson::node_type* user_expressions,
@@ -57,16 +62,23 @@ namespace xeus
                               int detail_level);
 
         xjson history_request(const xhistory_arguments& args);
-
         xjson is_complete_request(const std::string& code);
-
         xjson comm_info_request(const std::string& target_name);
-
         xjson kernel_info_request();
+
+        void register_publisher(const publisher& pub);
+
+        void publish_stream(const std::string& name, const std::string& text);
+        void display_data(xjson data, xjson metadata, xjson transient);
+        void update_display_data(xjson data, xjson metadata, xjson transient);
+        void publish_execution_result(int execution_count, xjson data, xjson metadata);
+        void publish_execution_error();
+        void clear_output(bool wait);
 
     private:
 
-        virtual xjson execute_request_impl(const std::string& code,
+        virtual xjson execute_request_impl(int execution_counter,
+                                           const std::string& code,
                                            bool silent,
                                            bool store_history,
                                            const xjson::node_type* user_expressions,
@@ -86,6 +98,10 @@ namespace xeus
         virtual xjson comm_info_request_impl(const std::string& target_name) = 0;
 
         virtual xjson kernel_info_request_impl() = 0;
+
+        xjson build_display_content(xjson data, xjson metadata, xjson transient);
+
+        publisher m_publisher;
     };
 
 }

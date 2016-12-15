@@ -27,7 +27,8 @@ namespace echo_kernel
 
     private:
 
-        xjson execute_request_impl(const std::string& code,
+        xjson execute_request_impl(int execution_counter,
+                                   const std::string& code,
                                    bool silent,
                                    bool store_history,
                                    const xjson::node_type* user_expressions,
