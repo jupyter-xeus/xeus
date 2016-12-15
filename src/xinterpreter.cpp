@@ -11,15 +11,23 @@
 namespace xeus
 {
 
-    xjson xinterpreter::execute_request(int execution_counter,
-                                        const std::string& code,
+    xjson xinterpreter::execute_request(const std::string& code,
                                         bool silent,
                                         bool store_history,
                                         const xjson::node_type* user_expressions,
                                         bool allow_stdin)
     {
-        return execute_request_impl(execution_counter,code, silent,
-                                    store_history, user_expressions, allow_stdin);
+        if (!silent)
+        {
+            ++m_execution_count;
+            publish_execution_input(code, m_execution_count);
+        }
+
+        xjson reply = execute_request_impl(m_execution_count, code, silent,
+                                           store_history, user_expressions, allow_stdin);
+
+        reply.set_value("/execution_count", m_execution_count);
+        return reply;
     }
 
     xjson xinterpreter::complete_request(const std::string& code,
@@ -84,6 +92,14 @@ namespace xeus
                                           std::move(transient)));
     }
 
+    void xinterpreter::publish_execution_input(const std::string& code, int execution_count)
+    {
+        xjson content;
+        content.set_value("/code", code);
+        content.set_value("/execution_count", execution_count);
+        m_publisher("execute_input", xjson(), std::move(content));
+    }
+
     void xinterpreter::publish_execution_result(int execution_count, xjson data, xjson metadata)
     {
         xjson content;
@@ -93,9 +109,14 @@ namespace xeus
         m_publisher("execute_result", xjson(), std::move(content));
     }
 
-    void xinterpreter::publish_execution_error()
+    void xinterpreter::publish_execution_error(const std::string& ename, const std::string& evalue,
+                                               const std::vector<std::string>& trace_back)
     {
-        // TODO
+        xjson content;
+        content.set_value("/ename", ename);
+        content.set_value("/evalue", evalue);
+        // TODO : add trace_back
+        m_publisher("error", xjson(), std::move(content));
     }
 
     void xinterpreter::clear_output(bool wait)

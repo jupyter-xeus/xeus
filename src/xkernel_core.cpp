@@ -23,7 +23,6 @@ namespace xeus
         : m_kernel_id(std::move(kernel_id)),
           m_user_name(std::move(user_name)),
           m_session_id(std::move(session_id)),
-          m_execution_counter(0),
           p_auth(std::move(auth)),
           p_server(server),
           p_interpreter(interpreter),
@@ -136,21 +135,13 @@ namespace xeus
 
             xjson metadata = get_metadata();
 
-            if (!silent)
-            {
-                ++m_execution_counter;
-                publish_execute_input(code, m_execution_counter);
-            }
-
-            xjson reply = p_interpreter->execute_request(m_execution_counter,
-                                                         code,
+            xjson reply = p_interpreter->execute_request(code,
                                                          silent,
                                                          store_history,
                                                          user_expression,
                                                          allow_stdin);
 
             std::string status = reply.get_string("/status", "error");
-            reply.set_value("/execution_count", m_execution_counter);
             send_reply(request, "execute_reply", std::move(metadata), std::move(reply), c);
 
             if (!silent && status == "error" && stop_on_error)

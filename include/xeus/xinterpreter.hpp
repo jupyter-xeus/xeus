@@ -11,6 +11,7 @@
 
 #include <string>
 #include <functional>
+#include <vector>
 #include "xeus_export.hpp"
 #include "xjson.hpp"
 
@@ -47,8 +48,7 @@ namespace xeus
         xinterpreter(xinterpreter&&) = delete;
         xinterpreter& operator=(xinterpreter&&) = delete;
 
-        xjson execute_request(int execution_counter,
-                              const std::string& code,
+        xjson execute_request(const std::string& code,
                               bool silent,
                               bool store_history,
                               const xjson::node_type* user_expressions,
@@ -71,8 +71,10 @@ namespace xeus
         void publish_stream(const std::string& name, const std::string& text);
         void display_data(xjson data, xjson metadata, xjson transient);
         void update_display_data(xjson data, xjson metadata, xjson transient);
+        void publish_execution_input(const std::string& code, int execution_count);
         void publish_execution_result(int execution_count, xjson data, xjson metadata);
-        void publish_execution_error();
+        void publish_execution_error(const std::string& ename, const std::string& evalue,
+                                     const std::vector<std::string>& trace_back);
         void clear_output(bool wait);
 
     private:
@@ -102,6 +104,7 @@ namespace xeus
         xjson build_display_content(xjson data, xjson metadata, xjson transient);
 
         publisher m_publisher;
+        int m_execution_count;
     };
 
 }

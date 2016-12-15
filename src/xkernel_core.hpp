@@ -86,7 +86,6 @@ namespace xeus
         std::string m_kernel_id;
         std::string m_user_name;
         std::string m_session_id;
-        int m_execution_counter;
         authentication_ptr p_auth;
 
         std::map<std::string, handler_type> m_handler;
