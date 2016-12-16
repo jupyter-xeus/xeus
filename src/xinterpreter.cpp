@@ -115,7 +115,7 @@ namespace xeus
         xjson content;
         content.set_value("/ename", ename);
         content.set_value("/evalue", evalue);
-        // TODO : add trace_back
+        content.set_value("/traceback", trace_back);
         m_publisher("error", xjson(), std::move(content));
     }
 

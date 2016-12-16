@@ -15,6 +15,7 @@
 
 #include <cstddef>
 #include <iostream>
+#include <vector>
 #include "xeus_export.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/pointer.h"
@@ -74,6 +75,9 @@ namespace xeus
 
         template <class char_type, std::size_t N>
         void set_value(const char_type(&name)[N], const std::string& value);
+
+        template <class char_type, std::size_t N, class T>
+        void set_value(const char_type(&name)[N], const std::vector<T>& value);
 
         template <class char_type, std::size_t N>
         void add_subtree(const char_type(&name)[N], xjson& subtree);
@@ -184,6 +188,20 @@ namespace xeus
     inline void xjson::set_value(const char_type(&name)[N], const std::string& value)
     {
         rapidjson::SetValueByPointer(m_document, name, value);
+    }
+
+    template <class char_type, std::size_t N, class T>
+    inline void xjson::set_value(const char_type(&name)[N], const std::vector<T>& value)
+    {
+        char ptr[N + 2];
+        std::copy(name, name + N - 1, ptr);
+        ptr[N - 1] = '/';
+        ptr[N + 1] = '\0';
+        for (size_t i = 0; i < value.size(); ++i)
+        {
+            ptr[N] = std::to_string(i).c_str()[0];
+            SetValueByPointer(m_document, ptr, value[i]);
+        }
     }
 
     template <class char_type, std::size_t N>
