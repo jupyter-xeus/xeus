@@ -36,6 +36,7 @@ namespace xeus
 
         void send_shell(zmq::multipart_t& message);
         void send_control(zmq::multipart_t& message);
+        void send_stdin(zmq::multipart_t& message);
         void publish(zmq::multipart_t& message);
 
         void start();
@@ -44,6 +45,7 @@ namespace xeus
 
         void register_shell_listener(const listener& l);
         void register_control_listener(const listener& l);
+        void register_stdin_listener(const listener& l);
 
     protected:
 
@@ -51,11 +53,13 @@ namespace xeus
 
         void notify_shell_listener(zmq::multipart_t& message);
         void notify_control_listener(zmq::multipart_t& message);
+        void notify_stdin_listener(zmq::multipart_t& message);
 
     private:
 
         virtual void send_shell_impl(zmq::multipart_t& message) = 0;
         virtual void send_control_impl(zmq::multipart_t& message) = 0;
+        virtual void send_stdin_impl(zmq::multipart_t& message) = 0;
         virtual void publish_impl(zmq::multipart_t& message) = 0;
 
         virtual void start_impl() = 0;
@@ -64,6 +68,7 @@ namespace xeus
 
         listener m_shell_listener;
         listener m_control_listener;
+        listener m_stdin_listener;
     };
 
     XEUS_API

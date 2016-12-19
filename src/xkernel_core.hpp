@@ -36,10 +36,15 @@ namespace xeus
 
         void dispatch_shell(zmq::multipart_t& wire_msg);
         void dispatch_control(zmq::multipart_t& wire_msg);
+        void dispatch_stdin(zmq::multipart_t& wire_msg);
 
         void publish_message(const std::string& msg_type,
                              xjson metadata,
                              xjson content);
+
+        void send_stdin(const std::string& msg_type,
+                        xjson metadata,
+                        xjson content);
 
     private:
 
@@ -50,6 +55,7 @@ namespace xeus
         };
 
         using handler_type = void (xkernel_core::*)(const xmessage&, xkernel_core::channel);
+        using guid_list = xmessage::guid_list;
 
         void dispatch(zmq::multipart_t& wire_msg, channel c);
 
@@ -69,8 +75,14 @@ namespace xeus
         void publish_execute_input(const std::string& code,
                                    int execution_count);
 
-        void send_reply(const xmessage& request,
+        void send_reply(const std::string& reply_type,
+                        xjson metadata,
+                        xjson reply_content,
+                        channel c);
+
+        void send_reply(const guid_list& id_list,
                         const std::string& reply_type,
+                        xjson parent_header,
                         xjson metadata,
                         xjson reply_content,
                         channel c);
@@ -80,8 +92,10 @@ namespace xeus
         std::string get_topic(const std::string& msg_type) const;
         xjson get_metadata() const;
 
-        void set_parent(const xjson& parent);
-        xjson get_parent() const;
+        void set_parent(const guid_list& list,
+                        const xjson& parent);
+        const guid_list& get_parent_id() const;
+        xjson get_parent_header() const;
 
         std::string m_kernel_id;
         std::string m_user_name;
@@ -93,7 +107,8 @@ namespace xeus
         server_ptr p_server;
         interpreter_ptr p_interpreter;
 
-        xjson m_parent;
+        guid_list m_parent_id;
+        xjson m_parent_header;
     };
 
 }

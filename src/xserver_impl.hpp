@@ -31,6 +31,7 @@ namespace xeus
 
         void send_shell_impl(zmq::multipart_t& message) override;
         void send_control_impl(zmq::multipart_t& message) override;
+        void send_stdin_impl(zmq::multipart_t& message) override;
         void publish_impl(zmq::multipart_t& message) override;
 
         void start_impl() override;

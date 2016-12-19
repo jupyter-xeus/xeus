@@ -124,4 +124,10 @@ namespace echo_kernel
         return result;
     }
 
+    void echo_interpreter::input_reply_impl(const std::string& value)
+    {
+        std::cout << "Received input_reply" << std::endl;
+        std::cout << "value: " << value << std::endl;
+    }
+
 }

@@ -26,7 +26,8 @@ namespace xeus
           p_auth(std::move(auth)),
           p_server(server),
           p_interpreter(interpreter),
-          m_parent(xjson())
+          m_parent_id(0),
+          m_parent_header(xjson())
     {
         // Request handlers
         m_handler["execute_request"] = &xkernel_core::execute_request;
@@ -38,12 +39,14 @@ namespace xeus
         m_handler["kernel_info_request"] = &xkernel_core::kernel_info_request;
         m_handler["shutdown_request"] = &xkernel_core::shutdown_request;
 
-        // Server settings
+        // Server bindings
         p_server->register_shell_listener(std::bind(&xkernel_core::dispatch_shell, this, _1));
         p_server->register_control_listener(std::bind(&xkernel_core::dispatch_control, this, _1));
+        p_server->register_stdin_listener(std::bind(&xkernel_core::dispatch_stdin, this, _1));
 
-        // Interpreter settings
+        // Interpreter bindings
         p_interpreter->register_publisher(std::bind(&xkernel_core::publish_message, this, _1, _2, _3));
+        p_interpreter->register_stdin_sender(std::bind(&xkernel_core::send_stdin, this, _1, _2, _3));
 
         // TODO : this message can't be sent because
         // server is not started yet
@@ -61,18 +64,52 @@ namespace xeus
         dispatch(wire_msg, channel::CONTROL);
     }
 
+    void xkernel_core::dispatch_stdin(zmq::multipart_t& wire_msg)
+    {
+        xmessage msg;
+        try
+        {
+            msg.deserialize(wire_msg, *p_auth);
+        }
+        catch (std::exception& e)
+        {
+            std::cout << "ERROR: could not deserialize message" << std::endl;
+            std::cout << e.what() << std::endl;;
+            return;
+        }
+
+        const xjson& header = msg.header();
+        std::string msg_type = header.get_string("/msg_type", "");
+
+
+    }
+
     void xkernel_core::publish_message(const std::string& msg_type,
                                        xjson metadata,
                                        xjson content)
     {
         xpub_message msg(get_topic(msg_type),
                          make_header(msg_type, m_user_name, m_session_id),
-                         get_parent(),
+                         get_parent_header(),
                          std::move(metadata),
                          std::move(content));
         zmq::multipart_t wire_msg;
         msg.serialize(wire_msg, *p_auth);
         p_server->publish(wire_msg);
+    }
+
+    void xkernel_core::send_stdin(const std::string& msg_type,
+                                  xjson metadata,
+                                  xjson content)
+    {
+        xmessage msg(get_parent_id(),
+                     make_header(msg_type, m_user_name, m_session_id),
+                     get_parent_header(),
+                     std::move(metadata),
+                     std::move(content));
+        zmq::multipart_t wire_msg;
+        msg.serialize(wire_msg, *p_auth);
+        p_server->send_stdin(wire_msg);
     }
 
     void xkernel_core::dispatch(zmq::multipart_t& wire_msg, channel c)
@@ -90,7 +127,7 @@ namespace xeus
         }
 
         const xjson& header = msg.header();
-        set_parent(header);
+        set_parent(msg.identities(), header);
         publish_status("busy");
 
         std::string msg_type = header.get_string("/msg_type", "");
@@ -142,7 +179,7 @@ namespace xeus
                                                          allow_stdin);
 
             std::string status = reply.get_string("/status", "error");
-            send_reply(request, "execute_reply", std::move(metadata), std::move(reply), c);
+            send_reply("execute_reply", std::move(metadata), std::move(reply), c);
 
             if (!silent && status == "error" && stop_on_error)
             {
@@ -163,7 +200,7 @@ namespace xeus
         int cursor_pos = content.get_int("/cursor_pos", -1);
 
         xjson reply = p_interpreter->complete_request(code, cursor_pos);
-        send_reply(request, "complete_request", xjson(), std::move(reply), c);
+        send_reply("complete_request", xjson(), std::move(reply), c);
     }
 
     void xkernel_core::inspect_request(const xmessage& request, channel c)
@@ -174,7 +211,7 @@ namespace xeus
         int detail_level = content.get_int("/detail_level", 0);
 
         xjson reply = p_interpreter->inspect_request(code, cursor_pos, detail_level);
-        send_reply(request, "inspect_reply", xjson(), std::move(reply), c);
+        send_reply("inspect_reply", xjson(), std::move(reply), c);
     }
 
     void xkernel_core::history_request(const xmessage& request, channel c)
@@ -192,7 +229,7 @@ namespace xeus
         args.m_unique = content.get_bool("/unique", false);
 
         xjson reply = p_interpreter->history_request(args);
-        send_reply(request, "history_reply", xjson(), std::move(reply), c);
+        send_reply("history_reply", xjson(), std::move(reply), c);
     }
 
     void xkernel_core::is_complete_request(const xmessage& request, channel c)
@@ -201,7 +238,7 @@ namespace xeus
         std::string code = content.get_string("/code", "");
 
         xjson reply = p_interpreter->is_complete_request(code);
-        send_reply(request, "is_complete_reply", xjson(), std::move(reply), c);
+        send_reply("is_complete_reply", xjson(), std::move(reply), c);
     }
 
     void xkernel_core::comm_info_request(const xmessage& request, channel c)
@@ -210,14 +247,14 @@ namespace xeus
         std::string target_name = content.get_string("/target_name", "");
 
         xjson reply = p_interpreter->comm_info_request(target_name);
-        send_reply(request, "comm_info_reply", xjson(), std::move(reply), c);
+        send_reply("comm_info_reply", xjson(), std::move(reply), c);
     }
 
     void xkernel_core::kernel_info_request(const xmessage& request, channel c)
     {
         xjson reply = p_interpreter->kernel_info_request();
         reply.set_value("/protocol_version", get_protocol_version());
-        send_reply(request, "kernel_info_reply", xjson(), std::move(reply), c);
+        send_reply("kernel_info_reply", xjson(), std::move(reply), c);
     }
 
     void xkernel_core::shutdown_request(const xmessage& request, channel c)
@@ -228,7 +265,7 @@ namespace xeus
         xjson reply;
         reply.set_value("/restart", restart);
         publish_message("shutdown", xjson(), reply.copy());
-        send_reply(request, "shutdown_reply", xjson(), std::move(reply), c);
+        send_reply("shutdown_reply", xjson(), std::move(reply), c);
     }
 
     void xkernel_core::publish_status(const std::string& status)
@@ -247,15 +284,29 @@ namespace xeus
         publish_message("execute_input", xjson(), std::move(content));
     }
 
-    void xkernel_core::send_reply(const xmessage& request,
-                                  const std::string& reply_type,
+    void xkernel_core::send_reply(const std::string& reply_type,
                                   xjson metadata,
                                   xjson reply_content,
                                   channel c)
     {
-        xmessage reply(request.identities(),
+        send_reply(get_parent_id(),
+                   reply_type,
+                   get_parent_header(),
+                   std::move(metadata),
+                   std::move(reply_content),
+                   c);
+    }
+
+    void xkernel_core::send_reply(const guid_list& id_list,
+                                  const std::string& reply_type,
+                                  xjson parent_header,
+                                  xjson metadata,
+                                  xjson reply_content,
+                                  channel c)
+    {
+        xmessage reply(id_list,
                        make_header(reply_type, m_user_name, m_session_id),
-                       get_parent(),
+                       std::move(parent_header),
                        std::move(metadata),
                        std::move(reply_content));
         zmq::multipart_t wire_msg;
@@ -288,7 +339,12 @@ namespace xeus
         msg_type.replace(msg_type.find_last_of('_'), 8, "_reply");
         xjson content;
         content.set_value("/status", "error");
-        send_reply(msg, msg_type, xjson(), std::move(content), channel::SHELL);
+        send_reply(msg.identities(),
+                   msg_type,
+                   header.copy(),
+                   xjson(),
+                   std::move(content),
+                   channel::SHELL);
     }
 
     std::string xkernel_core::get_topic(const std::string& msg_type) const
@@ -303,14 +359,21 @@ namespace xeus
         return metadata;
     }
 
-    void xkernel_core::set_parent(const xjson& parent)
+    void xkernel_core::set_parent(const guid_list& parent_id,
+                                  const xjson& parent_header)
     {
-        m_parent = parent.copy();
+        m_parent_id = parent_id;
+        m_parent_header = parent_header.copy();
     }
 
-    xjson xkernel_core::get_parent() const
+    const xkernel_core::guid_list& xkernel_core::get_parent_id() const
     {
-        return m_parent.copy();
+        return m_parent_id;
+    }
+
+    xjson xkernel_core::get_parent_header() const
+    {
+        return m_parent_header.copy();
     }
 
 }

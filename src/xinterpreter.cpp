@@ -126,6 +126,24 @@ namespace xeus
         m_publisher("clear_output", xjson(), std::move(content));
     }
 
+    void xinterpreter::register_stdin_sender(const stdin_sender& sender)
+    {
+        m_stdin = sender;
+    }
+
+    void xinterpreter::input_request(const std::string& prompt, bool pwd)
+    {
+        xjson content;
+        content.set_value("/prompt", prompt);
+        content.set_value("/pwd", pwd);
+        m_stdin("input_request", xjson(), std::move(content));
+    }
+
+    void xinterpreter::input_reply(const std::string& value)
+    {
+        input_reply_impl(value);
+    }
+
     xjson xinterpreter::build_display_content(xjson data, xjson metadata, xjson transient)
     {
         xjson res;

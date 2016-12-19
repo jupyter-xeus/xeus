@@ -52,6 +52,14 @@ namespace xeus
         message.send(m_controller);
     }
 
+    void xserver_impl::send_stdin_impl(zmq::multipart_t& message)
+    {
+        message.send(m_stdin);
+        zmq::multipart_t wire_msg;
+        wire_msg.recv(m_stdin);
+        xserver::notify_stdin_listener(wire_msg);
+    }
+
     void xserver_impl::publish_impl(zmq::multipart_t& message)
     {
         message.send(m_publisher_pub);

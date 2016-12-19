@@ -36,9 +36,6 @@ namespace xeus
 
     public:
 
-        // publish(msg_type, metadata, content) 
-        using publisher = std::function<void(const std::string&, xjson, xjson)>;
-
         xinterpreter() = default;
         virtual ~xinterpreter() = default;
 
@@ -66,6 +63,8 @@ namespace xeus
         xjson comm_info_request(const std::string& target_name);
         xjson kernel_info_request();
 
+        // publish(msg_type, metadata, content) 
+        using publisher = std::function<void(const std::string&, xjson, xjson)>;
         void register_publisher(const publisher& pub);
 
         void publish_stream(const std::string& name, const std::string& text);
@@ -76,6 +75,13 @@ namespace xeus
         void publish_execution_error(const std::string& ename, const std::string& evalue,
                                      const std::vector<std::string>& trace_back);
         void clear_output(bool wait);
+
+        // send_stdin(msg_type, metadata, content)
+        using stdin_sender = std::function<void(const std::string&, xjson, xjson)>;
+        void register_stdin_sender(const stdin_sender& sender);
+
+        void input_request(const std::string& prompt, bool pwd);
+        void input_reply(const std::string& value);
 
     private:
 
@@ -101,9 +107,12 @@ namespace xeus
 
         virtual xjson kernel_info_request_impl() = 0;
 
+        virtual void input_reply_impl(const std::string& value) = 0;
+
         xjson build_display_content(xjson data, xjson metadata, xjson transient);
 
         publisher m_publisher;
+        stdin_sender m_stdin;
         int m_execution_count;
     };
 
