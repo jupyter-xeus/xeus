@@ -31,9 +31,9 @@ namespace xeus
         publish_impl(message);
     }
 
-    void xserver::start()
+    void xserver::start(zmq::multipart_t& message)
     {
-        start_impl();
+        start_impl(message);
     }
 
     void xserver::abort_queue(const listener& l, long polling_interval)

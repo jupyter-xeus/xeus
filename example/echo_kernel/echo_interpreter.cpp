@@ -22,7 +22,7 @@ namespace echo_kernel
     {
         std::cout << "Received execute_request" << std::endl;
         std::cout << "execution_counter: " << execution_counter << std::endl;
-        std::cout << "code: " << code;
+        std::cout << "code: " << code << std::endl;
         std::cout << "silent: " << silent << std::endl;
         std::cout << "store_history: " << store_history << std::endl;
         std::cout << "allow_stdin: " << allow_stdin << std::endl;

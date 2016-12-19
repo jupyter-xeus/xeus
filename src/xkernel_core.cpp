@@ -47,11 +47,6 @@ namespace xeus
         // Interpreter bindings
         p_interpreter->register_publisher(std::bind(&xkernel_core::publish_message, this, _1, _2, _3));
         p_interpreter->register_stdin_sender(std::bind(&xkernel_core::send_stdin, this, _1, _2, _3));
-
-        // TODO : this message can't be sent because
-        // server is not started yet
-        // Status
-        publish_status("starting");
     }
 
     void xkernel_core::dispatch_shell(zmq::multipart_t& wire_msg)

@@ -39,7 +39,7 @@ namespace xeus
         void send_stdin(zmq::multipart_t& message);
         void publish(zmq::multipart_t& message);
 
-        void start();
+        void start(zmq::multipart_t& message);
         void abort_queue(const listener& l, long polling_interval);
         void stop();
 
@@ -62,7 +62,7 @@ namespace xeus
         virtual void send_stdin_impl(zmq::multipart_t& message) = 0;
         virtual void publish_impl(zmq::multipart_t& message) = 0;
 
-        virtual void start_impl() = 0;
+        virtual void start_impl(zmq::multipart_t& message) = 0;
         virtual void abort_queue_impl(const listener& l, long polling_interval) = 0;
         virtual void stop_impl() = 0;
 

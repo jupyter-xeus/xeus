@@ -65,7 +65,7 @@ namespace xeus
         message.send(m_publisher_pub);
     }
 
-    void xserver_impl::start_impl()
+    void xserver_impl::start_impl(zmq::multipart_t& message)
     {
         std::thread iopub_thread(&xpublisher::run, &m_publisher);
         iopub_thread.detach();
@@ -79,6 +79,8 @@ namespace xeus
             { m_controller, 0, ZMQ_POLLIN, 0 },
             { m_shell, 0, ZMQ_POLLIN, 0 }
         };
+
+        publish(message);
 
         while (!m_request_stop)
         {

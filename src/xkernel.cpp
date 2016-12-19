@@ -12,6 +12,24 @@
 
 namespace xeus
 {
+    void build_start_msg(xkernel_core::authentication_ptr& auth,
+                         const std::string& kernel_id,
+                         const std::string& user_name,
+                         const std::string& session_id,
+                         zmq::multipart_t& wire_msg)
+    {
+        std::string topic = "kernel_core." + kernel_id + ".status";
+        xjson content;
+        content.set_value("/execution_state", "starting");
+
+        xpub_message msg(topic,
+                         make_header("status", user_name, session_id),
+                         xjson(),
+                         xjson(),
+                         std::move(content));
+        msg.serialize(wire_msg, *auth);
+    }
+
     xkernel::xkernel(const xconfiguration& config,
                      const std::string& user_name,
                      interpreter_ptr interpreter,
@@ -34,10 +52,13 @@ namespace xeus
         using authentication_ptr = xkernel_core::authentication_ptr;
         authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
 
+        zmq::multipart_t start_msg;
+        build_start_msg(auth, kernel_id, m_user_name, session_id, start_msg);
+
         xkernel_core core(kernel_id, m_user_name, session_id,
                           std::move(auth), server.get(), p_interpreter.get());
 
-        server->start();
+        server->start(start_msg);
     }
 
 }
