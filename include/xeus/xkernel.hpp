@@ -11,7 +11,7 @@
 
 #include <memory>
 #include "xeus_export.hpp"
-#include "xconfiguration.hpp"
+#include "xkernel_configuration.hpp"
 #include "xinterpreter.hpp"
 #include "xserver.hpp"
 
