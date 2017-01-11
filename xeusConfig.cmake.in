@@ -1,0 +1,21 @@
+############################################################################
+# Copyright (c) 2016, Johan Mabille and Sylvain Corlay                     #
+#                                                                          #
+# Distributed under the terms of the BSD 3-Clause License.                 #
+#                                                                          #
+# The full license is in the file LICENSE, distributed with this software. #
+############################################################################
+
+# xeus cmake module
+# This module sets the following variables in your project::
+#
+#   xeus_FOUND - true if xtensor found on the system
+#   xeus_INCLUDE_DIR - the directory containing xtensor headers
+#   xeus_LIBRARY - the library for dynamic linking
+
+@PACKAGE_INIT@
+
+set(PN xeus)
+set_and_check(${PN}_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
+set_and_check(${PN}_LIBRARY "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@/@libxeus_link_file@")
+check_required_components(${PN})
