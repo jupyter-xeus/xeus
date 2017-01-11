@@ -113,8 +113,6 @@ if(BUILD_EXAMPLES)
     add_subdirectory(example)
 endif()
 
-
-
 # Installation
 # ============
 
@@ -144,6 +142,3 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
               DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 
-if(BUILD_EXAMPLES)
-    # TODO install example targets
-endif()
