@@ -11,7 +11,7 @@
 
 #include <vector>
 #include "zmq_addon.hpp"
-#include "xeus_export.hpp"
+#include "xeus.hpp"
 #include "xjson.hpp"
 #include "xauthentication.hpp"
 

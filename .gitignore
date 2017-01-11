@@ -41,5 +41,8 @@ docs/CMakeCache.txt
 docs/xml/
 docs/build/
 
+# Build directory
+build/
+
 # Jupyter artefacts
 .ipynb_checkpoints/

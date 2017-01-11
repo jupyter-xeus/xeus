@@ -13,8 +13,8 @@
 #include <memory>
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
-#include "xeus_export.hpp"
-#include "xconfiguration.hpp"
+#include "xeus.hpp"
+#include "xkernel_configuration.hpp"
 
 namespace xeus
 {

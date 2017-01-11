@@ -12,7 +12,7 @@
 #include "xserver.hpp"
 #include "xpublisher.hpp"
 #include "xheartbeat.hpp"
-#include "xconfiguration.hpp"
+#include "xkernel_configuration.hpp"
 
 namespace xeus
 {

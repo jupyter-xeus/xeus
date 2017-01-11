@@ -8,7 +8,7 @@
 
 #include <string>
 #include "zmq.hpp"
-#include "xeus/xconfiguration.hpp"
+#include "xeus/xkernel_configuration.hpp"
 #include "xeus/xauthentication.hpp"
 
 namespace echo_client

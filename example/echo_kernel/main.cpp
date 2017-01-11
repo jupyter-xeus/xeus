@@ -8,7 +8,7 @@
 
 #include <memory>
 #include <iostream>
-#include "xeus/xconfiguration.hpp"
+#include "xeus/xkernel_configuration.hpp"
 #include "xeus/xkernel.hpp"
 #include "echo_interpreter.hpp"
 

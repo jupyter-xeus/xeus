@@ -8,7 +8,7 @@
 
 #include <fstream>
 #include "rapidjson/istreamwrapper.h"
-#include "xconfiguration.hpp"
+#include "xkernel_configuration.hpp"
 #include "xjson.hpp"
 
 namespace xeus

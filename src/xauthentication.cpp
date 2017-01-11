@@ -10,7 +10,6 @@
 #include <cstddef>
 #include "xauthentication.hpp"
 #include "xstring_utils.hpp"
-#include "dll.h"
 #include "sha.h"
 #include "hmac.h"
 
