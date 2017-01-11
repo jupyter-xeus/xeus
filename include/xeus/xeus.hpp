@@ -19,4 +19,8 @@
     #define XEUS_API
 #endif
 
+#define XEUS_VERSION_MAJOR 0
+#define XEUS_VERSION_MINOR 0
+#define XEUS_VERSION_PATCH 1
+
 #endif

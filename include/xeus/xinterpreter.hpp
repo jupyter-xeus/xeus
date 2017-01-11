@@ -12,7 +12,7 @@
 #include <string>
 #include <functional>
 #include <vector>
-#include "xeus_export.hpp"
+#include "xeus.hpp"
 #include "xjson.hpp"
 
 namespace xeus

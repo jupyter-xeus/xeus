@@ -10,7 +10,7 @@
 #define XCONFIGURATION_HPP
 
 #include <string>
-#include "xeus_export.hpp"
+#include "xeus.hpp"
 
 namespace xeus
 {

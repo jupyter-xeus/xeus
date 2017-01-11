@@ -12,7 +12,7 @@
 #include <memory>
 #include <string>
 #include "zmq.hpp"
-#include "xeus_export.hpp"
+#include "xeus.hpp"
 
 namespace xeus
 {

@@ -10,7 +10,7 @@
 #define XKERNEL_HPP
 
 #include <memory>
-#include "xeus_export.hpp"
+#include "xeus.hpp"
 #include "xkernel_configuration.hpp"
 #include "xinterpreter.hpp"
 #include "xserver.hpp"

@@ -12,7 +12,7 @@
 #include <cstddef>
 #include <array>
 #include <string>
-#include "xeus_export.hpp"
+#include "xeus.hpp"
 
 namespace xeus
 {
