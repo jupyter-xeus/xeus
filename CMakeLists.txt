@@ -123,9 +123,6 @@ include(CMakePackageConfigHelpers)
 # GNUInstallDirs "DATADIR" wrong here; CMake search path wants "share".
 set(XEUS_CMAKECONFIG_INSTALL_DIR "share/cmake/${PROJECT_NAME}" CACHE STRING "install path for xeusConfig.cmake")
 
-#install(FILES ${XEUS_HEADERS}
-#        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xtensor)
-
 install(TARGETS ${XEUS_TARGET}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

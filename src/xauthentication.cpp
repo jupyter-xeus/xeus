@@ -10,8 +10,8 @@
 #include <cstddef>
 #include "xauthentication.hpp"
 #include "xstring_utils.hpp"
-#include "sha.h"
-#include "hmac.h"
+#include "cryptopp/sha.h"
+#include "cryptopp/hmac.h"
 
 namespace xeus
 {

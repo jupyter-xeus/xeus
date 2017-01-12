@@ -135,7 +135,7 @@ std::mutex cout_mutex;
     void xclient::run_io_suscriber()
     {
         int nb_rcv = 0;
-        while (nb_rcv < m_nb_msg)
+        while (nb_rcv < m_nb_msg * 2)
         {
             zmq::multipart_t wire_msg;
             wire_msg.recv(m_iosub);
@@ -144,6 +144,7 @@ std::mutex cout_mutex;
             msg.deserialize(wire_msg, *p_io_authentication);
             const std::string& topic = msg.topic();
             size_t topic_size = topic.size();
+
             if (topic.substr(topic_size - 6, topic_size) == "status")
             {
                 const xeus::xjson& content = msg.content();
@@ -155,7 +156,7 @@ std::mutex cout_mutex;
                 oss << std::endl;
                 print(oss.str());
             }
-            else
+            else if(topic.substr(topic_size - 13, topic_size) == "execute_input")
             {
                 ++nb_rcv;
                 const xeus::xjson& content = msg.content();
@@ -164,6 +165,17 @@ std::mutex cout_mutex;
                 std::ostringstream oss;
                 oss << "Kernel published input" << std::endl;
                 oss << "code: " << code << std::endl;
+                oss << std::endl;
+                print(oss.str());
+            }
+            else
+            {
+                ++nb_rcv;
+                const xeus::xjson& content = msg.content();
+                int execution_count = content.get_int("/execution_count");
+                std::ostringstream oss;
+                oss << "Kernel published result" << std::endl;
+                oss << "execution_count: " << execution_count << std::endl;
                 oss << std::endl;
                 print(oss.str());
             }

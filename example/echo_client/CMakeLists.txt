@@ -11,10 +11,12 @@ set(ECHO_CLIENT_SOURCES
     echo_client.hpp
     main.cpp)
 
+include_directories(${XEUS_INCLUDE_DIR})
+
 add_executable(echo_client ${ECHO_CLIENT_SOURCES} ${XEUS_HEADERS})
 target_link_libraries(echo_client ${XEUS_TARGET})
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../echo_kernel/connection.json)
 add_custom_command(TARGET echo_client POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E
-                   copy "${CONNECTION_FILE}" "${CMAKE_CURRENT_BINARY_DIR}/")
+                   copy "${CONNECTION_FILE}" "${libxeus_runtime_file}" "${CMAKE_CURRENT_BINARY_DIR}/")
