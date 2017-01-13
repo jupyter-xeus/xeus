@@ -84,7 +84,7 @@ namespace xeus
 
         while (!m_request_stop)
         {
-            zmq::poll(&items[0], std::size(items), -1);
+            zmq::poll(&items[0], 2, -1);
 
             if (items[0].revents & ZMQ_POLLIN)
             {

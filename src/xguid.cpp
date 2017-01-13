@@ -29,6 +29,11 @@ namespace xeus
         std::copy(buffer, buffer + GUID_SIZE, m_buffer.begin());
     }
 
+    xguid::xguid(const unsigned char* buffer)
+    {
+        std::copy(buffer, buffer + GUID_SIZE, m_buffer.begin());
+    }
+
     xguid::xguid(const buffer_type& buffer)
         : m_buffer(buffer)
     {

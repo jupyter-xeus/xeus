@@ -9,6 +9,7 @@
 #include "xheartbeat.hpp"
 #include "zmq_addon.hpp"
 #include "xmiddleware.hpp"
+#include <iterator>
 
 namespace xeus
 {
@@ -35,7 +36,7 @@ namespace xeus
 
         while (true)
         {
-            zmq::poll(&items[0], std::size(items), -1);
+            zmq::poll(&items[0], 2, -1);
 
             if (items[0].revents & ZMQ_POLLIN)
             {

@@ -25,6 +25,7 @@ namespace xeus
         using buffer_type = std::array<unsigned char, GUID_SIZE>;
 
         xguid(const char* buffer);
+        xguid(const unsigned char* buffer);
         xguid(const buffer_type& buffer);
 
         const unsigned char* buffer() const;
