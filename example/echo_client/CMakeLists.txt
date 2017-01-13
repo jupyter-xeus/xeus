@@ -24,4 +24,4 @@ add_custom_command(TARGET echo_client POST_BUILD
 
 add_custom_command(TARGET echo_client POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E
-                   copy "${libxeus_runtime_file}" "${CMAKE_CURRENT_BINARY_DIR}/")
+                   copy "${CMAKE_BINARY_DIR}/${XEUS_RUNTIME_FILE}" "${CMAKE_CURRENT_BINARY_DIR}/")

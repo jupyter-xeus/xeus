@@ -129,14 +129,24 @@ message(STATUS "${PROJECT_NAME} version: v${${PROJECT_NAME}_VERSION}")
 # Output
 # ======
 
-set(XEUS_TARGET xeus)
+set(XEUS_TARGET libxeus)
 set(XEUS_DEPENDENCIES ${cppzmq_LIBRARY} cryptopp-static)
 
 add_library(${XEUS_TARGET} SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
 target_link_libraries(${XEUS_TARGET} ${XEUS_DEPENDENCIES})
 set_target_properties(${XEUS_TARGET} PROPERTIES
                       PUBLIC_HEADER "${XEUS_HEADERS}"
-                      COMPILE_DEFINITIONS "XEUS_EXPORTS")
+                      COMPILE_DEFINITIONS "XEUS_EXPORTS"
+                      OUTPUT_NAME "libxeus")
+
+                  get_property(XEUS_NAME TARGET ${XEUS_TARGET} PROPERTY OUTPUT_NAME)
+if(MSVC)
+    set(XEUS_LINK_FILE ${XEUS_NAME}${CMAKE_LINK_LIBRARY_SUFFIX})
+    set(XEUS_RUNTIME_FILE ${XEUS_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+else()
+    set(XEUS_LINK_FILE ${XEUS_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(XEUS_RUNTIME_FILE ${XEUS_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+endif()
 
 # Examples
 # ========
@@ -149,12 +159,6 @@ endif()
 
 # Installation
 # ============
-
-if(MSVC)
-    set(libxeus_link_file ${XEUS_TARGET}${CMAKE_LINK_LIBRARY_SUFFIX})
-else()
-    set(libxeus_link_file "lib${XEUS_TARGET}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-endif()
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
