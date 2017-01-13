@@ -17,6 +17,11 @@ add_executable(echo_kernel ${ECHO_KERNEL_SOURCES} ${XEUS_HEADERS})
 target_link_libraries(echo_kernel ${XEUS_TARGET})
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
+
 add_custom_command(TARGET echo_kernel POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E
-                   copy "${CONNECTION_FILE}" "${libxeus_runtime_file}" "${CMAKE_CURRENT_BINARY_DIR}/")
+                   copy "${CONNECTION_FILE}" "${CMAKE_CURRENT_BINARY_DIR}/")
+
+add_custom_command(TARGET echo_kernel POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E
+                   copy "${libxeus_runtime_file}" "${CMAKE_CURRENT_BINARY_DIR}/")

@@ -36,9 +36,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"
     # Enable link time optimization and set the default symbol
     # visibility to hidden (very important to obtain small binaries)
     if (NOT ${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
-        # Default symbol visibility
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-
         # Check for Link Time Optimization support
         # (GCC/Clang)
         CHECK_CXX_COMPILER_FLAG("-flto" HAS_LTO_FLAG)
@@ -65,6 +62,10 @@ if(MSVC)
         set(CMAKE_CXX_FLAGS_DEBUG "/DNDEBUG /MD /Zi /Ob0 /Od /RTC1")
         message(STATUS "Overriding CMAKE_CXX_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
     endif()
+elseif(APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGUID_CFUUID")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGUID_LIBUUID -luuid")
 endif()
 
 # Source files
@@ -128,16 +129,14 @@ message(STATUS "${PROJECT_NAME} version: v${${PROJECT_NAME}_VERSION}")
 # Output
 # ======
 
-set(XEUS_TARGET libxeus)
+set(XEUS_TARGET xeus)
 set(XEUS_DEPENDENCIES ${cppzmq_LIBRARY} cryptopp-static)
 
-#if(MSVC)
-    add_library(${XEUS_TARGET} SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
-    target_link_libraries(${XEUS_TARGET} ${XEUS_DEPENDENCIES})
-    set_target_properties(${XEUS_TARGET} PROPERTIES
-                          PUBLIC_HEADER "${XEUS_HEADERS}"
-                          COMPILE_DEFINITIONS "XEUS_EXPORTS")
-                      #endif()
+add_library(${XEUS_TARGET} SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
+target_link_libraries(${XEUS_TARGET} ${XEUS_DEPENDENCIES})
+set_target_properties(${XEUS_TARGET} PROPERTIES
+                      PUBLIC_HEADER "${XEUS_HEADERS}"
+                      COMPILE_DEFINITIONS "XEUS_EXPORTS")
 
 # Examples
 # ========
@@ -154,7 +153,7 @@ endif()
 if(MSVC)
     set(libxeus_link_file ${XEUS_TARGET}${CMAKE_LINK_LIBRARY_SUFFIX})
 else()
-    set(libxeus_link_file ${XEUS_TARGET}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(libxeus_link_file "lib${XEUS_TARGET}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
 
 include(GNUInstallDirs)

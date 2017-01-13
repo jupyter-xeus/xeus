@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 #include "xeus.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/pointer.h"
