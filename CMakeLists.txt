@@ -19,7 +19,42 @@ find_package(cryptopp REQUIRED)
 # Compilation flags
 # =================
 
+include(CheckCXXCompilerFlag)
+
 string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -Wunused-parameter -Wextra -Wreorder")
+    CHECK_CXX_COMPILER_FLAG("-std=c++14" HAS_CPP14_FLAG)
+
+    if (HAS_CPP14_FLAG)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+    else()
+        message(FATAL_ERROR "Unsupported compiler -- xeux requires C++14 support!")
+    endif()
+
+    # Enable link time optimization and set the default symbol
+    # visibility to hidden (very important to obtain small binaries)
+    if (NOT ${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
+        # Default symbol visibility
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+
+        # Check for Link Time Optimization support
+        # (GCC/Clang)
+        CHECK_CXX_COMPILER_FLAG("-flto" HAS_LTO_FLAG)
+        if (HAS_LTO_FLAG)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
+        endif()
+
+        # Intel equivalent to LTO is called IPO
+        if (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
+            CHECK_CXX_COMPILER_FLAG("-ipo" HAS_IPO_FLAG)
+            if (HAS_IPO_FLAG)
+                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ipo")
+            endif()
+        endif()
+    endif()
+endif()
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DGUID_WINDOWS /MP /bigobj")
@@ -96,13 +131,13 @@ message(STATUS "${PROJECT_NAME} version: v${${PROJECT_NAME}_VERSION}")
 set(XEUS_TARGET libxeus)
 set(XEUS_DEPENDENCIES ${cppzmq_LIBRARY} cryptopp-static)
 
-if(MSVC)
+#if(MSVC)
     add_library(${XEUS_TARGET} SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
     target_link_libraries(${XEUS_TARGET} ${XEUS_DEPENDENCIES})
     set_target_properties(${XEUS_TARGET} PROPERTIES
                           PUBLIC_HEADER "${XEUS_HEADERS}"
                           COMPILE_DEFINITIONS "XEUS_EXPORTS")
-endif()
+                      #endif()
 
 # Examples
 # ========
@@ -116,15 +151,17 @@ endif()
 # Installation
 # ============
 
-set(libxeus_link_file ${XEUS_TARGET}${CMAKE_LINK_LIBRARY_SUFFIX})
+if(MSVC)
+    set(libxeus_link_file ${XEUS_TARGET}${CMAKE_LINK_LIBRARY_SUFFIX})
+else()
+    set(libxeus_link_file ${XEUS_TARGET}${CMAKE_SHARED_LIBRARY_SUFFIX})
+endif()
+
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 # GNUInstallDirs "DATADIR" wrong here; CMake search path wants "share".
 set(XEUS_CMAKECONFIG_INSTALL_DIR "share/cmake/${PROJECT_NAME}" CACHE STRING "install path for xeusConfig.cmake")
-
-#install(FILES ${XEUS_HEADERS}
-#        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xtensor)
 
 install(TARGETS ${XEUS_TARGET}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

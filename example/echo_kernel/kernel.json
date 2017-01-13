@@ -1,0 +1,9 @@
+{
+    "display_name": "Echo cpp",
+    "language" : "cpp",
+    "argv": [
+        "echo_kernel",
+        "-f",
+        "{connection_file}"
+    ]
+}

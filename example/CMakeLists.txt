@@ -6,5 +6,7 @@
 # The full license is in the file LICENSE, distributed with this software. #
 ############################################################################
 
+set(libxeus_runtime_file ${CMAKE_BINARY_DIR}/${XEUS_TARGET}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
 add_subdirectory(echo_client)
 add_subdirectory(echo_kernel)
