@@ -4,11 +4,11 @@ C++ implementation of the Jupyter Kernel protocol
 
 ## Introduction
 
-`xeus` is a library meant for easing Jupyter Kernel implementation. It takes the burden of
-implementing the Jupyter Kernel protocol so developers can focus on implementing the interpreter
-part of the Kernel.
+`xeus` is a library meant to facilitate the implementation of kernels for Jupyter. It takes the
+burden of implementing the Jupyter Kernel protocol so developers can focus on implementing the
+interpreter part of the Kernel.
 
-## Building and installation
+## Manual Building and installation
 
 `xeus` depends on the following libraries:
 
@@ -26,12 +26,12 @@ sure to run cmake from the Developer Command Prompt for Visual Studio.
 
 ```bash
 cmake -D WITH_PERF_TOOL=OFF -D ZMQ_BUILD_TESTS=OFF -D ENABLE_CPACK=OFF
+-D CMAKE_BUILD_TYPE=Release
 make
 make install
 ```
 Note: this ensures you build the library only, tests and performance tools are not required
-for building `xeus`. `libzmq`default build mode is Release, so no need to use
-`-D CMAKE_BUILD_TYPE=Release`.
+for building `xeus`.
 
 ### cppzmq
 
@@ -60,6 +60,7 @@ Windows.
 
 ```bash
 cmake -D BUILD_SHARED=OFF -D BUILD_TESTING=OFF -D CMAKE_BUILD_TYPE=Release
+make
 make install
 ```
 
