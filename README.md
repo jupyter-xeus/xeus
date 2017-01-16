@@ -22,6 +22,8 @@ In that case, a solution is to build these dependencies with cmake. On windows, 
 "NMake Makefiles" generator so you don't have to open Visual Studio to compile and install. Be
 sure to run cmake from the Developer Command Prompt for Visual Studio.
 
+On Unix operating systems, `xeus` also depends on `libuuid`, which is generally provided as a package for common linux distribution (`uuid-dev` on Debian).
+
 ### libzmq
 
 ```bash

@@ -65,7 +65,7 @@ if(MSVC)
 elseif(APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGUID_CFUUID")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGUID_LIBUUID -luuid")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGUID_LIBUUID")
 endif()
 
 # Source files
@@ -129,14 +129,20 @@ message(STATUS "${PROJECT_NAME} version: v${${PROJECT_NAME}_VERSION}")
 # Output
 # ======
 
-set(XEUS_TARGET libxeus)
+set(XEUS_TARGET xeus)
 set(XEUS_DEPENDENCIES ${cppzmq_LIBRARY} cryptopp-static)
+
+if(NOT MSVC)
+    find_library(UUID libuuid${CMAKE_SHARED_LIBRARY_SUFFIX} CMAKE_LIBRARY_PATH) 
+    set(XEUS_DEPENDENCIES ${XEUS_DEPENDENCIES} ${UUID})
+endif()
 
 add_library(${XEUS_TARGET} SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
 target_link_libraries(${XEUS_TARGET} ${XEUS_DEPENDENCIES})
 set_target_properties(${XEUS_TARGET} PROPERTIES
                       PUBLIC_HEADER "${XEUS_HEADERS}"
                       COMPILE_DEFINITIONS "XEUS_EXPORTS"
+                      PREFIX ""
                       OUTPUT_NAME "libxeus")
 
                   get_property(XEUS_NAME TARGET ${XEUS_TARGET} PROPERTY OUTPUT_NAME)
