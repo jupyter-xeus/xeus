@@ -12,15 +12,15 @@
 
 using namespace std::chrono_literals;
 
-int main(int argc, char* argv[])
+int main(int, char**)
 {
     xeus::xconfiguration config = xeus::load_configuration("connection.json");
 
-    std::string user_name = "jmabille";
+    std::string user_name = "JohanMabille";
     int nb_msg = 4;
     zmq::context_t context;
 
-    echo_client::xclient client(config, user_name, nb_msg, context);
+    echo_client::xclient client(config, user_name, context);
 
     std::this_thread::sleep_for(50ms);
 

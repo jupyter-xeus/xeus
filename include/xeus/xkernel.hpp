@@ -6,7 +6,7 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XKERNERL_HPP
+#ifndef XKERNEL_HPP
 #define XKERNEL_HPP
 
 #include <memory>

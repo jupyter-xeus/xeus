@@ -1,0 +1,11 @@
+name: test-xeus
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - cmake
+    - libuuid
+    - zeromq
+    - cppzmq
+    - rapidjson
+    - cryptopp

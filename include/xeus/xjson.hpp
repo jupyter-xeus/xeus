@@ -119,7 +119,7 @@ namespace xeus
         const node_type* node = get_bool_impl(name);
         if (node == nullptr)
         {
-            throw std::runtime_error("Bool attribute not found in json");
+            throw std::runtime_error("Bool attribute " + std::string(name) + " not found in json");
         }
         return node->GetBool();
     }
@@ -137,7 +137,7 @@ namespace xeus
         const node_type* node = get_int_impl(name);
         if (node == nullptr)
         {
-            throw std::runtime_error("Int attribute not found in json");
+            throw std::runtime_error("Int attribute " + std::string(name) + " not found in json");
         }
         return node->GetInt();
     }
@@ -155,7 +155,7 @@ namespace xeus
         const node_type* node = get_string_impl(name);
         if (node == nullptr)
         {
-            throw std::runtime_error("String attribute not found in json");
+            throw std::runtime_error("String attribute " + std::string(name) +  " not found in json");
         }
         return std::string(node->GetString(), node->GetStringLength());
     }

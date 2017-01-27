@@ -21,7 +21,6 @@ namespace echo_client
 
         xclient(const xeus::xconfiguration& config,
                 const std::string& user_name,
-                int nb_msg,
                 zmq::context_t& context);
 
         void send_code(const std::string& code);
@@ -42,7 +41,6 @@ namespace echo_client
 
         std::string m_user_name;
         std::string m_session_id;
-        int m_nb_msg;
     };
 
 }

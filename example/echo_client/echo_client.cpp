@@ -35,7 +35,6 @@ std::mutex cout_mutex;
 
     xclient::xclient(const xeus::xconfiguration& config,
         const std::string& user_name,
-        int nb_msg,
         zmq::context_t& context)
         : m_shell(context, zmq::socket_type::req),
           m_control(context, zmq::socket_type::req),
@@ -43,8 +42,7 @@ std::mutex cout_mutex;
           p_authentication(xeus::make_xauthentication(config.m_signature_scheme, config.m_key)),
           p_io_authentication(xeus::make_xauthentication(config.m_signature_scheme, config.m_key)),
           m_user_name(user_name),
-          m_session_id(xeus::new_xguid().to_string()),
-          m_nb_msg(nb_msg)
+          m_session_id(xeus::new_xguid().to_string())
     {
         std::string sep = get_end_point(config.m_transport, config.m_ip, config.m_shell_port);
         m_shell.connect(sep);
@@ -134,8 +132,7 @@ std::mutex cout_mutex;
 
     void xclient::run_io_suscriber()
     {
-        int nb_rcv = 0;
-        while (nb_rcv < m_nb_msg * 2)
+        while (true)
         {
             zmq::multipart_t wire_msg;
             wire_msg.recv(m_iosub);
@@ -158,7 +155,6 @@ std::mutex cout_mutex;
             }
             else if(topic.substr(topic_size - 13, topic_size) == "execute_input")
             {
-                ++nb_rcv;
                 const xeus::xjson& content = msg.content();
                 const xeus::xjson::node_type* code_ptr = content.get_node("/code");
                 std::string code = std::string(code_ptr->GetString(), code_ptr->GetStringLength());
@@ -168,9 +164,17 @@ std::mutex cout_mutex;
                 oss << std::endl;
                 print(oss.str());
             }
+            else if(topic.substr(topic_size - 8, topic_size) == "shutdown")
+            {
+                const xeus::xjson& content = msg.content();
+                std::ostringstream oss;
+                oss << "Kernel shut down" << std::endl;
+                oss << std::endl;
+                print(oss.str());
+                break;
+            }
             else
             {
-                ++nb_rcv;
                 const xeus::xjson& content = msg.content();
                 int execution_count = content.get_int("/execution_count");
                 std::ostringstream oss;
