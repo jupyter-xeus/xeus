@@ -8,21 +8,32 @@ C++ implementation of the Jupyter Kernel protocol
 burden of implementing the Jupyter Kernel protocol so developers can focus on implementing the
 interpreter part of the Kernel.
 
-## Manual Building and installation
+## Building and Installing from Source
 
 `xeus` depends on the following libraries:
 
- - [libzmq](https://github.com/zeromq/libzmq)
- - [cppzmq](https://github.com/zeromq/cppzmq)
- - [rapidjson](https://github.com/miloyip/rapidjson)
- - [cryptopp](https://github.com/weidai11/cryptopp)
+ - [`libzmq`](https://github.com/zeromq/libzmq) ^4.2.1, [`cppzmq`](https://github.com/zeromq/cppzmq), [`rapidjson`](https://github.com/miloyip/rapidjson) and [`cryptopp`](https://github.com/weidai11/cryptopp).
 
-Depending on your system and the installation method you use, cmake may not be able to find them.
-In that case, a solution is to build these dependencies with cmake. On windows, you can use the
-"NMake Makefiles" generator so you don't have to open Visual Studio to compile and install. Be
-sure to run cmake from the Developer Command Prompt for Visual Studio.
+On Unix operating systems, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
 
-On Unix operating systems, `xeus` also depends on `libuuid`, which is generally provided as a package for common linux distribution (`uuid-dev` on Debian).
+We have packaged all these dependencies for the conda package manager. The simplest way to install them with
+conda is to run:
+
+```bash
+conda install cmake zeromq cppzmq rapidjson cryptopp libuuid -c conda-forge
+```
+
+Once you have installed the dependencies, you can build `xeus`:
+
+```bash
+cmake -D BUILD_EXAMPLES=ON -D CMAKE_BUILD_TYPE=Release
+make
+make install
+```
+
+If you need the `xeus` library only, you can omit the `BUILD_EXAMPLES` settings.
+
+## Installing the Dependencies from Source
 
 ### libzmq
 
@@ -32,8 +43,6 @@ cmake -D WITH_PERF_TOOL=OFF -D ZMQ_BUILD_TESTS=OFF -D ENABLE_CPACK=OFF
 make
 make install
 ```
-Note: this ensures you build the library only, tests and performance tools are not required
-for building `xeus`.
 
 ### cppzmq
 
@@ -65,16 +74,3 @@ cmake -D BUILD_SHARED=OFF -D BUILD_TESTING=OFF -D CMAKE_BUILD_TYPE=Release
 make
 make install
 ```
-
-### xeus
-
-Once you've built and installed the dependencies, you can build `xeus`:
-
-```bash
-cmake -D BUILD_EXAMPLES=ON -D CMAKE_BUILD_TYPE=Release
-make
-make install
-```
-
-If you need the `xeus` library only, you can omit the `BUILD_EXAMPLES` settings.
-
