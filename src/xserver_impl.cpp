@@ -12,8 +12,6 @@
 #include "zmq_addon.hpp"
 #include "xmiddleware.hpp"
 
-using namespace std::chrono_literals;
-
 namespace xeus
 {
 
@@ -103,7 +101,7 @@ namespace xeus
 
         stop_channels();
 
-        std::this_thread::sleep_for(50ms);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
     void xserver_impl::abort_queue_impl(const listener& l, long polling_interval)

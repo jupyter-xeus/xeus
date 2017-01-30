@@ -7,6 +7,7 @@
 ****************************************************************************/
 
 #include "xserver.hpp"
+#include "make_unique.hpp"
 #include "xserver_impl.hpp"
 
 namespace xeus
@@ -79,7 +80,7 @@ namespace xeus
     std::unique_ptr<xserver> make_xserver(zmq::context_t& context,
                                           const xconfiguration& config)
     {
-        return std::make_unique<xserver_impl>(context, config);
+        return ::xeus::make_unique<xserver_impl>(context, config);
     }
 
 }

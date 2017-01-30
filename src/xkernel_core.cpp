@@ -245,7 +245,7 @@ namespace xeus
         send_reply("comm_info_reply", xjson(), std::move(reply), c);
     }
 
-    void xkernel_core::kernel_info_request(const xmessage& request, channel c)
+    void xkernel_core::kernel_info_request(const xmessage& /* request */, channel c)
     {
         xjson reply = p_interpreter->kernel_info_request();
         reply.set_value("/protocol_version", get_protocol_version());

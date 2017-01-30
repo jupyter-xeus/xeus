@@ -10,6 +10,7 @@
 #include <cstddef>
 #include "xauthentication.hpp"
 #include "xstring_utils.hpp"
+#include "make_unique.hpp"
 #include "cryptopp/sha.h"
 #include "cryptopp/hmac.h"
 
@@ -92,9 +93,9 @@ namespace xeus
     {
         if (scheme == sha256_scheme)
         {
-            return std::make_unique<xauthentication_impl<CryptoPP::SHA256>>(key);
+            return ::xeus::make_unique<xauthentication_impl<CryptoPP::SHA256>>(key);
         }
-        return std::make_unique<no_xauthentication>();
+        return ::xeus::make_unique<no_xauthentication>();
     }
 
     template <class T>
