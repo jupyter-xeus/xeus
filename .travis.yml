@@ -52,9 +52,9 @@ matrix:
           packages:
             - clang-3.8
       env: COMPILER=clang CLANG=3.8
-    #- os: osx
-    #  osx_image: xcode8
-    #  compiler: clang
+    - os: osx
+      osx_image: xcode8
+      compiler: clang
 env:
   global:
     - MINCONDA_VERSION="latest"
