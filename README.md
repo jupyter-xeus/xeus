@@ -3,6 +3,7 @@
 [![Travis](https://travis-ci.org/QuantStack/xeus.svg?branch=master)](https://travis-ci.org/QuantStack/xeus)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/5alkw5iiere4mox2?svg=true)](https://ci.appveyor.com/project/QuantStack/xeus)
 [![Documentation Status](http://readthedocs.org/projects/xeus/badge/?version=latest)](https://xeus.readthedocs.io/en/latest/?badge=latest)
+[![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 C++ implementation of the Jupyter Kernel protocol
 
@@ -10,15 +11,87 @@ C++ implementation of the Jupyter Kernel protocol
 
 `xeus` is a library meant to facilitate the implementation of kernels for Jupyter. It takes the
 burden of implementing the Jupyter Kernel protocol so developers can focus on implementing the
-interpreter part of the Kernel.
+interpreter part of the kernel.
 
-## Building and Installing from Source
+## Installation
+
+`xeus` has been packaged on all platforms for the conda package manager.
+
+```
+conda install xeus -c conda-forge
+```
+
+## Usage
+
+`xeus` enables custom kernel authors to implement Jupyter kernels more easily. It takes the burden of implementing the Jupyter Kernel protocol so developers can focus on implementing the interpreter part of the Kernel.
+
+The easiest way to get started with a new kernel is to inherit from the base interpreter class `xeus::xinterpreter` and implement the private virtual methods:
+
+- `execute_request_impl`
+- `complete_request_impl` 
+- `inspect_request_impl`
+- `history_request_impl`
+- `is_complete_request_impl`
+- `comm_info_request_impl`
+
+as seen in the echo kernel provided as an example.
+
+
+```cpp
+#include "xeus/xinterpreter.hpp"
+
+using xeus::xinterpreter;
+using xeus::xjson;
+using xeus::xhistory_arguments;
+
+namespace echo_kernel
+{
+    class echo_interpreter : public xinterpreter
+    {
+
+    public:
+
+        echo_interpreter() = default;
+        virtual ~echo_interpreter() = default;
+
+    private:
+
+        xjson execute_request_impl(int execution_counter,
+                                   const std::string& code,
+                                   bool silent,
+                                   bool store_history,
+                                   const xjson::node_type* user_expressions,
+                                   bool allow_stdin) override;
+
+        xjson complete_request_impl(const std::string& code,
+                                    int cursor_pos) override;
+
+        xjson inspect_request_impl(const std::string& code,
+                                   int cursor_pos,
+                                   int detail_level) override;
+
+        xjson history_request_impl(const xhistory_arguments& args) override;
+
+        xjson is_complete_request_impl(const std::string& code) override;
+
+        xjson comm_info_request_impl(const std::string& target_name) override;
+
+        xjson kernel_info_request_impl() override;
+
+        void input_reply_impl(const std::string& value) override;
+    };
+}
+```
+
+Kernel authors can then rebind to the native APIs of the interpreter that is being interfaced, providing richer information than with the classical approach of a wrapper kernel capturing textual output.
+
+## Building from Source
 
 `xeus` depends on the following libraries:
 
  - [`libzmq`](https://github.com/zeromq/libzmq) ^4.2.1, [`cppzmq`](https://github.com/zeromq/cppzmq), [`rapidjson`](https://github.com/miloyip/rapidjson) and [`cryptopp`](https://github.com/weidai11/cryptopp).
 
-On Unix platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
+On Linux platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
 
 We have packaged all these dependencies for the conda package manager. The simplest way to install them with
 conda is to run:
@@ -27,7 +100,7 @@ conda is to run:
 conda install cmake zeromq cppzmq rapidjson cryptopp -c conda-forge
 ```
 
-On Unix platform, you will also need:
+On Linux platform, you will also need:
 
 ```bash
 conda install libuuid -c conda-forge
@@ -44,6 +117,8 @@ make install
 If you need the `xeus` library only, you can omit the `BUILD_EXAMPLES` settings.
 
 ## Installing the Dependencies from Source
+
+The dependencies can also be installed from source. Simply clone the directories and run the following cmake and make instructions.
 
 ### libzmq
 
@@ -76,8 +151,7 @@ make install
 
 ### cryptopp
 
-`cryptopp` must be built as a static library, the shared library build doest' work on
-Windows.
+`cryptopp` must be built as a static library. Building cryptopp as a shared library is not supported on Windows.
 
 ```bash
 cmake -D BUILD_SHARED=OFF -D BUILD_TESTING=OFF -D CMAKE_BUILD_TYPE=Release

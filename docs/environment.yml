@@ -1,0 +1,9 @@
+name: xeus-docs
+
+channels:
+  - conda-forge
+
+dependencies:
+  - sphinx
+  - pip:
+    - breathe
