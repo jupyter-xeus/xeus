@@ -241,7 +241,7 @@ namespace xeus
         const xjson& content = request.content();
         std::string target_name = content.get_string("/target_name", "");
 
-        xjson reply = p_interpreter->comm_info_request(target_name);
+        xjson reply;
         send_reply("comm_info_reply", xjson(), std::move(reply), c);
     }
 
