@@ -98,20 +98,6 @@ namespace echo_kernel
         return result;
     }
 
-    xjson echo_interpreter::comm_info_request_impl(const std::string& target_name)
-    {
-        std::cout << "Received comm_info_request" << std::endl;
-        std::cout << "target_name " << target_name << std::endl;
-        std::cout << std::endl;
-        xjson result;
-        std::string uid = xeus::new_xguid().to_string();
-        std::string snode_name = "/comms/" + uid + "/target_name";
-        char node_name[35];
-        std::copy(snode_name.begin(), snode_name.end(), node_name);
-        result.set_value(node_name, target_name);
-        return result;
-    }
-
     xjson echo_interpreter::kernel_info_request_impl()
     {
         xjson result;

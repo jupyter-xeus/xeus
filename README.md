@@ -32,7 +32,6 @@ The easiest way to get started with a new kernel is to inherit from the base int
 - `inspect_request_impl`
 - `history_request_impl`
 - `is_complete_request_impl`
-- `comm_info_request_impl`
 
 as seen in the echo kernel provided as an example.
 
@@ -73,8 +72,6 @@ namespace echo_kernel
         xjson history_request_impl(const xhistory_arguments& args) override;
 
         xjson is_complete_request_impl(const std::string& code) override;
-
-        xjson comm_info_request_impl(const std::string& target_name) override;
 
         xjson kernel_info_request_impl() override;
 

@@ -53,11 +53,6 @@ namespace xeus
         return is_complete_request_impl(code);
     }
 
-    xjson xinterpreter::comm_info_request(const std::string& target_name)
-    {
-        return comm_info_request_impl(target_name);
-    }
-
     xjson xinterpreter::kernel_info_request()
     {
         return kernel_info_request_impl();

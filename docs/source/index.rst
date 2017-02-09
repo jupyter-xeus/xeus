@@ -4,8 +4,7 @@
 
    The full license is in the file LICENSE, distributed with this software.
 
-xeus
-====
+.. image:: http://quantstack.net/assets/images/xeus.svg
 
 C++ implementation of the Jupyter Kernel protocol
 
@@ -23,7 +22,13 @@ copyright on their contributions.
 This software is licensed under the BSD-3-Clause license. See the LICENSE file for details.
 
 .. toctree::
-   :maxdepth: 3
+   :caption: INSTALLATION
+   :maxdepth: 2
 
    installation
+
+.. toctree::
+   :caption: USAGE
+   :maxdepth: 2
+
    usage

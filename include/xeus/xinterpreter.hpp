@@ -60,7 +60,6 @@ namespace xeus
 
         xjson history_request(const xhistory_arguments& args);
         xjson is_complete_request(const std::string& code);
-        xjson comm_info_request(const std::string& target_name);
         xjson kernel_info_request();
 
         // publish(msg_type, metadata, content) 
@@ -102,8 +101,6 @@ namespace xeus
         virtual xjson history_request_impl(const xhistory_arguments& args) = 0;
 
         virtual xjson is_complete_request_impl(const std::string& code) = 0;
-
-        virtual xjson comm_info_request_impl(const std::string& target_name) = 0;
 
         virtual xjson kernel_info_request_impl() = 0;
 
