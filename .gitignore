@@ -30,7 +30,11 @@
 # Vim tmp files
 *.swp
 
+# Build directory
+build/
+
 # Test build artefacts
+test/test_xproperty
 test/CMakeCache.txt
 test/Makefile
 test/CMakeFiles/
@@ -40,9 +44,6 @@ test/cmake_install.cmake
 docs/CMakeCache.txt
 docs/xml/
 docs/build/
-
-# Build directory
-build/
 
 # Jupyter artefacts
 .ipynb_checkpoints/
