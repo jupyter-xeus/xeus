@@ -4,7 +4,7 @@
 
    The full license is in the file LICENSE, distributed with this software.
 
-.. image:: http://quantstack.net/assets/images/xeus.svg
+.. image:: xeus.svg
    :alt: xeus
 
 C++ implementation of the Jupyter Kernel protocol
