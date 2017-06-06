@@ -46,8 +46,8 @@ namespace xeus
         zmq::context_t context;
         server_ptr server = m_builder(context, m_config);
 
-        std::string kernel_id = new_xguid().to_string();
-        std::string session_id = new_xguid().to_string();
+        std::string kernel_id = xguid().to_string();
+        std::string session_id = xguid().to_string();
 
         using authentication_ptr = xkernel_core::authentication_ptr;
         authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
