@@ -24,51 +24,20 @@
 namespace xeus
 {
 
-    xguid::xguid(const char* buffer)
+    xguid::xguid()
     {
-        std::copy(buffer, buffer + GUID_SIZE, m_buffer.begin());
-    }
-
-    xguid::xguid(const unsigned char* buffer)
-    {
-        std::copy(buffer, buffer + GUID_SIZE, m_buffer.begin());
-    }
-
-    xguid::xguid(const buffer_type& buffer)
-        : m_buffer(buffer)
-    {
-    }
-
-    const unsigned char* xguid::buffer() const
-    {
-        return m_buffer.data();
-    }
-
-    std::string xguid::to_string() const
-    {
-        std::string res = hex_string(m_buffer);
-        return res;
-    }
-
 #ifdef GUID_LIBUUID
-
-    xguid new_xguid()
-    {
         uuid_t id;
         uuid_generate(id);
-        return id;
-    }
+        std::copy(id, id + GUID_SIZE, m_buffer.begin());
 #endif
 
 #ifdef GUID_CFUUID
-
-    xguid new_xguid()
-    {
         auto id = CFUUIDCreate(NULL);
         auto bytes = CFUUIDGetUUIDBytes(id);
         CFRelease(id);
 
-        std::array<unsigned char, 16> buffer =
+        m_buffer =
         {
             bytes.byte0,
             bytes.byte1,
@@ -87,28 +56,24 @@ namespace xeus
             bytes.byte14,
             bytes.byte15
         };
-        return buffer;
-    }
-
 #endif
 
 #ifdef GUID_WINDOWS
-
-    xguid new_xguid()
-    {
         GUID id;
         CoCreateGuid(&id);
 
-        std::array<unsigned char, 16> buffer =
+        using uchar = unsigned char;
+
+        m_buffer =
         {
-            (id.Data1 >> 24) & 0xFF,
-            (id.Data1 >> 16) & 0xFF,
-            (id.Data1 >> 8) & 0xFF,
-            (id.Data1) & 0xFF,
-            (id.Data2 >> 8) & 0xFF,
-            (id.Data2) & 0xFF,
-            (id.Data3 >> 8) & 0xFF,
-            (id.Data3) & 0xFF,
+            uchar(id.Data1 >> 24 & 0xFF),
+            uchar(id.Data1 >> 16 & 0xFF),
+            uchar(id.Data1 >> 8 & 0xFF),
+            uchar(id.Data1 & 0xFF),
+            uchar(id.Data2 >> 8 & 0xFF),
+            uchar(id.Data2 & 0xFF),
+            uchar(id.Data3 >> 8 & 0xFF),
+            uchar(id.Data3 & 0xFF),
             id.Data4[0],
             id.Data4[1],
             id.Data4[2],
@@ -118,9 +83,11 @@ namespace xeus
             id.Data4[6],
             id.Data4[7]
         };
-
-        return buffer;
-    }
 #endif
+    }
 
+    std::string xguid::to_string() const noexcept
+    {
+        return hex_string(m_buffer);
+    }
 }

@@ -9,10 +9,12 @@
 #include <iostream>
 #include <thread>
 #include <sstream>
+#include <mutex>
+#include <cstddef>
+
 #include "echo_client.hpp"
 #include "xeus/xmessage.hpp"
 #include "xeus/xguid.hpp"
-#include <mutex>
 
 namespace echo_client
 {
@@ -42,7 +44,7 @@ std::mutex cout_mutex;
           p_authentication(xeus::make_xauthentication(config.m_signature_scheme, config.m_key)),
           p_io_authentication(xeus::make_xauthentication(config.m_signature_scheme, config.m_key)),
           m_user_name(user_name),
-          m_session_id(xeus::new_xguid().to_string())
+          m_session_id(xeus::xguid().to_string())
     {
         std::string sep = get_end_point(config.m_transport, config.m_ip, config.m_shell_port);
         m_shell.connect(sep);
@@ -140,7 +142,7 @@ std::mutex cout_mutex;
             xeus::xpub_message msg;
             msg.deserialize(wire_msg, *p_io_authentication);
             const std::string& topic = msg.topic();
-            size_t topic_size = topic.size();
+            std::size_t topic_size = topic.size();
 
             if (topic.substr(topic_size - 6, topic_size) == "status")
             {

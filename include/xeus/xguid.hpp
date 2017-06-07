@@ -12,38 +12,66 @@
 #include <cstddef>
 #include <array>
 #include <string>
+
 #include "xeus.hpp"
 
 namespace xeus
 {
+    /*********************
+     * xguid declaration *
+     *********************/
+
     class XEUS_API xguid
     {
-
     public:
 
         static constexpr std::size_t GUID_SIZE = 16;
         using buffer_type = std::array<unsigned char, GUID_SIZE>;
 
+        xguid();
         xguid(const char* buffer);
-        xguid(const unsigned char* buffer);
-        xguid(const buffer_type& buffer);
+        const buffer_type& buffer() const noexcept;
 
-        const unsigned char* buffer() const;
-        static constexpr std::size_t buffer_size()
-        {
-            return GUID_SIZE;
-        }
+        std::string to_string() const noexcept;
 
-        std::string to_string() const;
+        bool equal(const xguid& other) const noexcept;
 
     private:
 
         buffer_type m_buffer;
     };
 
-    XEUS_API
-    xguid new_xguid();
+    bool operator==(const xguid&, const xguid&);
+    bool operator!=(const xguid&, const xguid&);
 
+    /************************
+     * xguid implementation *
+     ************************/
+
+    inline xguid::xguid(const char* buffer)
+    {
+        std::copy(buffer, buffer + GUID_SIZE, m_buffer.begin());
+    }
+
+    inline const typename xguid::buffer_type& xguid::buffer() const noexcept
+    {
+        return m_buffer;
+    }
+
+    inline bool xguid::equal(const xguid& other) const noexcept
+    {
+        return m_buffer == other.m_buffer;
+    }
+
+    inline bool operator==(const xguid& lhs, const xguid& rhs)
+    {
+        return lhs.equal(rhs);
+    }
+
+    inline bool operator!=(const xguid& lhs, const xguid& rhs)
+    {
+        return !lhs.equal(rhs);
+    }
 }
 
 #endif

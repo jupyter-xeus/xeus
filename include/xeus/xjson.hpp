@@ -17,7 +17,10 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+
 #include "xeus.hpp"
+#include "xguid.hpp"
+
 #include "rapidjson/document.h"
 #include "rapidjson/pointer.h"
 #include "rapidjson/writer.h"
@@ -66,6 +69,12 @@ namespace xeus
         std::string get_string(const char_type(&name)[N], const std::string& default_value) const;
 
         template <class char_type, std::size_t N>
+        xguid get_xguid(const char_type(&name)[N]) const;
+
+        template <class char_type, std::size_t N>
+        xguid get_xguid(const char_type(&name)[N], xguid default_value) const;
+
+        template <class char_type, std::size_t N>
         const node_type* get_node(const char_type(&name)[N]) const;
 
         template <class char_type, std::size_t N>
@@ -79,6 +88,9 @@ namespace xeus
 
         template <class char_type, std::size_t N, class T>
         void set_value(const char_type(&name)[N], const std::vector<T>& value);
+
+        template <class char_type, std::size_t N>
+        void set_value(const char_type(&name)[N], xguid value);
 
         template <class char_type, std::size_t N>
         void add_subtree(const char_type(&name)[N], xjson& subtree);
@@ -168,6 +180,34 @@ namespace xeus
     }
 
     template <class char_type, std::size_t N>
+    inline xguid xjson::get_xguid(const char_type(&name)[N]) const
+    {
+        const node_type* node = get_string_impl(name);
+        if (node == nullptr || node->GetStringLength() != xguid::GUID_SIZE)
+        {
+            throw std::runtime_error("Invalid UUID in json for attribute: " + std::string(name));
+        }
+        else
+        {
+            return xguid(node->GetString());
+        }
+    }
+
+    template <class char_type, std::size_t N>
+    inline xguid xjson::get_xguid(const char_type(&name)[N], xguid default_value) const
+    {
+        const node_type* node = get_string_impl(name);
+        if (node == nullptr || node->GetStringLength() != xguid::GUID_SIZE)
+        {
+            return default_value;
+        }
+        else
+        {
+            return xguid(node->GetString());
+        }
+    }
+
+    template <class char_type, std::size_t N>
     inline auto xjson::get_node(const char_type(&name)[N]) const -> const node_type*
     {
         return rapidjson::Pointer(name).Get(m_document);
@@ -203,6 +243,15 @@ namespace xeus
             ptr[N] = std::to_string(i).c_str()[0];
             SetValueByPointer(m_document, ptr, value[i]);
         }
+    }
+
+    template <class char_type, std::size_t N>
+    inline void xjson::set_value(const char_type(&name)[N], xguid value)
+    {
+        init_root();
+        auto tmp = rapidjson::Value();
+        tmp.SetString(reinterpret_cast<const char*>(value.buffer().data()), xguid::GUID_SIZE, m_document.GetAllocator());
+        m_document.AddMember(name, tmp.Move(), m_document.GetAllocator());
     }
 
     template <class char_type, std::size_t N>
