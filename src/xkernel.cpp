@@ -10,8 +10,32 @@
 #include "xguid.hpp"
 #include "xkernel_core.hpp"
 
+#if (defined(__linux__) || defined(__unix__))
+#define LINUX_PLATFORM
+#elif (defined(_WIN32) || defined(_WIN64))
+#define WINDOWS_PLATFORM
+#endif
+
+#if defined(LINUX_PLATFORM)
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#endif
+
 namespace xeus
 {
+    std::string get_user_name()
+    {
+#if defined(LINUX_PLATFORM)
+        struct passwd *pws;
+        pws = getpwuid(geteuid());
+        std::string res = pws->pw_name;
+        return res;
+#else
+        return "unspecified user";
+#endif
+    }
+
     void build_start_msg(xkernel_core::authentication_ptr& auth,
                          const std::string& kernel_id,
                          const std::string& user_name,

@@ -10,6 +10,7 @@
 #define XKERNEL_HPP
 
 #include <memory>
+#include <string>
 #include "xeus.hpp"
 #include "xkernel_configuration.hpp"
 #include "xinterpreter.hpp"
@@ -17,6 +18,9 @@
 
 namespace xeus
 {
+
+    XEUS_API
+    std::string get_user_name();
 
     class XEUS_API xkernel
     {
