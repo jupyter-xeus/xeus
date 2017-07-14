@@ -36,7 +36,7 @@ namespace xeus
         using document_type = rapidjson::Document;
         using node_type = document_type::ValueType;
         
-        xjson() = default;
+        xjson();
         xjson(document_type&& document);
         ~xjson() = default;
 

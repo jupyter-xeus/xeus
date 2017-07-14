@@ -10,6 +10,11 @@
 
 namespace xeus
 {
+    xjson::xjson()
+    {
+        init_root();
+    }
+
     xjson::xjson(document_type&& document)
         : m_document(std::move(document))
     {
