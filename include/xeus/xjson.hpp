@@ -96,10 +96,13 @@ namespace xeus
         void add_subtree(const char_type(&name)[N], xjson& subtree);
 
         template <class char_type, std::size_t N>
+        void add_subtree(const char_type(&name)[N], xjson&& subtree);
+
+        template <class char_type, std::size_t N>
         void add_subtree(const char_type(&name)[N], const node_type& node);
 
         template <class char_type, std::size_t N>
-        void add_subtree(const char_type(&node_name)[N], const xjson& document);
+        void copy_subtree(const char_type(&node_name)[N], const xjson& document);
 
         template <class char_type, std::size_t N>
         void add_member(const char_type(&name)[N], const std::string& value);
@@ -268,6 +271,13 @@ namespace xeus
     }
 
     template <class char_type, std::size_t N>
+    inline void xjson::add_subtree(const char_type(&name)[N], xjson&& subtree)
+    {
+        init_root();
+        m_document.AddMember(name, subtree.m_document, m_document.GetAllocator());
+    }
+
+    template <class char_type, std::size_t N>
     inline void xjson::add_subtree(const char_type(&name)[N], const node_type& node)
     {
         init_root();
@@ -277,7 +287,7 @@ namespace xeus
     }
 
     template <class char_type, std::size_t N>
-    inline void xjson::add_subtree(const char_type(&node_name)[N], const xjson& document)
+    inline void xjson::copy_subtree(const char_type(&node_name)[N], const xjson& document)
     {
         const node_type* node = get_node(node_name);
         if (node == nullptr)
