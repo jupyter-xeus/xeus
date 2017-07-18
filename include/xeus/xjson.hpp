@@ -96,6 +96,12 @@ namespace xeus
         void add_subtree(const char_type(&name)[N], xjson& subtree);
 
         template <class char_type, std::size_t N>
+        void add_subtree(const char_type(&name)[N], const node_type& node);
+
+        template <class char_type, std::size_t N>
+        void add_subtree(const char_type(&node_name)[N], const xjson& document);
+
+        template <class char_type, std::size_t N>
         void add_member(const char_type(&name)[N], const std::string& value);
 
         void parse(const char* buffer, std::size_t length);
@@ -259,6 +265,26 @@ namespace xeus
     {
         init_root();
         m_document.AddMember(name, subtree.m_document, m_document.GetAllocator());
+    }
+
+    template <class char_type, std::size_t N>
+    inline void xjson::add_subtree(const char_type(&name)[N], const node_type& node)
+    {
+        init_root();
+        document_type tmp_doc;
+        tmp_doc.CopyFrom(node, tmp_doc.GetAllocator());
+        m_document.AddMember(name, tmp_doc, m_document.GetAllocator());
+    }
+
+    template <class char_type, std::size_t N>
+    inline void xjson::add_subtree(const char_type(&node_name)[N], const xjson& document)
+    {
+        const node_type* node = get_node(node_name);
+        if (node == nullptr)
+        {
+            throw std::runtime_error("Attribute " + std::string(node_name) +  " not found in json");
+        }
+        add_subtree(node_name, *node);
     }
 
     template <class char_type, std::size_t N>
