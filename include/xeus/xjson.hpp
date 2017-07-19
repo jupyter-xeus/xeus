@@ -34,9 +34,11 @@ namespace xeus
     public:
 
         using document_type = rapidjson::Document;
+        using allocator_type = document_type::AllocatorType;
         using node_type = document_type::ValueType;
         
         xjson();
+        xjson(allocator_type& alloc);
         xjson(document_type&& document);
         ~xjson() = default;
 
@@ -49,6 +51,8 @@ namespace xeus
 
         // ... unless it is absolutely what we want
         xjson copy() const;
+
+        allocator_type& get_allocator();
 
         template <class char_type, std::size_t N>
         bool get_bool(const char_type(&name)[N]) const;
