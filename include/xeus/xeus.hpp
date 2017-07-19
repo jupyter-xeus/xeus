@@ -20,7 +20,7 @@
 #endif
 
 #define XEUS_VERSION_MAJOR 0
-#define XEUS_VERSION_MINOR 2
-#define XEUS_VERSION_PATCH 4
+#define XEUS_VERSION_MINOR 3
+#define XEUS_VERSION_PATCH 0
 
 #endif
