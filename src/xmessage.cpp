@@ -6,6 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <cstddef>
+
 #include "xmessage.hpp"
 #include "xguid.hpp"
 
@@ -40,7 +42,7 @@ namespace xeus
 
     bool xmessage_base::is_delimiter(zmq::message_t& frame) const
     {
-        size_t frame_size = frame.size();
+        std::size_t frame_size = frame.size();
         if (frame_size != xmessage_base::DELIMITER.size())
             return false;
 
@@ -202,7 +204,7 @@ namespace xeus
                       const std::string& session_id)
     {
         xjson header;
-        header.set_value("/msg_id", xguid().to_string());
+        header.set_value("/msg_id", guid_to_hex(xguid()));
         header.set_value("/username", user_name);
         header.set_value("/session", session_id);
         header.set_value("/date", iso8601_now());

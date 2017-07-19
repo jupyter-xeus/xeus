@@ -12,6 +12,7 @@
 #include <string>
 #include <functional>
 #include <vector>
+
 #include "xeus.hpp"
 #include "xjson.hpp"
 
@@ -33,10 +34,9 @@ namespace xeus
 
     class XEUS_API xinterpreter
     {
-
     public:
 
-        xinterpreter() = default;
+        xinterpreter();
         virtual ~xinterpreter() = default;
 
         xinterpreter(const xinterpreter&) = delete;
@@ -44,6 +44,8 @@ namespace xeus
 
         xinterpreter(xinterpreter&&) = delete;
         xinterpreter& operator=(xinterpreter&&) = delete;
+
+        void configure();
 
         xjson execute_request(const std::string& code,
                               bool silent,
@@ -62,9 +64,9 @@ namespace xeus
         xjson is_complete_request(const std::string& code);
         xjson kernel_info_request();
 
-        // publish(msg_type, metadata, content) 
-        using publisher = std::function<void(const std::string&, xjson, xjson)>;
-        void register_publisher(const publisher& pub);
+        // publish(msg_type, metadata, content)
+        using publisher_type = std::function<void(const std::string&, xjson, xjson)>;
+        void register_publisher(const publisher_type& publisher);
 
         void publish_stream(const std::string& name, const std::string& text);
         void display_data(xjson data, xjson metadata, xjson transient);
@@ -76,13 +78,15 @@ namespace xeus
         void clear_output(bool wait);
 
         // send_stdin(msg_type, metadata, content)
-        using stdin_sender = std::function<void(const std::string&, xjson, xjson)>;
-        void register_stdin_sender(const stdin_sender& sender);
+        using stdin_sender_type = std::function<void(const std::string&, xjson, xjson)>;
+        void register_stdin_sender(const stdin_sender_type& sender);
 
         void input_request(const std::string& prompt, bool pwd);
         void input_reply(const std::string& value);
 
     private:
+
+        virtual void configure_impl() = 0;
 
         virtual xjson execute_request_impl(int execution_counter,
                                            const std::string& code,
@@ -108,8 +112,8 @@ namespace xeus
 
         xjson build_display_content(xjson data, xjson metadata, xjson transient);
 
-        publisher m_publisher;
-        stdin_sender m_stdin;
+        publisher_type m_publisher;
+        stdin_sender_type m_stdin;
         int m_execution_count;
     };
 

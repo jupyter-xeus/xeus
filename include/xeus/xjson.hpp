@@ -14,7 +14,7 @@
 #endif
 
 #include <cstddef>
-#include <iostream>
+#include <ostream>
 #include <vector>
 #include <stdexcept>
 
@@ -30,7 +30,6 @@ namespace xeus
 
     class XEUS_API xjson
     {
-
     public:
 
         using document_type = rapidjson::Document;
@@ -83,6 +82,9 @@ namespace xeus
 
         template <class char_type, std::size_t N>
         void create_value(const char_type(&name)[N]);
+
+        template <class T>
+        void set(T& value);
 
         template <class char_type, std::size_t N, class T>
         void set_value(const char_type(&name)[N], T value);
@@ -196,13 +198,13 @@ namespace xeus
     inline xguid xjson::get_xguid(const char_type(&name)[N]) const
     {
         const node_type* node = get_string_impl(name);
-        if (node == nullptr || node->GetStringLength() != xguid::GUID_SIZE)
+        if (node == nullptr || node->GetStringLength() != 2 * xguid::GUID_SIZE)
         {
             throw std::runtime_error("Invalid UUID in json for attribute: " + std::string(name));
         }
         else
         {
-            return xguid(node->GetString());
+            return hex_to_guid(node->GetString());
         }
     }
 
@@ -216,7 +218,7 @@ namespace xeus
         }
         else
         {
-            return xguid(node->GetString());
+            return hex_to_guid(node->GetString());
         }
     }
 
@@ -230,6 +232,12 @@ namespace xeus
     void xjson::create_value(const char_type(&name)[N])
     {
         rapidjson::CreateValueByPointer(m_document, name);
+    }
+
+    template <class T>
+    void xjson::set(T& value)
+    {
+        m_document.CopyFrom(value, m_document.GetAllocator());
     }
 
     template <class char_type, std::size_t N, class T>
@@ -261,10 +269,7 @@ namespace xeus
     template <class char_type, std::size_t N>
     inline void xjson::set_value(const char_type(&name)[N], xguid value)
     {
-        init_root();
-        auto tmp = rapidjson::Value();
-        tmp.SetString(reinterpret_cast<const char*>(value.buffer().data()), xguid::GUID_SIZE, m_document.GetAllocator());
-        m_document.AddMember(name, tmp.Move(), m_document.GetAllocator());
+        return set_value(name, guid_to_hex(value));
     }
 
     template <class char_type, std::size_t N>
@@ -354,6 +359,12 @@ namespace xeus
         return node;
     }
 
+    inline std::ostream& operator<<(std::ostream& out, const xjson& e)
+    {
+        rapidjson::StringBuffer buffer;
+        e.write(buffer);
+        return out << buffer.GetString();
+    }
 }
 
 #endif

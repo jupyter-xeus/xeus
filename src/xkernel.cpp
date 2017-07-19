@@ -67,11 +67,8 @@ namespace xeus
 
     void xkernel::start()
     {
-        zmq::context_t context;
-        server_ptr server = m_builder(context, m_config);
-
-        std::string kernel_id = xguid().to_string();
-        std::string session_id = xguid().to_string();
+        std::string kernel_id = guid_to_hex(xguid());
+        std::string session_id = guid_to_hex(xguid());
 
         using authentication_ptr = xkernel_core::authentication_ptr;
         authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
@@ -79,9 +76,13 @@ namespace xeus
         zmq::multipart_t start_msg;
         build_start_msg(auth, kernel_id, m_user_name, session_id, start_msg);
 
+        zmq::context_t context;
+        server_ptr server = m_builder(context, m_config);
+
         xkernel_core core(kernel_id, m_user_name, session_id,
                           std::move(auth), server.get(), p_interpreter.get());
 
+        p_interpreter->configure(); 
         server->start(start_msg);
     }
 

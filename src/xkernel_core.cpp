@@ -6,8 +6,13 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xkernel_core.hpp"
+#include <exception>
+#include <functional>
 #include <iostream>
+#include <string>
+#include <tuple>
+
+#include "xkernel_core.hpp"
 
 using namespace std::placeholders;
 
@@ -75,8 +80,6 @@ namespace xeus
 
         const xjson& header = msg.header();
         std::string msg_type = header.get_string("/msg_type", "");
-
-
     }
 
     void xkernel_core::publish_message(const std::string& msg_type,
@@ -137,9 +140,9 @@ namespace xeus
             {
                 (this->*handler)(msg, c);
             }
-            catch (std::exception&)
+            catch (std::exception& e)
             {
-                std::cout << "ERROR: received bad message" << std::endl;
+                std::cout << "ERROR: received bad message: " << e.what() << std::endl;
             }
         }
 
@@ -182,9 +185,10 @@ namespace xeus
                 p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), 50);
             }
         }
-        catch (std::exception&)
+        catch (std::exception& e)
         {
-            // TODO : log received bad message
+            std::cout << "ERROR: during execute_request" << std::endl;
+            std::cout << e.what() << std::endl;
         }
     }
 
@@ -323,9 +327,9 @@ namespace xeus
         {
             msg.deserialize(wire_msg, *p_auth);
         }
-        catch (std::exception&)
+        catch (std::exception& e)
         {
-            // TODO : log error
+            std::cout << "ERROR: during execute_request: " << e.what() << std::endl;
             return;
         }
         const xjson& header = msg.header();
@@ -370,5 +374,4 @@ namespace xeus
     {
         return m_parent_header.copy();
     }
-
 }

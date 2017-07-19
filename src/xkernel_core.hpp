@@ -10,6 +10,7 @@
 #define XKERNEL_CORE_HPP
 
 #include <map>
+
 #include "xserver.hpp"
 #include "xinterpreter.hpp"
 #include "xauthentication.hpp"
@@ -20,7 +21,6 @@ namespace xeus
 
     class xkernel_core
     {
-
     public:
 
         using authentication_ptr = std::unique_ptr<xauthentication>;
@@ -67,6 +67,7 @@ namespace xeus
         void history_request(const xmessage& request, channel c);
         void is_complete_request(const xmessage& request, channel c);
         void comm_info_request(const xmessage& request, channel c);
+
         void kernel_info_request(const xmessage& request, channel c);
         void shutdown_request(const xmessage& request, channel c);
 
@@ -103,7 +104,6 @@ namespace xeus
         authentication_ptr p_auth;
 
         std::map<std::string, handler_type> m_handler;
-
         server_ptr p_server;
         interpreter_ptr p_interpreter;
 

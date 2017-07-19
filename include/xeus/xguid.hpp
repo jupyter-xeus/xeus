@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <array>
 #include <string>
+#include <algorithm>
 
 #include "xeus.hpp"
 
@@ -21,6 +22,16 @@ namespace xeus
      * xguid declaration *
      *********************/
 
+    /**
+     * @class xguid
+     * @brief Globally unique identifier.
+     *
+     * Instances of xguid are stack allocated and implement a value semantics.
+     * Instances of xguid can be used as keys in std::map and std::unordered maps.
+     * The unique identifier is computed upon creation of the object, rebinding on
+     * the implementation of the operating system.
+     *
+     */
     class XEUS_API xguid
     {
     public:
@@ -29,38 +40,39 @@ namespace xeus
         using buffer_type = std::array<unsigned char, GUID_SIZE>;
 
         xguid();
-        xguid(const char* buffer);
-        const buffer_type& buffer() const noexcept;
-
-        std::string to_string() const noexcept;
 
         bool equal(const xguid& other) const noexcept;
+        bool lesser(const xguid& other) const noexcept;
 
     private:
 
+        xguid(const char*);
+
         buffer_type m_buffer;
+
+        friend XEUS_API std::string guid_to_hex(xguid uuid);
+        friend XEUS_API xguid hex_to_guid(const char* hex);
     };
 
     bool operator==(const xguid&, const xguid&);
     bool operator!=(const xguid&, const xguid&);
+    bool operator<(const xguid&, const xguid&);
+
+    XEUS_API std::string guid_to_hex(xguid uuid);
+    XEUS_API xguid hex_to_guid(const char* hex);
 
     /************************
      * xguid implementation *
      ************************/
 
-    inline xguid::xguid(const char* buffer)
-    {
-        std::copy(buffer, buffer + GUID_SIZE, m_buffer.begin());
-    }
-
-    inline const typename xguid::buffer_type& xguid::buffer() const noexcept
-    {
-        return m_buffer;
-    }
-
     inline bool xguid::equal(const xguid& other) const noexcept
     {
         return m_buffer == other.m_buffer;
+    }
+
+    inline bool xguid::lesser(const xguid& other) const noexcept
+    {
+        return std::lexicographical_compare(m_buffer.begin(), m_buffer.end(), other.m_buffer.begin(), other.m_buffer.end());
     }
 
     inline bool operator==(const xguid& lhs, const xguid& rhs)
@@ -71,6 +83,11 @@ namespace xeus
     inline bool operator!=(const xguid& lhs, const xguid& rhs)
     {
         return !lhs.equal(rhs);
+    }
+
+    inline bool operator<(const xguid& lhs, const xguid& rhs)
+    {
+        return lhs.lesser(rhs);
     }
 }
 
