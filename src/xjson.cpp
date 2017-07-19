@@ -15,6 +15,11 @@ namespace xeus
         init_root();
     }
 
+    xjson::xjson(allocator_type& alloc)
+        : m_document(&alloc)
+    {
+    }
+
     xjson::xjson(document_type&& document)
         : m_document(std::move(document))
     {
@@ -26,6 +31,11 @@ namespace xeus
         document_type res;
         res.CopyFrom(m_document, allocator);
         return xjson(std::move(res));
+    }
+
+    xjson::allocator_type& xjson::get_allocator()
+    {
+        return m_document.GetAllocator();
     }
 
     void xjson::parse(const char* buffer, std::size_t length)
