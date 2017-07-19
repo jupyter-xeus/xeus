@@ -16,7 +16,6 @@ namespace xeus
 
     class xpublisher
     {
-
     public:
 
         xpublisher(zmq::context_t& context,

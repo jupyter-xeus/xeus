@@ -13,6 +13,10 @@
 namespace echo_kernel
 {
 
+    void echo_interpreter::configure_impl()
+    {
+    }
+
     xjson echo_interpreter::execute_request_impl(int execution_counter,
                                                  const std::string& code,
                                                  bool silent,

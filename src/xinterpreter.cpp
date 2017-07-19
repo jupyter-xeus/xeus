@@ -11,6 +11,15 @@
 namespace xeus
 {
 
+    xinterpreter::xinterpreter() : m_execution_count(0)
+    {
+    }
+
+    void xinterpreter::configure()
+    {
+        configure_impl();
+    }
+
     xjson xinterpreter::execute_request(const std::string& code,
                                         bool silent,
                                         bool store_history,
@@ -58,9 +67,9 @@ namespace xeus
         return kernel_info_request_impl();
     }
 
-    void xinterpreter::register_publisher(const publisher& pub)
+    void xinterpreter::register_publisher(const publisher_type& publisher)
     {
-        m_publisher = pub;
+        m_publisher = publisher;
     }
 
     void xinterpreter::publish_stream(const std::string& name, const std::string& text)
@@ -121,7 +130,7 @@ namespace xeus
         m_publisher("clear_output", xjson(), std::move(content));
     }
 
-    void xinterpreter::register_stdin_sender(const stdin_sender& sender)
+    void xinterpreter::register_stdin_sender(const stdin_sender_type& sender)
     {
         m_stdin = sender;
     }

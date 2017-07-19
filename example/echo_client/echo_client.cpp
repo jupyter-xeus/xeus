@@ -44,7 +44,7 @@ std::mutex cout_mutex;
           p_authentication(xeus::make_xauthentication(config.m_signature_scheme, config.m_key)),
           p_io_authentication(xeus::make_xauthentication(config.m_signature_scheme, config.m_key)),
           m_user_name(user_name),
-          m_session_id(xeus::xguid().to_string())
+          m_session_id(guid_to_hex(xeus::xguid()))
     {
         std::string sep = get_end_point(config.m_transport, config.m_ip, config.m_shell_port);
         m_shell.connect(sep);

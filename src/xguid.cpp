@@ -86,8 +86,21 @@ namespace xeus
 #endif
     }
 
-    std::string xguid::to_string() const noexcept
+    xguid::xguid(const char* hex)
     {
-        return hex_string(m_buffer);
+        for (std::size_t i = 0; i < GUID_SIZE; ++i)
+        {
+            m_buffer[i] = (unsigned char)strtol(hex + 2 * i, NULL, 16);
+        }
+    }
+
+    std::string guid_to_hex(xguid uuid)
+    {
+        return hex_string(uuid.m_buffer);
+    }
+
+    xguid hex_to_guid(const char* hex)
+    {
+        return xguid(hex);
     }
 }

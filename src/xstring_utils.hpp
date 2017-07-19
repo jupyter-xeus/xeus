@@ -10,6 +10,7 @@
 #define XSTRING_UTILS_HPP
 
 #include <array>
+#include <cstddef>
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -17,12 +18,12 @@
 namespace xeus
 {
 
-    template <class T, size_t N>
+    template <class T, std::size_t N>
     inline std::string hex_string(const std::array<T, N>& buffer)
     {
         std::ostringstream oss;
         oss << std::hex;
-        for (size_t i = 0; i < N; ++i)
+        for (std::size_t i = 0; i < N; ++i)
         {
             oss << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i]);
         }
