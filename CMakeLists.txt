@@ -13,7 +13,6 @@ project(xeus)
 # ============
 
 find_package(cppzmq REQUIRED)
-find_package(RapidJSON REQUIRED)
 find_package(cryptopp REQUIRED)
 
 # Compilation flags
@@ -84,6 +83,7 @@ set(XEUS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(XEUS_HEADERS
+    ${XEUS_INCLUDE_DIR}/xeus/nl_json.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xauthentication.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xguid.hpp
@@ -101,7 +101,6 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xheartbeat.cpp
     ${XEUS_SOURCE_DIR}/xheartbeat.hpp
     ${XEUS_SOURCE_DIR}/xinterpreter.cpp
-    ${XEUS_SOURCE_DIR}/xjson.cpp
     ${XEUS_SOURCE_DIR}/xkernel.cpp
     ${XEUS_SOURCE_DIR}/xkernel_configuration.cpp
     ${XEUS_SOURCE_DIR}/xkernel_core.cpp
@@ -118,7 +117,6 @@ set(XEUS_SOURCES
 )
 
 include_directories(${cppzmq_INCLUDE_DIR})
-include_directories(${RAPIDJSON_INCLUDE_DIRS})
 include_directories(${XEUS_INCLUDE_DIR}/xeus)
 
 # Versioning

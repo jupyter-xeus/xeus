@@ -64,8 +64,8 @@ std::mutex cout_mutex;
     {
         xeus::xjson header = xeus::make_header("execute_request", m_user_name, m_session_id);
         xeus::xjson content;
-        content.set_value("/code", code);
-        content.set_value("/silent", false);
+        content["code"] = code;
+        content["silent"] = false;
         xeus::xmessage msg(xeus::xmessage::guid_list(),
                            std::move(header),
                            xeus::xjson(),
@@ -81,7 +81,7 @@ std::mutex cout_mutex;
     {
         xeus::xjson header = xeus::make_header("shutdown_request", m_user_name, m_session_id);
         xeus::xjson content;
-        content.set_value("/restart", false);
+        content["restart"] = false;
         xeus::xmessage msg(xeus::xmessage::guid_list(),
                            std::move(header),
                            xeus::xjson(),
@@ -101,15 +101,13 @@ std::mutex cout_mutex;
         msg.deserialize(wire_msg, *p_authentication);
 
         const xeus::xjson& header = msg.header();
-        const xeus::xjson::node_type* mt_ptr = header.get_node("/msg_type");
-        std::string msg_type = std::string(mt_ptr->GetString(), mt_ptr->GetStringLength());
+        std::string msg_type = header.at("msg_type");
 
         const xeus::xjson& content = msg.content();
 
         if (msg_type == "shutdown_reply")
         {
-            const xeus::xjson::node_type* restart_ptr = content.get_node("/restart");
-            bool restart = restart_ptr->GetBool();
+            bool restart = content.at("restart");
 
             std::ostringstream oss;
             oss << "Received reply from kernel:" << std::endl;
@@ -120,8 +118,7 @@ std::mutex cout_mutex;
         }
         else
         {
-            const xeus::xjson::node_type* status_ptr = content.get_node("/status");
-            std::string status = std::string(status_ptr->GetString(), status_ptr->GetStringLength());
+            std::string status = content.at("status");
 
             std::ostringstream oss;
             oss << "Received reply from kernel:" << std::endl;
@@ -147,8 +144,7 @@ std::mutex cout_mutex;
             if (topic.substr(topic_size - 6, topic_size) == "status")
             {
                 const xeus::xjson& content = msg.content();
-                const xeus::xjson::node_type* status_ptr = content.get_node("/execution_state");
-                std::string status = std::string(status_ptr->GetString(), status_ptr->GetStringLength());
+                std::string status = content.at("execution_state");
                 std::ostringstream oss;
                 oss << "Kernel published status" << std::endl;
                 oss << "execution_state: " << status << std::endl;
@@ -158,8 +154,7 @@ std::mutex cout_mutex;
             else if(topic.substr(topic_size - 13, topic_size) == "execute_input")
             {
                 const xeus::xjson& content = msg.content();
-                const xeus::xjson::node_type* code_ptr = content.get_node("/code");
-                std::string code = std::string(code_ptr->GetString(), code_ptr->GetStringLength());
+                std::string code = content.at("code");
                 std::ostringstream oss;
                 oss << "Kernel published input" << std::endl;
                 oss << "code: " << code << std::endl;
@@ -178,7 +173,7 @@ std::mutex cout_mutex;
             else
             {
                 const xeus::xjson& content = msg.content();
-                int execution_count = content.get_int("/execution_count");
+                int execution_count = content.at("execution_count");
                 std::ostringstream oss;
                 oss << "Kernel published result" << std::endl;
                 oss << "execution_count: " << execution_count << std::endl;
