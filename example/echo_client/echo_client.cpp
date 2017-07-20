@@ -19,7 +19,7 @@
 namespace echo_client
 {
 
-std::mutex cout_mutex;
+    std::mutex cout_mutex;
 
     void print(std::string s)
     {
@@ -38,7 +38,7 @@ std::mutex cout_mutex;
     xclient::xclient(const xeus::xconfiguration& config,
         const std::string& user_name,
         zmq::context_t& context)
-        : m_shell(context, zmq::socket_type::req),
+        : m_shell(context, zmq::socket_type::dealer),
           m_control(context, zmq::socket_type::req),
           m_iosub(context, zmq::socket_type::sub),
           p_authentication(xeus::make_xauthentication(config.m_signature_scheme, config.m_key)),
@@ -124,6 +124,7 @@ std::mutex cout_mutex;
             oss << "Received reply from kernel:" << std::endl;
             oss << "msg_type: " << msg_type << std::endl;
             oss << "status: " << status << std::endl;
+            oss << "message: " << content << std::endl;
             oss << std::endl;
             print(oss.str());
         }
@@ -173,14 +174,46 @@ std::mutex cout_mutex;
             else
             {
                 const xeus::xjson& content = msg.content();
-                int execution_count = content.at("execution_count");
                 std::ostringstream oss;
-                oss << "Kernel published result" << std::endl;
-                oss << "execution_count: " << execution_count << std::endl;
+                oss << "Kernel published" << std::endl;
+                oss << content << std::endl;
                 oss << std::endl;
                 print(oss.str());
             }
         }
     }
 
+    void xclient::send_comm_open(const std::string& target_name)
+    {
+        xeus::xjson header = xeus::make_header("comm_open", m_user_name, m_session_id);
+        xeus::xjson content;
+
+        content["target_name"] = target_name;
+        content["comm_id"] = guid_to_hex(xeus::xguid());
+        content["data"] = xeus::xjson();
+
+        xeus::xmessage msg(xeus::xmessage::guid_list(),
+                           std::move(header),
+                           xeus::xjson(),
+                           xeus::xjson(),
+                           std::move(content));
+        zmq::multipart_t wire_msg;
+        msg.serialize(wire_msg, *p_authentication);
+        wire_msg.send(m_shell);
+    }
+
+    void xclient::send_comm_info()
+    {
+        xeus::xjson header = xeus::make_header("comm_info_request", m_user_name, m_session_id);
+        xeus::xjson content;
+        xeus::xmessage msg(xeus::xmessage::guid_list(),
+                           std::move(header),
+                           xeus::xjson(),
+                           xeus::xjson(),
+                           std::move(content));
+        zmq::multipart_t wire_msg;
+        msg.serialize(wire_msg, *p_authentication);
+        wire_msg.send(m_shell);
+        wait_for_reply(m_shell);
+    }
 }

@@ -25,6 +25,8 @@ namespace echo_client
 
         void send_code(const std::string& code);
         void send_stop();
+        void send_comm_open(const std::string& target_name);
+        void send_comm_info();
 
     private:
 

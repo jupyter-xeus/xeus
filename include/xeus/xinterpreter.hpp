@@ -15,6 +15,7 @@
 
 #include "xeus.hpp"
 #include "xjson.hpp"
+#include "xcomm.hpp" 
 
 namespace xeus
 {
@@ -84,6 +85,11 @@ namespace xeus
         void input_request(const std::string& prompt, bool pwd);
         void input_reply(const std::string& value);
 
+        void register_comm_manager(xcomm_manager* manager);
+
+        xcomm_manager& comm_manager() noexcept;
+        const xcomm_manager& comm_manager() const noexcept;
+
     private:
 
         virtual void configure_impl() = 0;
@@ -115,8 +121,18 @@ namespace xeus
         publisher_type m_publisher;
         stdin_sender_type m_stdin;
         int m_execution_count;
+        xcomm_manager* p_comm_manager;
     };
 
+    inline xcomm_manager& xinterpreter::comm_manager() noexcept
+    {
+        return *p_comm_manager;
+    }
+
+    inline const xcomm_manager& xinterpreter::comm_manager() const noexcept
+    {
+        return *p_comm_manager;
+    }
 }
 
 #endif

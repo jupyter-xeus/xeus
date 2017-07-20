@@ -85,6 +85,7 @@ set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/nl_json.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xauthentication.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xcomm.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xguid.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinterpreter.hpp
@@ -97,6 +98,7 @@ set(XEUS_HEADERS
 
 set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xauthentication.cpp
+    ${XEUS_SOURCE_DIR}/xcomm.cpp
     ${XEUS_SOURCE_DIR}/xguid.cpp
     ${XEUS_SOURCE_DIR}/xheartbeat.cpp
     ${XEUS_SOURCE_DIR}/xheartbeat.hpp

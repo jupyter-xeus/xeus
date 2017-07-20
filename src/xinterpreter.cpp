@@ -135,6 +135,11 @@ namespace xeus
         m_stdin = sender;
     }
 
+    void xinterpreter::register_comm_manager(xcomm_manager* manager)
+    {
+        p_comm_manager = manager;
+    }
+
     void xinterpreter::input_request(const std::string& prompt, bool pwd)
     {
         xjson content;

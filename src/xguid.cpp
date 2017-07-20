@@ -86,11 +86,22 @@ namespace xeus
 #endif
     }
 
+    int char2int(char input)
+    {
+        if(input >= '0' && input <= '9')
+            return input - '0';
+        if(input >= 'A' && input <= 'F')
+            return input - 'A' + 10;
+        if(input >= 'a' && input <= 'f')
+            return input - 'a' + 10;
+    }
+
     xguid::xguid(const char* hex)
     {
         for (std::size_t i = 0; i < GUID_SIZE; ++i)
         {
-            m_buffer[i] = (unsigned char)strtol(hex + 2 * i, NULL, 16);
+            m_buffer[i] = char2int(*hex) * 16 + char2int(hex[1]);
+            hex += 2;
         }
     }
 
