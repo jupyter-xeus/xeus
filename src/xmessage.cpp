@@ -19,14 +19,14 @@ namespace xeus
     void parse_zmq_message(const zmq::message_t& msg,
                            xjson& json)
     {
-        json.parse(msg.data<const char>(), msg.size());
+        const char* buf = msg.data<const char>();
+        json = xjson::parse(buf, buf + msg.size());
     }
 
     zmq::message_t write_zmq_message(const xjson& json)
     {
-        rapidjson::StringBuffer buffer;
-        json.write(buffer);
-        return zmq::message_t(buffer.GetString(), buffer.GetSize());
+        std::string buffer = json.dump();
+        return zmq::message_t(buffer.c_str(), buffer.size());
     }
 
     xmessage_base::xmessage_base(xjson header,
@@ -204,12 +204,12 @@ namespace xeus
                       const std::string& session_id)
     {
         xjson header;
-        header.set_value("/msg_id", guid_to_hex(xguid()));
-        header.set_value("/username", user_name);
-        header.set_value("/session", session_id);
-        header.set_value("/date", iso8601_now());
-        header.set_value("/msg_type", msg_type);
-        header.set_value("/version", get_protocol_version());
+        header["msg_id"] = guid_to_hex(xguid());
+        header["username"] = user_name;
+        header["session"] = session_id;
+        header["date"] = iso8601_now();
+        header["msg_type"] = msg_type;
+        header["version"] = get_protocol_version();
         return header;
     }
 }

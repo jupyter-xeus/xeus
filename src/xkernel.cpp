@@ -44,7 +44,7 @@ namespace xeus
     {
         std::string topic = "kernel_core." + kernel_id + ".status";
         xjson content;
-        content.set_value("/execution_state", "starting");
+        content["execution_state"] = "starting";
 
         xpub_message msg(topic,
                          make_header("status", user_name, session_id),

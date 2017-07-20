@@ -13,6 +13,7 @@
 
 using xeus::xinterpreter;
 using xeus::xjson;
+using xeus::xjson_node;
 using xeus::xhistory_arguments;
 
 namespace echo_kernel
@@ -33,7 +34,7 @@ namespace echo_kernel
                                    const std::string& code,
                                    bool silent,
                                    bool store_history,
-                                   const xjson::node_type* user_expressions,
+                                   const xjson_node* user_expressions,
                                    bool allow_stdin) override;
 
         xjson complete_request_impl(const std::string& code,

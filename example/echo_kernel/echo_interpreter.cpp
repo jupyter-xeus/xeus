@@ -21,7 +21,7 @@ namespace echo_kernel
                                                  const std::string& code,
                                                  bool silent,
                                                  bool store_history,
-                                                 const xjson::node_type* /* user_expressions */,
+                                                 const xjson_node* /* user_expressions */,
                                                  bool allow_stdin)
     {
         std::cout << "Received execute_request" << std::endl;
@@ -33,11 +33,11 @@ namespace echo_kernel
         std::cout << std::endl;
 
         xjson pub_data;
-        pub_data.add_member("text/plain", code);
+        pub_data["text/plain"] =  code;
         publish_execution_result(execution_counter, std::move(pub_data), xjson());
         
         xjson result;
-        result.set_value("/status", "ok");
+        result["status"] = "ok";
         return result;
     }
 
@@ -49,10 +49,10 @@ namespace echo_kernel
         std::cout << "cursor_pos: " << cursor_pos << std::endl;
         std::cout << std::endl;
         xjson result;
-        result.set_value("/status", "ok");
-        result.set_value("/matches/0", "a.echo1");
-        result.set_value("/cursor_start", 2);
-        result.set_value("/cursor_end", 6);
+        result["status"] = "ok";
+        result["matches"] = {"a.echo1"};
+        result["cursor_start"] = 2;
+        result["cursor_end"] =  6;
         return result;
     }
 
@@ -66,8 +66,8 @@ namespace echo_kernel
         std::cout << "detail_level: " << detail_level << std::endl;
         std::cout << std::endl;
         xjson result;
-        result.set_value("/status", "ok");
-        result.set_value("/found", false);
+        result["status"] = "ok";
+        result["found"] = false;
         return result;
     }
 
@@ -85,10 +85,7 @@ namespace echo_kernel
         std::cout << "unique: " << args.m_unique << std::endl;
         std::cout << std::endl;
         xjson result;
-        result.create_value("/history/0");
-        result.set_value("/history/0/0", args.m_session);
-        result.set_value("/history/0/1", 0);
-        result.set_value("/history/0/2", "");
+        result["history"] = {{args.m_session, 0, ""}};
         return result;
     }
 
@@ -98,19 +95,19 @@ namespace echo_kernel
         std::cout << "code: " << code << std::endl;
         std::cout << std::endl;
         xjson result;
-        result.set_value("/status", "complete");
+        result["status"] = "complete";
         return result;
     }
 
     xjson echo_interpreter::kernel_info_request_impl()
     {
         xjson result;
-        result.set_value("/implementation", "cpp_echo");
-        result.set_value("/implementation_version", "1.0.0");
-        result.set_value("/language_info/name", "cpp");
-        result.set_value("/language_info/version", "14.0.0");
-        result.set_value("/language_info/mimetype", "text/x-c++src");
-        result.set_value("/language_info/file_extension", ".cpp");
+        result["implementation"] = "cpp_echo";
+        result["implementation_version"] = "1.0.0";
+        result["language_info"]["name"] = "cpp";
+        result["language_info"]["version"] = "14.0.0";
+        result["language_info"]["mimetype"] = "text/x-c++src";
+        result["language_info"]["file_extension"] = ".cpp";
         return result;
     }
 
