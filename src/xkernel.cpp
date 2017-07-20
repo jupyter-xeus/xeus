@@ -48,8 +48,8 @@ namespace xeus
 
         xpub_message msg(topic,
                          make_header("status", user_name, session_id),
-                         xjson(),
-                         xjson(),
+                         xjson::object(),
+                         xjson::object(),
                          std::move(content));
         msg.serialize(wire_msg, *auth);
     }

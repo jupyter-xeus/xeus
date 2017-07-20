@@ -77,12 +77,12 @@ namespace xeus
         xjson content;
         content["name"] = name;
         content["text"] = text;
-        m_publisher("stream", xjson(), std::move(content));
+        m_publisher("stream", xjson::object(), std::move(content));
     }
 
     void xinterpreter::display_data(xjson data, xjson metadata, xjson transient)
     {
-        m_publisher("display_data", xjson(),
+        m_publisher("display_data", xjson::object(),
                     build_display_content(std::move(data),
                                           std::move(metadata), 
                                           std::move(transient)));
@@ -90,7 +90,7 @@ namespace xeus
 
     void xinterpreter::update_display_data(xjson data, xjson metadata, xjson transient)
     {
-        m_publisher("display_data", xjson(),
+        m_publisher("display_data", xjson::object(),
                     build_display_content(std::move(data),
                                           std::move(metadata),
                                           std::move(transient)));
@@ -101,7 +101,7 @@ namespace xeus
         xjson content;
         content["code"] = code;
         content["execution_count"] = execution_count;
-        m_publisher("execute_input", xjson(), std::move(content));
+        m_publisher("execute_input", xjson::object(), std::move(content));
     }
 
     void xinterpreter::publish_execution_result(int execution_count, xjson data, xjson metadata)
@@ -110,7 +110,7 @@ namespace xeus
         content["execution_count"] = execution_count;
         content["data"] = std::move(data);
         content["metadata"] = std::move(metadata);
-        m_publisher("execute_result", xjson(), std::move(content));
+        m_publisher("execute_result", xjson::object(), std::move(content));
     }
 
     void xinterpreter::publish_execution_error(const std::string& ename, const std::string& evalue,
@@ -120,14 +120,14 @@ namespace xeus
         content["ename"] = ename;
         content["evalue"] = evalue;
         content["traceback"] = trace_back;
-        m_publisher("error", xjson(), std::move(content));
+        m_publisher("error", xjson::object(), std::move(content));
     }
 
     void xinterpreter::clear_output(bool wait)
     {
         xjson content;
         content["wait"] = wait;
-        m_publisher("clear_output", xjson(), std::move(content));
+        m_publisher("clear_output", xjson::object(), std::move(content));
     }
 
     void xinterpreter::register_stdin_sender(const stdin_sender_type& sender)
@@ -145,7 +145,7 @@ namespace xeus
         xjson content;
         content["prompt"] = prompt;
         content["pwd"] = pwd;
-        m_stdin("input_request", xjson(), std::move(content));
+        m_stdin("input_request", xjson::object(), std::move(content));
     }
 
     void xinterpreter::input_reply(const std::string& value)

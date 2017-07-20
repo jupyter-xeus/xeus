@@ -33,7 +33,7 @@ namespace xeus
           p_server(server),
           p_interpreter(interpreter),
           m_parent_id(0),
-          m_parent_header(xjson())
+          m_parent_header(xjson::object())
     {
         // Request handlers
         m_handler["execute_request"] = &xkernel_core::execute_request;
@@ -220,7 +220,7 @@ namespace xeus
         int cursor_pos = content.value("cursor_pos", -1);
 
         xjson reply = p_interpreter->complete_request(code, cursor_pos);
-        send_reply("complete_request", xjson(), std::move(reply), c);
+        send_reply("complete_request", xjson::object(), std::move(reply), c);
     }
 
     void xkernel_core::inspect_request(const xmessage& request, channel c)
@@ -231,7 +231,7 @@ namespace xeus
         int detail_level = content.value("detail_level", 0);
 
         xjson reply = p_interpreter->inspect_request(code, cursor_pos, detail_level);
-        send_reply("inspect_reply", xjson(), std::move(reply), c);
+        send_reply("inspect_reply", xjson::object(), std::move(reply), c);
     }
 
     void xkernel_core::history_request(const xmessage& request, channel c)
@@ -249,7 +249,7 @@ namespace xeus
         args.m_unique = content.value("unique", false);
 
         xjson reply = p_interpreter->history_request(args);
-        send_reply("history_reply", xjson(), std::move(reply), c);
+        send_reply("history_reply", xjson::object(), std::move(reply), c);
     }
 
     void xkernel_core::is_complete_request(const xmessage& request, channel c)
@@ -258,7 +258,7 @@ namespace xeus
         std::string code = content.value("code", "");
 
         xjson reply = p_interpreter->is_complete_request(code);
-        send_reply("is_complete_reply", xjson(), std::move(reply), c);
+        send_reply("is_complete_reply", xjson::object(), std::move(reply), c);
     }
 
     void xkernel_core::comm_info_request(const xmessage& request, channel c)
@@ -279,14 +279,14 @@ namespace xeus
         xjson reply;
         reply["comms"] = comms;
         reply["status"] = "ok";
-        send_reply("comm_info_reply", xjson(), std::move(reply), c);
+        send_reply("comm_info_reply", xjson::object(), std::move(reply), c);
     }
 
     void xkernel_core::kernel_info_request(const xmessage& /* request */, channel c)
     {
         xjson reply = p_interpreter->kernel_info_request();
         reply["protocol_version"] = get_protocol_version();
-        send_reply("kernel_info_reply", xjson(), std::move(reply), c);
+        send_reply("kernel_info_reply", xjson::object(), std::move(reply), c);
     }
 
     void xkernel_core::shutdown_request(const xmessage& request, channel c)
@@ -296,15 +296,15 @@ namespace xeus
         p_server->stop();
         xjson reply;
         reply["restart"] = restart;
-        publish_message("shutdown", xjson(), xjson(reply));
-        send_reply("shutdown_reply", xjson(), std::move(reply), c);
+        publish_message("shutdown", xjson::object(), xjson(reply));
+        send_reply("shutdown_reply", xjson::object(), std::move(reply), c);
     }
 
     void xkernel_core::publish_status(const std::string& status)
     {
         xjson content;
         content["execution_state"] = status;
-        publish_message("status", xjson(), std::move(content));
+        publish_message("status", xjson::object(), std::move(content));
     }
 
     void xkernel_core::publish_execute_input(const std::string& code,
@@ -313,7 +313,7 @@ namespace xeus
         xjson content;
         content["code"] =  code;
         content["execution_count"] =  execution_count;
-        publish_message("execute_input", xjson(), std::move(content));
+        publish_message("execute_input", xjson::object(), std::move(content));
     }
 
     void xkernel_core::send_reply(const std::string& reply_type,
@@ -374,7 +374,7 @@ namespace xeus
         send_reply(msg.identities(),
                    msg_type,
                    xjson(header),
-                   xjson(),
+                   xjson::object(),
                    std::move(content),
                    channel::SHELL);
     }

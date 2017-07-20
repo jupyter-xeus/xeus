@@ -11,10 +11,13 @@
 #include <chrono>
 
 #include "xeus/xguid.hpp"
+#include "xeus/xjson.hpp"
 #include <iostream>
 
 int main(int, char**)
 {
+
+    std::cout << "Default json: " << xeus::xjson() << std::endl;
     xeus::xconfiguration config = xeus::load_configuration("connection.json");
 
     std::string user_name = "JohanMabille";
