@@ -11,6 +11,7 @@
 
 #include <map>
 
+#include "xcomm.hpp"
 #include "xserver.hpp"
 #include "xinterpreter.hpp"
 #include "xauthentication.hpp"
@@ -46,6 +47,10 @@ namespace xeus
                         xjson metadata,
                         xjson content);
 
+        xcomm_manager& comm_manager() & noexcept;
+        const xcomm_manager& comm_manager() const & noexcept;
+        xcomm_manager comm_manager() const && noexcept;
+
     private:
 
         enum class channel
@@ -67,6 +72,9 @@ namespace xeus
         void history_request(const xmessage& request, channel c);
         void is_complete_request(const xmessage& request, channel c);
         void comm_info_request(const xmessage& request, channel c);
+        void comm_open(const xmessage& request, channel c);
+        void comm_close(const xmessage& request, channel c);
+        void comm_msg(const xmessage& request, channel c);
 
         void kernel_info_request(const xmessage& request, channel c);
         void shutdown_request(const xmessage& request, channel c);
@@ -104,6 +112,7 @@ namespace xeus
         authentication_ptr p_auth;
 
         std::map<std::string, handler_type> m_handler;
+        xcomm_manager m_comm_manager;
         server_ptr p_server;
         interpreter_ptr p_interpreter;
 

@@ -29,6 +29,7 @@ namespace xeus
           m_user_name(std::move(user_name)),
           m_session_id(std::move(session_id)),
           p_auth(std::move(auth)),
+          m_comm_manager(this),
           p_server(server),
           p_interpreter(interpreter),
           m_parent_id(0),
@@ -41,6 +42,9 @@ namespace xeus
         m_handler["history_request"] = &xkernel_core::history_request;
         m_handler["is_complete_request"] = &xkernel_core::is_complete_request;
         m_handler["comm_info_request"] = &xkernel_core::comm_info_request;
+        m_handler["comm_open"] = &xkernel_core::comm_open;
+        m_handler["comm_close"] = &xkernel_core::comm_close;
+        m_handler["comm_msg"] = &xkernel_core::comm_msg;
         m_handler["kernel_info_request"] = &xkernel_core::kernel_info_request;
         m_handler["shutdown_request"] = &xkernel_core::shutdown_request;
 
@@ -52,6 +56,7 @@ namespace xeus
         // Interpreter bindings
         p_interpreter->register_publisher(std::bind(&xkernel_core::publish_message, this, _1, _2, _3));
         p_interpreter->register_stdin_sender(std::bind(&xkernel_core::send_stdin, this, _1, _2, _3));
+        p_interpreter->register_comm_manager(&m_comm_manager);
     }
 
     void xkernel_core::dispatch_shell(zmq::multipart_t& wire_msg)
@@ -108,6 +113,21 @@ namespace xeus
         zmq::multipart_t wire_msg;
         msg.serialize(wire_msg, *p_auth);
         p_server->send_stdin(wire_msg);
+    }
+
+    xcomm_manager& xkernel_core::comm_manager() & noexcept
+    {
+        return m_comm_manager;
+    }
+
+    const xcomm_manager& xkernel_core::comm_manager() const & noexcept
+    {
+        return m_comm_manager;
+    }
+
+    xcomm_manager xkernel_core::comm_manager() const && noexcept
+    {
+        return m_comm_manager;
     }
 
     void xkernel_core::dispatch(zmq::multipart_t& wire_msg, channel c)
@@ -244,9 +264,21 @@ namespace xeus
     void xkernel_core::comm_info_request(const xmessage& request, channel c)
     {
         const xjson& content = request.content();
-        std::string target_name = content.value("target_name", "");
-
+        std::string target_name = content.is_null() ? "" : content.value("target_name", "");
+        xjson comms;
+        for (auto it = m_comm_manager.comms().cbegin(); it != m_comm_manager.comms().cend();  ++it)
+        {
+            const std::string& name = it->second.target().name();
+            if(target_name.empty() || name == target_name)
+            {
+                xjson info;
+                info["target_name"] = name;
+                comms[guid_to_hex(it->first)] = std::move(info);
+            }
+        }
         xjson reply;
+        reply["comms"] = comms;
+        reply["status"] = "ok";
         send_reply("comm_info_reply", xjson(), std::move(reply), c);
     }
 
@@ -373,6 +405,21 @@ namespace xeus
 
     xjson xkernel_core::get_parent_header() const
     {
-        return xjson(m_parent_header);
+        return m_parent_header;
+    }
+
+    void xkernel_core::comm_open(const xmessage& request, channel)
+    {
+        return m_comm_manager.comm_open(request);
+    }
+
+    void xkernel_core::comm_close(const xmessage& request, channel)
+    {
+        return m_comm_manager.comm_close(request);
+    }
+
+    void xkernel_core::comm_msg(const xmessage& request, channel)
+    {
+        return m_comm_manager.comm_msg(request);
     }
 }

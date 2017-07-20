@@ -10,6 +10,9 @@
 #include <thread>
 #include <chrono>
 
+#include "xeus/xguid.hpp"
+#include <iostream>
+
 int main(int, char**)
 {
     xeus::xconfiguration config = xeus::load_configuration("connection.json");
@@ -27,11 +30,11 @@ int main(int, char**)
         client.send_code("double x = std::sqrt(" + std::to_string(i) + ");");
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
-    client.send_stop();
-
-    // Gives time to publish thread so it can log
-    // remaining messages
+    client.send_comm_open("echo_target");
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
+    client.send_comm_info();
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    client.send_stop();
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     return 0;
 }
