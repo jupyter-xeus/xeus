@@ -90,7 +90,7 @@ namespace xeus
     {
         for (std::size_t i = 0; i < GUID_SIZE; ++i)
         {
-            m_buffer[i] = (unsigned char)strtol(hex + 2 * i, NULL, 16);
+            m_buffer[i] = (unsigned char)*(reinterpret_cast<const short*>(hex + 2 * i));
         }
     }
 
