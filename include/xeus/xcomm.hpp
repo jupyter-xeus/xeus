@@ -57,8 +57,6 @@ namespace xeus
         std::string m_name;
         function_type m_callback;
         xcomm_manager* p_manager;
-
-        friend class xcomm_manager;
     };
 
     /*********************
@@ -80,29 +78,23 @@ namespace xeus
     {
     public:
 
+        xcomm();
+        xcomm(xtarget* target, xguid id);
+
+        void open(xjson metadata, xjson data);
+        void close(xjson metadata, xjson data);
+
         xtarget& target() noexcept;
         const xtarget& target() const noexcept;
 
         void handle_message(const xmessage& request);
         void handle_close(const xmessage& request);
-        //void on_message(callback);
-        void send();
+
+        xguid id() const noexcept;
 
     private:
 
         friend class xcomm_manager;
-
-        /**
-         * Private constructors. May only be called by `kernel_core`.
-         */
-        xcomm();
-        xcomm(xtarget* target, xguid id);
-
-        /**
-         * Private xcomm::open and xcomm::close. May only be called by `kernel_core`.
-         */
-        void open(xjson metadata, xjson data);
-        void close(xjson metadata, xjson data);
 
         /**
          * Send comm message on iopub. Compose iopub message with specified data
@@ -134,7 +126,7 @@ namespace xeus
     {
     public:
 
-        xcomm_manager(xkernel_core* kernel);
+        xcomm_manager(xkernel_core* kernel = nullptr);
 
         using target_function_type = xtarget::function_type;
 
@@ -149,10 +141,11 @@ namespace xeus
         const std::map<xguid, xcomm>& comms() const & noexcept;
         std::map<xguid, xcomm> comms() const && noexcept;
 
-        xkernel_core& kernel() noexcept;
-        const xkernel_core& kernel() const noexcept;
+        xtarget* target(const std::string& target_name);
 
     private:
+
+        friend class xtarget;
 
         xjson get_metadata() const;
 
@@ -251,9 +244,19 @@ namespace xeus
         publish_message("comm_close", std::move(metadata), std::move(data));
     }
 
+    inline xguid xcomm::id() const noexcept
+    {
+        return m_id;
+    }
+
     /********************************
      * xcomm_manager implementation *
      ********************************/
+
+    inline xtarget* xcomm_manager::target(const std::string& target_name)
+    {
+        return &m_targets[target_name];
+    }
 
     inline std::map<xguid, xcomm>& xcomm_manager::comms() & noexcept
     {
