@@ -55,6 +55,8 @@ namespace echo_kernel
 
     private:
 
+        void configure() override;
+
         xjson execute_request_impl(int execution_counter,
                                    const std::string& code,
                                    bool silent,
@@ -86,7 +88,7 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 `xeus` depends on the following libraries:
 
- - [`libzmq`](https://github.com/zeromq/libzmq) ^4.2.1, [`cppzmq`](https://github.com/zeromq/cppzmq), [`rapidjson`](https://github.com/miloyip/rapidjson) and [`cryptopp`](https://github.com/weidai11/cryptopp).
+ - [`libzmq`](https://github.com/zeromq/libzmq) ^4.2.1, [`cppzmq`](https://github.com/zeromq/cppzmq), and [`cryptopp`](https://github.com/weidai11/cryptopp).
 
 On Linux platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
 
@@ -94,7 +96,7 @@ We have packaged all these dependencies for the conda package manager. The simpl
 conda is to run:
 
 ```bash
-conda install cmake zeromq cppzmq rapidjson cryptopp -c conda-forge
+conda install cmake zeromq cppzmq cryptopp -c conda-forge
 ```
 
 On Linux platform, you will also need:
@@ -135,16 +137,6 @@ cmake -D CMAKE_BUILD_TYPE=Release
 make install
 ```
 
-### rapidjson
-
-`rapidjson` is a header only library too, but requires some options to be set:
-
-```bash
-cmake -D RAPIDJSON_BUILD_DOC=OFF -D RAPIDJSON_BUILD_TESTS=OFF
--D RAPIDJSON_BUILD_EXAMPLES=OFF -D RAPIDJSON_HAS_STDSTRING=ON
--D CMAKE_BUILD_TYPE=Release
-make install
-```
 
 ### cryptopp
 

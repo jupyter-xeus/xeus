@@ -5,7 +5,10 @@ namespace xeus
 {
     void xtarget::publish_message(const std::string& msg_type, xjson metadata, xjson content)
     {
-        p_manager->kernel().publish_message(msg_type, std::move(metadata), std::move(content));
+        if (p_manager->p_kernel != nullptr)
+        {
+            p_manager->p_kernel->publish_message(msg_type, std::move(metadata), std::move(content));
+        }
     }
 
     xcomm_manager::xcomm_manager(xkernel_core* kernel)
@@ -76,15 +79,5 @@ namespace xeus
         {
             position->second.handle_message(request);
         }
-    }
-
-    xkernel_core& xcomm_manager::kernel() noexcept
-    {
-        return *p_kernel;
-    }
-
-    const xkernel_core& xcomm_manager::kernel() const noexcept
-    {
-        return *p_kernel;
     }
 }

@@ -40,6 +40,8 @@ as seen in the echo kernel provided as an example.
 
         private:
 
+            void configure() override;
+
             xjson execute_request_impl(int execution_counter,
                                        const std::string& code,
                                        bool silent,
