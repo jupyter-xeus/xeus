@@ -268,7 +268,7 @@ namespace xeus
         xjson comms;
         for (auto it = m_comm_manager.comms().cbegin(); it != m_comm_manager.comms().cend();  ++it)
         {
-            const std::string& name = it->second.target().name();
+            const std::string& name = it->second->target().name();
             if(target_name.empty() || name == target_name)
             {
                 xjson info;
