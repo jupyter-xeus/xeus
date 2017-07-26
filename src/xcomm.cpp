@@ -34,6 +34,16 @@ namespace xeus
         m_targets.erase(target_name);
     }
 
+    void xcomm_manager::register_comm(xguid id, xcomm* comm)
+    {
+        m_comms[id] = comm;
+    }
+
+    void xcomm_manager::unregister_comm(xguid id)
+    {
+        m_comms.erase(id);
+    }
+
     void xcomm_manager::comm_open(const xmessage& request)
     {
         const xjson& content = request.content();
@@ -50,9 +60,7 @@ namespace xeus
             std::string sid = content["comm_id"];
             xguid id = hex_to_guid(sid.c_str());
             xcomm comm = xcomm(&target, id);
-            auto p = m_comms.emplace(id, std::move(comm));
-            target(p.first->second, request);
-            // Open comm
+            target(comm, request);
             comm.open(get_metadata(), content["data"]);
         }
     }
@@ -62,6 +70,15 @@ namespace xeus
         const xjson& content = request.content();
         std::string sid = content["comm_id"];
         xguid id = hex_to_guid(sid.c_str());
+        auto position = m_comms.find(id);
+        if (position == m_comms.end())
+        {
+            throw std::runtime_error("No such comm registered: " + guid_to_hex(id));
+        }
+        else
+        {
+            position->second->handle_close(request);
+        }
         m_comms.erase(id);
     }
 
@@ -77,7 +94,7 @@ namespace xeus
         }
         else
         {
-            position->second.handle_message(request);
+            position->second->handle_message(request);
         }
     }
 }

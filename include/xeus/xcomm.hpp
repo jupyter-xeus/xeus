@@ -9,12 +9,11 @@
 #ifndef XCOMM_HPP
 #define XCOMM_HPP
 
+#include <iostream>
 #include <string>
 #include <functional>
 #include <map>
 #include <utility>
-
-#include <iostream>
 
 #include "xguid.hpp"
 #include "xmessage.hpp"
@@ -50,6 +49,8 @@ namespace xeus
         void operator()(const xcomm& comm, const xmessage& request) const;
 
         void publish_message(const std::string&, xjson, xjson);
+
+        void register_comm(xguid, xcomm*);
         void unregister_comm(xguid);
 
     private:
@@ -67,19 +68,21 @@ namespace xeus
      * @class xcomm
      * @brief Comm object.
      *
-     * Instances of xcomm are lightweight stack-allocated objects which can
-     * be cheaply instantiated and copied.
-     *
-     * xcomm objects cannot be directly instantiated or destroyed by the user, or only with the
-     * methods `xinterpreter::create_comm` and `xinterpreter::delete_comm` respectively.
-     *
      */
     class XEUS_API xcomm
     {
     public:
 
-        xcomm();
+        using handler_type = std::function<void(const xmessage&)>;
+
+        xcomm() = delete;
+        ~xcomm();
+        xcomm(xcomm&&) = default;
+        xcomm(const xcomm&);
         xcomm(xtarget* target, xguid id);
+
+        xcomm& operator=(xcomm&&) = default;
+        xcomm& operator=(const xcomm&);
 
         void open(xjson metadata, xjson data);
         void close(xjson metadata, xjson data);
@@ -91,6 +94,11 @@ namespace xeus
         void handle_close(const xmessage& request);
 
         xguid id() const noexcept;
+
+        template <class T>
+        void on_message(T&& handler);
+        template <class T>
+        void on_close(T&& handler);
 
     private:
 
@@ -107,6 +115,8 @@ namespace xeus
         void publish_message(const std::string& msg_type, xjson metadata, xjson data);
         void publish_message(const std::string& msg_type, xjson metadata, xjson data, const std::string&);
 
+        handler_type m_close_handler;
+        handler_type m_message_handler;
         xtarget* p_target;
         xguid m_id;
     };
@@ -137,11 +147,14 @@ namespace xeus
         void comm_close(const xmessage& request);
         void comm_msg(const xmessage& request);
 
-        std::map<xguid, xcomm>& comms() & noexcept;
-        const std::map<xguid, xcomm>& comms() const & noexcept;
-        std::map<xguid, xcomm> comms() const && noexcept;
+        std::map<xguid, xcomm*>& comms() & noexcept;
+        const std::map<xguid, xcomm*>& comms() const & noexcept;
+        std::map<xguid, xcomm*> comms() const && noexcept;
 
         xtarget* target(const std::string& target_name);
+
+        void register_comm(xguid, xcomm*);
+        void unregister_comm(xguid);
 
     private:
 
@@ -149,7 +162,7 @@ namespace xeus
 
         xjson get_metadata() const;
 
-        std::map<xguid, xcomm> m_comms;
+        std::map<xguid, xcomm*> m_comms;
         std::map<std::string, xtarget> m_targets;
         xkernel_core* p_kernel;
     };
@@ -188,6 +201,16 @@ namespace xeus
         return m_callback(comm, message);
     }
 
+    inline void xtarget::register_comm(xguid id, xcomm* comm)
+    {
+        p_manager->register_comm(id, comm);
+    }
+
+    inline void xtarget::unregister_comm(xguid id)
+    {
+        p_manager->unregister_comm(id);
+    }
+
     /************************
      * xcomm implementation *
      ************************/
@@ -202,8 +225,20 @@ namespace xeus
         return *p_target;
     }
 
-    inline void xcomm::handle_message(const xmessage&)
+    inline void xcomm::handle_close(const xmessage& message)
     {
+        if(m_close_handler)
+        {
+            m_close_handler(message);
+        }
+    }
+
+    inline void xcomm::handle_message(const xmessage& message)
+    {
+        if(m_message_handler)
+        {
+            m_message_handler(message);
+        }
     }
 
     inline void xcomm::publish_message(const std::string& msg_type, xjson metadata, xjson data)
@@ -224,14 +259,29 @@ namespace xeus
         target().publish_message(msg_type, std::move(metadata), std::move(content));
     }
 
-    inline xcomm::xcomm()
-        : p_target(nullptr), m_id() 
+    inline xcomm::xcomm(const xcomm& comm)
+        : p_target(comm.p_target), m_id() 
     {
+        p_target->register_comm(m_id, this);
+    }
+
+    inline xcomm& xcomm::operator=(const xcomm& comm)
+    {
+        p_target = comm.p_target;
+        m_id = xguid();
+        p_target->register_comm(m_id, this);
+        return *this;
     }
 
     inline xcomm::xcomm(xtarget* target, xguid id)
         : p_target(target), m_id(id)
     {
+        p_target->register_comm(m_id, this);
+    }
+
+    inline xcomm::~xcomm()
+    {
+        p_target->unregister_comm(m_id);
     }
 
     inline void xcomm::open(xjson metadata, xjson data)
@@ -249,6 +299,18 @@ namespace xeus
         return m_id;
     }
 
+    template <class T>
+    inline void xcomm::on_message(T&& handler)
+    {
+        m_message_handler = std::forward<T>(handler);
+    }
+
+    template <class T>
+    inline void xcomm::on_close(T&& handler)
+    {
+        m_close_handler = std::forward<T>(handler);
+    }
+
     /********************************
      * xcomm_manager implementation *
      ********************************/
@@ -258,17 +320,17 @@ namespace xeus
         return &m_targets[target_name];
     }
 
-    inline std::map<xguid, xcomm>& xcomm_manager::comms() & noexcept
+    inline std::map<xguid, xcomm*>& xcomm_manager::comms() & noexcept
     {
         return m_comms;
     }
 
-    inline const std::map<xguid, xcomm>& xcomm_manager::comms() const & noexcept
+    inline const std::map<xguid, xcomm*>& xcomm_manager::comms() const & noexcept
     {
         return m_comms;
     }
 
-    inline std::map<xguid, xcomm> xcomm_manager::comms() const && noexcept
+    inline std::map<xguid, xcomm*> xcomm_manager::comms() const && noexcept
     {
         return m_comms;
     }
