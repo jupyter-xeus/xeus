@@ -183,8 +183,7 @@ endif()
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-# GNUInstallDirs "DATADIR" wrong here; CMake search path wants "share".
-set(XEUS_CMAKECONFIG_INSTALL_DIR "share/cmake/${PROJECT_NAME}" CACHE STRING "install path for xeusConfig.cmake")
+set(XEUS_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE STRING "install path for xeusConfig.cmake")
 
 install(TARGETS ${XEUS_TARGET}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
