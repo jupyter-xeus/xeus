@@ -77,11 +77,12 @@ namespace xeus
 
         xcomm() = delete;
         ~xcomm();
-        xcomm(xcomm&&) = default;
+        xcomm(xcomm&&);
         xcomm(const xcomm&);
+        xcomm(xtarget* target);
         xcomm(xtarget* target, xguid id);
 
-        xcomm& operator=(xcomm&&) = default;
+        xcomm& operator=(xcomm&&);
         xcomm& operator=(const xcomm&);
 
         void open(xjson metadata, xjson data);
@@ -119,6 +120,7 @@ namespace xeus
         handler_type m_message_handler;
         xtarget* p_target;
         xguid m_id;
+        bool m_moved;
     };
 
 
@@ -259,10 +261,29 @@ namespace xeus
         target().publish_message(msg_type, std::move(metadata), std::move(content));
     }
 
+    inline xcomm::xcomm(xcomm&& comm)
+        : m_close_handler(std::move(comm.m_close_handler)),
+          m_message_handler(std::move(comm.m_message_handler)),
+          p_target(std::move(comm.p_target)),
+          m_id(std::move(comm.m_id))
+    {
+        comm.m_moved = true;
+    }
+
     inline xcomm::xcomm(const xcomm& comm)
         : p_target(comm.p_target), m_id() 
     {
         p_target->register_comm(m_id, this);
+    }
+
+    inline xcomm& xcomm::operator=(xcomm&& comm)
+    {
+        m_close_handler = std::move(comm.m_close_handler);
+        m_message_handler = std::move(comm.m_message_handler);
+        p_target = std::move(comm.p_target);
+        m_id = std::move(comm.m_id);
+        comm.m_moved = true;
+        return *this;
     }
 
     inline xcomm& xcomm::operator=(const xcomm& comm)
@@ -273,6 +294,12 @@ namespace xeus
         return *this;
     }
 
+    inline xcomm::xcomm(xtarget* target)
+        : p_target(target), m_id()
+    {
+        p_target->register_comm(m_id, this);
+    }
+
     inline xcomm::xcomm(xtarget* target, xguid id)
         : p_target(target), m_id(id)
     {
@@ -281,7 +308,10 @@ namespace xeus
 
     inline xcomm::~xcomm()
     {
-        p_target->unregister_comm(m_id);
+        if (!m_moved)
+        {
+            p_target->unregister_comm(m_id);
+        }
     }
 
     inline void xcomm::open(xjson metadata, xjson data)
