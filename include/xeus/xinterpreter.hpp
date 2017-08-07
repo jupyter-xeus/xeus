@@ -20,6 +20,11 @@
 namespace xeus
 {
 
+    class xinterpreter;
+
+    XEUS_API bool register_interpreter(xinterpreter* interpreter);
+    XEUS_API xinterpreter& get_interpreter();
+
     struct XEUS_API xhistory_arguments
     {
         std::string m_hist_access_type;
