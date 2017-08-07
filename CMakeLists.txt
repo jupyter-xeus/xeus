@@ -109,6 +109,8 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xkernel_core.cpp
     ${XEUS_SOURCE_DIR}/xkernel_core.hpp
     ${XEUS_SOURCE_DIR}/xmessage.cpp
+    ${XEUS_SOURCE_DIR}/xmock_interpreter.cpp
+    ${XEUS_SOURCE_DIR}/xmock_interpreter.hpp
     ${XEUS_SOURCE_DIR}/xmiddleware.cpp
     ${XEUS_SOURCE_DIR}/xmiddleware.hpp
     ${XEUS_SOURCE_DIR}/xpublisher.cpp
