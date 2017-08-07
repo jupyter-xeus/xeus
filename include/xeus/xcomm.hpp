@@ -259,7 +259,6 @@ namespace xeus
           m_id(std::move(comm.m_id))
     {
         comm.m_moved = true;
-        // Even though `comm` was not unregistered, the pointer in the container has to be changed.
         p_target->register_comm(m_id, this);
     }
 
@@ -274,10 +273,10 @@ namespace xeus
         m_close_handler = std::move(comm.m_close_handler);
         m_message_handler = std::move(comm.m_message_handler);
         p_target = std::move(comm.p_target);
+        p_target->unregister_comm(m_id);
         m_id = std::move(comm.m_id);
-        comm.m_moved = true;
-        // Even though `comm` was not unregistered, the pointer in the container has to be changed.
         p_target->register_comm(m_id, this);
+        comm.m_moved = true;
         return *this;
     }
 
