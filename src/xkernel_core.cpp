@@ -163,6 +163,7 @@ namespace xeus
             catch (std::exception& e)
             {
                 std::cout << "ERROR: received bad message: " << e.what() << std::endl;
+                std::cout << "Message content: " << msg.content() << std::endl;
             }
         }
 

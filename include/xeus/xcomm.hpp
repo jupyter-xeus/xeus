@@ -48,10 +48,10 @@ namespace xeus
 
         void operator()(const xcomm& comm, const xmessage& request) const;
 
-        void publish_message(const std::string&, xjson, xjson);
+        void publish_message(const std::string&, xjson, xjson) const;
 
-        void register_comm(xguid, xcomm*);
-        void unregister_comm(xguid);
+        void register_comm(xguid, xcomm*) const;
+        void unregister_comm(xguid) const;
 
     private:
 
@@ -110,10 +110,11 @@ namespace xeus
          * and rebinds to target's publish_message
          * {
          *    "comm_id": m_id,
-         *    "data": data
+         *    "target_name": specified target name,
+         *    "data": specified data
          * }
          */
-        void publish_message(const std::string& msg_type, xjson metadata, xjson data, const std::string&);
+        void send_comm_message(const std::string& msg_type, xjson metadata, xjson data, const std::string&) const;
 
         handler_type m_close_handler;
         handler_type m_message_handler;
@@ -121,7 +122,6 @@ namespace xeus
         xguid m_id;
         bool m_moved;
     };
-
 
     /*****************************
      * xcomm_manager declaration *
@@ -202,12 +202,12 @@ namespace xeus
         return m_callback(comm, message);
     }
 
-    inline void xtarget::register_comm(xguid id, xcomm* comm)
+    inline void xtarget::register_comm(xguid id, xcomm* comm) const
     {
         p_manager->register_comm(id, comm);
     }
 
-    inline void xtarget::unregister_comm(xguid id)
+    inline void xtarget::unregister_comm(xguid id) const
     {
         p_manager->unregister_comm(id);
     }
@@ -242,8 +242,8 @@ namespace xeus
         }
     }
 
-    inline void xcomm::publish_message(const std::string& msg_type, xjson metadata, xjson data,
-                                       const std::string& target_name)
+    inline void xcomm::send_comm_message(const std::string& msg_type, xjson metadata, xjson data,
+                                         const std::string& target_name) const
     {
         xjson content;
         content["comm_id"] = guid_to_hex(m_id);
@@ -310,12 +310,12 @@ namespace xeus
 
     inline void xcomm::open(xjson metadata, xjson data)
     {
-        publish_message("comm_open", std::move(metadata), std::move(data), p_target->name());
+        send_comm_message("comm_open", std::move(metadata), std::move(data), p_target->name());
     }
 
     inline void xcomm::close(xjson metadata, xjson data)
     {
-        publish_message("comm_close", std::move(metadata), std::move(data), p_target->name());
+        send_comm_message("comm_close", std::move(metadata), std::move(data), p_target->name());
     }
 
     inline xguid xcomm::id() const noexcept

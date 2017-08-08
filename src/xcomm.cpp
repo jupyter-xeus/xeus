@@ -3,7 +3,7 @@
 
 namespace xeus
 {
-    void xtarget::publish_message(const std::string& msg_type, xjson metadata, xjson content)
+    void xtarget::publish_message(const std::string& msg_type, xjson metadata, xjson content) const
     {
         if (p_manager->p_kernel != nullptr)
         {
