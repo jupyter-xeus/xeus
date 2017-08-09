@@ -6,11 +6,12 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include <memory>
 #include <iostream>
-#include "xeus/xkernel_configuration.hpp"
-#include "xeus/xkernel.hpp"
+#include <memory>
+
 #include "echo_interpreter.hpp"
+#include "xeus/xkernel.hpp"
+#include "xeus/xkernel_configuration.hpp"
 
 int main(int argc, char* argv[])
 {

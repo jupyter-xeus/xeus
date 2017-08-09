@@ -9,10 +9,10 @@
 #ifndef XGUID_HPP
 #define XGUID_HPP
 
-#include <cstddef>
-#include <array>
-#include <string>
 #include <algorithm>
+#include <array>
+#include <cstddef>
+#include <string>
 
 #include "xeus.hpp"
 

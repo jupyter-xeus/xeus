@@ -7,16 +7,18 @@
 ****************************************************************************/
 
 #include <string>
+
 #include "zmq.hpp"
-#include "xeus/xkernel_configuration.hpp"
+
 #include "xeus/xauthentication.hpp"
+#include "xeus/xkernel_configuration.hpp"
+
 
 namespace echo_client
 {
 
     class xclient
     {
-
     public:
 
         xclient(const xeus::xconfiguration& config,
@@ -44,5 +46,4 @@ namespace echo_client
         std::string m_user_name;
         std::string m_session_id;
     };
-
 }

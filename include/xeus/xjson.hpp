@@ -24,4 +24,3 @@ namespace xeus
 }
 
 #endif
-

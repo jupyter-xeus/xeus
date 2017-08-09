@@ -4,7 +4,4 @@ channels:
   - conda-forge
 
 dependencies:
-  - python=3.5
-  - sphinx_rtd_theme
-  - pip:
-    - breathe
+  - breathe

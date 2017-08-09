@@ -9,18 +9,17 @@
 #ifndef XMESSAGE_HPP
 #define XMESSAGE_HPP
 
-#include <vector>
-#include "zmq_addon.hpp"
+#include "xauthentication.hpp"
 #include "xeus.hpp"
 #include "xjson.hpp"
-#include "xauthentication.hpp"
+#include "zmq_addon.hpp"
+#include <vector>
 
 namespace xeus
 {
 
     class XEUS_API xmessage_base
     {
-
     public:
 
         xmessage_base(const xmessage_base&) = delete;
@@ -130,7 +129,6 @@ namespace xeus
     xjson make_header(const std::string& msg_type,
                       const std::string& user_name,
                       const std::string& session_id);
-
 }
 
 #endif

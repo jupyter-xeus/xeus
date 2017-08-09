@@ -11,17 +11,17 @@
 
 #include <functional>
 #include <memory>
-#include "zmq.hpp"
-#include "zmq_addon.hpp"
+
 #include "xeus.hpp"
 #include "xkernel_configuration.hpp"
+#include "zmq.hpp"
+#include "zmq_addon.hpp"
 
 namespace xeus
 {
 
     class XEUS_API xserver
     {
-
     public:
 
         using listener = std::function<void(zmq::multipart_t&)>;
@@ -74,7 +74,6 @@ namespace xeus
     XEUS_API
     std::unique_ptr<xserver> make_xserver(zmq::context_t& context,
                                           const xconfiguration& config);
-
 }
 
 #endif

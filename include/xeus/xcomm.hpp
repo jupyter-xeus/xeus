@@ -9,10 +9,10 @@
 #ifndef XCOMM_HPP
 #define XCOMM_HPP
 
-#include <iostream>
-#include <string>
 #include <functional>
+#include <iostream>
 #include <map>
+#include <string>
 #include <utility>
 
 #include "xguid.hpp"
@@ -36,7 +36,7 @@ namespace xeus
     {
     public:
 
-        using function_type = std::function<void (const xcomm&, const xmessage&)>;
+        using function_type = std::function<void(const xcomm&, const xmessage&)>;
 
         xtarget();
         xtarget(const std::string& name, const function_type& callback, xcomm_manager* manager);
@@ -228,7 +228,7 @@ namespace xeus
 
     inline void xcomm::handle_close(const xmessage& message)
     {
-        if(m_close_handler)
+        if (m_close_handler)
         {
             m_close_handler(message);
         }
@@ -236,7 +236,7 @@ namespace xeus
 
     inline void xcomm::handle_message(const xmessage& message)
     {
-        if(m_message_handler)
+        if (m_message_handler)
         {
             m_message_handler(message);
         }
@@ -263,7 +263,7 @@ namespace xeus
     }
 
     inline xcomm::xcomm(const xcomm& comm)
-        : p_target(comm.p_target), m_id() 
+        : p_target(comm.p_target), m_id()
     {
         p_target->register_comm(m_id, this);
     }
@@ -358,7 +358,6 @@ namespace xeus
     {
         return m_comms;
     }
-
 }
 
 #endif

@@ -9,12 +9,12 @@
 #ifndef XKERNEL_HPP
 #define XKERNEL_HPP
 
+#include "xeus.hpp"
+#include "xinterpreter.hpp"
+#include "xkernel_configuration.hpp"
+#include "xserver.hpp"
 #include <memory>
 #include <string>
-#include "xeus.hpp"
-#include "xkernel_configuration.hpp"
-#include "xinterpreter.hpp"
-#include "xserver.hpp"
 
 namespace xeus
 {
@@ -24,13 +24,12 @@ namespace xeus
 
     class XEUS_API xkernel
     {
-
     public:
 
         using interpreter_ptr = std::unique_ptr<xinterpreter>;
         using server_ptr = std::unique_ptr<xserver>;
-        using server_builder = server_ptr(*)(zmq::context_t& context,
-                                             const xconfiguration& config);
+        using server_builder = server_ptr (*)(zmq::context_t& context,
+                                              const xconfiguration& config);
 
         xkernel(const xconfiguration& config,
                 const std::string& user_name,
@@ -46,7 +45,6 @@ namespace xeus
         interpreter_ptr p_interpreter;
         server_builder m_builder;
     };
-
 }
 
 #endif

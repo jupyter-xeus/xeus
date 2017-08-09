@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <string>
+
 #include "zmq.hpp"
 #include "xeus.hpp"
 
@@ -19,7 +20,6 @@ namespace xeus
 
     class XEUS_API xauthentication
     {
-
     public:
 
         virtual ~xauthentication() = default;
@@ -62,7 +62,6 @@ namespace xeus
     XEUS_API
     std::unique_ptr<xauthentication> make_xauthentication(const std::string& scheme,
                                                           const std::string& key);
-
 }
 
 #endif

@@ -6,15 +6,15 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include <iostream>
-#include <thread>
-#include <sstream>
-#include <mutex>
 #include <cstddef>
+#include <iostream>
+#include <mutex>
+#include <sstream>
+#include <thread>
 
 #include "echo_client.hpp"
-#include "xeus/xmessage.hpp"
 #include "xeus/xguid.hpp"
+#include "xeus/xmessage.hpp"
 
 namespace echo_client
 {
@@ -36,8 +36,8 @@ namespace echo_client
     }
 
     xclient::xclient(const xeus::xconfiguration& config,
-        const std::string& user_name,
-        zmq::context_t& context)
+                     const std::string& user_name,
+                     zmq::context_t& context)
         : m_shell(context, zmq::socket_type::dealer),
           m_control(context, zmq::socket_type::req),
           m_iosub(context, zmq::socket_type::sub),
@@ -152,7 +152,7 @@ namespace echo_client
                 oss << std::endl;
                 print(oss.str());
             }
-            else if(topic.substr(topic_size - 13, topic_size) == "execute_input")
+            else if (topic.substr(topic_size - 13, topic_size) == "execute_input")
             {
                 const xeus::xjson& content = msg.content();
                 std::string code = content.at("code");
@@ -162,7 +162,7 @@ namespace echo_client
                 oss << std::endl;
                 print(oss.str());
             }
-            else if(topic.substr(topic_size - 8, topic_size) == "shutdown")
+            else if (topic.substr(topic_size - 8, topic_size) == "shutdown")
             {
                 const xeus::xjson& content = msg.content();
                 std::ostringstream oss;

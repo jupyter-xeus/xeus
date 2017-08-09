@@ -7,6 +7,7 @@
 ****************************************************************************/
 
 #include <iostream>
+
 #include "echo_interpreter.hpp"
 #include "xeus/xguid.hpp"
 
@@ -19,7 +20,7 @@ namespace echo_kernel
             std::cout << "Comm opened for target: " << comm.target().name() << std::endl;
         };
         comm_manager().register_comm_target("echo_target", handle_comm_opened);
-        using function_type = std::function<void (const xeus::xcomm&, const xeus::xmessage&)>;
+        using function_type = std::function<void(const xeus::xcomm&, const xeus::xmessage&)>;
     }
 
     xjson echo_interpreter::execute_request_impl(int execution_counter,
@@ -38,9 +39,9 @@ namespace echo_kernel
         std::cout << std::endl;
 
         xjson pub_data;
-        pub_data["text/plain"] =  code;
+        pub_data["text/plain"] = code;
         publish_execution_result(execution_counter, std::move(pub_data), xjson());
-        
+
         xjson result;
         result["status"] = "ok";
         return result;
@@ -57,7 +58,7 @@ namespace echo_kernel
         result["status"] = "ok";
         result["matches"] = {"a.echo1"};
         result["cursor_start"] = 2;
-        result["cursor_end"] =  6;
+        result["cursor_end"] = 6;
         return result;
     }
 
@@ -121,5 +122,4 @@ namespace echo_kernel
         std::cout << "Received input_reply" << std::endl;
         std::cout << "value: " << value << std::endl;
     }
-
 }

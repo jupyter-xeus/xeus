@@ -9,8 +9,8 @@
 #ifndef XCONFIGURATION_HPP
 #define XCONFIGURATION_HPP
 
-#include <string>
 #include "xeus.hpp"
+#include <string>
 
 namespace xeus
 {

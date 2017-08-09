@@ -9,13 +9,13 @@
 #ifndef XINTERPRETER_HPP
 #define XINTERPRETER_HPP
 
-#include <string>
 #include <functional>
+#include <string>
 #include <vector>
 
+#include "xcomm.hpp"
 #include "xeus.hpp"
 #include "xjson.hpp"
-#include "xcomm.hpp" 
 
 namespace xeus
 {

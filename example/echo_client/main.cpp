@@ -8,9 +8,9 @@
 
 #include "echo_client.hpp"
 
+#include <chrono>
 #include <iostream>
 #include <thread>
-#include <chrono>
 
 #include "xeus/xguid.hpp"
 
