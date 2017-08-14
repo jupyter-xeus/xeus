@@ -87,6 +87,7 @@ namespace xeus
 
         void open(xjson metadata, xjson data);
         void close(xjson metadata, xjson data);
+        void send(xjson metadata, xjson data) const;
 
         xtarget& target() noexcept;
         const xtarget& target() const noexcept;
@@ -114,7 +115,8 @@ namespace xeus
          *    "data": specified data
          * }
          */
-        void send_comm_message(const std::string& msg_type, xjson metadata, xjson data, const std::string&) const;
+        void send_comm_message(const std::string& msg_type, xjson metadata, xjson data) const;
+        void send_comm_message(const std::string& msg_type, xjson metadata, xjson data, const std::string& target_name) const;
 
         handler_type m_close_handler;
         handler_type m_message_handler;
@@ -242,6 +244,14 @@ namespace xeus
         }
     }
 
+    inline void xcomm::send_comm_message(const std::string& msg_type, xjson metadata, xjson data) const
+    {
+        xjson content;
+        content["comm_id"] = guid_to_hex(m_id);
+        content["data"] = std::move(data);
+        target().publish_message(msg_type, std::move(metadata), std::move(content));
+    }
+
     inline void xcomm::send_comm_message(const std::string& msg_type, xjson metadata, xjson data,
                                          const std::string& target_name) const
     {
@@ -315,7 +325,12 @@ namespace xeus
 
     inline void xcomm::close(xjson metadata, xjson data)
     {
-        send_comm_message("comm_close", std::move(metadata), std::move(data), p_target->name());
+        send_comm_message("comm_close", std::move(metadata), std::move(data));
+    }
+
+    inline void xcomm::send(xjson metadata, xjson data) const
+    {
+        send_comm_message("comm_msg", std::move(metadata), std::move(data));
     }
 
     inline xguid xcomm::id() const noexcept
