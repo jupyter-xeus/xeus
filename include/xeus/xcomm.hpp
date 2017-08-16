@@ -41,7 +41,6 @@ namespace xeus
         xtarget();
         xtarget(const std::string& name, const function_type& callback, xcomm_manager* manager);
 
-        // name accessor
         std::string& name() & noexcept;
         const std::string& name() const & noexcept;
         std::string name() const && noexcept;
@@ -156,12 +155,12 @@ namespace xeus
 
         xtarget* target(const std::string& target_name);
 
-        void register_comm(xguid, xcomm*);
-        void unregister_comm(xguid);
-
     private:
 
         friend class xtarget;
+
+        void register_comm(xguid, xcomm*);
+        void unregister_comm(xguid);
 
         xjson get_metadata() const;
 
@@ -269,7 +268,7 @@ namespace xeus
           m_id(std::move(comm.m_id))
     {
         comm.m_moved = true;
-        p_target->register_comm(m_id, this);
+        p_target->register_comm(m_id, this); // Replacing the address of the moved comm with `this`.
     }
 
     inline xcomm::xcomm(const xcomm& comm)
@@ -285,7 +284,7 @@ namespace xeus
         p_target = std::move(comm.p_target);
         p_target->unregister_comm(m_id);
         m_id = std::move(comm.m_id);
-        p_target->register_comm(m_id, this);
+        p_target->register_comm(m_id, this); // Replacing the address of the moved comm with `this`.
         comm.m_moved = true;
         return *this;
     }
@@ -293,6 +292,7 @@ namespace xeus
     inline xcomm& xcomm::operator=(const xcomm& comm)
     {
         p_target = comm.p_target;
+        p_target->unregister_comm(m_id);
         m_id = xguid();
         p_target->register_comm(m_id, this);
         return *this;
