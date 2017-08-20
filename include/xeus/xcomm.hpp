@@ -121,7 +121,7 @@ namespace xeus
         handler_type m_message_handler;
         xtarget* p_target;
         xguid m_id;
-        bool m_moved;
+        bool m_moved_from;
     };
 
     /*****************************
@@ -265,14 +265,15 @@ namespace xeus
         : m_close_handler(std::move(comm.m_close_handler)),
           m_message_handler(std::move(comm.m_message_handler)),
           p_target(std::move(comm.p_target)),
-          m_id(std::move(comm.m_id))
+          m_id(std::move(comm.m_id)),
+          m_moved_from(false)
     {
-        comm.m_moved = true;
+        comm.m_moved_from = true;
         p_target->register_comm(m_id, this); // Replacing the address of the moved comm with `this`.
     }
 
     inline xcomm::xcomm(const xcomm& comm)
-        : p_target(comm.p_target), m_id()
+        : p_target(comm.p_target), m_id(), m_moved_from(false)
     {
         p_target->register_comm(m_id, this);
     }
@@ -284,8 +285,9 @@ namespace xeus
         p_target = std::move(comm.p_target);
         p_target->unregister_comm(m_id);
         m_id = std::move(comm.m_id);
+        m_moved_from = false;
+        comm.m_moved_from = true;
         p_target->register_comm(m_id, this); // Replacing the address of the moved comm with `this`.
-        comm.m_moved = true;
         return *this;
     }
 
@@ -294,6 +296,7 @@ namespace xeus
         p_target = comm.p_target;
         p_target->unregister_comm(m_id);
         m_id = xguid();
+        m_moved_from = false;
         p_target->register_comm(m_id, this);
         return *this;
     }
@@ -312,7 +315,7 @@ namespace xeus
 
     inline xcomm::~xcomm()
     {
-        if (!m_moved)
+        if (!m_moved_from)
         {
             p_target->unregister_comm(m_id);
         }
