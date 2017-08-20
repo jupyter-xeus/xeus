@@ -78,8 +78,8 @@ namespace xeus
         }
         catch (std::exception& e)
         {
-            std::cout << "ERROR: could not deserialize message" << std::endl;
-            std::cout << e.what() << std::endl;;
+            std::cerr << "ERROR: could not deserialize message" << std::endl;
+            std::cerr << e.what() << std::endl;
             return;
         }
 
@@ -139,8 +139,8 @@ namespace xeus
         }
         catch (std::exception& e)
         {
-            std::cout << "ERROR: could not deserialize message" << std::endl;
-            std::cout << e.what() << std::endl;;
+            std::cerr << "ERROR: could not deserialize message" << std::endl;
+            std::cerr << e.what() << std::endl;
             return;
         }
 
@@ -152,7 +152,7 @@ namespace xeus
         handler_type handler = get_handler(msg_type);
         if (handler == nullptr)
         {
-            std::cout << "ERROR: received unknown message" << std::endl;
+            std::cerr << "ERROR: received unknown message" << std::endl;
         }
         else
         {
@@ -162,8 +162,8 @@ namespace xeus
             }
             catch (std::exception& e)
             {
-                std::cout << "ERROR: received bad message: " << e.what() << std::endl;
-                std::cout << "Message content: " << msg.content() << std::endl;
+                std::cerr << "ERROR: received bad message: " << e.what() << std::endl;
+                std::cerr << "Message content: " << msg.content() << std::endl;
             }
         }
 
@@ -209,8 +209,8 @@ namespace xeus
         }
         catch (std::exception& e)
         {
-            std::cout << "ERROR: during execute_request" << std::endl;
-            std::cout << e.what() << std::endl;
+            std::cerr << "ERROR: during execute_request" << std::endl;
+            std::cerr << e.what() << std::endl;
         }
     }
 
@@ -267,10 +267,10 @@ namespace xeus
         const xjson& content = request.content();
         std::string target_name = content.is_null() ? "" : content.value("target_name", "");
         xjson comms;
-        for (auto it = m_comm_manager.comms().cbegin(); it != m_comm_manager.comms().cend();  ++it)
+        for (auto it = m_comm_manager.comms().cbegin(); it != m_comm_manager.comms().cend(); ++it)
         {
             const std::string& name = it->second->target().name();
-            if(target_name.empty() || name == target_name)
+            if (target_name.empty() || name == target_name)
             {
                 xjson info;
                 info["target_name"] = name;
@@ -312,8 +312,8 @@ namespace xeus
                                              int execution_count)
     {
         xjson content;
-        content["code"] =  code;
-        content["execution_count"] =  execution_count;
+        content["code"] = code;
+        content["execution_count"] = execution_count;
         publish_message("execute_input", xjson::object(), std::move(content));
     }
 
@@ -363,7 +363,7 @@ namespace xeus
         }
         catch (std::exception& e)
         {
-            std::cout << "ERROR: during execute_request: " << e.what() << std::endl;
+            std::cerr << "ERROR: during execute_request: " << e.what() << std::endl;
             return;
         }
         const xjson& header = msg.header();
@@ -371,7 +371,7 @@ namespace xeus
         // replace "_request" part of message type by "_reply"
         msg_type.replace(msg_type.find_last_of('_'), 8, "_reply");
         xjson content;
-        content["status"] =  "error";
+        content["status"] = "error";
         send_reply(msg.identities(),
                    msg_type,
                    xjson(header),

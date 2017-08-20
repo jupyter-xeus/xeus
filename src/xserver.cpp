@@ -82,5 +82,4 @@ namespace xeus
     {
         return ::xeus::make_unique<xserver_impl>(context, config);
     }
-
 }
