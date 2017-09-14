@@ -9,3 +9,4 @@ dependencies:
     - cppzmq
     - rapidjson
     - cryptopp
+    - xtl

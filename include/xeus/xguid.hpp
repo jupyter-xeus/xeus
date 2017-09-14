@@ -14,81 +14,25 @@
 #include <cstddef>
 #include <string>
 
+#include "xtl/xbasic_fixed_string.hpp"
+
 #include "xeus.hpp"
 
 namespace xeus
 {
-    /*********************
-     * xguid declaration *
-     *********************/
 
-    /**
-     * @class xguid
-     * @brief Globally unique identifier.
-     *
-     * Instances of xguid are stack allocated and implement a value semantics.
-     * Instances of xguid can be used as keys in std::map and std::unordered maps.
-     * The unique identifier is computed upon creation of the object, rebinding on
-     * the implementation of the operating system.
-     *
-     */
-    class XEUS_API xguid
-    {
-    public:
+    // xfixed_string contains 2 members:
+    // - a stack-allocated buffer of N (template parameter) + 1 (null termination) char
+    // - a size_t for the number of characters actually used
+    // So its memory footprint is N + 9 bytes. In order to not waste memory
+    // due to padding, it is good to choose N so the size of the structure is a
+    // multiple of the stackframe alignment (8 or 16 depending on the architecture
+    // and compilers).
+    // Here we want a size of 64 bytes, which gives room for 55 characters (64 - 8 - 1).
+    using xguid = xtl::xfixed_string<55>;
 
-        static constexpr std::size_t GUID_SIZE = 16;
-        using buffer_type = std::array<unsigned char, GUID_SIZE>;
+    XEUS_API xguid new_xguid();
 
-        xguid();
-
-        bool equal(const xguid& other) const noexcept;
-        bool lesser(const xguid& other) const noexcept;
-
-    private:
-
-        xguid(const char*);
-
-        buffer_type m_buffer;
-
-        friend XEUS_API std::string guid_to_hex(xguid uuid);
-        friend XEUS_API xguid hex_to_guid(const char* hex);
-    };
-
-    bool operator==(const xguid&, const xguid&);
-    bool operator!=(const xguid&, const xguid&);
-    bool operator<(const xguid&, const xguid&);
-
-    XEUS_API std::string guid_to_hex(xguid uuid);
-    XEUS_API xguid hex_to_guid(const char* hex);
-
-    /************************
-     * xguid implementation *
-     ************************/
-
-    inline bool xguid::equal(const xguid& other) const noexcept
-    {
-        return m_buffer == other.m_buffer;
-    }
-
-    inline bool xguid::lesser(const xguid& other) const noexcept
-    {
-        return std::lexicographical_compare(m_buffer.begin(), m_buffer.end(), other.m_buffer.begin(), other.m_buffer.end());
-    }
-
-    inline bool operator==(const xguid& lhs, const xguid& rhs)
-    {
-        return lhs.equal(rhs);
-    }
-
-    inline bool operator!=(const xguid& lhs, const xguid& rhs)
-    {
-        return !lhs.equal(rhs);
-    }
-
-    inline bool operator<(const xguid& lhs, const xguid& rhs)
-    {
-        return lhs.lesser(rhs);
-    }
 }
 
 #endif

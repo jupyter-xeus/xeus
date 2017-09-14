@@ -245,7 +245,7 @@ namespace xeus
     inline void xcomm::send_comm_message(const std::string& msg_type, xjson metadata, xjson data) const
     {
         xjson content;
-        content["comm_id"] = guid_to_hex(m_id);
+        content["comm_id"] = m_id;
         content["data"] = std::move(data);
         target().publish_message(msg_type, std::move(metadata), std::move(content));
     }
@@ -254,7 +254,7 @@ namespace xeus
                                          const std::string& target_name) const
     {
         xjson content;
-        content["comm_id"] = guid_to_hex(m_id);
+        content["comm_id"] = m_id;
         content["target_name"] = target_name;
         content["data"] = std::move(data);
         target().publish_message(msg_type, std::move(metadata), std::move(content));
@@ -294,7 +294,7 @@ namespace xeus
     {
         p_target = comm.p_target;
         p_target->unregister_comm(m_id);
-        m_id = xguid();
+        m_id = new_xguid();
         m_moved_from = false;
         p_target->register_comm(m_id, this);
         return *this;

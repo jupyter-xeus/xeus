@@ -23,7 +23,7 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda install cmake cppzmq zeromq rapidjson cryptopp -c conda-forge
+  - conda install cmake cppzmq zeromq rapidjson cryptopp xtl -c conda-forge
   - mkdir build
   - cd build
   - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -D BUILD_EXAMPLES=ON ..

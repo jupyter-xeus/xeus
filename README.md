@@ -88,7 +88,8 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 `xeus` depends on the following libraries:
 
- - [`libzmq`](https://github.com/zeromq/libzmq) ^4.2.1, [`cppzmq`](https://github.com/zeromq/cppzmq), and [`cryptopp`](https://github.com/weidai11/cryptopp).
+ - [`libzmq`](https://github.com/zeromq/libzmq) ^4.2.1, [`cppzmq`](https://github.com/zeromq/cppzmq), [`cryptopp`](https://github.com/weidai11/cryptopp),
+and [`xtl`](https://github.com/QuantStack/xtl) ^0.2.1
 
 On Linux platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
 
@@ -145,6 +146,15 @@ make install
 ```bash
 cmake -D BUILD_SHARED=OFF -D BUILD_TESTING=OFF -D CMAKE_BUILD_TYPE=Release
 make
+make install
+```
+
+### xtl
+
+`xtl` is a header only library:
+
+```bash
+cmake -D CMAKE_BUILD_TYPE
 make install
 ```
 

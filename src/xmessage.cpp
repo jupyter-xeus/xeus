@@ -204,7 +204,7 @@ namespace xeus
                       const std::string& session_id)
     {
         xjson header;
-        header["msg_id"] = guid_to_hex(xguid());
+        header["msg_id"] = new_xguid();
         header["username"] = user_name;
         header["session"] = session_id;
         header["date"] = iso8601_now();

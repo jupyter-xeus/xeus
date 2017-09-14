@@ -21,7 +21,7 @@ From Source
 
 ``xeus`` depends on the following libraries:
 
- - libzmq_, cppzmq_, rapidjson_, cryptopp_
+ - libzmq_, cppzmq_, cryptopp_ and xtl_
 
 On linux platforms, ``xeus`` also requires libuuid, which is available in all linux distributions (``uuid-dev`` on Debian).
 
@@ -29,7 +29,7 @@ We have packaged all these dependencies for the conda package manager. The simpl
 
 .. code::
 
-    conda install cmake zeromq cppzmq rapidjson cryptopp -c conda-forge .
+    conda install cmake zeromq cppzmq cryptopp xtl -c conda-forge .
 
 On Linux platform, you will also need:
 
@@ -71,16 +71,6 @@ cppzmq
     cmake -D CMAKE_BUILD_TYPE=Release .
     make install
 
-rapidjson
-~~~~~~~~~
-
-`rapidjson` is a header only library too, but requires some options to be set:
-
-.. code::
-
-    cmake -D RAPIDJSON_BUILD_DOC=OFF -D RAPIDJSON_BUILD_TESTS=OFF -D RAPIDJSON_BUILD_EXAMPLES=OFF -D RAPIDJSON_HAS_STDSTRING=ON -D CMAKE_BUILD_TYPE=Release .
-    make install
-
 cryptopp
 ~~~~~~~~~
 
@@ -92,8 +82,18 @@ cryptopp
     make
     make install
 
+xtl
+~~~
+
+`xtl` is a header only library:
+
+.. code::
+
+    cmake -DCMAKE_BUILD_TYPE=Release .
+    make install
+
 .. _libzmq: https://github.com/zeromq/libzmq
 .. _cppzmq: https://github.com/zeromq/cppzmq
-.. _rapidjson: https://github.com/miloyip/rapidjson
 .. _cryptopp: https://github.com/weidai11/cryptopp
+.. _xtl: https://github.com/QuantStack/xtl
 
