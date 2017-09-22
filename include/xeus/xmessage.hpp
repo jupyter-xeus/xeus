@@ -9,6 +9,7 @@
 #ifndef XMESSAGE_HPP
 #define XMESSAGE_HPP
 
+#include <string>
 #include <vector>
 
 #include "xauthentication.hpp"
@@ -18,6 +19,7 @@
 
 namespace xeus
 {
+    using buffer_sequence = std::vector<zmq::message_t>;
 
     class XEUS_API xmessage_base
     {
@@ -30,6 +32,7 @@ namespace xeus
         const xjson& parent_header() const;
         const xjson& metadata() const;
         const xjson& content() const;
+        const buffer_sequence& buffers() const;
 
     protected:
 
@@ -37,7 +40,8 @@ namespace xeus
         xmessage_base(xjson header,
                       xjson parent_header,
                       xjson metadata,
-                      xjson content);
+                      xjson content,
+                      buffer_sequence buffers);
 
         ~xmessage_base() = default;
 
@@ -46,7 +50,7 @@ namespace xeus
 
         bool is_delimiter(zmq::message_t& frame) const;
         void deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth);
-        void serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) const;
+        void serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&;
 
         static const std::string DELIMITER;
 
@@ -56,13 +60,14 @@ namespace xeus
         xjson m_parent_header;
         xjson m_metadata;
         xjson m_content;
+        buffer_sequence m_buffers;
     };
 
     class XEUS_API xmessage : public xmessage_base
     {
-
     public:
 
+        using base_type = xmessage_base;
         using guid_list = std::vector<std::string>;
 
         xmessage() = default;
@@ -70,7 +75,8 @@ namespace xeus
                  xjson header,
                  xjson parent_header,
                  xjson metadata,
-                 xjson content);
+                 xjson content,
+                 buffer_sequence buffers);
 
         ~xmessage() = default;
 
@@ -81,7 +87,7 @@ namespace xeus
         xmessage& operator=(const xmessage&) = delete;
 
         void deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth);
-        void serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) const;
+        void serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&;
 
         const guid_list& identities() const;
 
@@ -92,15 +98,17 @@ namespace xeus
 
     class XEUS_API xpub_message : public xmessage_base
     {
-
     public:
+
+        using base_type = xmessage_base;
 
         xpub_message() = default;
         xpub_message(const std::string& topic,
                      xjson header,
                      xjson parent_header,
                      xjson metadata,
-                     xjson content);
+                     xjson content,
+                     buffer_sequence buffers);
 
         ~xpub_message() = default;
 
@@ -111,7 +119,7 @@ namespace xeus
         xpub_message& operator=(const xpub_message&) = delete;
 
         void deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth);
-        void serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) const;
+        void serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&;
 
         const std::string& topic() const;
 
@@ -120,16 +128,13 @@ namespace xeus
         std::string m_topic;
     };
 
-    XEUS_API
-    std::string iso8601_now();
+    XEUS_API std::string iso8601_now();
 
-    XEUS_API
-    std::string get_protocol_version();
+    XEUS_API std::string get_protocol_version();
 
-    XEUS_API
-    xjson make_header(const std::string& msg_type,
-                      const std::string& user_name,
-                      const std::string& session_id);
+    XEUS_API xjson make_header(const std::string& msg_type,
+                               const std::string& user_name,
+                               const std::string& session_id);
 }
 
 #endif

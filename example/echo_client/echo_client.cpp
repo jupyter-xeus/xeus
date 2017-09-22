@@ -66,13 +66,15 @@ namespace echo_client
         xeus::xjson content;
         content["code"] = code;
         content["silent"] = false;
+
+        zmq::multipart_t wire_msg;
         xeus::xmessage msg(xeus::xmessage::guid_list(),
                            std::move(header),
                            xeus::xjson(),
                            xeus::xjson(),
-                           std::move(content));
-        zmq::multipart_t wire_msg;
-        msg.serialize(wire_msg, *p_authentication);
+                           std::move(content),
+                           xeus::buffer_sequence());
+        std::move(msg).serialize(wire_msg, *p_authentication);
         wire_msg.send(m_shell);
         wait_for_reply(m_shell);
     }
@@ -82,13 +84,15 @@ namespace echo_client
         xeus::xjson header = xeus::make_header("shutdown_request", m_user_name, m_session_id);
         xeus::xjson content;
         content["restart"] = false;
+
+        zmq::multipart_t wire_msg;
         xeus::xmessage msg(xeus::xmessage::guid_list(),
                            std::move(header),
                            xeus::xjson(),
                            xeus::xjson(),
-                           std::move(content));
-        zmq::multipart_t wire_msg;
-        msg.serialize(wire_msg, *p_authentication);
+                           std::move(content),
+                           xeus::buffer_sequence());
+        std::move(msg).serialize(wire_msg, *p_authentication);
         wire_msg.send(m_control);
         wait_for_reply(m_control);
     }
@@ -200,18 +204,18 @@ namespace echo_client
     {
         xeus::xjson header = xeus::make_header("comm_open", m_user_name, m_session_id);
         xeus::xjson content;
-
         content["target_name"] = target_name;
         content["comm_id"] = xeus::new_xguid();
         content["data"] = xeus::xjson();
 
+        zmq::multipart_t wire_msg;
         xeus::xmessage msg(xeus::xmessage::guid_list(),
                            std::move(header),
                            xeus::xjson(),
                            xeus::xjson(),
-                           std::move(content));
-        zmq::multipart_t wire_msg;
-        msg.serialize(wire_msg, *p_authentication);
+                           std::move(content),
+                           xeus::buffer_sequence());
+        std::move(msg).serialize(wire_msg, *p_authentication);
         wire_msg.send(m_shell);
     }
 
@@ -219,13 +223,14 @@ namespace echo_client
     {
         xeus::xjson header = xeus::make_header("comm_info_request", m_user_name, m_session_id);
         xeus::xjson content;
+        zmq::multipart_t wire_msg;
         xeus::xmessage msg(xeus::xmessage::guid_list(),
                            std::move(header),
                            xeus::xjson(),
                            xeus::xjson(),
-                           std::move(content));
-        zmq::multipart_t wire_msg;
-        msg.serialize(wire_msg, *p_authentication);
+                           std::move(content),
+                           xeus::buffer_sequence());
+        std::move(msg).serialize(wire_msg, *p_authentication);
         wire_msg.send(m_shell);
         wait_for_reply(m_shell);
     }

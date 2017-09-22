@@ -3,11 +3,11 @@
 
 namespace xeus
 {
-    void xtarget::publish_message(const std::string& msg_type, xjson metadata, xjson content) const
+    void xtarget::publish_message(const std::string& msg_type, xjson metadata, xjson content, buffer_sequence buffers) const
     {
         if (p_manager->p_kernel != nullptr)
         {
-            p_manager->p_kernel->publish_message(msg_type, std::move(metadata), std::move(content));
+            p_manager->p_kernel->publish_message(msg_type, std::move(metadata), std::move(content), std::move(buffers));
         }
     }
 

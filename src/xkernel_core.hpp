@@ -41,7 +41,8 @@ namespace xeus
 
         void publish_message(const std::string& msg_type,
                              xjson metadata,
-                             xjson content);
+                             xjson content,
+                             buffer_sequence buffers);
 
         void send_stdin(const std::string& msg_type,
                         xjson metadata,

@@ -6,6 +6,10 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <string>
+#include <utility>
+#include <vector>
+
 #include "xeus/xinterpreter.hpp"
 
 namespace xeus
@@ -79,7 +83,7 @@ namespace xeus
             xjson content;
             content["name"] = name;
             content["text"] = text;
-            m_publisher("stream", xjson::object(), std::move(content));
+            m_publisher("stream", xjson::object(), std::move(content), buffer_sequence());
         }
     }
 
@@ -90,7 +94,8 @@ namespace xeus
             m_publisher("display_data", xjson::object(),
                         build_display_content(std::move(data),
                                               std::move(metadata), 
-                                              std::move(transient)));
+                                              std::move(transient)),
+                                              buffer_sequence());
         }
     }
 
@@ -101,7 +106,8 @@ namespace xeus
             m_publisher("update_display_data", xjson::object(),
                         build_display_content(std::move(data),
                                               std::move(metadata),
-                                              std::move(transient)));
+                                              std::move(transient)),
+                                              buffer_sequence());
         }
     }
 
@@ -112,7 +118,7 @@ namespace xeus
             xjson content;
             content["code"] = code;
             content["execution_count"] = execution_count;
-            m_publisher("execute_input", xjson::object(), std::move(content));
+            m_publisher("execute_input", xjson::object(), std::move(content), buffer_sequence());
         }
     }
 
@@ -124,7 +130,7 @@ namespace xeus
             content["execution_count"] = execution_count;
             content["data"] = std::move(data);
             content["metadata"] = std::move(metadata);
-            m_publisher("execute_result", xjson::object(), std::move(content));
+            m_publisher("execute_result", xjson::object(), std::move(content), buffer_sequence());
         }
     }
 
@@ -137,7 +143,7 @@ namespace xeus
             content["ename"] = ename;
             content["evalue"] = evalue;
             content["traceback"] = trace_back;
-            m_publisher("error", xjson::object(), std::move(content));
+            m_publisher("error", xjson::object(), std::move(content), buffer_sequence());
         }
     }
 
@@ -147,7 +153,7 @@ namespace xeus
         {
             xjson content;
             content["wait"] = wait;
-            m_publisher("clear_output", xjson::object(), std::move(content));
+            m_publisher("clear_output", xjson::object(), std::move(content), buffer_sequence());
         }
     }
 
