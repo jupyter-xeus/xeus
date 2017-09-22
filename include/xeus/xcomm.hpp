@@ -272,7 +272,7 @@ namespace xeus
     }
 
     inline xcomm::xcomm(const xcomm& comm)
-        : p_target(comm.p_target), m_id(), m_moved_from(false)
+        : p_target(comm.p_target), m_id(xeus::new_xguid()), m_moved_from(false)
     {
         p_target->register_comm(m_id, this);
     }
@@ -301,7 +301,7 @@ namespace xeus
     }
 
     inline xcomm::xcomm(xtarget* target)
-        : p_target(target), m_id()
+        : p_target(target), m_id(xeus::new_xguid())
     {
         p_target->register_comm(m_id, this);
     }
