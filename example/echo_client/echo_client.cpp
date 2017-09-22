@@ -44,7 +44,7 @@ namespace echo_client
           p_authentication(xeus::make_xauthentication(config.m_signature_scheme, config.m_key)),
           p_io_authentication(xeus::make_xauthentication(config.m_signature_scheme, config.m_key)),
           m_user_name(user_name),
-          m_session_id(guid_to_hex(xeus::xguid()))
+          m_session_id(xeus::new_xguid())
     {
         std::string sep = get_end_point(config.m_transport, config.m_ip, config.m_shell_port);
         m_shell.connect(sep);
@@ -189,7 +189,7 @@ namespace echo_client
         xeus::xjson content;
 
         content["target_name"] = target_name;
-        content["comm_id"] = guid_to_hex(xeus::xguid());
+        content["comm_id"] = xeus::new_xguid();
         content["data"] = xeus::xjson();
 
         xeus::xmessage msg(xeus::xmessage::guid_list(),

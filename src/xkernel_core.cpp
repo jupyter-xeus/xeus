@@ -274,7 +274,7 @@ namespace xeus
             {
                 xjson info;
                 info["target_name"] = name;
-                comms[guid_to_hex(it->first)] = std::move(info);
+                comms[it->first] = std::move(info);
             }
         }
         xjson reply;

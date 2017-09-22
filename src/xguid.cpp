@@ -6,6 +6,12 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <array>
+#include <cstddef>
+#include <string>
+#include <sstream>
+#include <iomanip>
+
 #include "xguid.hpp"
 #include "xstring_utils.hpp"
 
@@ -24,12 +30,14 @@
 namespace xeus
 {
 
-    xguid::xguid()
+    xguid new_xguid()
     {
+        static constexpr std::size_t GUID_SIZE = 16;
+        std::array<unsigned char, GUID_SIZE> buffer;
 #ifdef GUID_LIBUUID
         uuid_t id;
         uuid_generate(id);
-        std::copy(id, id + GUID_SIZE, m_buffer.begin());
+        std::copy(id, id + GUID_SIZE, buffer.begin());
 #endif
 
 #ifdef GUID_CFUUID
@@ -37,7 +45,7 @@ namespace xeus
         auto bytes = CFUUIDGetUUIDBytes(id);
         CFRelease(id);
 
-        m_buffer =
+        buffer =
         {
             bytes.byte0,
             bytes.byte1,
@@ -64,7 +72,7 @@ namespace xeus
 
         using uchar = unsigned char;
 
-        m_buffer =
+        buffer =
         {
             uchar(id.Data1 >> 24 & 0xFF),
             uchar(id.Data1 >> 16 & 0xFF),
@@ -84,34 +92,8 @@ namespace xeus
             id.Data4[7]
         };
 #endif
-    }
 
-    int char2int(char input)
-    {
-        if(input >= '0' && input <= '9')
-            return input - '0';
-        if(input >= 'A' && input <= 'F')
-            return input - 'A' + 10;
-        if(input >= 'a' && input <= 'f')
-            return input - 'a' + 10;
-    }
-
-    xguid::xguid(const char* hex)
-    {
-        for (std::size_t i = 0; i < GUID_SIZE; ++i)
-        {
-            m_buffer[i] = char2int(*hex) * 16 + char2int(hex[1]);
-            hex += 2;
-        }
-    }
-
-    std::string guid_to_hex(xguid uuid)
-    {
-        return hex_string(uuid.m_buffer);
-    }
-
-    xguid hex_to_guid(const char* hex)
-    {
-        return xguid(hex);
+        xguid res = hex_string(buffer);
+        return res;
     }
 }

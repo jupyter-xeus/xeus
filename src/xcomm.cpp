@@ -57,8 +57,7 @@ namespace xeus
         else
         {
             xtarget& target = position->second;
-            std::string sid = content["comm_id"];
-            xguid id = hex_to_guid(sid.c_str());
+            xguid id = content["comm_id"];
             xcomm comm = xcomm(&target, id);
             target(comm, request);
             comm.open(get_metadata(), content["data"]);
@@ -68,12 +67,11 @@ namespace xeus
     void xcomm_manager::comm_close(const xmessage& request)
     {
         const xjson& content = request.content();
-        std::string sid = content["comm_id"];
-        xguid id = hex_to_guid(sid.c_str());
+        xguid id = content["comm_id"];
         auto position = m_comms.find(id);
         if (position == m_comms.end())
         {
-            throw std::runtime_error("No such comm registered: " + guid_to_hex(id));
+            throw std::runtime_error("No such comm registered: " + id);
         }
         else
         {
@@ -85,12 +83,11 @@ namespace xeus
     void xcomm_manager::comm_msg(const xmessage& request)
     {
         const xjson& content = request.content();
-        std::string sid = content["comm_id"];
-        xguid id = hex_to_guid(sid.c_str());
+        xguid id = content["comm_id"];
         auto position = m_comms.find(id);
         if (position == m_comms.end())
         {
-            throw std::runtime_error("No such comm registered: " + guid_to_hex(id));
+            throw std::runtime_error("No such comm registered: " + id);
         }
         else
         {

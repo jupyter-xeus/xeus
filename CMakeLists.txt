@@ -12,6 +12,7 @@ project(xeus)
 # Dependencies
 # ============
 
+find_package(xtl REQUIRED)
 find_package(cppzmq REQUIRED)
 find_package(cryptopp REQUIRED)
 

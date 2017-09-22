@@ -67,8 +67,8 @@ namespace xeus
 
     void xkernel::start()
     {
-        std::string kernel_id = guid_to_hex(xguid());
-        std::string session_id = guid_to_hex(xguid());
+        std::string kernel_id = new_xguid();
+        std::string session_id = new_xguid();
 
         using authentication_ptr = xkernel_core::authentication_ptr;
         authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
