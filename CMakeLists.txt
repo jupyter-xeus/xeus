@@ -38,7 +38,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"
     if (HAS_CPP11_FLAG)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
     else()
-        message(FATAL_ERROR "Unsupported compiler -- xeux requires C++11 support!")
+        message(FATAL_ERROR "Unsupported compiler -- xeus requires C++11 support!")
     endif()
 
     # Enable link time optimization and set the default symbol
