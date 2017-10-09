@@ -16,11 +16,11 @@ namespace echo_kernel
 
     void echo_interpreter::configure_impl()
     {
-        auto handle_comm_opened = [](const xeus::xcomm& comm, const xeus::xmessage&) {
+        auto handle_comm_opened = [](xeus::xcomm&& comm, const xeus::xmessage&) {
             std::cout << "Comm opened for target: " << comm.target().name() << std::endl;
         };
         comm_manager().register_comm_target("echo_target", handle_comm_opened);
-        using function_type = std::function<void(const xeus::xcomm&, const xeus::xmessage&)>;
+        using function_type = std::function<void(xeus::xcomm&&, const xeus::xmessage&)>;
     }
 
     xjson echo_interpreter::execute_request_impl(int execution_counter,

@@ -35,7 +35,7 @@ namespace xeus
     {
     public:
 
-        using function_type = std::function<void(const xcomm&, const xmessage&)>;
+        using function_type = std::function<void(xcomm&&, const xmessage&)>;
 
         xtarget();
         xtarget(const std::string& name, const function_type& callback, xcomm_manager* manager);
@@ -44,7 +44,7 @@ namespace xeus
         const std::string& name() const & noexcept;
         std::string name() const && noexcept;
 
-        void operator()(const xcomm& comm, const xmessage& request) const;
+        void operator()(xcomm&& comm, const xmessage& request) const;
 
         void publish_message(const std::string&, xjson, xjson) const;
 
@@ -197,9 +197,9 @@ namespace xeus
         return m_name;
     }
 
-    inline void xtarget::operator()(const xcomm& comm, const xmessage& message) const
+    inline void xtarget::operator()(xcomm&& comm, const xmessage& message) const
     {
-        return m_callback(comm, message);
+        return m_callback(std::move(comm), message);
     }
 
     inline void xtarget::register_comm(xguid id, xcomm* comm) const
