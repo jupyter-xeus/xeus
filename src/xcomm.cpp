@@ -59,8 +59,7 @@ namespace xeus
             xtarget& target = position->second;
             xguid id = content["comm_id"];
             xcomm comm = xcomm(&target, id);
-            target(comm, request);
-            comm.open(get_metadata(), content["data"]);
+            target(std::move(comm), request);
         }
     }
 

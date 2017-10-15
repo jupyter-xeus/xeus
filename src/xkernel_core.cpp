@@ -266,7 +266,7 @@ namespace xeus
     {
         const xjson& content = request.content();
         std::string target_name = content.is_null() ? "" : content.value("target_name", "");
-        xjson comms;
+        auto comms = xjson::object();
         for (auto it = m_comm_manager.comms().cbegin(); it != m_comm_manager.comms().cend(); ++it)
         {
             const std::string& name = it->second->target().name();
