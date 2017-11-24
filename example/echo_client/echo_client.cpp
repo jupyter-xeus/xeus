@@ -135,7 +135,20 @@ namespace echo_client
         while (true)
         {
             zmq::multipart_t wire_msg;
-            wire_msg.recv(m_iosub);
+            try
+            {
+                wire_msg.recv(m_iosub);
+            }
+            catch (zmq::error_t& e)
+            {
+                if (e.num() == ETERM)
+                {
+                    std::ostringstream oss;
+                    oss << "Received message after context termination" << std::endl;
+                    print(oss.str());
+                    break;
+                }
+            }
 
             xeus::xpub_message msg;
             msg.deserialize(wire_msg, *p_io_authentication);
