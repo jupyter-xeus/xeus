@@ -98,7 +98,7 @@ namespace xeus
     {
         if (m_publisher)
         {
-            m_publisher("display_data", xjson::object(),
+            m_publisher("update_display_data", xjson::object(),
                         build_display_content(std::move(data),
                                               std::move(metadata),
                                               std::move(transient)));
