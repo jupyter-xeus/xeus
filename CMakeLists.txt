@@ -13,6 +13,7 @@ project(xeus)
 # ============
 
 find_package(xtl REQUIRED)
+find_package(ZeroMQ REQUIRED)
 find_package(cppzmq REQUIRED)
 find_package(cryptopp REQUIRED)
 
@@ -143,7 +144,7 @@ message(STATUS "${PROJECT_NAME} version: v${${PROJECT_NAME}_VERSION}")
 # ======
 
 set(XEUS_TARGET xeus)
-set(XEUS_DEPENDENCIES ${cppzmq_LIBRARY} cryptopp-static)
+set(XEUS_DEPENDENCIES libzmq cryptopp-static)
 
 if(NOT MSVC)
     if(NOT APPLE)
