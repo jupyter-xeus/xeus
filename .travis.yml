@@ -87,14 +87,13 @@ install:
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
     - conda info -a
-    # Start test environement
-    - conda env create -f ./test/test-environment.yml
-    - source activate test-xeus
+    - conda install toolchain cmake zeromq cppzmq cryptopp xtl -c conda-forge
     # Build
     - mkdir build
     - cd build
-    - cmake -D BUILD_EXAMPLES=ON ..
+    - cmake -D BUILD_EXAMPLES=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib ..
     - make
+    - make install
 script:
     - |
       cd example
