@@ -13,6 +13,7 @@ project(xeus)
 # ============
 
 find_package(xtl REQUIRED)
+find_package(ZeroMQ REQUIRED)
 find_package(cppzmq REQUIRED)
 find_package(cryptopp REQUIRED)
 
@@ -129,7 +130,7 @@ include_directories(${XEUS_INCLUDE_DIR}/xeus)
 # ==========
 
 file(STRINGS "${XEUS_INCLUDE_DIR}/xeus/xeus.hpp" xeus_version_defines
-    REGEX "#define XEUS_VERSION_(MAJOR|MINOR|PATCH)")
+     REGEX "#define XEUS_VERSION_(MAJOR|MINOR|PATCH)")
 foreach(ver ${xeus_version_defines})
     if(ver MATCHES "#define XEUS_VERSION_(MAJOR|MINOR|PATCH) +([^ ]+)$")
         set(XEUS_VERSION_${CMAKE_MATCH_1} "${CMAKE_MATCH_2}" CACHE INTERNAL "")
@@ -142,8 +143,17 @@ message(STATUS "${PROJECT_NAME} version: v${${PROJECT_NAME}_VERSION}")
 # Output
 # ======
 
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+if("${isSystemDir}" STREQUAL "-1")
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+endif("${isSystemDir}" STREQUAL "-1")
+
 set(XEUS_TARGET xeus)
-set(XEUS_DEPENDENCIES ${cppzmq_LIBRARY} cryptopp-static)
+set(XEUS_DEPENDENCIES cppzmq cryptopp-static)
 
 if(NOT MSVC)
     if(NOT APPLE)
@@ -160,7 +170,7 @@ set_target_properties(${XEUS_TARGET} PROPERTIES
                       PREFIX ""
                       OUTPUT_NAME "libxeus")
 
-                  get_property(XEUS_NAME TARGET ${XEUS_TARGET} PROPERTY OUTPUT_NAME)
+get_property(XEUS_NAME TARGET ${XEUS_TARGET} PROPERTY OUTPUT_NAME)
 if(MSVC)
     set(XEUS_LINK_FILE ${XEUS_NAME}${CMAKE_LINK_LIBRARY_SUFFIX})
     set(XEUS_RUNTIME_FILE ${XEUS_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})

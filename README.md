@@ -86,10 +86,15 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 ## Building from Source
 
-`xeus` depends on the following libraries:
+`xeus` depends on the following libraries: [`libzmq`](https://github.com/zeromq/libzmq), [`cppzmq`](https://github.com/zeromq/cppzmq), [`cryptopp`](https://github.com/weidai11/cryptopp),
+and [`xtl`](https://github.com/QuantStack/xtl)
 
- - [`libzmq`](https://github.com/zeromq/libzmq) ^4.2.1, [`cppzmq`](https://github.com/zeromq/cppzmq), [`cryptopp`](https://github.com/weidai11/cryptopp),
-and [`xtl`](https://github.com/QuantStack/xtl) ^0.3.0
+|  xeus  | libzmq | cppzmq | cryptopp |   xtl  |
+|--------|--------|--------|----------|--------|
+| master |  4.2.3 |  4.2.3 |    5.6.5 | ^0.3.4 |
+|  0.9.0 |  4.2.3 |  4.2.2 |    5.6.5 | ^0.3.4 |
+|  0.8.x |  4.2.1 |  4.2.1 |    5.6.5 | ^0.3.4 |
+
 
 On Linux platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
 
