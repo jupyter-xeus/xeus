@@ -13,7 +13,12 @@ project(xeus)
 # ============
 
 find_package(xtl REQUIRED)
-find_package(ZeroMQ REQUIRED)
+find_package(ZeroMQ QUIET)
+if(NOT ZeroMQ_FOUND)
+    # try again with pkg-config (normal install of zeromq)
+    list (APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/libzmq-pkg-config)
+    find_package(ZeroMQ REQUIRED)
+endif()
 find_package(cppzmq REQUIRED)
 find_package(cryptopp REQUIRED)
 
@@ -215,3 +220,5 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
               DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 
+install(FILES ${CMAKE_CURRENT_LIST_DIR}/libzmq-pkg-config/FindZeroMQ.cmake
+              DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR}/libzmq-pkg-config)
