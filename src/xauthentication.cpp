@@ -8,9 +8,9 @@
 
 #include <array>
 #include <cstddef>
-#include "xauthentication.hpp"
+#include "xeus/xauthentication.hpp"
+#include "xeus/make_unique.hpp"
 #include "xstring_utils.hpp"
-#include "make_unique.hpp"
 #include "cryptopp/sha.h"
 #include "cryptopp/hmac.h"
 

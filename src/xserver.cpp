@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xserver.hpp"
-#include "make_unique.hpp"
+#include "xeus/xserver.hpp"
+#include "xeus/make_unique.hpp"
 #include "xserver_impl.hpp"
 
 namespace xeus

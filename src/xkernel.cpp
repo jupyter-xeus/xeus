@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xkernel.hpp"
-#include "xguid.hpp"
+#include "xeus/xkernel.hpp"
+#include "xeus/xguid.hpp"
 #include "xkernel_core.hpp"
 
 #if (defined(__linux__) || defined(__unix__))

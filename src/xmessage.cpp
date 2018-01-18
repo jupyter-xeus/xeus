@@ -8,8 +8,8 @@
 
 #include <cstddef>
 
-#include "xmessage.hpp"
-#include "xguid.hpp"
+#include "xeus/xmessage.hpp"
+#include "xeus/xguid.hpp"
 
 namespace xeus
 {

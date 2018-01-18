@@ -11,10 +11,8 @@ set(ECHO_CLIENT_SOURCES
     echo_client.hpp
     main.cpp)
 
-include_directories(${XEUS_INCLUDE_DIR})
-
-add_executable(echo_client ${ECHO_CLIENT_SOURCES} ${XEUS_HEADERS})
-target_link_libraries(echo_client ${XEUS_TARGET})
+add_executable(echo_client ${ECHO_CLIENT_SOURCES})
+target_link_libraries(echo_client xeus "-lpthread")
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../echo_kernel/connection.json)
 

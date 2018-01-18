@@ -9,81 +9,49 @@
 cmake_minimum_required(VERSION 3.1)
 project(xeus)
 
+set(XEUS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+# Versionning
+# ===========
+
+# Project version
+file(STRINGS "${XEUS_INCLUDE_DIR}/xeus/xeus.hpp" xeus_version_defines
+     REGEX "#define XEUS_VERSION_(MAJOR|MINOR|PATCH)")
+foreach(ver ${xeus_version_defines})
+    if(ver MATCHES "#define XEUS_VERSION_(MAJOR|MINOR|PATCH) +([^ ]+)$")
+        set(XEUS_VERSION_${CMAKE_MATCH_1} "${CMAKE_MATCH_2}" CACHE INTERNAL "")
+    endif()
+endforeach()
+set(XEUS_VERSION
+    ${XEUS_VERSION_MAJOR}.${XEUS_VERSION_MINOR}.${XEUS_VERSION_PATCH})
+message(STATUS "xeus version: v${XEUS_VERSION}")
+
+# Binary version
+# See the following URL for explanations about the binary versionning
+# https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html#Updating-version-info
+file(STRINGS "${XEUS_INCLUDE_DIR}/xeus/xeus.hpp" xeus_version_defines
+    REGEX "#define XEUS_BINARY_(CURRENT|REVISION|AGE)")
+foreach(ver ${xeus_version_defines})
+    if(ver MATCHES "#define XEUS_BINARY_(CURRENT|REVISION|AGE) +([^ ]+)$")
+        set(XEUS_BINARY_${CMAKE_MATCH_1} "${CMAKE_MATCH_2}" CACHE INTERNAL "")
+    endif()
+endforeach()
+set(XEUS_BINARY_VERSION
+    ${XEUS_BINARY_CURRENT}.${XEUS_BINARY_REVISION}.${XEUS_BINARY_AGE})
+message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
+
+
 # Dependencies
 # ============
 
-find_package(xtl REQUIRED)
-find_package(ZeroMQ REQUIRED)
-find_package(cppzmq REQUIRED)
+find_package(xtl 0.4 REQUIRED)
+find_package(ZeroMQ 4.2.3 REQUIRED)
+find_package(cppzmq 4.2.3 REQUIRED)
 find_package(cryptopp REQUIRED)
-
-# Compilation flags
-# =================
-
-include(CheckCXXCompilerFlag)
-
-string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
-
-OPTION(DISABLE_ARCH_NATIVE "disable -march=native flag" OFF)
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-parameter -Wextra -Wreorder")
-    if (DISABLE_ARCH_NATIVE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mtune=generic")
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
-    endif()
-
-    CHECK_CXX_COMPILER_FLAG("-std=c++11" HAS_CPP11_FLAG)
-
-    if (HAS_CPP11_FLAG)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    else()
-        message(FATAL_ERROR "Unsupported compiler -- xeus requires C++11 support!")
-    endif()
-
-    # Enable link time optimization and set the default symbol
-    # visibility to hidden (very important to obtain small binaries)
-    if (NOT ${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
-        # Check for Link Time Optimization support
-        # (GCC/Clang)
-        CHECK_CXX_COMPILER_FLAG("-flto" HAS_LTO_FLAG)
-        if (HAS_LTO_FLAG)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
-        endif()
-
-        # Intel equivalent to LTO is called IPO
-        if (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-            CHECK_CXX_COMPILER_FLAG("-ipo" HAS_IPO_FLAG)
-            if (HAS_IPO_FLAG)
-                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ipo")
-            endif()
-        endif()
-    endif()
-    message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
-endif()
-
-if(MSVC)
-    add_definitions(-DNOMINMAX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DGUID_WINDOWS /MP /bigobj")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4996")
-    # Allows to compile in debug without requiring each dependencies to
-    # be compiled in debug
-    if(${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
-        set(CMAKE_CXX_FLAGS_DEBUG "/DNDEBUG /MD /Zi /Ob0 /Od /RTC1")
-        message(STATUS "Overriding CMAKE_CXX_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
-    endif()
-elseif(APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGUID_CFUUID")
-else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGUID_LIBUUID")
-endif()
 
 # Source files
 # ============
-
-set(XEUS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/nl_json.hpp
@@ -123,23 +91,6 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xstring_utils.hpp
 )
 
-include_directories(${cppzmq_INCLUDE_DIR})
-include_directories(${XEUS_INCLUDE_DIR}/xeus)
-
-# Versioning
-# ==========
-
-file(STRINGS "${XEUS_INCLUDE_DIR}/xeus/xeus.hpp" xeus_version_defines
-     REGEX "#define XEUS_VERSION_(MAJOR|MINOR|PATCH)")
-foreach(ver ${xeus_version_defines})
-    if(ver MATCHES "#define XEUS_VERSION_(MAJOR|MINOR|PATCH) +([^ ]+)$")
-        set(XEUS_VERSION_${CMAKE_MATCH_1} "${CMAKE_MATCH_2}" CACHE INTERNAL "")
-    endif()
-endforeach()
-set(${PROJECT_NAME}_VERSION
-    ${XEUS_VERSION_MAJOR}.${XEUS_VERSION_MINOR}.${XEUS_VERSION_PATCH})
-message(STATUS "${PROJECT_NAME} version: v${${PROJECT_NAME}_VERSION}")
-
 # Output
 # ======
 
@@ -152,34 +103,91 @@ if("${isSystemDir}" STREQUAL "-1")
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 endif("${isSystemDir}" STREQUAL "-1")
 
-set(XEUS_TARGET xeus)
-set(XEUS_DEPENDENCIES cppzmq cryptopp-static)
+add_library(xeus SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
+target_include_directories(xeus PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
+                                       $<INSTALL_INTERFACE:include>)
+target_link_libraries(xeus
+                      PUBLIC cppzmq
+                      PRIVATE cryptopp-static) 
 
 if(NOT MSVC)
-    if(NOT APPLE)
+    if(APPLE)
+        target_link_libraries(xeus PUBLIC "-framework CoreFoundation")
+    else()
         find_library(UUID libuuid${CMAKE_SHARED_LIBRARY_SUFFIX} CMAKE_LIBRARY_PATH) 
-        set(XEUS_DEPENDENCIES ${XEUS_DEPENDENCIES} ${UUID})
+        target_link_libraries(xeus PUBLIC ${UUID})
     endif()
 endif()
 
-add_library(${XEUS_TARGET} SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
-target_link_libraries(${XEUS_TARGET} ${XEUS_DEPENDENCIES})
-set_target_properties(${XEUS_TARGET} PROPERTIES
+set_target_properties(xeus PROPERTIES
                       PUBLIC_HEADER "${XEUS_HEADERS}"
                       COMPILE_DEFINITIONS "XEUS_EXPORTS"
                       PREFIX ""
+                      VERSION ${XEUS_BINARY_VERSION}
+                      SOVERSION ${XEUS_BINARY_CURRENT}
                       OUTPUT_NAME "libxeus")
 
-get_property(XEUS_NAME TARGET ${XEUS_TARGET} PROPERTY OUTPUT_NAME)
-if(MSVC)
-    set(XEUS_LINK_FILE ${XEUS_NAME}${CMAKE_LINK_LIBRARY_SUFFIX})
-    set(XEUS_RUNTIME_FILE ${XEUS_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-else()
-    if(APPLE)
-        target_link_libraries(${XEUS_TARGET} "-framework CoreFoundation")
+# Compilation flags
+# =================
+
+include(CheckCXXCompilerFlag)
+string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
+OPTION(DISABLE_ARCH_NATIVE "disable -march=native flag" OFF)
+
+set_target_properties(xeus PROPERTIES
+                      CXX_STANDARD 11
+                      CXX_STANDARD_REQUIRED ON)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
+    target_compile_options(xeus PUBLIC -Wunused-parameter -Wextra -Wreorder)
+    if (DISABLE_ARCH_NATIVE)
+        target_compile_options(xeus PUBLIC -mtune=generic)
+    else()
+        target_compile_options(xeus PUBLIC -march=native)
     endif()
-    set(XEUS_LINK_FILE ${XEUS_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(XEUS_RUNTIME_FILE ${XEUS_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+    CHECK_CXX_COMPILER_FLAG("-std=c++11" HAS_CPP11_FLAG)
+    if(HAS_CPP11_FLAG)
+        target_compile_options(xeus PUBLIC -std=c++11)
+    else()
+        message(FATAL_ERROR "Unsupported compiler -- xeus requires C++11 support!")
+    endif()
+
+    # Enable link time optimization and set the default symbol
+    # visibility to hidden (very important to obtain small binaries)
+    if (NOT ${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
+        # Check for Link Time Optimization support
+        # (GCC/Clang)
+        CHECK_CXX_COMPILER_FLAG("-flto" HAS_LTO_FLAG)
+        if (HAS_LTO_FLAG)
+            target_compile_options(xeus PUBLIC -flto)
+        endif()
+
+        # Intel equivalent to LTO is called IPO
+        if (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
+            CHECK_CXX_COMPILER_FLAG("-ipo" HAS_IPO_FLAG)
+            if (HAS_IPO_FLAG)
+                target_compile_options(xeus PUBLIC -ipo)
+            endif()
+        endif()
+    endif()
+    message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+endif()
+
+if(MSVC)
+    target_compile_definitions(xeus PUBLIC -DNOMINMAX)
+    target_compile_options(xeus PUBLIC /DGUID_WINDOWS /MP /bigobj)
+    target_compile_options(xeus PUBLIC /wd4251 /wd 4996)
+    # Allows to compile in debug without requiring each dependencies to
+    # be compiled in debug
+    if(${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
+        set(CMAKE_CXX_FLAGS_DEBUG "/DNDEBUG /MD /Zi /Ob0 /Od /RTC1")
+        message(STATUS "Overriding CMAKE_CXX_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
+    endif()
+elseif(APPLE)
+    target_compile_definitions(xeus PUBLIC -DGUID_CFUUID)
+else()
+    target_compile_definitions(xeus PUBLIC -DGUID_LIBUUID)
 endif()
 
 # Examples
@@ -199,19 +207,27 @@ include(CMakePackageConfigHelpers)
 
 set(XEUS_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE STRING "install path for xeusConfig.cmake")
 
-install(TARGETS ${XEUS_TARGET}
+install(TARGETS xeus
+        EXPORT ${PROJECT_NAME}-targets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xeus)
 
+# Makes the project importable from the build directory
+export(EXPORT ${PROJECT_NAME}-targets
+       FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
+
 configure_package_config_file(${PROJECT_NAME}Config.cmake.in
                               "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
                               INSTALL_DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-                                 VERSION ${${PROJECT_NAME}_VERSION}
+                                 VERSION ${XEUS_VERSION}
                                  COMPATIBILITY AnyNewerVersion)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
               DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
+install(EXPORT ${PROJECT_NAME}-targets
+        FILE ${PROJECT_NAME}Targets.cmake
+        DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 
