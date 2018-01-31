@@ -11,10 +11,8 @@ set(ECHO_KERNEL_SOURCES
     echo_interpreter.hpp
     main.cpp)
 
-include_directories(${XEUS_INCLUDE_DIR})
-
-add_executable(echo_kernel ${ECHO_KERNEL_SOURCES} ${XEUS_HEADERS})
-target_link_libraries(echo_kernel ${XEUS_TARGET})
+add_executable(echo_kernel ${ECHO_KERNEL_SOURCES})
+target_link_libraries(echo_kernel xeus "-lpthread")
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
 

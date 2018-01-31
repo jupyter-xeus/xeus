@@ -7,8 +7,8 @@
 ****************************************************************************/
 
 #include <fstream>
-#include "xkernel_configuration.hpp"
-#include "xjson.hpp"
+#include "xeus/xkernel_configuration.hpp"
+#include "xeus/xjson.hpp"
 
 namespace xeus
 {

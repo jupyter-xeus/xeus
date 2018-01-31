@@ -11,11 +11,11 @@
 
 #include <map>
 
-#include "xcomm.hpp"
-#include "xserver.hpp"
-#include "xinterpreter.hpp"
-#include "xauthentication.hpp"
-#include "xmessage.hpp"
+#include "xeus/xcomm.hpp"
+#include "xeus/xserver.hpp"
+#include "xeus/xinterpreter.hpp"
+#include "xeus/xauthentication.hpp"
+#include "xeus/xmessage.hpp"
 
 namespace xeus
 {

@@ -9,10 +9,10 @@
 #ifndef XSERVER_IMPL_HPP
 #define XSERVER_IMPL_HPP
 
-#include "xserver.hpp"
+#include "xeus/xserver.hpp"
+#include "xeus/xkernel_configuration.hpp"
 #include "xpublisher.hpp"
 #include "xheartbeat.hpp"
-#include "xkernel_configuration.hpp"
 
 namespace xeus
 {

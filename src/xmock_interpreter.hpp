@@ -9,8 +9,8 @@
 #ifndef XEUX_MOCK_INTERPRETER_HPP
 #define XEUX_MOCK_INTERPRETER_HPP
 
-#include "xinterpreter.hpp"
-#include "xeus.hpp"
+#include "xeus/xinterpreter.hpp"
+#include "xeus/xeus.hpp"
 
 namespace xeus
 {

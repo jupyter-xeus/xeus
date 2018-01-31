@@ -1,4 +1,4 @@
-#include "xcomm.hpp"
+#include "xeus/xcomm.hpp"
 #include "xkernel_core.hpp"
 
 namespace xeus

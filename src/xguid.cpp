@@ -12,7 +12,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "xguid.hpp"
+#include "xeus/xguid.hpp"
 #include "xstring_utils.hpp"
 
 #ifdef GUID_LIBUUID
