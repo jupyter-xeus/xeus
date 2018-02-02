@@ -14,6 +14,8 @@ set(ECHO_CLIENT_SOURCES
 add_executable(echo_client ${ECHO_CLIENT_SOURCES})
 target_link_libraries(echo_client xeus "-lpthread")
 
+target_compile_features(echo_client PRIVATE cxx_std_11)
+
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../echo_kernel/connection.json)
 
 add_custom_command(TARGET echo_client POST_BUILD

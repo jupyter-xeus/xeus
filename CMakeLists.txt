@@ -108,7 +108,8 @@ target_include_directories(xeus PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
                                        $<INSTALL_INTERFACE:include>)
 target_link_libraries(xeus
                       PUBLIC cppzmq
-                      PRIVATE cryptopp-static) 
+                      PRIVATE cryptopp-static
+                      PRIVATE xtl)
 
 if(NOT MSVC)
     if(APPLE)
@@ -134,9 +135,7 @@ include(CheckCXXCompilerFlag)
 string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 OPTION(DISABLE_ARCH_NATIVE "disable -march=native flag" OFF)
 
-set_target_properties(xeus PROPERTIES
-                      CXX_STANDARD 11
-                      CXX_STANDARD_REQUIRED ON)
+target_compile_features(xeus PRIVATE cxx_std_11)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
     target_compile_options(xeus PUBLIC -Wunused-parameter -Wextra -Wreorder)
@@ -144,13 +143,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"
         target_compile_options(xeus PUBLIC -mtune=generic)
     else()
         target_compile_options(xeus PUBLIC -march=native)
-    endif()
-
-    CHECK_CXX_COMPILER_FLAG("-std=c++11" HAS_CPP11_FLAG)
-    if(HAS_CPP11_FLAG)
-        target_compile_options(xeus PUBLIC -std=c++11)
-    else()
-        message(FATAL_ERROR "Unsupported compiler -- xeus requires C++11 support!")
     endif()
 
     # Enable link time optimization and set the default symbol
