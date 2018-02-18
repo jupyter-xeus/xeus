@@ -86,15 +86,16 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 ## Building from Source
 
-`xeus` depends on the following libraries: [`libzmq`](https://github.com/zeromq/libzmq), [`cppzmq`](https://github.com/zeromq/cppzmq), [`cryptopp`](https://github.com/weidai11/cryptopp),
-and [`xtl`](https://github.com/QuantStack/xtl)
+`xeus` depends on the following libraries: [`libzmq`](https://github.com/zeromq/libzmq),
+[`cppzmq`](https://github.com/zeromq/cppzmq), [`cryptopp`](https://github.com/weidai11/cryptopp),
+[`nlohmann_json`](https://github.com/nlohmann/json), and [`xtl`](https://github.com/QuantStack/xtl).
 
-|  xeus  | libzmq | cppzmq | cryptopp |   xtl  |
-|--------|--------|--------|----------|--------|
-| master |  4.2.3 |  4.2.3 |    5.6.5 | ^0.3.4 |
-| 0.10.x |  4.2.3 |  4.2.3 |    5.6.5 | ^0.3.4 |
-|  0.9.x |  4.2.3 |  4.2.2 |    5.6.5 | ^0.3.4 |
-|  0.8.x |  4.2.1 |  4.2.1 |    5.6.5 | ^0.3.4 |
+|  xeus  | libzmq | cppzmq | cryptopp |   xtl  | nlohmann json |
+|--------|--------|--------|----------|--------|---------------|
+| master |  4.2.3 |  4.2.3 |    5.6.5 | ^0.4.0 | ^3.1.1        |
+| 0.10.x |  4.2.3 |  4.2.3 |    5.6.5 | ^0.4.0 |               |
+|  0.9.x |  4.2.3 |  4.2.2 |    5.6.5 | ^0.3.4 |               |
+|  0.8.x |  4.2.1 |  4.2.1 |    5.6.5 | ^0.3.4 |               |
 
 
 On Linux platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
@@ -103,13 +104,13 @@ We have packaged all these dependencies for the conda package manager. The simpl
 conda is to run:
 
 ```bash
-conda install cmake zeromq cppzmq cryptopp -c conda-forge
+conda install cmake zeromq cppzmq cryptopp nlohmann_json -c QuantStack
 ```
 
 On Linux platform, you will also need:
 
 ```bash
-conda install libuuid -c conda-forge
+conda install util-linux -c conda-forge
 ```
 
 Once you have installed the dependencies, you can build and install `xeus`:
@@ -144,6 +145,14 @@ cmake -D CMAKE_BUILD_TYPE=Release
 make install
 ```
 
+### json for modern cpp
+
+`nlohmann_json` is a header only library
+
+```bash
+cmake
+make install
+```
 
 ### cryptopp
 

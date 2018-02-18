@@ -88,6 +88,7 @@ install:
     - conda update -q conda
     - conda info -a
     - conda install toolchain cmake zeromq cppzmq cryptopp xtl -c conda-forge
+    - conda install nlohmann_json -c QuantStack
     # Build
     - mkdir build
     - cd build

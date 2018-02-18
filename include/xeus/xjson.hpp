@@ -11,7 +11,7 @@
 
 #include "xtl/xbasic_fixed_string.hpp"
 
-#include "nl_json.hpp"
+#include "nlohmann/json.hpp"
 
 namespace xtl
 {
