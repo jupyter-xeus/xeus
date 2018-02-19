@@ -45,6 +45,7 @@ message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 # Dependencies
 # ============
 
+find_package(nlohmann_json 3.1.1 REQUIRED)
 find_package(xtl 0.4 REQUIRED)
 find_package(ZeroMQ 4.2.3 REQUIRED)
 find_package(cppzmq 4.2.3 REQUIRED)
@@ -54,7 +55,6 @@ find_package(cryptopp REQUIRED)
 # ============
 
 set(XEUS_HEADERS
-    ${XEUS_INCLUDE_DIR}/xeus/nl_json.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xauthentication.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xcomm.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus.hpp

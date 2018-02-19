@@ -24,6 +24,7 @@ install:
   - conda update -q conda
   - conda info -a
   - conda install cmake cppzmq zeromq rapidjson cryptopp xtl -c conda-forge
+  - conda install nlohmann_json -c QuantStack
   - mkdir build
   - cd build
   - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -D BUILD_EXAMPLES=ON ..
