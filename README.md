@@ -13,6 +13,9 @@ C++ implementation of the Jupyter Kernel protocol
 burden of implementing the Jupyter Kernel protocol so developers can focus on implementing the
 interpreter part of the kernel.
 
+An example of kernel built with xeus is [`xeus-cling`](https://github.com/QuantStack/xeus-cling),
+a kernel for the C++ programming language based on the `cling` C++ interpreter.
+
 ## Installation
 
 `xeus` has been packaged on all platforms for the conda package manager.
