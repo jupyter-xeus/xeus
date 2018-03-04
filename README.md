@@ -18,7 +18,7 @@ interpreter part of the kernel.
 `xeus` has been packaged on all platforms for the conda package manager.
 
 ```
-conda install xeus -c conda-forge
+conda install xeus -c QuantStack
 ```
 
 ## Usage
@@ -28,7 +28,7 @@ conda install xeus -c conda-forge
 The easiest way to get started with a new kernel is to inherit from the base interpreter class `xeus::xinterpreter` and implement the private virtual methods:
 
 - `execute_request_impl`
-- `complete_request_impl` 
+- `complete_request_impl`
 - `inspect_request_impl`
 - `history_request_impl`
 - `is_complete_request_impl`
