@@ -8,8 +8,8 @@
 
 #include <cstddef>
 
-#include "xeus/xmessage.hpp"
 #include "xeus/xguid.hpp"
+#include "xeus/xmessage.hpp"
 
 namespace xeus
 {
@@ -196,7 +196,7 @@ namespace xeus
 
     std::string get_protocol_version()
     {
-        return "5.1";
+        return XEUS_KERNEL_PROTOCOL_VERSION;
     }
 
     xjson make_header(const std::string& msg_type,
