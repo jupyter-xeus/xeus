@@ -29,4 +29,17 @@
 #define XEUS_BINARY_REVISION 0
 #define XEUS_BINARY_AGE 1
 
+// Kernel protocol version
+#define XEUS_KERNEL_PROTOCOL_VERSION_MAJOR 5
+#define XEUS_KERNEL_PROTOCOL_VERSION_MINOR 1
+
+// Composing the protocol version string from major, and minor
+#define XEUS_CONCATENATE(A, B) XEUS_CONCATENATE_IMPL(A, B)
+#define XEUS_CONCATENATE_IMPL(A, B) A##B
+#define XEUS_STRINGIFY(a) XEUS_STRINGIFY_IMPL(a)
+#define XEUS_STRINGIFY_IMPL(a) #a
+
+#define XEUS_KERNEL_PROTOCOL_VERSION XEUS_STRINGIFY(XEUS_CONCATENATE(    XEUS_KERNEL_PROTOCOL_VERSION_MAJOR,\
+                                                    XEUS_CONCATENATE(.,  XEUS_KERNEL_PROTOCOL_VERSION_MINOR)))
+
 #endif

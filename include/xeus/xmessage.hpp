@@ -9,11 +9,12 @@
 #ifndef XMESSAGE_HPP
 #define XMESSAGE_HPP
 
+#include <vector>
+
 #include "xauthentication.hpp"
 #include "xeus.hpp"
 #include "xjson.hpp"
 #include "zmq_addon.hpp"
-#include <vector>
 
 namespace xeus
 {
