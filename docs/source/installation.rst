@@ -14,7 +14,7 @@ With Conda
 
 .. code::
 
-    conda install -c conda-forge xeus 
+    conda install xeus -c QuantStack -c conda-forge
 
 From Source
 -----------
@@ -23,13 +23,13 @@ From Source
 
  - libzmq_, cppzmq_, cryptopp_ and xtl_
 
-On linux platforms, ``xeus`` also requires libuuid, which is available in all linux distributions (``uuid-dev`` on Debian).
+On linux platforms, ``xeus`` also requires libuuid, which is available in all linux distributions.
 
 We have packaged all these dependencies for the conda package manager. The simplest way to install them with conda is to run:
 
 .. code::
 
-    conda install cmake zeromq cppzmq cryptopp xtl -c conda-forge .
+    conda install cmake zeromq cppzmq cryptopp xtl -c QuantStack -c conda-forge .
 
 On Linux platform, you will also need:
 
