@@ -129,7 +129,7 @@ If you need the `xeus` library only, you can omit the `BUILD_EXAMPLES` settings.
 
 ## Installing the Dependencies from Source
 
-The dependencies can also be installed from source. Simply clone the directories and run the following cmake and make instructions.
+The dependencies can also be installed from source. Simply clone the directories and run the following cmake (cmake >= 3.8)  and make instructions.
 
 ### libzmq
 
