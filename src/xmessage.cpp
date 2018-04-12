@@ -7,13 +7,15 @@
 ****************************************************************************/
 
 #include <cstddef>
+#include <stdexcept>
+#include <string>
+#include <utility>
 
 #include "xeus/xguid.hpp"
 #include "xeus/xmessage.hpp"
 
 namespace xeus
 {
-
     const std::string xmessage_base::DELIMITER = "<IDS|MSG>";
 
     void parse_zmq_message(const zmq::message_t& msg,
@@ -32,11 +34,13 @@ namespace xeus
     xmessage_base::xmessage_base(xjson header,
                                  xjson parent_header,
                                  xjson metadata,
-                                 xjson content)
+                                 xjson content,
+                                 buffer_sequence buffers)
         : m_header(std::move(header)),
           m_parent_header(std::move(parent_header)),
           m_metadata(std::move(metadata)),
-          m_content(std::move(content))
+          m_content(std::move(content)),
+          m_buffers(std::move(buffers))
     {
     }
 
@@ -44,7 +48,9 @@ namespace xeus
     {
         std::size_t frame_size = frame.size();
         if (frame_size != xmessage_base::DELIMITER.size())
+        {
             return false;
+        }
 
         std::string check(frame.data<const char>(), frame_size);
         return check == xmessage_base::DELIMITER;
@@ -58,16 +64,24 @@ namespace xeus
         zmq::message_t metadata = wire_msg.pop();
         zmq::message_t content = wire_msg.pop();
 
-        if (!auth.verify(signature, header, parent_header, metadata, content))
-            throw std::runtime_error("Signatures don't match");
-
         parse_zmq_message(header, m_header);
         parse_zmq_message(parent_header, m_parent_header);
         parse_zmq_message(metadata, m_metadata);
         parse_zmq_message(content, m_content);
+
+        while (not wire_msg.empty())
+        {
+            m_buffers.push_back(wire_msg.pop());
+        }
+
+        // TODO: should we verify with buffers
+        if (!auth.verify(signature, header, parent_header, metadata, content))
+        {
+            throw std::runtime_error("Signatures don't match");
+        }
     }
 
-    void xmessage_base::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) const
+    void xmessage_base::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&
     {
         // DELIMITER is written in the inheriting class so serialize/ deserialize
         // are symmetric
@@ -83,6 +97,12 @@ namespace xeus
         wire_msg.add(std::move(parent_header));
         wire_msg.add(std::move(metadata));
         wire_msg.add(std::move(content));
+
+        // was not const and  could only be called on rvalues.
+        for (zmq::message_t& buffer : m_buffers)
+        {
+            wire_msg.add(std::move(buffer));
+        }
     }
 
     const xjson& xmessage_base::header() const
@@ -105,15 +125,22 @@ namespace xeus
         return m_content;
     }
 
+    const buffer_sequence& xmessage_base::buffers() const
+    {
+        return m_buffers;
+    }
+
     xmessage::xmessage(const guid_list& zmq_id,
                        xjson header,
                        xjson parent_header,
                        xjson metadata,
-                       xjson content)
+                       xjson content,
+                       buffer_sequence buffers)
         : xmessage_base(std::move(header),
             std::move(parent_header),
             std::move(metadata),
-            std::move(content)),
+            std::move(content),
+            std::move(buffers)),
         m_zmq_id(zmq_id)
     {
     }
@@ -121,22 +148,24 @@ namespace xeus
     void xmessage::deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth)
     {
         zmq::message_t frame = wire_msg.pop();
+
         // ZMQ identites
-        while (!xmessage_base::is_delimiter(frame) && wire_msg.size() != 0)
+        while (!base_type::is_delimiter(frame) && wire_msg.size() != 0)
         {
             m_zmq_id.emplace_back(frame.data<const char>(), frame.size());
             frame = wire_msg.pop();
         }
+
         // if wire_msg is empty, that means frame doesn't contain <IDS|MSG>
         if (wire_msg.size() == 0)
         {
             throw std::runtime_error("Delimiter not present in message");
         }
 
-        xmessage_base::deserialize(wire_msg, auth);
+        base_type::deserialize(wire_msg, auth);
     }
 
-    void xmessage::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) const
+    void xmessage::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&
     {
         auto app = [&wire_msg](const std::string& uid)
         {
@@ -144,7 +173,7 @@ namespace xeus
         };
         std::for_each(m_zmq_id.begin(), m_zmq_id.end(), app);
         wire_msg.add(zmq::message_t(DELIMITER.begin(), DELIMITER.end()));
-        xmessage_base::serialize(wire_msg, auth);
+        std::move(*this).base_type::serialize(wire_msg, auth);
     }
 
     auto xmessage::identities() const -> const guid_list&
@@ -156,11 +185,13 @@ namespace xeus
                                xjson header,
                                xjson parent_header,
                                xjson metadata,
-                               xjson content)
+                               xjson content,
+                               buffer_sequence buffers)
         : xmessage_base(std::move(header),
                         std::move(parent_header),
                         std::move(metadata),
-                        std::move(content)),
+                        std::move(content),
+                        std::move(buffers)),
         m_topic(topic)
     {
     }
@@ -170,14 +201,14 @@ namespace xeus
         zmq::message_t topic_msg = wire_msg.pop();
         m_topic = std::string(topic_msg.data<const char>(), topic_msg.size());
         wire_msg.pop();
-        xmessage_base::deserialize(wire_msg, auth);
+        base_type::deserialize(wire_msg, auth);
     }
 
-    void xpub_message::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) const
+    void xpub_message::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&
     {
         wire_msg.add(zmq::message_t(m_topic.begin(), m_topic.end()));
         wire_msg.add(zmq::message_t(DELIMITER.begin(), DELIMITER.end()));
-        xmessage_base::serialize(wire_msg, auth);
+        std::move(*this).base_type::serialize(wire_msg, auth);
     }
 
     const std::string& xpub_message::topic() const

@@ -50,8 +50,9 @@ namespace xeus
                          make_header("status", user_name, session_id),
                          xjson::object(),
                          xjson::object(),
-                         std::move(content));
-        msg.serialize(wire_msg, *auth);
+                         std::move(content),
+                         buffer_sequence());
+        std::move(msg).serialize(wire_msg, *auth);
     }
 
     xkernel::xkernel(const xconfiguration& config,

@@ -71,7 +71,7 @@ namespace xeus
         xjson kernel_info_request();
 
         // publish(msg_type, metadata, content)
-        using publisher_type = std::function<void(const std::string&, xjson, xjson)>;
+        using publisher_type = std::function<void(const std::string&, xjson, xjson, buffer_sequence)>;
         void register_publisher(const publisher_type& publisher);
 
         void publish_stream(const std::string& name, const std::string& text);
