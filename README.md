@@ -24,6 +24,12 @@ a kernel for the C++ programming language based on the `cling` C++ interpreter.
 conda install xeus -c QuantStack
 ```
 
+## Documentation
+
+To get started with using `xeus`, check out the full documentation
+
+http://xeus.readthedocs.io/
+
 ## Usage
 
 `xeus` enables custom kernel authors to implement Jupyter kernels more easily. It takes the burden of implementing the Jupyter Kernel protocol so developers can focus on implementing the interpreter part of the Kernel.
