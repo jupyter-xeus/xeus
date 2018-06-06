@@ -1,4 +1,4 @@
-# ![xeus](http://quantstack.net/assets/images/xeus.svg)
+# ![xeus](docs/source/xeus.svg)
 
 [![Travis](https://travis-ci.org/QuantStack/xeus.svg?branch=master)](https://travis-ci.org/QuantStack/xeus)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/5alkw5iiere4mox2?svg=true)](https://ci.appveyor.com/project/QuantStack/xeus)
