@@ -110,8 +110,8 @@ target_include_directories(xeus PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
 target_link_libraries(xeus
                       PUBLIC cppzmq
                       PUBLIC nlohmann_json
-                      PRIVATE cryptopp-static
-                      PRIVATE xtl)
+                      PUBLIC xtl
+                      PRIVATE cryptopp-static)
 
 if(NOT MSVC)
     if(APPLE)
