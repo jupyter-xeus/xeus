@@ -109,6 +109,7 @@ target_include_directories(xeus PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
                                        $<INSTALL_INTERFACE:include>)
 target_link_libraries(xeus
                       PUBLIC cppzmq
+                      PUBLIC nlohmann_json
                       PRIVATE cryptopp-static
                       PRIVATE xtl)
 
