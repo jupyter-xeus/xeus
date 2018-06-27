@@ -9,6 +9,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(xeus)
 
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(XEUS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
@@ -115,8 +116,8 @@ if(NOT MSVC)
     if(APPLE)
         target_link_libraries(xeus PUBLIC "-framework CoreFoundation")
     else()
-        find_library(UUID libuuid${CMAKE_SHARED_LIBRARY_SUFFIX} CMAKE_LIBRARY_PATH)
-        target_link_libraries(xeus PUBLIC ${UUID})
+        find_package(LibUUID REQUIRED)
+        target_link_libraries(xeus PUBLIC LibUUID::LibUUID)
     endif()
 endif()
 
