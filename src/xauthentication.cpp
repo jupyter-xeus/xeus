@@ -14,6 +14,8 @@
 #include "cryptopp/sha.h"
 #include "cryptopp/hmac.h"
 
+using CryptoPP::byte;
+
 namespace xeus
 {
 
