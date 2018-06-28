@@ -7,8 +7,8 @@
 ****************************************************************************/
 
 #include "xeus/xkernel.hpp"
+#include "xeus/xkernel_core.hpp"
 #include "xeus/xguid.hpp"
-#include "xkernel_core.hpp"
 
 #if (defined(__linux__) || defined(__unix__))
 #define LINUX_PLATFORM

@@ -6,7 +6,7 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xmiddleware.hpp"
+#include "xeus/xmiddleware.hpp"
 
 namespace xeus
 {

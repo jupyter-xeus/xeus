@@ -6,9 +6,9 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xheartbeat.hpp"
+#include "xeus/xheartbeat.hpp"
+#include "xeus/xmiddleware.hpp"
 #include "zmq_addon.hpp"
-#include "xmiddleware.hpp"
 #include <iterator>
 
 namespace xeus

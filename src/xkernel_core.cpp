@@ -12,7 +12,7 @@
 #include <string>
 #include <tuple>
 
-#include "xkernel_core.hpp"
+#include "xeus/xkernel_core.hpp"
 
 using namespace std::placeholders;
 

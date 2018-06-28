@@ -66,6 +66,12 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xkernel_configuration.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xmessage.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver.hpp
+
+    ${XEUS_INCLUDE_DIR}/xeus/xkernel_core.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xheartbeat.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xmiddleware.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xpublisher.hpp
+
 )
 
 set(XEUS_SOURCES
@@ -73,19 +79,15 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xcomm.cpp
     ${XEUS_SOURCE_DIR}/xguid.cpp
     ${XEUS_SOURCE_DIR}/xheartbeat.cpp
-    ${XEUS_SOURCE_DIR}/xheartbeat.hpp
     ${XEUS_SOURCE_DIR}/xinterpreter.cpp
     ${XEUS_SOURCE_DIR}/xkernel.cpp
     ${XEUS_SOURCE_DIR}/xkernel_configuration.cpp
     ${XEUS_SOURCE_DIR}/xkernel_core.cpp
-    ${XEUS_SOURCE_DIR}/xkernel_core.hpp
     ${XEUS_SOURCE_DIR}/xmessage.cpp
     ${XEUS_SOURCE_DIR}/xmock_interpreter.cpp
     ${XEUS_SOURCE_DIR}/xmock_interpreter.hpp
     ${XEUS_SOURCE_DIR}/xmiddleware.cpp
-    ${XEUS_SOURCE_DIR}/xmiddleware.hpp
     ${XEUS_SOURCE_DIR}/xpublisher.cpp
-    ${XEUS_SOURCE_DIR}/xpublisher.hpp
     ${XEUS_SOURCE_DIR}/xserver.cpp
     ${XEUS_SOURCE_DIR}/xserver_impl.cpp
     ${XEUS_SOURCE_DIR}/xserver_impl.hpp

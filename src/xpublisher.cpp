@@ -6,9 +6,9 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xpublisher.hpp"
+#include "xeus/xmiddleware.hpp"
+#include "xeus/xpublisher.hpp"
 #include "zmq_addon.hpp"
-#include "xmiddleware.hpp"
 
 namespace xeus
 {
