@@ -196,7 +196,7 @@ endif()
 if(MSVC)
     target_compile_definitions(xeus PUBLIC -DNOMINMAX)
     target_compile_options(xeus PUBLIC /DGUID_WINDOWS /MP /bigobj)
-    target_compile_options(xeus PUBLIC /wd4251 /wd 4996)
+    target_compile_options(xeus PUBLIC /wd4251 /wd4996)
     # Allows to compile in debug without requiring each dependencies to
     # be compiled in debug
     if(${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
