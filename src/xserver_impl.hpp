@@ -11,8 +11,8 @@
 
 #include "xeus/xserver.hpp"
 #include "xeus/xkernel_configuration.hpp"
-#include "xeus/xpublisher.hpp"
-#include "xeus/xheartbeat.hpp"
+#include "xpublisher.hpp"
+#include "xheartbeat.hpp"
 
 namespace xeus
 {

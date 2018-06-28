@@ -10,7 +10,7 @@
 #include <thread>
 #include <chrono>
 #include "zmq_addon.hpp"
-#include "xeus/xmiddleware.hpp"
+#include "xmiddleware.hpp"
 
 namespace xeus
 {

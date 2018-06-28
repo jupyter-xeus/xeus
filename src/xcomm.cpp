@@ -1,5 +1,5 @@
 #include "xeus/xcomm.hpp"
-#include "xeus/xkernel_core.hpp"
+#include "xkernel_core.hpp"
 
 namespace xeus
 {
