@@ -9,6 +9,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(xeus)
 
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 set(XEUS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
@@ -108,15 +109,16 @@ target_include_directories(xeus PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
                                        $<INSTALL_INTERFACE:include>)
 target_link_libraries(xeus
                       PUBLIC cppzmq
-                      PRIVATE cryptopp-static
-                      PRIVATE xtl)
+                      PUBLIC nlohmann_json
+                      PUBLIC xtl
+                      PRIVATE cryptopp-static)
 
 if(NOT MSVC)
     if(APPLE)
         target_link_libraries(xeus PUBLIC "-framework CoreFoundation")
     else()
-        find_library(UUID libuuid${CMAKE_SHARED_LIBRARY_SUFFIX} CMAKE_LIBRARY_PATH)
-        target_link_libraries(xeus PUBLIC ${UUID})
+        find_package(LibUUID REQUIRED)
+        target_link_libraries(xeus PUBLIC LibUUID::LibUUID)
     endif()
 endif()
 
@@ -127,6 +129,31 @@ set_target_properties(xeus PROPERTIES
                       VERSION ${XEUS_BINARY_VERSION}
                       SOVERSION ${XEUS_BINARY_CURRENT}
                       OUTPUT_NAME "libxeus")
+
+# Configure Checks
+# ================
+
+include(CheckCXXSourceCompiles)
+include(CMakePushCheckState)
+
+cmake_push_check_state()
+
+# HAVE_CRYPTOPP_BYTE_T
+get_target_property(cryptopp_INCLUDE_DIR cryptopp-static INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(cryptopp_LIBRARY cryptopp-static LOCATION)
+set(CMAKE_REQUIRED_LIBRARIES ${cryptopp_LIBRARY})
+set(CMAKE_REQUIRED_INCLUDES ${cryptopp_INCLUDE_DIR})
+check_cxx_source_compiles("
+#include \"cryptopp/config.h\"
+int main(){
+  [[maybe_unused]] CryptoPP::byte b = CryptoPP::byte{0x36};
+}" HAVE_CRYPTOPP_BYTE_T)
+
+cmake_pop_check_state()
+
+if(HAVE_CRYPTOPP_BYTE_T)
+  target_compile_definitions(xeus PRIVATE HAVE_CRYPTOPP_BYTE_T)
+endif()
 
 # Compilation flags
 # =================
@@ -210,14 +237,27 @@ install(TARGETS xeus
 export(EXPORT ${PROJECT_NAME}-targets
        FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
 
+# Configure 'xeusConfig.cmake' for a build tree
+set(XEUS_CONFIG_CODE "####### Expanded from \@XEUS_CONFIG_CODE\@ #######\n")
+set(XEUS_CONFIG_CODE "${XEUS_CONFIG_CODE}set(CMAKE_MODULE_PATH \"${CMAKE_CURRENT_SOURCE_DIR}/cmake;\${CMAKE_MODULE_PATH}\")\n")
+set(XEUS_CONFIG_CODE "${XEUS_CONFIG_CODE}##################################################")
 configure_package_config_file(${PROJECT_NAME}Config.cmake.in
                               "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+                              INSTALL_DESTINATION ${PROJECT_BINARY_DIR})
+
+# Configure 'xeusConfig.cmake' for an install tree
+set(XEUS_CONFIG_CODE "")
+configure_package_config_file(${PROJECT_NAME}Config.cmake.in
+                              "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake"
                               INSTALL_DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
+
+
 write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
                                  VERSION ${XEUS_VERSION}
                                  COMPATIBILITY AnyNewerVersion)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+              ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibUUID.cmake
               DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 install(EXPORT ${PROJECT_NAME}-targets
         FILE ${PROJECT_NAME}Targets.cmake
