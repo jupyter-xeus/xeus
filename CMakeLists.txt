@@ -9,6 +9,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(xeus)
 
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(XEUS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
@@ -108,15 +109,16 @@ target_include_directories(xeus PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
                                        $<INSTALL_INTERFACE:include>)
 target_link_libraries(xeus
                       PUBLIC cppzmq
-                      PRIVATE cryptopp-static
-                      PRIVATE xtl)
+                      PUBLIC nlohmann_json
+                      PUBLIC xtl
+                      PRIVATE cryptopp-static)
 
 if(NOT MSVC)
     if(APPLE)
         target_link_libraries(xeus PUBLIC "-framework CoreFoundation")
     else()
-        find_library(UUID libuuid${CMAKE_SHARED_LIBRARY_SUFFIX} CMAKE_LIBRARY_PATH)
-        target_link_libraries(xeus PUBLIC ${UUID})
+        find_package(LibUUID REQUIRED)
+        target_link_libraries(xeus PUBLIC LibUUID::LibUUID)
     endif()
 endif()
 
