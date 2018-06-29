@@ -43,6 +43,8 @@ namespace xeus
         void stop_impl() override;
 
         void poll(long timeout);
+        void start_publisher_thread();
+        void start_heartbeat_thread();
         void stop_channels();
 
         zmq::socket_t m_shell;
