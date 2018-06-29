@@ -7,8 +7,8 @@
 ****************************************************************************/
 
 #include "xeus/xserver.hpp"
+#include "xeus/xserver_zmq.hpp"
 #include "xeus/make_unique.hpp"
-#include "xserver_zmq.hpp"
 
 namespace xeus
 {

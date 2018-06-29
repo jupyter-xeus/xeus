@@ -6,11 +6,13 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xserver_zmq.hpp"
+#include "xeus/xserver_zmq.hpp"
 #include <thread>
 #include <chrono>
 #include "zmq_addon.hpp"
 #include "xmiddleware.hpp"
+#include "xpublisher.hpp"
+#include "xheartbeat.hpp"
 
 namespace xeus
 {
@@ -29,8 +31,8 @@ namespace xeus
           m_stdin(context, zmq::socket_type::router),
           m_publisher_pub(context, zmq::socket_type::pub),
           m_controller_pub(context, zmq::socket_type::pub),
-          m_publisher(context, c.m_transport, c.m_ip, c.m_iopub_port),
-          m_heartbeat(context, c.m_transport, c.m_ip, c.m_hb_port),
+          p_publisher(new xpublisher(context, c.m_transport, c.m_ip, c.m_iopub_port)),
+          p_heartbeat(new xheartbeat(context, c.m_transport, c.m_ip, c.m_hb_port)),
           m_request_stop(false)
     {
         init_socket(m_shell, get_end_point(c.m_transport, c.m_ip, c.m_shell_port));
@@ -39,6 +41,8 @@ namespace xeus
         init_socket(m_publisher_pub, get_publisher_end_point());
         init_socket(m_controller_pub, get_controller_end_point());
     }
+
+    xserver_zmq::~xserver_zmq(){}
 
     void xserver_zmq::send_shell_impl(zmq::multipart_t& message)
     {
@@ -65,10 +69,10 @@ namespace xeus
 
     void xserver_zmq::start_impl(zmq::multipart_t& message)
     {
-        std::thread iopub_thread(&xpublisher::run, &m_publisher);
+        std::thread iopub_thread(&xpublisher::run, p_publisher.get());
         iopub_thread.detach();
 
-        std::thread hb_thread(&xheartbeat::run, &m_heartbeat);
+        std::thread hb_thread(&xheartbeat::run, p_heartbeat.get());
         hb_thread.detach();
 
         m_request_stop = false;

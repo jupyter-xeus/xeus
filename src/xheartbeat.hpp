@@ -24,6 +24,8 @@ namespace xeus
                    const std::string& ip,
                    const std::string& port);
 
+        ~xheartbeat();
+
         void run();
 
     private:

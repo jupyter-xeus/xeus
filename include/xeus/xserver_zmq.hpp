@@ -9,25 +9,29 @@
 #ifndef XSERVER_IMPL_HPP
 #define XSERVER_IMPL_HPP
 
+#include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
 #include "xeus/xkernel_configuration.hpp"
-#include "xpublisher.hpp"
-#include "xheartbeat.hpp"
 
 namespace xeus
 {
+    class xpublisher;
+    class xheartbeat;
 
-    class xserver_zmq : public xserver
+    class XEUS_API xserver_zmq : public xserver
     {
 
     public:
 
+        using publisher_ptr = std::unique_ptr<xpublisher>;
+        using heartbeat_ptr = std::unique_ptr<xheartbeat>;
+
         xserver_zmq(zmq::context_t& context,
                      const xconfiguration& config);
 
-        virtual ~xserver_zmq() = default;
+        virtual ~xserver_zmq();
 
-    private:
+    protected:
 
         void send_shell_impl(zmq::multipart_t& message) override;
         void send_control_impl(zmq::multipart_t& message) override;
@@ -46,8 +50,8 @@ namespace xeus
         zmq::socket_t m_publisher_pub;
         zmq::socket_t m_controller_pub;
 
-        xpublisher m_publisher;
-        xheartbeat m_heartbeat;
+        publisher_ptr p_publisher;
+        heartbeat_ptr p_heartbeat;
 
         bool m_request_stop;
     };

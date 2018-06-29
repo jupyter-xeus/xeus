@@ -29,6 +29,8 @@ namespace xeus
         m_controller.setsockopt(ZMQ_SUBSCRIBE, "", 0);
     }
 
+    xpublisher::~xpublisher(){}
+
     void xpublisher::run()
     {
         zmq::pollitem_t items[] = {
