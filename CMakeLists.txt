@@ -87,8 +87,8 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xpublisher.cpp
     ${XEUS_SOURCE_DIR}/xpublisher.hpp
     ${XEUS_SOURCE_DIR}/xserver.cpp
-    ${XEUS_SOURCE_DIR}/xserver_impl.cpp
-    ${XEUS_SOURCE_DIR}/xserver_impl.hpp
+    ${XEUS_SOURCE_DIR}/xserver_zmq.cpp
+    ${XEUS_SOURCE_DIR}/xserver_zmq.hpp
     ${XEUS_SOURCE_DIR}/xstring_utils.hpp
 )
 

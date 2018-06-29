@@ -17,15 +17,15 @@
 namespace xeus
 {
 
-    class xserver_impl : public xserver
+    class xserver_zmq : public xserver
     {
 
     public:
 
-        xserver_impl(zmq::context_t& context,
+        xserver_zmq(zmq::context_t& context,
                      const xconfiguration& config);
 
-        virtual ~xserver_impl() = default;
+        virtual ~xserver_zmq() = default;
 
     private:
 

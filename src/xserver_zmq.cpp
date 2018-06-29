@@ -6,7 +6,7 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xserver_impl.hpp"
+#include "xserver_zmq.hpp"
 #include <thread>
 #include <chrono>
 #include "zmq_addon.hpp"
@@ -22,7 +22,7 @@ namespace xeus
         socket.bind(end_point);
     }
 
-    xserver_impl::xserver_impl(zmq::context_t& context,
+    xserver_zmq::xserver_zmq(zmq::context_t& context,
                                const xconfiguration& c)
         : m_shell(context, zmq::socket_type::router),
           m_controller(context, zmq::socket_type::router),
@@ -40,17 +40,17 @@ namespace xeus
         init_socket(m_controller_pub, get_controller_end_point());
     }
 
-    void xserver_impl::send_shell_impl(zmq::multipart_t& message)
+    void xserver_zmq::send_shell_impl(zmq::multipart_t& message)
     {
         message.send(m_shell);
     }
 
-    void xserver_impl::send_control_impl(zmq::multipart_t& message)
+    void xserver_zmq::send_control_impl(zmq::multipart_t& message)
     {
         message.send(m_controller);
     }
 
-    void xserver_impl::send_stdin_impl(zmq::multipart_t& message)
+    void xserver_zmq::send_stdin_impl(zmq::multipart_t& message)
     {
         message.send(m_stdin);
         zmq::multipart_t wire_msg;
@@ -58,12 +58,12 @@ namespace xeus
         xserver::notify_stdin_listener(wire_msg);
     }
 
-    void xserver_impl::publish_impl(zmq::multipart_t& message)
+    void xserver_zmq::publish_impl(zmq::multipart_t& message)
     {
         message.send(m_publisher_pub);
     }
 
-    void xserver_impl::start_impl(zmq::multipart_t& message)
+    void xserver_zmq::start_impl(zmq::multipart_t& message)
     {
         std::thread iopub_thread(&xpublisher::run, &m_publisher);
         iopub_thread.detach();
@@ -104,7 +104,7 @@ namespace xeus
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
-    void xserver_impl::abort_queue_impl(const listener& l, long polling_interval)
+    void xserver_zmq::abort_queue_impl(const listener& l, long polling_interval)
     {
         while (true)
         {
@@ -120,12 +120,12 @@ namespace xeus
         }
     }
 
-    void xserver_impl::stop_impl()
+    void xserver_zmq::stop_impl()
     {
         m_request_stop = true;
     }
 
-    void xserver_impl::stop_channels()
+    void xserver_zmq::stop_channels()
     {
         zmq::message_t stop_msg("stop", 4);
         m_controller_pub.send(stop_msg);
