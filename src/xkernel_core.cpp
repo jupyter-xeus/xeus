@@ -59,6 +59,8 @@ namespace xeus
         p_interpreter->register_comm_manager(&m_comm_manager);
     }
 
+    xkernel_core::~xkernel_core(){}
+
     void xkernel_core::dispatch_shell(zmq::multipart_t& wire_msg)
     {
         dispatch(wire_msg, channel::SHELL);
