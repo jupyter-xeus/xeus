@@ -69,11 +69,8 @@ namespace xeus
 
     void xserver_zmq::start_impl(zmq::multipart_t& message)
     {
-        std::thread iopub_thread(&xpublisher::run, p_publisher.get());
-        iopub_thread.detach();
-
-        std::thread hb_thread(&xheartbeat::run, p_heartbeat.get());
-        hb_thread.detach();
+        start_publisher_thread();
+        start_heartbeat_thread();
 
         m_request_stop = false;
 
@@ -87,6 +84,18 @@ namespace xeus
         stop_channels();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+
+    void xserver_zmq::start_publisher_thread()
+    {
+      std::thread iopub_thread(&xpublisher::run, p_publisher.get());
+      iopub_thread.detach();
+    }
+
+    void xserver_zmq::start_heartbeat_thread()
+    {
+      std::thread hb_thread(&xheartbeat::run, p_heartbeat.get());
+      hb_thread.detach();
     }
 
     void xserver_zmq::poll(long timeout)
