@@ -35,6 +35,8 @@ namespace xeus
                      server_ptr server,
                      interpreter_ptr p_interpreter);
 
+        ~xkernel_core();
+
         void dispatch_shell(zmq::multipart_t& wire_msg);
         void dispatch_control(zmq::multipart_t& wire_msg);
         void dispatch_stdin(zmq::multipart_t& wire_msg);

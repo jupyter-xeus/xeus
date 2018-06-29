@@ -18,6 +18,7 @@
 
 namespace xeus
 {
+    class xkernel_core;
 
     XEUS_API
     std::string get_user_name();
@@ -27,6 +28,7 @@ namespace xeus
     public:
 
         using interpreter_ptr = std::unique_ptr<xinterpreter>;
+        using kernel_core_ptr = std::unique_ptr<xkernel_core>;
         using server_ptr = std::unique_ptr<xserver>;
         using server_builder = server_ptr (*)(zmq::context_t& context,
                                               const xconfiguration& config);
@@ -36,14 +38,21 @@ namespace xeus
                 interpreter_ptr interpreter,
                 server_builder builder = make_xserver);
 
+        ~xkernel();
+
         void start();
 
     private:
 
         xconfiguration m_config;
+        std::string m_kernel_id;
+        std::string m_session_id;
         std::string m_user_name;
         interpreter_ptr p_interpreter;
         server_builder m_builder;
+        server_ptr p_server;
+        zmq::context_t m_context;
+        kernel_core_ptr p_core;
     };
 }
 

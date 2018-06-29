@@ -23,6 +23,8 @@ namespace xeus
                    const std::string& ip,
                    const std::string& port);
 
+        ~xpublisher();
+
         void run();
 
     private:

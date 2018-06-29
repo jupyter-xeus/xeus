@@ -27,6 +27,8 @@ namespace xeus
         m_controller.setsockopt(ZMQ_SUBSCRIBE, "", 0);
     }
 
+    xheartbeat::~xheartbeat(){}
+
     void xheartbeat::run()
     {
         zmq::pollitem_t items[] = {

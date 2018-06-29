@@ -66,25 +66,26 @@ namespace xeus
     {
     }
 
+    xkernel::~xkernel(){}
+
     void xkernel::start()
     {
-        std::string kernel_id = new_xguid();
-        std::string session_id = new_xguid();
+        m_kernel_id = new_xguid();
+        m_session_id = new_xguid();
 
         using authentication_ptr = xkernel_core::authentication_ptr;
         authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
 
         zmq::multipart_t start_msg;
-        build_start_msg(auth, kernel_id, m_user_name, session_id, start_msg);
+        build_start_msg(auth, m_kernel_id, m_user_name, m_session_id, start_msg);
 
-        zmq::context_t context;
-        server_ptr server = m_builder(context, m_config);
+        p_server = m_builder(m_context, m_config);
 
-        xkernel_core core(kernel_id, m_user_name, session_id,
-                          std::move(auth), server.get(), p_interpreter.get());
+        p_core = kernel_core_ptr(new xkernel_core(m_kernel_id, m_user_name, m_session_id,
+                                                  std::move(auth), p_server.get(), p_interpreter.get()));
 
-        p_interpreter->configure(); 
-        server->start(start_msg);
+        p_interpreter->configure();
+        p_server->start(start_msg);
     }
 
 }
