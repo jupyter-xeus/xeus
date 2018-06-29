@@ -77,35 +77,40 @@ namespace xeus
 
         m_request_stop = false;
 
-        zmq::pollitem_t items[] = {
-            { m_controller, 0, ZMQ_POLLIN, 0 },
-            { m_shell, 0, ZMQ_POLLIN, 0 }
-        };
-
         publish(message);
 
         while (!m_request_stop)
         {
-            zmq::poll(&items[0], 2, -1);
-
-            if (items[0].revents & ZMQ_POLLIN)
-            {
-                zmq::multipart_t wire_msg;
-                wire_msg.recv(m_controller);
-                xserver::notify_control_listener(wire_msg);
-            }
-
-            if (!m_request_stop && (items[1].revents & ZMQ_POLLIN))
-            {
-                zmq::multipart_t wire_msg;
-                wire_msg.recv(m_shell);
-                xserver::notify_shell_listener(wire_msg);
-            }
+            poll(-1);
         }
 
         stop_channels();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+
+    void xserver_zmq::poll(long timeout)
+    {
+        zmq::pollitem_t items[] = {
+            { m_controller, 0, ZMQ_POLLIN, 0 },
+            { m_shell, 0, ZMQ_POLLIN, 0 }
+        };
+
+        zmq::poll(&items[0], 2, std::chrono::milliseconds(timeout));
+
+        if (items[0].revents & ZMQ_POLLIN)
+        {
+            zmq::multipart_t wire_msg;
+            wire_msg.recv(m_controller);
+            xserver::notify_control_listener(wire_msg);
+        }
+
+        if (!m_request_stop && (items[1].revents & ZMQ_POLLIN))
+        {
+            zmq::multipart_t wire_msg;
+            wire_msg.recv(m_shell);
+            xserver::notify_shell_listener(wire_msg);
+        }
     }
 
     void xserver_zmq::abort_queue_impl(const listener& l, long polling_interval)

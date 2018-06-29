@@ -42,6 +42,7 @@ namespace xeus
         void abort_queue_impl(const listener& l, long polling_interval) override;
         void stop_impl() override;
 
+        void poll(long timeout);
         void stop_channels();
 
         zmq::socket_t m_shell;
