@@ -12,7 +12,10 @@ C++ implementation of the Jupyter Kernel protocol
 Introduction
 ------------
 
-``xeus`` is a library meant to facilitate the implementation of kernels for Jupyter. It takes the burden of implementing the Jupyter Kernel protocol so developers can focus on implementing the interpreter part of the kernel.
+``xeus`` is a library meant to facilitate the implementation of kernels for
+Project Jupyter. It takes the burden of implementing the Jupyter Kernel
+protocol so developers can focus on implementing the interpreter part of the
+kernel.
 
 Licensing
 ---------
@@ -20,7 +23,8 @@ Licensing
 We use a shared copyright model that enables all contributors to maintain the
 copyright on their contributions.
 
-This software is licensed under the BSD-3-Clause license. See the LICENSE file for details.
+This software is licensed under the BSD-3-Clause license. See the LICENSE file
+for details.
 
 .. toctree::
    :caption: INSTALLATION
@@ -33,3 +37,8 @@ This software is licensed under the BSD-3-Clause license. See the LICENSE file f
    :maxdepth: 2
 
    usage
+
+.. toctree::
+   :caption: MISCELLANEOUS
+
+   related

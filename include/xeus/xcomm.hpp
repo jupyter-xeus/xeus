@@ -9,7 +9,6 @@
 #ifndef XCOMM_HPP
 #define XCOMM_HPP
 
-#include <iostream>
 #include <functional>
 #include <list>
 #include <map>
