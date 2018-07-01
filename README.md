@@ -99,14 +99,15 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 [`cppzmq`](https://github.com/zeromq/cppzmq), [`cryptopp`](https://github.com/weidai11/cryptopp),
 [`nlohmann_json`](https://github.com/nlohmann/json), and [`xtl`](https://github.com/QuantStack/xtl).
 
-|  xeus  | libzmq  | cppzmq  | cryptopp |   xtl  | nlohmann json |
-|--------|---------|---------|----------|--------|---------------|
-| master |  ^4.2.3 |  ^4.2.5 |    5.6.5 | ^0.4.0 |    ^3.1.1     |
-| 0.12.0 |  ^4.2.3 |  ^4.2.5 |    5.6.5 | ^0.4.0 |    ^3.1.1     |
-| 0.11.0 |  4.2.3  |   4.2.3 |    5.6.5 | ^0.4.0 |    ^3.1.1     |
-| 0.10.x |  4.2.3  |   4.2.3 |    5.6.5 | ^0.4.0 |               |
-|  0.9.x |  4.2.3  |   4.2.2 |    5.6.5 | ^0.3.4 |               |
-|  0.8.x |  4.2.1  |   4.2.1 |    5.6.5 | ^0.3.4 |               |
+|  xeus  | libzmq  | cppzmq  |    cryptopp    |   xtl  | nlohmann json |
+|--------|---------|---------|----------------|--------|---------------|
+| master |  ^4.2.3 |  ^4.2.5 | ^5.6.5, ^7.0.0 | ^0.4.0 |       ^3.1.1  |
+| 0.13.0 |  ^4.2.3 |  ^4.2.5 | ^5.6.5, ^7.0.0 | ^0.4.0 |       ^3.1.1  |
+| 0.12.0 |  ^4.2.3 |  ^4.2.5 |          5.6.5 | ^0.4.0 |       ^3.1.1  |
+| 0.11.0 |  4.2.3  |   4.2.3 |          5.6.5 | ^0.4.0 |       ^3.1.1  |
+| 0.10.x |  4.2.3  |   4.2.3 |          5.6.5 | ^0.4.0 |               |
+|  0.9.x |  4.2.3  |   4.2.2 |          5.6.5 | ^0.3.4 |               |
+|  0.8.x |  4.2.1  |   4.2.1 |          5.6.5 | ^0.3.4 |               |
 
 
 On Linux platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
@@ -118,7 +119,7 @@ conda is to run:
 conda install cmake zeromq cppzmq cryptopp nlohmann_json -c QuantStack
 ```
 
-On Linux platform, you will also need:
+On Linux platforms, you will also need:
 
 ```bash
 conda install util-linux -c conda-forge
