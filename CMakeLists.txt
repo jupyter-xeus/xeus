@@ -95,14 +95,15 @@ set(XEUS_SOURCES
 # Output
 # ======
 
+add_library(xeus SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
+
 if (APPLE)
-    set_target_properties(${XEUSCLING_TARGET} PROPERTIES
+    set_target_properties(xeus PROPERTIES
         MACOSX_RPATH ON
-        BUILD_WITH_INSTALL_RPATH 1
     )
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib; ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 else()
-    set_target_properties(${XEUSCLING_TARGET} PROPERTIES
+    set_target_properties(xeus PROPERTIES
         BUILD_WITH_INSTALL_RPATH 1
     )
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib; ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
@@ -110,7 +111,6 @@ else()
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
-add_library(xeus SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
 target_include_directories(xeus PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
                                        $<INSTALL_INTERFACE:include>)
 target_link_libraries(xeus
