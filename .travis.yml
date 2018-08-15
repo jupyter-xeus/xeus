@@ -87,7 +87,8 @@ install:
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
     - conda info -a
-    - conda install toolchain cmake zeromq cppzmq cryptopp xtl -c conda-forge
+    - conda install toolchain cmake pkg-config -c conda-forge
+    - conda install zeromq cppzmq cryptopp xtl -c conda-forge
     - conda install nlohmann_json -c QuantStack
     # Build
     - mkdir build

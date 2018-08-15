@@ -46,11 +46,21 @@ message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 # Dependencies
 # ============
 
+# Dependencies that provide cmake project config
+
 find_package(nlohmann_json 3.1.1 REQUIRED)
 find_package(xtl 0.4 REQUIRED)
-find_package(ZeroMQ 4.2.3 REQUIRED)
 find_package(cppzmq 4.2.3 REQUIRED)
 find_package(cryptopp REQUIRED)
+
+# Dependencies built with autotools
+
+if (WIN32)
+    find_package(zeromq 4.2.3 REQUIRED)
+else()
+    find_package(PkgConfig)
+    pkg_check_modules(ZeroMQ libzmq>=4.2.3 REQUIRED)
+endif()
 
 # Source files
 # ============
