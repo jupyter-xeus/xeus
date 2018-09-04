@@ -1,4 +1,5 @@
 language: cpp
+dist: trusty
 matrix:
   include:
     - os: linux
@@ -30,8 +31,8 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
           packages:
+            - g++-4.9
             - clang-3.6
       env: COMPILER=clang CLANG=3.6
     - os: linux
@@ -39,19 +40,40 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-trusty-3.9
           packages:
-            - clang-3.7
-      env: COMPILER=clang CLANG=3.7
+            - g++-4.9
+            - clang-3.9
+      env: COMPILER=clang CLANG=3.9
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
+            - llvm-toolchain-trusty-4.0
           packages:
-            - clang-3.8
-      env: COMPILER=clang CLANG=3.8
+            - g++-4.9
+            - clang-4.0
+      env: COMPILER=clang CLANG=4.0
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - g++-4.9
+            - clang-5.0
+      env: COMPILER=clang CLANG=5.0
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-6.0
+          packages:
+            - clang-6.0
+      env: COMPILER=clang CLANG=6.0
     - os: osx
       osx_image: xcode8
       compiler: clang
