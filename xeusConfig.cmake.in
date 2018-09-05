@@ -23,11 +23,16 @@ include(CMakeFindDependencyMacro)
 find_dependency(xtl 0.4)
 find_dependency(nlohmann_json 3.1.1)
 
+# On Unix platforms, ZeroMQ is built with autotools and pkg-config is
+# required to locate it.
 if (WIN32)
     find_dependency(ZeroMQ 4.2.3)
 else()
-    find_package(PkgConfig)
-    pkg_check_modules(ZeroMQ libzmq>=4.2.3 REQUIRED)
+    # In order to not propagate the build-time requirement for pkg-config, we
+    # do not propagate the dependency on ZeroMQ.
+
+    #find_package(PkgConfig)
+    #pkg_check_modules(ZeroMQ libzmq>=4.2.3 REQUIRED)
 endif()
 
 find_dependency(cppzmq 4.2.3)
