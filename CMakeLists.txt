@@ -51,6 +51,8 @@ find_package(xtl 0.4 REQUIRED)
 find_package(cppzmq 4.3.0 REQUIRED)
 find_package(cryptopp REQUIRED)
 
+# On Unix platforms, ZeroMQ is built with autotools and pkg-config is
+# required to locate it.
 if (WIN32)
     find_package(zeromq 4.2.3 REQUIRED)
 else()
