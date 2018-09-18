@@ -46,7 +46,7 @@ message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 # Dependencies
 # ============
 
-find_package(nlohmann_json 3.1.1 REQUIRED)
+find_package(nlohmann_json 3.2.0 REQUIRED)
 find_package(xtl 0.4 REQUIRED)
 find_package(cppzmq 4.3.0 REQUIRED)
 find_package(cryptopp REQUIRED)
@@ -123,7 +123,7 @@ target_include_directories(xeus PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
                                        $<INSTALL_INTERFACE:include>)
 target_link_libraries(xeus
                       PUBLIC cppzmq
-                      PUBLIC nlohmann_json
+                      PUBLIC nlohmann_json::nlohmann_json
                       PUBLIC xtl
                       PRIVATE cryptopp-static)
 
