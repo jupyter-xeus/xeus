@@ -46,7 +46,7 @@ as seen in the echo kernel provided as an example.
                                        const std::string& code,
                                        bool silent,
                                        bool store_history,
-                                       const xjson::node_type* user_expressions,
+                                       const xeus::xjson_node* user_expressions,
                                        bool allow_stdin) override;
 
             xjson complete_request_impl(const std::string& code,
