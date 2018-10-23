@@ -70,6 +70,8 @@ namespace xeus
         xjson is_complete_request(const std::string& code);
         xjson kernel_info_request();
 
+        void shutdown_request();
+
         // publish(msg_type, metadata, content)
         using publisher_type = std::function<void(const std::string&, xjson, xjson, buffer_sequence)>;
         void register_publisher(const publisher_type& publisher);
@@ -118,6 +120,8 @@ namespace xeus
         virtual xjson is_complete_request_impl(const std::string& code) = 0;
 
         virtual xjson kernel_info_request_impl() = 0;
+
+        virtual void shutdown_request_impl() = 0;
 
         virtual void input_reply_impl(const std::string& value) = 0;
 

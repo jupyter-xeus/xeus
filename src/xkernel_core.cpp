@@ -299,6 +299,7 @@ namespace xeus
     {
         const xjson& content = request.content();
         bool restart = content.value("restart", false);
+        p_interpreter->shutdown_request();
         p_server->stop();
         xjson reply;
         reply["restart"] = restart;

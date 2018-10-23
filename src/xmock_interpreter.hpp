@@ -73,6 +73,10 @@ namespace xeus
         	return xjson();
         }
 
+        inline void shutdown_request_impl() override
+        {
+        }
+
         inline void input_reply_impl(const std::string& /*value*/) override
         {
         }
