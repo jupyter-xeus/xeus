@@ -84,6 +84,8 @@ namespace xeus
         stop_channels();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+        std::exit(0);
     }
 
     void xserver_zmq::start_publisher_thread()

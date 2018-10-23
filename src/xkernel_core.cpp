@@ -305,7 +305,6 @@ namespace xeus
         reply["restart"] = restart;
         publish_message("shutdown", xjson::object(), xjson(reply), buffer_sequence());
         send_reply("shutdown_reply", xjson::object(), std::move(reply), c);
-        std::exit(0);
     }
 
     void xkernel_core::publish_status(const std::string& status)
