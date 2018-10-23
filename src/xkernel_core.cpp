@@ -299,9 +299,18 @@ namespace xeus
     {
         const xjson& content = request.content();
         bool restart = content.value("restart", false);
-        p_server->stop();
         xjson reply;
         reply["restart"] = restart;
+
+        if (restart)
+        {
+            p_interpreter->restart_request();
+            send_reply("shutdown_reply", xjson::object(), std::move(reply), c);
+
+            return;
+        }
+
+        p_server->stop();
         publish_message("shutdown", xjson::object(), xjson(reply), buffer_sequence());
         send_reply("shutdown_reply", xjson::object(), std::move(reply), c);
     }

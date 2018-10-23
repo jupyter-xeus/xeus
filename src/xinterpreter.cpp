@@ -71,6 +71,11 @@ namespace xeus
         return kernel_info_request_impl();
     }
 
+    void xinterpreter::restart_request()
+    {
+        restart_request_impl();
+    }
+
     void xinterpreter::register_publisher(const publisher_type& publisher)
     {
         m_publisher = publisher;
@@ -93,7 +98,7 @@ namespace xeus
         {
             m_publisher("display_data", xjson::object(),
                         build_display_content(std::move(data),
-                                              std::move(metadata), 
+                                              std::move(metadata),
                                               std::move(transient)),
                                               buffer_sequence());
         }
