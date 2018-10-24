@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright (c) 2016, Johan Mabille and Sylvain Corlay                     *
+* Copyright (c) 2018, Johan Mabille, Sylvain Corlay and Martin Renou       *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *
@@ -19,14 +19,14 @@ namespace xeus
                            const std::string& port)
         : m_publisher(context, zmq::socket_type::pub),
           m_listener(context, zmq::socket_type::sub),
-          m_controller(context, zmq::socket_type::sub)
+          m_controller(context, zmq::socket_type::rep)
     {
         m_publisher.setsockopt(ZMQ_LINGER, get_socket_linger());
         m_publisher.bind(get_end_point(transport, ip, port));
         m_listener.connect(get_publisher_end_point());
         m_listener.setsockopt(ZMQ_SUBSCRIBE, "", 0);
-        m_controller.connect(get_controller_end_point());
-        m_controller.setsockopt(ZMQ_SUBSCRIBE, "", 0);
+        m_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_controller.bind(get_publisher_controller_end_point());
     }
 
     xpublisher::~xpublisher(){}
@@ -51,7 +51,10 @@ namespace xeus
 
             if (items[1].revents & ZMQ_POLLIN)
             {
-                // stop or restart message
+                // stop message
+                zmq::multipart_t wire_msg;
+                wire_msg.recv(m_controller);
+                wire_msg.send(m_controller);
                 break;
             }
         }

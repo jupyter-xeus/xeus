@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright (c) 2016, Johan Mabille and Sylvain Corlay                     *
+* Copyright (c) 2018, Johan Mabille, Sylvain Corlay and Martin Renou       *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *
@@ -30,7 +30,8 @@ namespace xeus
           m_controller(context, zmq::socket_type::router),
           m_stdin(context, zmq::socket_type::router),
           m_publisher_pub(context, zmq::socket_type::pub),
-          m_controller_pub(context, zmq::socket_type::pub),
+          m_publisher_controller(context, zmq::socket_type::req),
+          m_heartbeat_controller(context, zmq::socket_type::req),
           p_publisher(new xpublisher(context, c.m_transport, c.m_ip, c.m_iopub_port)),
           p_heartbeat(new xheartbeat(context, c.m_transport, c.m_ip, c.m_hb_port)),
           m_request_stop(false)
@@ -39,7 +40,10 @@ namespace xeus
         init_socket(m_controller, get_end_point(c.m_transport, c.m_ip, c.m_control_port));
         init_socket(m_stdin, get_end_point(c.m_transport, c.m_ip, c.m_stdin_port));
         init_socket(m_publisher_pub, get_publisher_end_point());
-        init_socket(m_controller_pub, get_controller_end_point());
+        m_publisher_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_publisher_controller.connect(get_publisher_controller_end_point());
+        m_heartbeat_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_heartbeat_controller.connect(get_heartbeat_controller_end_point());
     }
 
     xserver_zmq::~xserver_zmq(){}
@@ -82,8 +86,6 @@ namespace xeus
         }
 
         stop_channels();
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
         std::exit(0);
     }
@@ -148,7 +150,15 @@ namespace xeus
     void xserver_zmq::stop_channels()
     {
         zmq::message_t stop_msg("stop", 4);
-        m_controller_pub.send(stop_msg);
+        zmq::message_t response;
+
+        // Wait for publisher answer
+        m_publisher_controller.send(stop_msg);
+        m_publisher_controller.recv(&response);
+
+        // Wait for heartbeat answer
+        m_heartbeat_controller.send(stop_msg);
+        m_heartbeat_controller.recv(&response);
     }
 
 }
