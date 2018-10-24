@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright (c) 2016, Johan Mabille and Sylvain Corlay                     *
+* Copyright (c) 2018, Johan Mabille, Sylvain Corlay and Martin Renou       *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *
@@ -51,7 +51,8 @@ namespace xeus
         zmq::socket_t m_controller;
         zmq::socket_t m_stdin;
         zmq::socket_t m_publisher_pub;
-        zmq::socket_t m_controller_pub;
+        zmq::socket_t m_publisher_controller;
+        zmq::socket_t m_heartbeat_controller;
 
         publisher_ptr p_publisher;
         heartbeat_ptr p_heartbeat;
