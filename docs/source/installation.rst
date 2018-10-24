@@ -29,7 +29,7 @@ We have packaged all these dependencies for the conda package manager. The simpl
 
 .. code::
 
-    conda install cmake zeromq cppzmq OpenSSL xtl -c conda-forge .
+    conda install cmake zeromq cppzmq OpenSSL xtl -c conda-forge
 
 On Linux platform, you will also need:
 
@@ -74,7 +74,7 @@ cppzmq
 OpenSSL
 ~~~~~~~
 
-`OpenSSL` has been packaged for most platforms and package manager. It should generally not be required for the user to build it. 
+`OpenSSL` has been packaged for most platforms and package manager. It should generally not be required for the user to build it.
 
 xtl
 ~~~
