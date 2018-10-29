@@ -252,19 +252,10 @@ namespace xeus
     void xkernel_core::history_request(const xmessage& request, channel c)
     {
         const xjson& content = request.content();
-        xhistory_arguments args;
-        args.m_hist_access_type = content.value("hist_access_type", "tail");
-        args.m_output = content.value("output", false);
-        args.m_raw = content.value("raw", false);
-        args.m_session = content.value("session", 0);
-        args.m_start = content.value("start", 0);
-        args.m_stop = content.value("stop", 0);
-        args.m_n = content.value("n", 0);
-        args.m_pattern = content.value("pattern", "");
-        args.m_unique = content.value("unique", false);
 
-        xjson reply = p_interpreter->history_request(args);
-        send_reply("history_reply", xjson::object(), std::move(reply), c);
+        xjson history = p_history_manager->process_request(content);
+
+        send_reply("history_reply", xjson::object(), std::move(history), c);
     }
 
     void xkernel_core::is_complete_request(const xmessage& request, channel c)

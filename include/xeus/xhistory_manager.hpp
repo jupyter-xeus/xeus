@@ -13,15 +13,15 @@
 #include <string>
 #include <vector>
 
+#include "xeus.hpp"
+#include "xjson.hpp"
 
 namespace xeus
 {
 
-    class xhistory_manager
+    class XEUS_API xhistory_manager
     {
     public:
-
-        using history_type = std::vector<std::string>;
 
         xhistory_manager();
         virtual ~xhistory_manager() = default;
@@ -33,20 +33,21 @@ namespace xeus
         xhistory_manager& operator=(xhistory_manager&&) = delete;
 
         void configure();
-        void store_inputs(int line_num, const std::string& code);
+        void store_inputs(int line_num, const std::string& input);
+        xjson process_request(const xjson& content) const;
         // void store_output(int line_num, const std::string& output);
-        history_type get_tail(int n, bool raw, bool output);
-        history_type get_range(int session, int start, int stop, bool raw, bool output);
-        history_type search(const std::string& pattern, bool raw, bool output, int n, bool unique);
+        xjson get_tail(int n, bool raw, bool output) const;
+        xjson get_range(int session, int start, int stop, bool raw, bool output) const;
+        xjson search(const std::string& pattern, bool raw, bool output, int n, bool unique) const;
 
     private:
 
         virtual void configure_impl() = 0;
-        virtual void store_inputs_impl(int line_num, const std::string& code) = 0;
+        virtual void store_inputs_impl(int line_num, const std::string& input) = 0;
         // virtual void store_output_impl(int line_num, const std::string& output) = 0;
-        virtual history_type get_tail_impl(int n, bool raw, bool output) = 0;
-        virtual history_type get_range_impl(int session, int start, int stop, bool raw, bool output) = 0;
-        virtual history_type search_impl(const std::string& pattern, bool raw, bool output, int n, bool unique) = 0;
+        virtual xjson get_tail_impl(int n, bool raw, bool output) const = 0;
+        virtual xjson get_range_impl(int session, int start, int stop, bool raw, bool output) const = 0;
+        virtual xjson search_impl(const std::string& pattern, bool raw, bool output, int n, bool unique) const = 0;
 
     };
 

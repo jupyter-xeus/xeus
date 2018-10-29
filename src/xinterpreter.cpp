@@ -54,11 +54,6 @@ namespace xeus
         return inspect_request_impl(code, cursor_pos, detail_level);
     }
 
-    xjson xinterpreter::history_request(const xhistory_arguments& args)
-    {
-        return history_request_impl(args);
-    }
-
     xjson xinterpreter::is_complete_request(const std::string& code)
     {
         return is_complete_request_impl(code);

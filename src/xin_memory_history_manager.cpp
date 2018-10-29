@@ -8,40 +8,63 @@
 ****************************************************************************/
 
 #include <stdexcept>
+#include <string>
 
 #include "xeus/xin_memory_history_manager.hpp"
+#include "xeus/xjson.hpp"
 
 namespace xeus
 {
-
     xin_memory_history_manager::xin_memory_history_manager()
     {
     }
 
-    xin_memory_history_manager::~xin_memory_history_manager() {}
+    xin_memory_history_manager::~xin_memory_history_manager()
+    {
+    }
 
     void xin_memory_history_manager::configure_impl()
     {
     }
 
-    void xin_memory_history_manager::store_inputs_impl(int /*line_num*/, const std::string& /*code*/)
+    void xin_memory_history_manager::store_inputs_impl(int line_num, const std::string& input)
     {
-        throw std::runtime_error("xin_memory_history_manager::store_inputs_impl not implemented");
+        m_history.push_back({"0", std::to_string(line_num), input});
     }
 
-    auto xin_memory_history_manager::get_tail_impl(int /*n*/, bool /*raw*/, bool /*output*/) -> history_type
+    xjson xin_memory_history_manager::get_tail_impl(int n, bool /*raw*/, bool /*output*/) const
     {
-        throw std::runtime_error("xin_memory_history_manager::get_tail_impl not implemented");
+        xjson reply;
+        history_type history;
+
+        int count = std::min(n, static_cast<int>(m_history.size()));
+        std::copy_n(m_history.cbegin(), count, std::back_inserter(history));
+
+        reply["status"] = "ok";
+        reply["history"] = history;
+
+        return reply;
     }
 
-    auto xin_memory_history_manager::get_range_impl(int /*session*/, int /*start*/, int /*stop*/, bool /*raw*/, bool /*output*/) -> history_type
+    xjson xin_memory_history_manager::get_range_impl(int /*session*/, int start, int stop, bool /*raw*/, bool /*output*/) const
     {
-        throw std::runtime_error("xin_memory_history_manager::get_range_impl not implemented");
+        xjson reply;
+        history_type history;
+
+        int count = std::min(stop, static_cast<int>(m_history.size())) - start;
+        auto it = m_history.cbegin();
+        std::advance(it, start);
+        std::copy_n(it, count, std::back_inserter(history));
+
+        reply["status"] = "ok";
+        reply["history"] = history;
+
+        return reply;
     }
 
-    auto xin_memory_history_manager::search_impl(const std::string& /*pattern*/, bool /*raw*/, bool /*output*/, int /*n*/, bool /*unique*/) -> history_type
+    xjson xin_memory_history_manager::search_impl(const std::string& /*pattern*/, bool /*raw*/, bool /*output*/, int /*n*/, bool /*unique*/) const
     {
-        throw std::runtime_error("xin_memory_history_manager::search_impl not implemented");
+        throw std::runtime_error("search not implemented for xin_memory_history_manager");
     }
 
 }

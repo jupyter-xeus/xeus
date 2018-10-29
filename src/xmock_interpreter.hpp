@@ -57,11 +57,6 @@ namespace xeus
         	return xjson();
         }
 
-        inline xjson history_request_impl(const xhistory_arguments& /*args*/) override
-        {
-        	return xjson();
-        }
-
         inline xjson is_complete_request_impl(const std::string& /*code*/) override
         {
         	return xjson();

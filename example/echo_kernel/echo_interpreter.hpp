@@ -14,7 +14,6 @@
 using xeus::xinterpreter;
 using xeus::xjson;
 using xeus::xjson_node;
-using xeus::xhistory_arguments;
 
 namespace echo_kernel
 {
@@ -42,8 +41,6 @@ namespace echo_kernel
         xjson inspect_request_impl(const std::string& code,
                                    int cursor_pos,
                                    int detail_level) override;
-
-        xjson history_request_impl(const xhistory_arguments& args) override;
 
         xjson is_complete_request_impl(const std::string& code) override;
 

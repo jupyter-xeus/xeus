@@ -75,24 +75,6 @@ namespace echo_kernel
         return result;
     }
 
-    xjson echo_interpreter::history_request_impl(const xhistory_arguments& args)
-    {
-        std::cout << "Received history_request" << std::endl;
-        std::cout << "output: " << args.m_output << std::endl;
-        std::cout << "raw: " << args.m_raw << std::endl;
-        std::cout << "hist_access_type: " << args.m_hist_access_type << std::endl;
-        std::cout << "session: " << args.m_session << std::endl;
-        std::cout << "start: " << args.m_start << std::endl;
-        std::cout << "stop: " << args.m_stop << std::endl;
-        std::cout << "n: " << args.m_n << std::endl;
-        std::cout << "pattern: " << args.m_pattern << std::endl;
-        std::cout << "unique: " << args.m_unique << std::endl;
-        std::cout << std::endl;
-        xjson result;
-        result["history"] = {{args.m_session, 0, ""}};
-        return result;
-    }
-
     xjson echo_interpreter::is_complete_request_impl(const std::string& code)
     {
         std::cout << "Received is_complete_request" << std::endl;
