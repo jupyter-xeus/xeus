@@ -14,6 +14,7 @@
 #include "xeus/xcomm.hpp"
 #include "xeus/xserver.hpp"
 #include "xeus/xinterpreter.hpp"
+#include "xeus/xhistory_manager.hpp"
 #include "xeus/xauthentication.hpp"
 #include "xeus/xmessage.hpp"
 
@@ -27,13 +28,16 @@ namespace xeus
         using authentication_ptr = std::unique_ptr<xauthentication>;
         using server_ptr = xserver*;
         using interpreter_ptr = xinterpreter*;
+        using history_manager_ptr = xhistory_manager*;
 
         xkernel_core(const std::string& kernel_id,
                      const std::string& user_name,
                      const std::string& session_id,
                      authentication_ptr auth,
                      server_ptr server,
-                     interpreter_ptr p_interpreter);
+                     interpreter_ptr p_interpreter,
+                     history_manager_ptr p_history_manager
+                 );
 
         ~xkernel_core();
 
@@ -118,6 +122,7 @@ namespace xeus
         xcomm_manager m_comm_manager;
         server_ptr p_server;
         interpreter_ptr p_interpreter;
+        history_manager_ptr p_history_manager;
 
         guid_list m_parent_id;
         xjson m_parent_header;

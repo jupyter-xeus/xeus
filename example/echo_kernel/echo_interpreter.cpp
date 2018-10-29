@@ -26,7 +26,6 @@ namespace echo_kernel
     xjson echo_interpreter::execute_request_impl(int execution_counter,
                                                  const std::string& code,
                                                  bool silent,
-                                                 bool store_history,
                                                  const xjson_node* /* user_expressions */,
                                                  bool allow_stdin)
     {
@@ -34,7 +33,6 @@ namespace echo_kernel
         std::cout << "execution_counter: " << execution_counter << std::endl;
         std::cout << "code: " << code << std::endl;
         std::cout << "silent: " << silent << std::endl;
-        std::cout << "store_history: " << store_history << std::endl;
         std::cout << "allow_stdin: " << allow_stdin << std::endl;
         std::cout << std::endl;
 

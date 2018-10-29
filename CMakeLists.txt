@@ -68,6 +68,8 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xcomm.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xguid.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xhistory_manager.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xin_memory_history_manager.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinterpreter.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xjson.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xkernel.hpp
@@ -83,6 +85,8 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xguid.cpp
     ${XEUS_SOURCE_DIR}/xheartbeat.cpp
     ${XEUS_SOURCE_DIR}/xheartbeat.hpp
+    ${XEUS_SOURCE_DIR}/xhistory_manager.cpp
+    ${XEUS_SOURCE_DIR}/xin_memory_history_manager.cpp
     ${XEUS_SOURCE_DIR}/xinterpreter.cpp
     ${XEUS_SOURCE_DIR}/xkernel.cpp
     ${XEUS_SOURCE_DIR}/xkernel_configuration.cpp
@@ -276,4 +280,3 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake
 install(EXPORT ${PROJECT_NAME}-targets
         FILE ${PROJECT_NAME}Targets.cmake
         DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
-
