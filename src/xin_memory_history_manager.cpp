@@ -51,7 +51,17 @@ namespace xeus
         xjson reply;
         history_type history;
 
-        int count = std::min(stop, static_cast<int>(m_history.size())) - start;
+        int hist_size = static_cast<int>(m_history.size());
+        if (start > stop || start > hist_size)
+        {
+            reply["status"] = "error";
+            reply["ename"] = "history_request_error";
+            reply["ename"] = "get_range: start is too high given stop or current history";
+
+            return reply;
+        }
+
+        int count = std::min(stop, hist_size) - start;
         auto it = m_history.cbegin();
         std::advance(it, start);
         std::copy_n(it, count, std::back_inserter(history));
