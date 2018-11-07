@@ -13,6 +13,7 @@
 #include <tuple>
 
 #include "xkernel_core.hpp"
+#include "xeus/xhistory_manager.hpp"
 
 using namespace std::placeholders;
 
@@ -24,7 +25,9 @@ namespace xeus
                                const std::string& session_id,
                                authentication_ptr auth,
                                server_ptr server,
-                               interpreter_ptr interpreter)
+                               interpreter_ptr interpreter,
+                               history_manager_ptr history_manager
+                           )
         : m_kernel_id(std::move(kernel_id)),
           m_user_name(std::move(user_name)),
           m_session_id(std::move(session_id)),
@@ -32,6 +35,7 @@ namespace xeus
           m_comm_manager(this),
           p_server(server),
           p_interpreter(interpreter),
+          p_history_manager(history_manager),
           m_parent_id(0),
           m_parent_header(xjson::object())
     {
@@ -190,6 +194,7 @@ namespace xeus
             std::string code = content.value("code", "");
             bool silent = content.value("silent", false);
             bool store_history = content.value("store_history", true);
+            int execution_count = content.value("execution_count", 1);
             store_history = store_history && !silent;
             const xjson_node* user_expression = get_json_node(content, "user_expressions");
             bool allow_stdin = content.value("allow_stdin", true);
@@ -199,12 +204,16 @@ namespace xeus
 
             xjson reply = p_interpreter->execute_request(code,
                                                          silent,
-                                                         store_history,
                                                          user_expression,
                                                          allow_stdin);
 
             std::string status = reply.value("status", "error");
             send_reply("execute_reply", std::move(metadata), std::move(reply), c);
+
+            if (!silent && store_history)
+            {
+                p_history_manager->store_inputs(execution_count, code);
+            }
 
             if (!silent && status == "error" && stop_on_error)
             {
@@ -243,19 +252,10 @@ namespace xeus
     void xkernel_core::history_request(const xmessage& request, channel c)
     {
         const xjson& content = request.content();
-        xhistory_arguments args;
-        args.m_hist_access_type = content.value("hist_access_type", "tail");
-        args.m_output = content.value("output", false);
-        args.m_raw = content.value("raw", false);
-        args.m_session = content.value("session", 0);
-        args.m_start = content.value("start", 0);
-        args.m_stop = content.value("stop", 0);
-        args.m_n = content.value("n", 0);
-        args.m_pattern = content.value("pattern", "");
-        args.m_unique = content.value("unique", false);
 
-        xjson reply = p_interpreter->history_request(args);
-        send_reply("history_reply", xjson::object(), std::move(reply), c);
+        xjson history = p_history_manager->process_request(content);
+
+        send_reply("history_reply", xjson::object(), std::move(history), c);
     }
 
     void xkernel_core::is_complete_request(const xmessage& request, channel c)

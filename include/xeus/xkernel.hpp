@@ -10,6 +10,8 @@
 #define XKERNEL_HPP
 
 #include "xeus.hpp"
+#include "xhistory_manager.hpp"
+#include "xin_memory_history_manager.hpp"
 #include "xinterpreter.hpp"
 #include "xkernel_configuration.hpp"
 #include "xserver.hpp"
@@ -27,6 +29,7 @@ namespace xeus
     {
     public:
 
+        using history_manager_ptr = std::unique_ptr<xhistory_manager>;
         using interpreter_ptr = std::unique_ptr<xinterpreter>;
         using kernel_core_ptr = std::unique_ptr<xkernel_core>;
         using server_ptr = std::unique_ptr<xserver>;
@@ -36,6 +39,7 @@ namespace xeus
         xkernel(const xconfiguration& config,
                 const std::string& user_name,
                 interpreter_ptr interpreter,
+                history_manager_ptr history_manager = history_manager_ptr(new xin_memory_history_manager()),
                 server_builder builder = make_xserver);
 
         ~xkernel();
@@ -49,6 +53,7 @@ namespace xeus
         std::string m_session_id;
         std::string m_user_name;
         interpreter_ptr p_interpreter;
+        history_manager_ptr p_history_manager;
         server_builder m_builder;
         server_ptr p_server;
         zmq::context_t m_context;

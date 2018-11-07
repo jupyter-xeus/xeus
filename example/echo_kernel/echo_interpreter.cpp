@@ -26,7 +26,6 @@ namespace echo_kernel
     xjson echo_interpreter::execute_request_impl(int execution_counter,
                                                  const std::string& code,
                                                  bool silent,
-                                                 bool store_history,
                                                  const xjson_node* /* user_expressions */,
                                                  bool allow_stdin)
     {
@@ -34,7 +33,6 @@ namespace echo_kernel
         std::cout << "execution_counter: " << execution_counter << std::endl;
         std::cout << "code: " << code << std::endl;
         std::cout << "silent: " << silent << std::endl;
-        std::cout << "store_history: " << store_history << std::endl;
         std::cout << "allow_stdin: " << allow_stdin << std::endl;
         std::cout << std::endl;
 
@@ -74,24 +72,6 @@ namespace echo_kernel
         xjson result;
         result["status"] = "ok";
         result["found"] = false;
-        return result;
-    }
-
-    xjson echo_interpreter::history_request_impl(const xhistory_arguments& args)
-    {
-        std::cout << "Received history_request" << std::endl;
-        std::cout << "output: " << args.m_output << std::endl;
-        std::cout << "raw: " << args.m_raw << std::endl;
-        std::cout << "hist_access_type: " << args.m_hist_access_type << std::endl;
-        std::cout << "session: " << args.m_session << std::endl;
-        std::cout << "start: " << args.m_start << std::endl;
-        std::cout << "stop: " << args.m_stop << std::endl;
-        std::cout << "n: " << args.m_n << std::endl;
-        std::cout << "pattern: " << args.m_pattern << std::endl;
-        std::cout << "unique: " << args.m_unique << std::endl;
-        std::cout << std::endl;
-        xjson result;
-        result["history"] = {{args.m_session, 0, ""}};
         return result;
     }
 

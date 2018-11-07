@@ -25,19 +25,6 @@ namespace xeus
     XEUS_API bool register_interpreter(xinterpreter* interpreter);
     XEUS_API xinterpreter& get_interpreter();
 
-    struct XEUS_API xhistory_arguments
-    {
-        std::string m_hist_access_type;
-        bool m_output;
-        bool m_raw;
-        int m_session;
-        int m_start;
-        int m_stop;
-        int m_n;
-        std::string m_pattern;
-        bool m_unique;
-    };
-
     class XEUS_API xinterpreter
     {
     public:
@@ -55,7 +42,6 @@ namespace xeus
 
         xjson execute_request(const std::string& code,
                               bool silent,
-                              bool store_history,
                               const xjson_node* user_expressions,
                               bool allow_stdin);
 
@@ -66,7 +52,6 @@ namespace xeus
                               int cursor_pos,
                               int detail_level);
 
-        xjson history_request(const xhistory_arguments& args);
         xjson is_complete_request(const std::string& code);
         xjson kernel_info_request();
 
@@ -104,7 +89,6 @@ namespace xeus
         virtual xjson execute_request_impl(int execution_counter,
                                            const std::string& code,
                                            bool silent,
-                                           bool store_history,
                                            const xjson_node* user_expressions,
                                            bool allow_stdin) = 0;
 
@@ -114,8 +98,6 @@ namespace xeus
         virtual xjson inspect_request_impl(const std::string& code,
                                            int cursor_pos,
                                            int detail_level) = 0;
-
-        virtual xjson history_request_impl(const xhistory_arguments& args) = 0;
 
         virtual xjson is_complete_request_impl(const std::string& code) = 0;
 

@@ -38,7 +38,6 @@ namespace xeus
         inline xjson execute_request_impl(int /*execution_counter*/,
                                           const std::string& /*code*/,
                                           bool /*silent*/,
-                                          bool /*store_history*/,
                                           const xjson_node* /*user_expressions*/,
                                           bool /*allow_stdin*/) override
         {
@@ -54,11 +53,6 @@ namespace xeus
         inline xjson inspect_request_impl(const std::string& /*code*/,
                                           int /*cursor_pos*/,
                                           int /*detail_level*/) override
-        {
-        	return xjson();
-        }
-
-        inline xjson history_request_impl(const xhistory_arguments& /*args*/) override
         {
         	return xjson();
         }
