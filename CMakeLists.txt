@@ -236,6 +236,20 @@ if(BUILD_EXAMPLES)
     add_subdirectory(example)
 endif()
 
+# Tests
+# =====
+
+OPTION(BUILD_TESTS "xeus test suite" OFF)
+OPTION(DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
+
+if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
+    set(BUILD_TESTS ON)
+endif()
+
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()
+
 # Installation
 # ============
 

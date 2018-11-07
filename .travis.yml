@@ -117,14 +117,9 @@ install:
     # Build
     - mkdir build
     - cd build
-    - cmake -D BUILD_EXAMPLES=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib ..
+    - cmake -D BUILD_EXAMPLES=ON -DDOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib ..
     - make
     - make install
 script:
-    - |
-      cd example
-      cd echo_kernel
-      ./echo_kernel &
-      cd ..
-      cd echo_client
-      ./echo_client
+    - cd test
+    - ./test_xeus
