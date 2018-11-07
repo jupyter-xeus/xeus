@@ -119,7 +119,8 @@ We have packaged all these dependencies for the conda package manager. The simpl
 conda is to run:
 
 ```bash
-conda install cmake zeromq cppzmq cryptopp nlohmann_json -c QuantStack
+conda install cmake pkg-config zeromq cppzmq xtl cryptopp -c conda-forge
+conda install nlohmann_json -c conda-forge/label/gcc7
 ```
 
 On Linux platforms, you will also need:
@@ -144,6 +145,8 @@ The dependencies can also be installed from source. Simply clone the directories
 
 ### libzmq
 
+[libzmq](https://github.com/zeromq/libzmq):
+
 ```bash
 cmake -D WITH_PERF_TOOL=OFF -D ZMQ_BUILD_TESTS=OFF -D ENABLE_CPACK=OFF
 -D CMAKE_BUILD_TYPE=Release
@@ -153,7 +156,7 @@ make install
 
 ### cppzmq
 
-`cppzmq` is a header only library:
+[cppzmq](https://github.com/zeromq/cppzmq) is a header only library:
 
 ```bash
 cmake -D CMAKE_BUILD_TYPE=Release
@@ -162,7 +165,7 @@ make install
 
 ### json for modern cpp
 
-`nlohmann_json` is a header only library
+[nlohmann_json](https://github.com/nlohmann/json) is a header only library
 
 ```bash
 cmake
@@ -171,7 +174,7 @@ make install
 
 ### cryptopp
 
-`cryptopp` must be built as a static library. Building cryptopp as a shared library is not supported on Windows.
+[cryptopp-cmake](https://github.com/noloader/cryptopp-cmake) must be built as a static library. Building cryptopp as a shared library is not supported on Windows.
 
 ```bash
 cmake -D BUILD_SHARED=OFF -D BUILD_TESTING=OFF -D CMAKE_BUILD_TYPE=Release
@@ -181,7 +184,7 @@ make install
 
 ### xtl
 
-`xtl` is a header only library:
+[xtl](https://github.com/QuantStack/xtl) is a header only library:
 
 ```bash
 cmake -D CMAKE_BUILD_TYPE
