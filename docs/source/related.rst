@@ -28,6 +28,15 @@ implementation of the Jupyter protocol.
 .. image:: xeus-cling-screenshot.png
    :alt: C++ notebook
 
+xeus-python
+-----------
+
+.. image:: xeus-python.svg
+   :alt: xeus-python
+
+The `xeus-python`_ project is a Jupyter kernel for the Python programming
+language based on the Xeus implementation of the protocol.
+
 xwidgets
 ---------
 
@@ -59,6 +68,7 @@ built with Xeus and Rcpp_.
    :alt: rwidgets screenshot
 
 .. _xeus-cling: https://github.com/QuantStack/xeus-cling
+.. _xeus-python: https://github.com/QuantStack/xeus-python
 .. _xwidgets: https://github.com/QuantStack/xwidgets
 .. _JuniperKernel: https://github.com/JuniperKernel/JuniperKernel
 .. _Rcpp: https://github.com/RcppCore/Rcpp
