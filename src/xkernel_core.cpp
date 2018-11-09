@@ -235,7 +235,7 @@ namespace xeus
         int cursor_pos = content.value("cursor_pos", -1);
 
         xjson reply = p_interpreter->complete_request(code, cursor_pos);
-        send_reply("complete_request", xjson::object(), std::move(reply), c);
+        send_reply("complete_reply", xjson::object(), std::move(reply), c);
     }
 
     void xkernel_core::inspect_request(const xmessage& request, channel c)
