@@ -12,9 +12,8 @@ Usage
 The easiest way to get started with a new kernel is to inherit from the base interpreter class ``xeus::xinterpreter`` and implement the private virtual methods
 
 - ``execute_request_impl``
-- ``complete_request_impl`` 
+- ``complete_request_impl``
 - ``inspect_request_impl``
-- ``history_request_impl``
 - ``is_complete_request_impl``
 - ``input_reply_impl``
 
@@ -26,7 +25,6 @@ as seen in the echo kernel provided as an example.
 
     using xeus::xinterpreter;
     using xeus::xjson;
-    using xeus::xhistory_arguments;
 
     namespace echo_kernel
     {
@@ -45,7 +43,6 @@ as seen in the echo kernel provided as an example.
             xjson execute_request_impl(int execution_counter,
                                        const std::string& code,
                                        bool silent,
-                                       bool store_history,
                                        const xeus::xjson_node* user_expressions,
                                        bool allow_stdin) override;
 
@@ -55,8 +52,6 @@ as seen in the echo kernel provided as an example.
             xjson inspect_request_impl(const std::string& code,
                                        int cursor_pos,
                                        int detail_level) override;
-
-            xjson history_request_impl(const xhistory_arguments& args) override;
 
             xjson is_complete_request_impl(const std::string& code) override;
 
