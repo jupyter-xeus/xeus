@@ -13,10 +13,8 @@
 
 namespace xeus
 {
-
     class xheartbeat
     {
-
     public:
 
         xheartbeat(zmq::context_t& context,
@@ -33,7 +31,6 @@ namespace xeus
         zmq::socket_t m_heartbeat;
         zmq::socket_t m_controller;
     };
-
 }
 
 #endif

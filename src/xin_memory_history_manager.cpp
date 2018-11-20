@@ -29,7 +29,7 @@ namespace xeus
 
     void xin_memory_history_manager::store_inputs_impl(int line_num, const std::string& input)
     {
-        m_history.push_back({"0", std::to_string(line_num), input});
+        m_history.push_back({ "0", std::to_string(line_num), input });
     }
 
     xjson xin_memory_history_manager::get_tail_impl(int n, bool /*raw*/, bool /*output*/) const
@@ -46,7 +46,8 @@ namespace xeus
         return reply;
     }
 
-    xjson xin_memory_history_manager::get_range_impl(int /*session*/, int start, int stop, bool /*raw*/, bool /*output*/) const
+    xjson xin_memory_history_manager::get_range_impl(
+        int /*session*/, int start, int stop, bool /*raw*/, bool /*output*/) const
     {
         xjson reply;
         history_type history;
@@ -72,9 +73,12 @@ namespace xeus
         return reply;
     }
 
-    xjson xin_memory_history_manager::search_impl(const std::string& /*pattern*/, bool /*raw*/, bool /*output*/, int /*n*/, bool /*unique*/) const
+    xjson xin_memory_history_manager::search_impl(const std::string& /*pattern*/,
+                                                  bool /*raw*/,
+                                                  bool /*output*/,
+                                                  int /*n*/,
+                                                  bool /*unique*/) const
     {
         throw std::runtime_error("search not implemented for xin_memory_history_manager");
     }
-
 }

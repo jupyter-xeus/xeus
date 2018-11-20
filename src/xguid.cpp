@@ -29,7 +29,6 @@
 
 namespace xeus
 {
-
     xguid new_xguid()
     {
         static constexpr std::size_t GUID_SIZE = 16;

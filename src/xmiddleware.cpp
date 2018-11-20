@@ -10,7 +10,6 @@
 
 namespace xeus
 {
-
     std::string get_publisher_controller_end_point()
     {
         return "inproc://publisher_controller";

@@ -3,18 +3,19 @@
 
 namespace xeus
 {
-    void xtarget::publish_message(const std::string& msg_type, xjson metadata, xjson content, buffer_sequence buffers) const
+    void xtarget::publish_message(const std::string& msg_type,
+                                  xjson metadata,
+                                  xjson content,
+                                  buffer_sequence buffers) const
     {
         if (p_manager->p_kernel != nullptr)
         {
-            p_manager->p_kernel->publish_message(msg_type, std::move(metadata), std::move(content), std::move(buffers));
+            p_manager->p_kernel->publish_message(
+                msg_type, std::move(metadata), std::move(content), std::move(buffers));
         }
     }
 
-    xcomm_manager::xcomm_manager(xkernel_core* kernel)
-    {
-        p_kernel = kernel;
-    }
+    xcomm_manager::xcomm_manager(xkernel_core* kernel) { p_kernel = kernel; }
 
     xjson xcomm_manager::get_metadata() const
     {
@@ -24,7 +25,8 @@ namespace xeus
         return metadata;
     }
 
-    void xcomm_manager::register_comm_target(const std::string& target_name, const target_function_type& callback)
+    void xcomm_manager::register_comm_target(const std::string& target_name,
+                                             const target_function_type& callback)
     {
         m_targets[target_name] = xtarget(target_name, callback, this);
     }

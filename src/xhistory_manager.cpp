@@ -15,7 +15,6 @@
 
 namespace xeus
 {
-
     xhistory_manager::xhistory_manager()
     {
     }
@@ -82,7 +81,6 @@ namespace xeus
 
     xjson xhistory_manager::search(const std::string& pattern, bool raw, bool output, int n, bool unique) const
     {
-        return search_impl(pattern, raw, output, n , unique);
+        return search_impl(pattern, raw, output, n, unique);
     }
-
 }

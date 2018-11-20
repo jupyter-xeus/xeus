@@ -16,25 +16,22 @@
 
 namespace xeus
 {
-
-    void init_socket(zmq::socket_t& socket,
-        const std::string& end_point)
+    void init_socket(zmq::socket_t& socket, const std::string& end_point)
     {
         socket.setsockopt(ZMQ_LINGER, get_socket_linger());
         socket.bind(end_point);
     }
 
-    xserver_zmq::xserver_zmq(zmq::context_t& context,
-                               const xconfiguration& c)
-        : m_shell(context, zmq::socket_type::router),
-          m_controller(context, zmq::socket_type::router),
-          m_stdin(context, zmq::socket_type::router),
-          m_publisher_pub(context, zmq::socket_type::pub),
-          m_publisher_controller(context, zmq::socket_type::req),
-          m_heartbeat_controller(context, zmq::socket_type::req),
-          p_publisher(new xpublisher(context, c.m_transport, c.m_ip, c.m_iopub_port)),
-          p_heartbeat(new xheartbeat(context, c.m_transport, c.m_ip, c.m_hb_port)),
-          m_request_stop(false)
+    xserver_zmq::xserver_zmq(zmq::context_t& context, const xconfiguration& c)
+        : m_shell(context, zmq::socket_type::router)
+        , m_controller(context, zmq::socket_type::router)
+        , m_stdin(context, zmq::socket_type::router)
+        , m_publisher_pub(context, zmq::socket_type::pub)
+        , m_publisher_controller(context, zmq::socket_type::req)
+        , m_heartbeat_controller(context, zmq::socket_type::req)
+        , p_publisher(new xpublisher(context, c.m_transport, c.m_ip, c.m_iopub_port))
+        , p_heartbeat(new xheartbeat(context, c.m_transport, c.m_ip, c.m_hb_port))
+        , m_request_stop(false)
     {
         init_socket(m_shell, get_end_point(c.m_transport, c.m_ip, c.m_shell_port));
         init_socket(m_controller, get_end_point(c.m_transport, c.m_ip, c.m_control_port));
@@ -46,7 +43,7 @@ namespace xeus
         m_heartbeat_controller.connect(get_heartbeat_controller_end_point());
     }
 
-    xserver_zmq::~xserver_zmq(){}
+    xserver_zmq::~xserver_zmq() {}
 
     void xserver_zmq::send_shell_impl(zmq::multipart_t& message)
     {
@@ -92,22 +89,20 @@ namespace xeus
 
     void xserver_zmq::start_publisher_thread()
     {
-      std::thread iopub_thread(&xpublisher::run, p_publisher.get());
-      iopub_thread.detach();
+        std::thread iopub_thread(&xpublisher::run, p_publisher.get());
+        iopub_thread.detach();
     }
 
     void xserver_zmq::start_heartbeat_thread()
     {
-      std::thread hb_thread(&xheartbeat::run, p_heartbeat.get());
-      hb_thread.detach();
+        std::thread hb_thread(&xheartbeat::run, p_heartbeat.get());
+        hb_thread.detach();
     }
 
     void xserver_zmq::poll(long timeout)
     {
-        zmq::pollitem_t items[] = {
-            { m_controller, 0, ZMQ_POLLIN, 0 },
-            { m_shell, 0, ZMQ_POLLIN, 0 }
-        };
+        zmq::pollitem_t items[]
+            = { { m_controller, 0, ZMQ_POLLIN, 0 }, { m_shell, 0, ZMQ_POLLIN, 0 } };
 
         zmq::poll(&items[0], 2, std::chrono::milliseconds(timeout));
 
@@ -160,5 +155,4 @@ namespace xeus
         m_heartbeat_controller.send(stop_msg);
         m_heartbeat_controller.recv(&response);
     }
-
 }

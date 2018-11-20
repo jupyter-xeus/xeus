@@ -12,7 +12,6 @@
 
 namespace xeus
 {
-
     xconfiguration load_configuration(const std::string& file_name)
     {
         std::ifstream ifs(file_name);
@@ -29,7 +28,7 @@ namespace xeus
         res.m_iopub_port = std::to_string(doc["iopub_port"].get<int>());
         res.m_hb_port = std::to_string(doc["hb_port"].get<int>());
         res.m_signature_scheme = doc.value("signature_scheme", "");
-        if(res.m_signature_scheme != "")
+        if (res.m_signature_scheme != "")
         {
             res.m_key = doc["key"];
         }
@@ -40,5 +39,4 @@ namespace xeus
 
         return res;
     }
-
 }

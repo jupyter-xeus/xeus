@@ -12,7 +12,6 @@
 
 namespace xeus
 {
-
     xpublisher::xpublisher(zmq::context_t& context,
                            const std::string& transport,
                            const std::string& ip,
@@ -29,7 +28,7 @@ namespace xeus
         m_controller.bind(get_publisher_controller_end_point());
     }
 
-    xpublisher::~xpublisher(){}
+    xpublisher::~xpublisher() {}
 
     void xpublisher::run()
     {
@@ -59,5 +58,4 @@ namespace xeus
             }
         }
     }
-
 }
