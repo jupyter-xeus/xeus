@@ -13,13 +13,12 @@
 
 namespace xeus
 {
-
     xheartbeat::xheartbeat(zmq::context_t& context,
                            const std::string& transport,
                            const std::string& ip,
                            const std::string& port)
-        : m_heartbeat(context, zmq::socket_type::router),
-          m_controller(context, zmq::socket_type::rep)
+        : m_heartbeat(context, zmq::socket_type::router)
+        , m_controller(context, zmq::socket_type::rep)
     {
         m_heartbeat.setsockopt(ZMQ_LINGER, get_socket_linger());
         m_heartbeat.bind(get_end_point(transport, ip, port));
@@ -27,7 +26,7 @@ namespace xeus
         m_controller.bind(get_heartbeat_controller_end_point());
     }
 
-    xheartbeat::~xheartbeat(){}
+    xheartbeat::~xheartbeat() {}
 
     void xheartbeat::run()
     {
@@ -57,5 +56,4 @@ namespace xeus
             }
         }
     }
-
 }

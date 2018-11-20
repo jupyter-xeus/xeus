@@ -35,43 +35,42 @@ namespace xeus
         {
         }
 
-        inline xjson execute_request_impl(int /*execution_counter*/,
-                                          const std::string& /*code*/,
-                                          bool /*silent*/,
-                                          const xjson_node* /*user_expressions*/,
-                                          bool /*allow_stdin*/) override
-        {
-        	return xjson();
-        }
-
-        inline xjson complete_request_impl(const std::string& /*code*/,
-                                           int /*cursor_pos*/) override
+        xjson execute_request_impl(int /*execution_counter*/,
+                                   const std::string& /*code*/,
+                                   bool /*silent*/,
+                                   const xjson_node* /*user_expressions*/,
+                                   bool /*allow_stdin*/) override
         {
             return xjson();
         }
 
-        inline xjson inspect_request_impl(const std::string& /*code*/,
-                                          int /*cursor_pos*/,
-                                          int /*detail_level*/) override
+        xjson complete_request_impl(const std::string& /*code*/, int /*cursor_pos*/) override
         {
-        	return xjson();
+            return xjson();
         }
 
-        inline xjson is_complete_request_impl(const std::string& /*code*/) override
+        xjson inspect_request_impl(const std::string& /*code*/,
+                                   int /*cursor_pos*/,
+                                   int /*detail_level*/) override
         {
-        	return xjson();
+            return xjson();
         }
 
-        inline xjson kernel_info_request_impl() override
+        xjson is_complete_request_impl(const std::string& /*code*/) override
         {
-        	return xjson();
+            return xjson();
         }
 
-        inline void shutdown_request_impl() override
+        xjson kernel_info_request_impl() override
+        {
+            return xjson();
+        }
+
+        void shutdown_request_impl() override
         {
         }
 
-        inline void input_reply_impl(const std::string& /*value*/) override
+        void input_reply_impl(const std::string& /*value*/) override
         {
         }
 

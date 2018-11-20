@@ -13,7 +13,6 @@
 
 namespace xeus
 {
-
     std::string get_publisher_controller_end_point();
     std::string get_heartbeat_controller_end_point();
     std::string get_publisher_end_point();
@@ -23,7 +22,6 @@ namespace xeus
                               const std::string& port);
 
     int get_socket_linger();
-
 }
 
 #endif

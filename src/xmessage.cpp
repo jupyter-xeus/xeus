@@ -18,8 +18,7 @@ namespace xeus
 {
     const std::string xmessage_base::DELIMITER = "<IDS|MSG>";
 
-    void parse_zmq_message(const zmq::message_t& msg,
-                           xjson& json)
+    void parse_zmq_message(const zmq::message_t& msg, xjson& json)
     {
         const char* buf = msg.data<const char>();
         json = xjson::parse(buf, buf + msg.size());
@@ -31,16 +30,13 @@ namespace xeus
         return zmq::message_t(buffer.c_str(), buffer.size());
     }
 
-    xmessage_base::xmessage_base(xjson header,
-                                 xjson parent_header,
-                                 xjson metadata,
-                                 xjson content,
-                                 buffer_sequence buffers)
-        : m_header(std::move(header)),
-          m_parent_header(std::move(parent_header)),
-          m_metadata(std::move(metadata)),
-          m_content(std::move(content)),
-          m_buffers(std::move(buffers))
+    xmessage_base::xmessage_base(
+        xjson header, xjson parent_header, xjson metadata, xjson content, buffer_sequence buffers)
+        : m_header(std::move(header))
+        , m_parent_header(std::move(parent_header))
+        , m_metadata(std::move(metadata))
+        , m_content(std::move(content))
+        , m_buffers(std::move(buffers))
     {
     }
 
@@ -137,11 +133,11 @@ namespace xeus
                        xjson content,
                        buffer_sequence buffers)
         : xmessage_base(std::move(header),
-            std::move(parent_header),
-            std::move(metadata),
-            std::move(content),
-            std::move(buffers)),
-        m_zmq_id(zmq_id)
+                        std::move(parent_header),
+                        std::move(metadata),
+                        std::move(content),
+                        std::move(buffers))
+        , m_zmq_id(zmq_id)
     {
     }
 
@@ -167,8 +163,7 @@ namespace xeus
 
     void xmessage::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&
     {
-        auto app = [&wire_msg](const std::string& uid)
-        {
+        auto app = [&wire_msg](const std::string& uid) {
             wire_msg.add(zmq::message_t(uid.begin(), uid.end()));
         };
         std::for_each(m_zmq_id.begin(), m_zmq_id.end(), app);
@@ -191,8 +186,8 @@ namespace xeus
                         std::move(parent_header),
                         std::move(metadata),
                         std::move(content),
-                        std::move(buffers)),
-        m_topic(topic)
+                        std::move(buffers))
+        , m_topic(topic)
     {
     }
 

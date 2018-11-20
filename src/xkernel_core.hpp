@@ -20,7 +20,6 @@
 
 namespace xeus
 {
-
     class xkernel_core
     {
     public:
@@ -36,8 +35,7 @@ namespace xeus
                      authentication_ptr auth,
                      server_ptr server,
                      interpreter_ptr p_interpreter,
-                     history_manager_ptr p_history_manager
-                 );
+                     history_manager_ptr p_history_manager);
 
         ~xkernel_core();
 
@@ -50,9 +48,7 @@ namespace xeus
                              xjson content,
                              buffer_sequence buffers);
 
-        void send_stdin(const std::string& msg_type,
-                        xjson metadata,
-                        xjson content);
+        void send_stdin(const std::string& msg_type, xjson metadata, xjson content);
 
         xcomm_manager& comm_manager() & noexcept;
         const xcomm_manager& comm_manager() const & noexcept;
@@ -88,8 +84,7 @@ namespace xeus
 
         void publish_status(const std::string& status);
 
-        void publish_execute_input(const std::string& code,
-                                   int execution_count);
+        void publish_execute_input(const std::string& code, int execution_count);
 
         void send_reply(const std::string& reply_type,
                         xjson metadata,
@@ -108,8 +103,7 @@ namespace xeus
         std::string get_topic(const std::string& msg_type) const;
         xjson get_metadata() const;
 
-        void set_parent(const guid_list& list,
-                        const xjson& parent);
+        void set_parent(const guid_list& list, const xjson& parent);
         const guid_list& get_parent_id() const;
         xjson get_parent_header() const;
 
@@ -127,7 +121,6 @@ namespace xeus
         guid_list m_parent_id;
         xjson m_parent_header;
     };
-
 }
 
 #endif

@@ -13,7 +13,6 @@
 
 namespace xeus
 {
-
     class xpublisher
     {
     public:
@@ -33,7 +32,6 @@ namespace xeus
         zmq::socket_t m_listener;
         zmq::socket_t m_controller;
     };
-
 }
 
 #endif

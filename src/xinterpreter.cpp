@@ -35,21 +35,19 @@ namespace xeus
             publish_execution_input(code, m_execution_count);
         }
 
-        xjson reply = execute_request_impl(m_execution_count, code, silent, user_expressions, allow_stdin);
+        xjson reply
+            = execute_request_impl(m_execution_count, code, silent, user_expressions, allow_stdin);
 
         reply["execution_count"] = m_execution_count;
         return reply;
     }
 
-    xjson xinterpreter::complete_request(const std::string& code,
-                                         int cursor_pos)
+    xjson xinterpreter::complete_request(const std::string& code, int cursor_pos)
     {
         return complete_request_impl(code, cursor_pos);
     }
 
-    xjson xinterpreter::inspect_request(const std::string& code,
-                                        int cursor_pos,
-                                        int detail_level)
+    xjson xinterpreter::inspect_request(const std::string& code, int cursor_pos, int detail_level)
     {
         return inspect_request_impl(code, cursor_pos, detail_level);
     }
@@ -89,11 +87,11 @@ namespace xeus
     {
         if (m_publisher)
         {
-            m_publisher("display_data", xjson::object(),
-                        build_display_content(std::move(data),
-                                              std::move(metadata),
-                                              std::move(transient)),
-                                              buffer_sequence());
+            m_publisher(
+                "display_data",
+                xjson::object(),
+                build_display_content(std::move(data), std::move(metadata), std::move(transient)),
+                buffer_sequence());
         }
     }
 
@@ -101,11 +99,11 @@ namespace xeus
     {
         if (m_publisher)
         {
-            m_publisher("update_display_data", xjson::object(),
-                        build_display_content(std::move(data),
-                                              std::move(metadata),
-                                              std::move(transient)),
-                                              buffer_sequence());
+            m_publisher(
+                "update_display_data",
+                xjson::object(),
+                build_display_content(std::move(data), std::move(metadata), std::move(transient)),
+                buffer_sequence());
         }
     }
 
@@ -132,7 +130,8 @@ namespace xeus
         }
     }
 
-    void xinterpreter::publish_execution_error(const std::string& ename, const std::string& evalue,
+    void xinterpreter::publish_execution_error(const std::string& ename,
+                                               const std::string& evalue,
                                                const std::vector<std::string>& trace_back)
     {
         if (m_publisher)

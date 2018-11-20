@@ -20,11 +20,9 @@ using CryptoPP::byte;
 
 namespace xeus
 {
-
     template <class T>
     class xauthentication_impl : public xauthentication
     {
-
     public:
 
         using hmac_type = CryptoPP::HMAC<T>;
@@ -53,7 +51,6 @@ namespace xeus
 
     class no_xauthentication : public xauthentication
     {
-
     public:
 
         no_xauthentication() = default;
@@ -163,5 +160,4 @@ namespace xeus
     {
         return true;
     }
-
 }

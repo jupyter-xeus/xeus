@@ -19,25 +19,23 @@ using namespace std::placeholders;
 
 namespace xeus
 {
-
     xkernel_core::xkernel_core(const std::string& kernel_id,
                                const std::string& user_name,
                                const std::string& session_id,
                                authentication_ptr auth,
                                server_ptr server,
                                interpreter_ptr interpreter,
-                               history_manager_ptr history_manager
-                           )
-        : m_kernel_id(std::move(kernel_id)),
-          m_user_name(std::move(user_name)),
-          m_session_id(std::move(session_id)),
-          p_auth(std::move(auth)),
-          m_comm_manager(this),
-          p_server(server),
-          p_interpreter(interpreter),
-          p_history_manager(history_manager),
-          m_parent_id(0),
-          m_parent_header(xjson::object())
+                               history_manager_ptr history_manager)
+        : m_kernel_id(std::move(kernel_id))
+        , m_user_name(std::move(user_name))
+        , m_session_id(std::move(session_id))
+        , p_auth(std::move(auth))
+        , m_comm_manager(this)
+        , p_server(server)
+        , p_interpreter(interpreter)
+        , p_history_manager(history_manager)
+        , m_parent_id(0)
+        , m_parent_header(xjson::object())
     {
         // Request handlers
         m_handler["execute_request"] = &xkernel_core::execute_request;
@@ -63,7 +61,7 @@ namespace xeus
         p_interpreter->register_comm_manager(&m_comm_manager);
     }
 
-    xkernel_core::~xkernel_core(){}
+    xkernel_core::~xkernel_core() {}
 
     void xkernel_core::dispatch_shell(zmq::multipart_t& wire_msg)
     {
@@ -202,10 +200,7 @@ namespace xeus
 
             xjson metadata = get_metadata();
 
-            xjson reply = p_interpreter->execute_request(code,
-                                                         silent,
-                                                         user_expression,
-                                                         allow_stdin);
+            xjson reply = p_interpreter->execute_request(code, silent, user_expression, allow_stdin);
 
             std::string status = reply.value("status", "error");
             send_reply("execute_reply", std::move(metadata), std::move(reply), c);

@@ -17,7 +17,6 @@
 
 namespace xeus
 {
-
     template <class T, std::size_t N>
     inline std::string hex_string(const std::array<T, N>& buffer)
     {
@@ -29,7 +28,6 @@ namespace xeus
         }
         return oss.str();
     }
-
 }
 
 #endif
