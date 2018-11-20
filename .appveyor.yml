@@ -23,6 +23,7 @@ install:
   - conda update -q conda
   - conda info -a
   - conda install cmake cppzmq=4.3.0 zeromq=4.2.5 xtl=0.4 nlohmann_json=3.2.0 cryptopp=5.6.5 -c conda-forge
+  - conda install pytest jupyter jupyter_kernel_test=0.3.0 -c conda-forge
   - mkdir build
   - cd build
   - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -D BUILD_EXAMPLES=ON -D DOWNLOAD_GTEST=ON -Dgtest_force_shared_crt=ON ..
@@ -30,3 +31,4 @@ install:
 
 build_script:
   - .\test\test_xeus
+  - py.test test\test_echo_kernel.py

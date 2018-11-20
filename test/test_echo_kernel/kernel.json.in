@@ -1,0 +1,9 @@
+{
+    "display_name": "test_echo_kernel",
+    "language" : "cpp",
+    "argv": [
+        "@CMAKE_BINARY_DIR@/test/test_echo_kernel",
+        "-f",
+        "{connection_file}"
+    ]
+}

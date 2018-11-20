@@ -39,6 +39,7 @@ test/CMakeCache.txt
 test/Makefile
 test/CMakeFiles/
 test/cmake_install.cmake
+test/test_echo_kernel/kernel.json
 
 # Documentation build artefacts
 docs/CMakeCache.txt
