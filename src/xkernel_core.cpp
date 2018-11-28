@@ -200,7 +200,8 @@ namespace xeus
 
             xjson metadata = get_metadata();
 
-            xjson reply = p_interpreter->execute_request(code, silent, user_expression, allow_stdin);
+            xjson reply = p_interpreter->execute_request(
+                code, silent, store_history, user_expression, allow_stdin);
 
             std::string status = reply.value("status", "error");
             send_reply("execute_reply", std::move(metadata), std::move(reply), c);
