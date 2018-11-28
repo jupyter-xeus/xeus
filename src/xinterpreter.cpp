@@ -26,6 +26,7 @@ namespace xeus
 
     xjson xinterpreter::execute_request(const std::string& code,
                                         bool silent,
+                                        bool store_history,
                                         const xjson_node* user_expressions,
                                         bool allow_stdin)
     {
@@ -35,8 +36,10 @@ namespace xeus
             publish_execution_input(code, m_execution_count);
         }
 
-        xjson reply
-            = execute_request_impl(m_execution_count, code, silent, user_expressions, allow_stdin);
+        xjson reply = execute_request_impl(
+            m_execution_count, code, silent,
+            store_history, user_expressions, allow_stdin
+        );
 
         reply["execution_count"] = m_execution_count;
         return reply;
