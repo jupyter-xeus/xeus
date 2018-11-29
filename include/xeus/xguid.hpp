@@ -9,12 +9,8 @@
 #ifndef XGUID_HPP
 #define XGUID_HPP
 
-#include <algorithm>
-#include <array>
-#include <cstddef>
-#include <string>
-
 #include "xtl/xbasic_fixed_string.hpp"
+#include "xtl/xjson.hpp"
 
 #include "xeus.hpp"
 
@@ -32,7 +28,6 @@ namespace xeus
     using xguid = xtl::xfixed_string<55>;
 
     XEUS_API xguid new_xguid();
-
 }
 
 #endif

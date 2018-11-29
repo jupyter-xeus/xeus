@@ -48,7 +48,7 @@ message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 # ============
 
 find_package(nlohmann_json 3.2.0 REQUIRED)
-find_package(xtl 0.4 REQUIRED)
+find_package(xtl 0.5 REQUIRED)
 find_package(cppzmq 4.3.0 REQUIRED)
 find_package(cryptopp REQUIRED)
 

@@ -9,24 +9,7 @@
 #ifndef XJSON_HPP
 #define XJSON_HPP
 
-#include "xtl/xbasic_fixed_string.hpp"
-
 #include "nlohmann/json.hpp"
-
-namespace xtl
-{
-    template <class CT, std::size_t N, template <std::size_t> class EP, class TR>
-    void to_json(::nlohmann::json& j, const xbasic_fixed_string<CT, N, EP, TR>& str)
-    {
-        j = str.c_str();
-    }
-
-    template <class CT, std::size_t N, template <std::size_t> class EP, class TR>
-    void from_json(const ::nlohmann::json& j, xbasic_fixed_string<CT, N, EP, TR>& str)
-    {
-        str = j.get<std::string>();
-    }
-}
 
 namespace xeus
 {

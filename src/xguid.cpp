@@ -92,7 +92,6 @@ namespace xeus
         };
 #endif
 
-        xguid res = hex_string(buffer);
-        return res;
+        return xguid(hex_string(buffer));
     }
 }
