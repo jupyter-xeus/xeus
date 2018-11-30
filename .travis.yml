@@ -112,8 +112,8 @@ install:
     # Build dependencies
     - conda install cmake pkg-config -c conda-forge
     # Host dependencies
-    - conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.4 cryptopp=5.6.5 -c conda-forge
-    - conda install nlohmann_json=3.2.0 -c conda-forge/label/gcc7
+    - conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=5.6.5 -c conda-forge
+    - conda install nlohmann_json=3.4.0 -c conda-forge/label/gcc7
     # Test dependencies
     - conda install pytest jupyter jupyter_kernel_test=0.3.0 -c conda-forge
     # Build
