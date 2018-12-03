@@ -15,7 +15,6 @@ The easiest way to get started with a new kernel is to inherit from the base int
 - ``complete_request_impl``
 - ``inspect_request_impl``
 - ``is_complete_request_impl``
-- ``input_reply_impl``
 
 as seen in the echo kernel provided as an example.
 
@@ -57,10 +56,9 @@ as seen in the echo kernel provided as an example.
             xjson is_complete_request_impl(const std::string& code) override;
 
             xjson kernel_info_request_impl() override;
-
-            void input_reply_impl(const std::string& value) override;
         };
     }
 
 
 Kernel authors can then rebind to the native APIs of the interpreter that is being interfaced, providing richer information than with the classical approach of a wrapper kernel capturing textual output.
+

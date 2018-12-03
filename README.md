@@ -81,8 +81,6 @@ namespace echo_kernel
         xjson is_complete_request_impl(const std::string& code) override;
 
         xjson kernel_info_request_impl() override;
-
-        void input_reply_impl(const std::string& value) override;
     };
 }
 ```

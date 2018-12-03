@@ -74,6 +74,8 @@ namespace xeus
         // send_stdin(msg_type, metadata, content)
         using stdin_sender_type = std::function<void(const std::string&, xjson, xjson)>;
         void register_stdin_sender(const stdin_sender_type& sender);
+        using input_reply_handler_type = std::function<void(const std::string&)>;
+        void register_input_handler(const input_reply_handler_type& handler);
 
         void input_request(const std::string& prompt, bool pwd);
         void input_reply(const std::string& value);
@@ -107,14 +109,13 @@ namespace xeus
 
         virtual void shutdown_request_impl() = 0;
 
-        virtual void input_reply_impl(const std::string& value) = 0;
-
         xjson build_display_content(xjson data, xjson metadata, xjson transient);
 
         publisher_type m_publisher;
         stdin_sender_type m_stdin;
         int m_execution_count;
         xcomm_manager* p_comm_manager;
+        input_reply_handler_type m_input_reply_handler;
     };
 
     inline xcomm_manager& xinterpreter::comm_manager() noexcept
