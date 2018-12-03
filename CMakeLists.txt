@@ -149,31 +149,6 @@ set_target_properties(xeus PROPERTIES
                       SOVERSION ${XEUS_BINARY_CURRENT}
                       OUTPUT_NAME "libxeus")
 
-# Configure Checks
-# ================
-
-include(CheckCXXSourceCompiles)
-include(CMakePushCheckState)
-
-cmake_push_check_state()
-
-# HAVE_CRYPTOPP_BYTE_T
-get_target_property(cryptopp_INCLUDE_DIR cryptopp-static INTERFACE_INCLUDE_DIRECTORIES)
-get_target_property(cryptopp_LIBRARY cryptopp-static LOCATION)
-set(CMAKE_REQUIRED_LIBRARIES ${cryptopp_LIBRARY})
-set(CMAKE_REQUIRED_INCLUDES ${cryptopp_INCLUDE_DIR})
-check_cxx_source_compiles("
-#include \"cryptopp/config.h\"
-int main(){
-  [[maybe_unused]] CryptoPP::byte b = CryptoPP::byte{0x36};
-}" HAVE_CRYPTOPP_BYTE_T)
-
-cmake_pop_check_state()
-
-if(HAVE_CRYPTOPP_BYTE_T)
-  target_compile_definitions(xeus PRIVATE HAVE_CRYPTOPP_BYTE_T)
-endif()
-
 # Compilation flags
 # =================
 

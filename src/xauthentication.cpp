@@ -14,10 +14,6 @@
 #include "cryptopp/sha.h"
 #include "cryptopp/hmac.h"
 
-#if defined(HAVE_CRYPTOPP_BYTE_T)
-using CryptoPP::byte;
-#endif
-
 namespace xeus
 {
     template <class T>
@@ -26,7 +22,7 @@ namespace xeus
     public:
 
         using hmac_type = CryptoPP::HMAC<T>;
-        using signature_type = std::array<byte, hmac_type::DIGESTSIZE>;
+        using signature_type = std::array<CryptoPP::byte, hmac_type::DIGESTSIZE>;
 
         explicit xauthentication_impl(const std::string& key);
         virtual ~xauthentication_impl() = default;
@@ -102,7 +98,7 @@ namespace xeus
     template <class T>
     xauthentication_impl<T>::xauthentication_impl(const std::string& key)
     {
-        m_hmac = hmac_type(reinterpret_cast<const byte*>(key.c_str()), key.size());
+        m_hmac = hmac_type(reinterpret_cast<const CryptoPP::byte*>(key.c_str()), key.size());
     }
 
     template <class T>
@@ -138,7 +134,7 @@ namespace xeus
         std::string hex_sig = hex_string(sig);
 
         // Reduces the vulnerability to timing attacks.
-        bool res = CryptoPP::VerifyBufsEqual(reinterpret_cast<const byte*>(hex_sig.c_str()),
+        bool res = CryptoPP::VerifyBufsEqual(reinterpret_cast<const CryptoPP::byte*>(hex_sig.c_str()),
                                              signature.data<const unsigned char>(),
                                              hex_sig.size());
         return res;
