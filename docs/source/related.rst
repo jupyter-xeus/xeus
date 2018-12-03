@@ -37,6 +37,9 @@ xeus-python
 The `xeus-python`_ project is a Jupyter kernel for the Python programming
 language based on the Xeus implementation of the protocol.
 
+.. image:: xeus-python-screencast.gif
+   :alt: xeus-python screencast
+
 xwidgets
 ---------
 
