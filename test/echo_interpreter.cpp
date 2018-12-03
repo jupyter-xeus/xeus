@@ -122,10 +122,4 @@ namespace echo_kernel
     }
 
     void echo_interpreter::shutdown_request_impl() {}
-
-    void echo_interpreter::input_reply_impl(const std::string& value)
-    {
-        std::cout << "Received input_reply" << std::endl;
-        std::cout << "value: " << value << std::endl;
-    }
 }

@@ -79,16 +79,16 @@ namespace xeus
         try
         {
             msg.deserialize(wire_msg, *p_auth);
+            const xjson& content = msg.content();
+            std::string value = content.value("value", "");
+            p_interpreter->input_reply(value);
         }
         catch (std::exception& e)
         {
-            std::cerr << "ERROR: could not deserialize message" << std::endl;
+            std::cerr << "ERROR: could not handle stdin message" << std::endl;
             std::cerr << e.what() << std::endl;
             return;
         }
-
-        const xjson& header = msg.header();
-        std::string msg_type = header.value("msg_type", "");
     }
 
     void xkernel_core::publish_message(const std::string& msg_type,

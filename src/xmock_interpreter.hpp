@@ -71,10 +71,6 @@ namespace xeus
         {
         }
 
-        void input_reply_impl(const std::string& /*value*/) override
-        {
-        }
-
         xcomm_manager m_comm_manager;
     };
 }

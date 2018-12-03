@@ -48,8 +48,6 @@ namespace echo_kernel
         xjson kernel_info_request_impl() override;
 
         void shutdown_request_impl() override;
-
-        void input_reply_impl(const std::string& value) override;
     };
 }
 

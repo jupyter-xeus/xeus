@@ -162,6 +162,11 @@ namespace xeus
         m_stdin = sender;
     }
 
+    void xinterpreter::register_input_handler(const input_reply_handler_type& handler)
+    {
+        m_input_reply_handler = handler;
+    }
+
     void xinterpreter::register_comm_manager(xcomm_manager* manager)
     {
         p_comm_manager = manager;
@@ -180,7 +185,10 @@ namespace xeus
 
     void xinterpreter::input_reply(const std::string& value)
     {
-        input_reply_impl(value);
+        if (m_input_reply_handler)
+        {
+            m_input_reply_handler(value);
+        }
     }
 
     xjson xinterpreter::build_display_content(xjson data, xjson metadata, xjson transient)
