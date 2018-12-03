@@ -27,7 +27,7 @@ namespace echo_kernel
                                                  const std::string& code,
                                                  bool silent,
                                                  bool store_history,
-                                                 const xjson_node* /* user_expressions */,
+                                                 xjson /* user_expressions */,
                                                  bool allow_stdin)
     {
         std::cout << "Received execute_request" << std::endl;

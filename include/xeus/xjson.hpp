@@ -14,13 +14,6 @@
 namespace xeus
 {
     using xjson = nlohmann::json;
-    using xjson_node = xjson::object_t;
-
-    inline const xjson_node* get_json_node(const xjson& document, const xjson_node::key_type& key)
-    {
-        const auto it = document.find(key);
-        return it != document.end() ? it.value().get_ptr<const xjson_node*>() : nullptr;
-    }
 }
 
 #endif

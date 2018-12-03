@@ -43,7 +43,7 @@ namespace xeus
         xjson execute_request(const std::string& code,
                               bool silent,
                               bool store_history,
-                              const xjson_node* user_expressions,
+                              xjson user_expressions,
                               bool allow_stdin);
 
         xjson complete_request(const std::string& code,
@@ -93,7 +93,7 @@ namespace xeus
                                            const std::string& code,
                                            bool silent,
                                            bool store_history,
-                                           const xjson_node* user_expressions,
+                                           xjson user_expressions,
                                            bool allow_stdin) = 0;
 
         virtual xjson complete_request_impl(const std::string& code,

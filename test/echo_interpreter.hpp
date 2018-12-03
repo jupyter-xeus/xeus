@@ -11,13 +11,9 @@
 
 #include "xeus/xinterpreter.hpp"
 
-using xeus::xinterpreter;
-using xeus::xjson;
-using xeus::xjson_node;
-
 namespace echo_kernel
 {
-    class echo_interpreter : public xinterpreter
+    class echo_interpreter : public xeus::xinterpreter
     {
 
     public:
@@ -29,23 +25,23 @@ namespace echo_kernel
 
         void configure_impl() override;
 
-        xjson execute_request_impl(int execution_counter,
-                                   const std::string& code,
-                                   bool silent,
-                                   bool store_history,
-                                   const xjson_node* user_expressions,
-                                   bool allow_stdin) override;
+        xeus::xjson execute_request_impl(int execution_counter,
+                                         const std::string& code,
+                                         bool silent,
+                                         bool store_history,
+                                         xeus::xjson user_expressions,
+                                         bool allow_stdin) override;
 
-        xjson complete_request_impl(const std::string& code,
-                                    int cursor_pos) override;
+        xeus::xjson complete_request_impl(const std::string& code,
+                                          int cursor_pos) override;
 
-        xjson inspect_request_impl(const std::string& code,
-                                   int cursor_pos,
-                                   int detail_level) override;
+        xeus::xjson inspect_request_impl(const std::string& code,
+                                         int cursor_pos,
+                                         int detail_level) override;
 
-        xjson is_complete_request_impl(const std::string& code) override;
+        xeus::xjson is_complete_request_impl(const std::string& code) override;
 
-        xjson kernel_info_request_impl() override;
+        xeus::xjson kernel_info_request_impl() override;
 
         void shutdown_request_impl() override;
     };
