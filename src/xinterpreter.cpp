@@ -27,7 +27,7 @@ namespace xeus
     xjson xinterpreter::execute_request(const std::string& code,
                                         bool silent,
                                         bool store_history,
-                                        const xjson_node* user_expressions,
+                                        xjson user_expressions,
                                         bool allow_stdin)
     {
         if (!silent)

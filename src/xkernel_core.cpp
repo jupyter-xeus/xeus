@@ -194,14 +194,14 @@ namespace xeus
             bool store_history = content.value("store_history", true);
             int execution_count = content.value("execution_count", 1);
             store_history = store_history && !silent;
-            const xjson_node* user_expression = get_json_node(content, "user_expressions");
+            xjson user_expression = content.value("user_expressions", xjson::object());
             bool allow_stdin = content.value("allow_stdin", true);
             bool stop_on_error = content.value("stop_on_error", false);
 
             xjson metadata = get_metadata();
 
             xjson reply = p_interpreter->execute_request(
-                code, silent, store_history, user_expression, allow_stdin);
+                code, silent, store_history, std::move(user_expression), allow_stdin);
 
             std::string status = reply.value("status", "error");
             send_reply("execute_reply", std::move(metadata), std::move(reply), c);

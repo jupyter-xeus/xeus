@@ -23,14 +23,14 @@ namespace echo_kernel
         using function_type = std::function<void(xeus::xcomm&&, const xeus::xmessage&)>;
     }
 
-    xjson echo_interpreter::execute_request_impl(int execution_counter,
-                                                 const std::string& code,
-                                                 bool /* silent */,
-                                                 bool /* store_history */,
-                                                 const xjson_node* /* user_expressions */,
-                                                 bool /* allow_stdin */)
+    xeus::xjson echo_interpreter::execute_request_impl(int execution_counter,
+                                                       const std::string& code,
+                                                       bool /* silent */,
+                                                       bool /* store_history */,
+                                                       xeus::xjson /* user_expressions */,
+                                                       bool /* allow_stdin */)
     {
-        xjson kernel_res;
+        xeus::xjson kernel_res;
 
         if (code.compare("hello, world") == 0)
         {
@@ -62,9 +62,9 @@ namespace echo_kernel
             return kernel_res;
         }
 
-        xjson pub_data;
+        xeus::xjson pub_data;
         pub_data["text/plain"] = code;
-        publish_execution_result(execution_counter, std::move(pub_data), xjson());
+        publish_execution_result(execution_counter, std::move(pub_data), xeus::xjson());
 
         kernel_res["status"] = "ok";
         kernel_res["payload"] = xeus::xjson::array();
@@ -73,10 +73,10 @@ namespace echo_kernel
         return kernel_res;
     }
 
-    xjson echo_interpreter::complete_request_impl(const std::string& /* code */,
-                                                  int /* cursor_pos */)
+    xeus::xjson echo_interpreter::complete_request_impl(const std::string& /* code */,
+                                                        int /* cursor_pos */)
     {
-        xjson result;
+        xeus::xjson result;
         result["status"] = "ok";
         result["matches"] = {"a.echo1", "a.echo2"};
         result["cursor_start"] = 2;
@@ -85,11 +85,11 @@ namespace echo_kernel
         return result;
     }
 
-    xjson echo_interpreter::inspect_request_impl(const std::string& /* code */,
-                                                 int /* cursor_pos */,
-                                                 int /* detail_level */)
+    xeus::xjson echo_interpreter::inspect_request_impl(const std::string& /* code */,
+                                                       int /* cursor_pos */,
+                                                       int /* detail_level */)
     {
-        xjson result;
+        xeus::xjson result;
         result["status"] = "ok";
         result["found"] = true;
         result["data"] = {{"text/plain", ""}};
@@ -97,9 +97,9 @@ namespace echo_kernel
         return result;
     }
 
-    xjson echo_interpreter::is_complete_request_impl(const std::string& code)
+    xeus::xjson echo_interpreter::is_complete_request_impl(const std::string& code)
     {
-        xjson result;
+        xeus::xjson result;
         result["status"] = code;
         if (code.compare("incomplete") == 0)
         {
@@ -108,9 +108,9 @@ namespace echo_kernel
         return result;
     }
 
-    xjson echo_interpreter::kernel_info_request_impl()
+    xeus::xjson echo_interpreter::kernel_info_request_impl()
     {
-        xjson result;
+        xeus::xjson result;
         result["implementation"] = "cpp_echo";
         result["implementation_version"] = "1.0.0";
         result["banner"] = "echo_kernel";
@@ -121,5 +121,7 @@ namespace echo_kernel
         return result;
     }
 
-    void echo_interpreter::shutdown_request_impl() {}
+    void echo_interpreter::shutdown_request_impl()
+    {
+    }
 }
