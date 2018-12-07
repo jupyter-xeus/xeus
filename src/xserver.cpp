@@ -47,6 +47,11 @@ namespace xeus
         stop_impl();
     }
 
+    void xserver::update_config(xconfiguration& config) const
+    {
+        update_config_impl(config);
+    }
+
     void xserver::register_shell_listener(const listener& l)
     {
         m_shell_listener = l;
@@ -77,8 +82,7 @@ namespace xeus
         m_stdin_listener(message);
     }
 
-    std::unique_ptr<xserver> make_xserver(zmq::context_t& context,
-                                          const xconfiguration& config)
+    std::unique_ptr<xserver> make_xserver(zmq::context_t& context, const xconfiguration& config)
     {
         return ::xeus::make_unique<xserver_zmq>(context, config);
     }

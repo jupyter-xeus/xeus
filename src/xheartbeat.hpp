@@ -9,6 +9,8 @@
 #ifndef XHEARTBEAT_HPP
 #define XHEARTBEAT_HPP
 
+#include <string>
+
 #include "zmq.hpp"
 
 namespace xeus
@@ -23,6 +25,8 @@ namespace xeus
                    const std::string& port);
 
         ~xheartbeat();
+
+        std::string get_port() const;
 
         void run();
 

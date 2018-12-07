@@ -63,6 +63,25 @@ namespace xeus
 
     xkernel_core::~xkernel_core() {}
 
+    zmq::multipart_t xkernel_core::build_start_msg() const
+    {
+        zmq::multipart_t start_msg;
+
+        std::string topic = "kernel_core." + m_kernel_id + ".status";
+        xjson content;
+        content["execution_state"] = "starting";
+
+        xpub_message msg(topic,
+                         make_header("status", m_user_name, m_session_id),
+                         xjson::object(),
+                         xjson::object(),
+                         std::move(content),
+                         buffer_sequence());
+        std::move(msg).serialize(start_msg, *p_auth);
+
+        return start_msg;
+    }
+
     void xkernel_core::dispatch_shell(zmq::multipart_t& wire_msg)
     {
         dispatch(wire_msg, channel::SHELL);
