@@ -7,6 +7,8 @@
 ****************************************************************************/
 
 #include <fstream>
+#include <string>
+
 #include "xeus/xkernel_configuration.hpp"
 #include "xeus/xjson.hpp"
 

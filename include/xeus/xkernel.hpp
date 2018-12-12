@@ -42,11 +42,20 @@ namespace xeus
                 history_manager_ptr history_manager = history_manager_ptr(new xin_memory_history_manager()),
                 server_builder builder = make_xserver);
 
+        xkernel(const std::string& user_name,
+                interpreter_ptr interpreter,
+                history_manager_ptr history_manager = history_manager_ptr(new xin_memory_history_manager()),
+                server_builder builder = make_xserver);
+
         ~xkernel();
 
         void start();
 
+        const xconfiguration& get_config();
+
     private:
+
+        void init();
 
         xconfiguration m_config;
         std::string m_kernel_id;

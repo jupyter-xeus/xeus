@@ -17,14 +17,14 @@ namespace xeus
 
     struct XEUS_API xconfiguration
     {
-        std::string m_transport;
-        std::string m_ip;
+        std::string m_transport = "tcp";
+        std::string m_ip = "127.0.0.1";
         std::string m_control_port;
         std::string m_shell_port;
         std::string m_stdin_port;
         std::string m_iopub_port;
         std::string m_hb_port;
-        std::string m_signature_scheme;
+        std::string m_signature_scheme = "hmac-sha256";
         std::string m_key;
     };
 

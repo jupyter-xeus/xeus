@@ -6,9 +6,11 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xeus/xserver_zmq.hpp"
 #include <thread>
 #include <chrono>
+
+#include "xeus/xserver_zmq.hpp"
+#include "xeus/xguid.hpp"
 #include "zmq_addon.hpp"
 #include "xmiddleware.hpp"
 #include "xpublisher.hpp"
@@ -16,27 +18,23 @@
 
 namespace xeus
 {
-    void init_socket(zmq::socket_t& socket, const std::string& end_point)
-    {
-        socket.setsockopt(ZMQ_LINGER, get_socket_linger());
-        socket.bind(end_point);
-    }
 
-    xserver_zmq::xserver_zmq(zmq::context_t& context, const xconfiguration& c)
+    xserver_zmq::xserver_zmq(zmq::context_t& context, const xconfiguration& config)
         : m_shell(context, zmq::socket_type::router)
         , m_controller(context, zmq::socket_type::router)
         , m_stdin(context, zmq::socket_type::router)
         , m_publisher_pub(context, zmq::socket_type::pub)
         , m_publisher_controller(context, zmq::socket_type::req)
         , m_heartbeat_controller(context, zmq::socket_type::req)
-        , p_publisher(new xpublisher(context, c.m_transport, c.m_ip, c.m_iopub_port))
-        , p_heartbeat(new xheartbeat(context, c.m_transport, c.m_ip, c.m_hb_port))
+        , p_publisher(new xpublisher(context, config.m_transport, config.m_ip, config.m_iopub_port))
+        , p_heartbeat(new xheartbeat(context, config.m_transport, config.m_ip, config.m_hb_port))
         , m_request_stop(false)
     {
-        init_socket(m_shell, get_end_point(c.m_transport, c.m_ip, c.m_shell_port));
-        init_socket(m_controller, get_end_point(c.m_transport, c.m_ip, c.m_control_port));
-        init_socket(m_stdin, get_end_point(c.m_transport, c.m_ip, c.m_stdin_port));
+        init_socket(m_shell, config.m_transport, config.m_ip, config.m_shell_port);
+        init_socket(m_controller, config.m_transport, config.m_ip, config.m_control_port);
+        init_socket(m_stdin, config.m_transport, config.m_ip, config.m_stdin_port);
         init_socket(m_publisher_pub, get_publisher_end_point());
+
         m_publisher_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
         m_publisher_controller.connect(get_publisher_controller_end_point());
         m_heartbeat_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
@@ -140,6 +138,15 @@ namespace xeus
     void xserver_zmq::stop_impl()
     {
         m_request_stop = true;
+    }
+
+    void xserver_zmq::update_config_impl(xconfiguration& config) const
+    {
+        config.m_control_port = get_socket_port(m_controller);
+        config.m_shell_port = get_socket_port(m_shell);
+        config.m_stdin_port = get_socket_port(m_stdin);
+        config.m_iopub_port = p_publisher->get_port();
+        config.m_hb_port = p_heartbeat->get_port();
     }
 
     void xserver_zmq::stop_channels()

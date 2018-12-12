@@ -22,6 +22,13 @@ namespace xeus
                               const std::string& port);
 
     int get_socket_linger();
+
+    void init_socket(zmq::socket_t& socket,
+                     const std::string& transport,
+                     const std::string& ip,
+                     const std::string& port);
+    void init_socket(zmq::socket_t& socket, const std::string& end_point);
+    std::string get_socket_port(const zmq::socket_t& socket);
 }
 
 #endif

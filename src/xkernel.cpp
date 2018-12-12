@@ -6,6 +6,9 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <string>
+#include <random>
+
 #include "xeus/xkernel.hpp"
 #include "xeus/xguid.hpp"
 #include "xeus/xhistory_manager.hpp"
@@ -37,25 +40,6 @@ namespace xeus
 #endif
     }
 
-    void build_start_msg(xkernel_core::authentication_ptr& auth,
-                         const std::string& kernel_id,
-                         const std::string& user_name,
-                         const std::string& session_id,
-                         zmq::multipart_t& wire_msg)
-    {
-        std::string topic = "kernel_core." + kernel_id + ".status";
-        xjson content;
-        content["execution_state"] = "starting";
-
-        xpub_message msg(topic,
-                         make_header("status", user_name, session_id),
-                         xjson::object(),
-                         xjson::object(),
-                         std::move(content),
-                         buffer_sequence());
-        std::move(msg).serialize(wire_msg, *auth);
-    }
-
     xkernel::xkernel(const xconfiguration& config,
                      const std::string& user_name,
                      interpreter_ptr interpreter,
@@ -67,22 +51,38 @@ namespace xeus
         , p_history_manager(std::move(history_manager))
         , m_builder(builder)
     {
+        init();
+    }
+
+    xkernel::xkernel(const std::string& user_name,
+                     interpreter_ptr interpreter,
+                     history_manager_ptr history_manager,
+                     server_builder builder)
+        : m_user_name(user_name)
+        , p_interpreter(std::move(interpreter))
+        , p_history_manager(std::move(history_manager))
+        , m_builder(builder)
+    {
+        init();
     }
 
     xkernel::~xkernel() {}
 
-    void xkernel::start()
+    void xkernel::init()
     {
         m_kernel_id = new_xguid();
         m_session_id = new_xguid();
 
+        if (m_config.m_key.size() == 0)
+        {
+            m_config.m_key = new_xguid();
+        }
+
         using authentication_ptr = xkernel_core::authentication_ptr;
         authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
 
-        zmq::multipart_t start_msg;
-        build_start_msg(auth, m_kernel_id, m_user_name, m_session_id, start_msg);
-
         p_server = m_builder(m_context, m_config);
+        p_server->update_config(m_config);
 
         p_core = kernel_core_ptr(new xkernel_core(m_kernel_id,
                                                   m_user_name,
@@ -93,6 +93,16 @@ namespace xeus
                                                   p_history_manager.get()));
 
         p_interpreter->configure();
+    }
+
+    void xkernel::start()
+    {
+        zmq::multipart_t start_msg = p_core->build_start_msg();
         p_server->start(start_msg);
+    }
+
+    const xconfiguration& xkernel::get_config()
+    {
+        return m_config;
     }
 }

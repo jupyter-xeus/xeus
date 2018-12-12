@@ -26,8 +26,7 @@ namespace xeus
         using publisher_ptr = std::unique_ptr<xpublisher>;
         using heartbeat_ptr = std::unique_ptr<xheartbeat>;
 
-        xserver_zmq(zmq::context_t& context,
-                     const xconfiguration& config);
+        xserver_zmq(zmq::context_t& context, const xconfiguration& config);
 
         virtual ~xserver_zmq();
 
@@ -41,6 +40,8 @@ namespace xeus
         void start_impl(zmq::multipart_t& message) override;
         void abort_queue_impl(const listener& l, long polling_interval) override;
         void stop_impl() override;
+
+        void update_config_impl(xconfiguration& config) const override;
 
         void poll(long timeout);
         void start_publisher_thread();

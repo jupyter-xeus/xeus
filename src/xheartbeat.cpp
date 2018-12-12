@@ -6,10 +6,12 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <iterator>
+#include <string>
+
 #include "xheartbeat.hpp"
 #include "zmq_addon.hpp"
 #include "xmiddleware.hpp"
-#include <iterator>
 
 namespace xeus
 {
@@ -20,13 +22,16 @@ namespace xeus
         : m_heartbeat(context, zmq::socket_type::router)
         , m_controller(context, zmq::socket_type::rep)
     {
-        m_heartbeat.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_heartbeat.bind(get_end_point(transport, ip, port));
-        m_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_controller.bind(get_heartbeat_controller_end_point());
+        init_socket(m_heartbeat, transport, ip, port);
+        init_socket(m_controller, get_heartbeat_controller_end_point());
     }
 
     xheartbeat::~xheartbeat() {}
+
+    std::string xheartbeat::get_port() const
+    {
+        return get_socket_port(m_heartbeat);
+    }
 
     void xheartbeat::run()
     {
