@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XSTRING_UTILS_HPP
-#define XSTRING_UTILS_HPP
+#ifndef XEUS_STRING_UTILS_HPP
+#define XEUS_STRING_UTILS_HPP
 
 #include <array>
 #include <cstddef>

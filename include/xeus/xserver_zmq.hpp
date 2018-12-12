@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XSERVER_IMPL_HPP
-#define XSERVER_IMPL_HPP
+#ifndef XEUS_SERVER_IMPL_HPP
+#define XEUS_SERVER_IMPL_HPP
 
 #include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
@@ -20,7 +20,6 @@ namespace xeus
 
     class XEUS_API xserver_zmq : public xserver
     {
-
     public:
 
         using publisher_ptr = std::unique_ptr<xpublisher>;
@@ -60,7 +59,6 @@ namespace xeus
 
         bool m_request_stop;
     };
-
 }
 
 #endif

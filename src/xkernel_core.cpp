@@ -61,7 +61,9 @@ namespace xeus
         p_interpreter->register_comm_manager(&m_comm_manager);
     }
 
-    xkernel_core::~xkernel_core() {}
+    xkernel_core::~xkernel_core()
+    {
+    }
 
     zmq::multipart_t xkernel_core::build_start_msg() const
     {

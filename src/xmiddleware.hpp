@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XMIDDLEWARE_HPP
-#define XMIDDLEWARE_HPP
+#ifndef XEUS_MIDDLEWARE_HPP
+#define XEUS_MIDDLEWARE_HPP
 
 #include <string>
 

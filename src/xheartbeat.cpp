@@ -26,7 +26,9 @@ namespace xeus
         init_socket(m_controller, get_heartbeat_controller_end_point());
     }
 
-    xheartbeat::~xheartbeat() {}
+    xheartbeat::~xheartbeat()
+    {
+    }
 
     std::string xheartbeat::get_port() const
     {

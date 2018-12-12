@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XMESSAGE_HPP
-#define XMESSAGE_HPP
+#ifndef XEUS_MESSAGE_HPP
+#define XEUS_MESSAGE_HPP
 
 #include <string>
 #include <vector>

@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XINTERPRETER_HPP
-#define XINTERPRETER_HPP
+#ifndef XEUS_INTERPRETER_HPP
+#define XEUS_INTERPRETER_HPP
 
 #include <functional>
 #include <string>
@@ -19,7 +19,6 @@
 
 namespace xeus
 {
-
     class xinterpreter;
 
     XEUS_API bool register_interpreter(xinterpreter* interpreter);
@@ -28,7 +27,6 @@ namespace xeus
     class XEUS_API xinterpreter
     {
     public:
-
         xinterpreter();
         virtual ~xinterpreter() = default;
 
@@ -46,12 +44,9 @@ namespace xeus
                               xjson user_expressions,
                               bool allow_stdin);
 
-        xjson complete_request(const std::string& code,
-                               int cursor_pos);
+        xjson complete_request(const std::string& code, int cursor_pos);
 
-        xjson inspect_request(const std::string& code,
-                              int cursor_pos,
-                              int detail_level);
+        xjson inspect_request(const std::string& code, int cursor_pos, int detail_level);
 
         xjson is_complete_request(const std::string& code);
         xjson kernel_info_request();
@@ -67,7 +62,8 @@ namespace xeus
         void update_display_data(xjson data, xjson metadata, xjson transient);
         void publish_execution_input(const std::string& code, int execution_count);
         void publish_execution_result(int execution_count, xjson data, xjson metadata);
-        void publish_execution_error(const std::string& ename, const std::string& evalue,
+        void publish_execution_error(const std::string& ename,
+                                     const std::string& evalue,
                                      const std::vector<std::string>& trace_back);
         void clear_output(bool wait);
 

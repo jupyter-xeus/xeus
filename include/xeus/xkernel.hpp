@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XKERNEL_HPP
-#define XKERNEL_HPP
+#ifndef XEUS_KERNEL_HPP
+#define XEUS_KERNEL_HPP
 
 #include "xeus.hpp"
 #include "xhistory_manager.hpp"

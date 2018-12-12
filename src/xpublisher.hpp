@@ -6,8 +6,10 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XPUBLISHER_HPP
-#define XPUBLISHER_HPP
+#ifndef XEUS_PUBLISHER_HPP
+#define XEUS_PUBLISHER_HPP
+
+#include <string>
 
 #include <string>
 

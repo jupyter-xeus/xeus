@@ -18,7 +18,6 @@
 
 namespace xeus
 {
-
     class XEUS_API xhistory_manager
     {
     public:
@@ -48,9 +47,7 @@ namespace xeus
         virtual xjson get_tail_impl(int n, bool raw, bool output) const = 0;
         virtual xjson get_range_impl(int session, int start, int stop, bool raw, bool output) const = 0;
         virtual xjson search_impl(const std::string& pattern, bool raw, bool output, int n, bool unique) const = 0;
-
     };
-
 }
 
 #endif

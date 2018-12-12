@@ -6,8 +6,10 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XEUX_MOCK_INTERPRETER_HPP
-#define XEUX_MOCK_INTERPRETER_HPP
+#ifndef XEUS_MOCK_INTERPRETER_HPP
+#define XEUS_MOCK_INTERPRETER_HPP
+
+#include <string>
 
 #include "xeus/xinterpreter.hpp"
 #include "xeus/xeus.hpp"

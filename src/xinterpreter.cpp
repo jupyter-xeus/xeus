@@ -14,8 +14,8 @@
 
 namespace xeus
 {
-
-    xinterpreter::xinterpreter() : m_execution_count(0)
+    xinterpreter::xinterpreter()
+        : m_execution_count(0)
     {
     }
 

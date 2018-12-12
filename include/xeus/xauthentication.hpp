@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XAUTHENTICATION_HPP
-#define XAUTHENTICATION_HPP
+#ifndef XEUS_AUTHENTICATION_HPP
+#define XEUS_AUTHENTICATION_HPP
 
 #include <memory>
 #include <string>
@@ -17,7 +17,6 @@
 
 namespace xeus
 {
-
     class XEUS_API xauthentication
     {
     public:
@@ -59,9 +58,8 @@ namespace xeus
                                  const zmq::message_t& content) const = 0;
     };
 
-    XEUS_API
-    std::unique_ptr<xauthentication> make_xauthentication(const std::string& scheme,
-                                                          const std::string& key);
+    XEUS_API std::unique_ptr<xauthentication> make_xauthentication(const std::string& scheme,
+                                                                   const std::string& key);
 }
 
 #endif

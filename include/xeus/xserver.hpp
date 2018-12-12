@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XSERVER_HPP
-#define XSERVER_HPP
+#ifndef XEUS_SERVER_HPP
+#define XEUS_SERVER_HPP
 
 #include <functional>
 #include <memory>
@@ -19,7 +19,6 @@
 
 namespace xeus
 {
-
     class XEUS_API xserver
     {
     public:

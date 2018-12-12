@@ -18,9 +18,9 @@ namespace xeus
                            const std::string& transport,
                            const std::string& ip,
                            const std::string& port)
-        : m_publisher(context, zmq::socket_type::pub),
-          m_listener(context, zmq::socket_type::sub),
-          m_controller(context, zmq::socket_type::rep)
+        : m_publisher(context, zmq::socket_type::pub)
+        , m_listener(context, zmq::socket_type::sub)
+        , m_controller(context, zmq::socket_type::rep)
     {
         init_socket(m_publisher, transport, ip, port);
         m_listener.connect(get_publisher_end_point());
@@ -29,7 +29,9 @@ namespace xeus
         m_controller.bind(get_publisher_controller_end_point());
     }
 
-    xpublisher::~xpublisher() {}
+    xpublisher::~xpublisher()
+    {
+    }
 
     std::string xpublisher::get_port() const
     {

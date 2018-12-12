@@ -6,15 +6,15 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XCONFIGURATION_HPP
-#define XCONFIGURATION_HPP
+#ifndef XEUS_CONFIGURATION_HPP
+#define XEUS_CONFIGURATION_HPP
+
+#include <string>
 
 #include "xeus.hpp"
-#include <string>
 
 namespace xeus
 {
-
     struct XEUS_API xconfiguration
     {
         std::string m_transport = "tcp";

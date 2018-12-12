@@ -6,10 +6,11 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XKERNEL_CORE_HPP
-#define XKERNEL_CORE_HPP
+#ifndef XEUS_KERNEL_CORE_HPP
+#define XEUS_KERNEL_CORE_HPP
 
 #include <map>
+#include <string>
 
 #include "xeus/xcomm.hpp"
 #include "xeus/xserver.hpp"

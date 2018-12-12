@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XCOMM_HPP
-#define XCOMM_HPP
+#ifndef XEUS_COMM_HPP
+#define XEUS_COMM_HPP
 
 #include <functional>
 #include <list>
@@ -20,7 +20,6 @@
 
 namespace xeus
 {
-
     /***********************
      * xtarget declaration *
      ***********************/
@@ -114,8 +113,15 @@ namespace xeus
          *    "data": specified data
          * }
          */
-        void send_comm_message(const std::string& msg_type, xjson metadata, xjson data, buffer_sequence) const;
-        void send_comm_message(const std::string& msg_type, xjson metadata, xjson data, buffer_sequence, const std::string& target_name) const;
+        void send_comm_message(const std::string& msg_type,
+                               xjson metadata,
+                               xjson data,
+                               buffer_sequence) const;
+        void send_comm_message(const std::string& msg_type,
+                               xjson metadata,
+                               xjson data,
+                               buffer_sequence,
+                               const std::string& target_name) const;
 
         handler_type m_close_handler;
         handler_type m_message_handler;
@@ -142,7 +148,8 @@ namespace xeus
 
         using target_function_type = xtarget::function_type;
 
-        void register_comm_target(const std::string& target_name, const target_function_type& callback);
+        void register_comm_target(const std::string& target_name,
+                                  const target_function_type& callback);
         void unregister_comm_target(const std::string& target_name);
 
         void comm_open(const xmessage& request);
@@ -174,12 +181,18 @@ namespace xeus
      **************************/
 
     inline xtarget::xtarget()
-        : m_name(), m_callback(), p_manager(nullptr)
+        : m_name()
+        , m_callback()
+        , p_manager(nullptr)
     {
     }
 
-    inline xtarget::xtarget(const std::string& name, const function_type& callback, xcomm_manager* manager)
-        : m_name(name), m_callback(callback), p_manager(manager)
+    inline xtarget::xtarget(const std::string& name,
+                            const function_type& callback,
+                            xcomm_manager* manager)
+        : m_name(name)
+        , m_callback(callback)
+        , p_manager(manager)
     {
     }
 
@@ -243,7 +256,10 @@ namespace xeus
         }
     }
 
-    inline void xcomm::send_comm_message(const std::string& msg_type, xjson metadata, xjson data, buffer_sequence buffers) const
+    inline void xcomm::send_comm_message(const std::string& msg_type,
+                                         xjson metadata,
+                                         xjson data,
+                                         buffer_sequence buffers) const
     {
         xjson content;
         content["comm_id"] = m_id;
@@ -251,29 +267,36 @@ namespace xeus
         target().publish_message(msg_type, std::move(metadata), std::move(content), std::move(buffers));
     }
 
-    inline void xcomm::send_comm_message(const std::string& msg_type, xjson metadata, xjson data, buffer_sequence buffers,
-                                         const std::string& target_name) const 
+    inline void xcomm::send_comm_message(const std::string& msg_type,
+                                         xjson metadata,
+                                         xjson data,
+                                         buffer_sequence buffers,
+                                         const std::string& target_name) const
     {
         xjson content;
         content["comm_id"] = m_id;
         content["target_name"] = target_name;
         content["data"] = std::move(data);
-        target().publish_message(msg_type, std::move(metadata), std::move(content), std::move(buffers));
+        target().publish_message(
+            msg_type, std::move(metadata), std::move(content), std::move(buffers));
     }
 
     inline xcomm::xcomm(xcomm&& comm)
-        : m_close_handler(std::move(comm.m_close_handler)),
-          m_message_handler(std::move(comm.m_message_handler)),
-          p_target(std::move(comm.p_target)),
-          m_id(std::move(comm.m_id)),
-          m_moved_from(false)
+        : m_close_handler(std::move(comm.m_close_handler))
+        , m_message_handler(std::move(comm.m_message_handler))
+        , p_target(std::move(comm.p_target))
+        , m_id(std::move(comm.m_id))
+        , m_moved_from(false)
     {
         comm.m_moved_from = true;
-        p_target->register_comm(m_id, this); // Replacing the address of the moved comm with `this`.
+        p_target->register_comm(m_id,
+                                this);  // Replacing the address of the moved comm with `this`.
     }
 
     inline xcomm::xcomm(const xcomm& comm)
-        : p_target(comm.p_target), m_id(xeus::new_xguid()), m_moved_from(false)
+        : p_target(comm.p_target)
+        , m_id(xeus::new_xguid())
+        , m_moved_from(false)
     {
         p_target->register_comm(m_id, this);
     }
@@ -287,7 +310,8 @@ namespace xeus
         m_id = std::move(comm.m_id);
         m_moved_from = false;
         comm.m_moved_from = true;
-        p_target->register_comm(m_id, this); // Replacing the address of the moved comm with `this`.
+        p_target->register_comm(m_id,
+                                this);  // Replacing the address of the moved comm with `this`.
         return *this;
     }
 
@@ -302,13 +326,15 @@ namespace xeus
     }
 
     inline xcomm::xcomm(xtarget* target)
-        : p_target(target), m_id(xeus::new_xguid())
+        : p_target(target)
+        , m_id(xeus::new_xguid())
     {
         p_target->register_comm(m_id, this);
     }
 
     inline xcomm::xcomm(xtarget* target, xguid id)
-        : p_target(target), m_id(id)
+        : p_target(target)
+        , m_id(id)
     {
         p_target->register_comm(m_id, this);
     }
@@ -323,7 +349,11 @@ namespace xeus
 
     inline void xcomm::open(xjson metadata, xjson data, buffer_sequence buffers)
     {
-        send_comm_message("comm_open", std::move(metadata), std::move(data), std::move(buffers), p_target->name());
+        send_comm_message("comm_open",
+                          std::move(metadata),
+                          std::move(data),
+                          std::move(buffers),
+                          p_target->name());
     }
 
     inline void xcomm::close(xjson metadata, xjson data, buffer_sequence buffers)
@@ -376,7 +406,6 @@ namespace xeus
     {
         return m_comms;
     }
-
 }
 
 #endif
