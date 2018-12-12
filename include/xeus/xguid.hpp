@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XGUID_HPP
-#define XGUID_HPP
+#ifndef XEUS_GUID_HPP
+#define XEUS_GUID_HPP
 
 #include "xtl/xbasic_fixed_string.hpp"
 #include "xtl/xjson.hpp"
@@ -16,7 +16,6 @@
 
 namespace xeus
 {
-
     // xfixed_string contains 2 members:
     // - a stack-allocated buffer of N (template parameter) + 1 (null termination) char
     // - a size_t for the number of characters actually used

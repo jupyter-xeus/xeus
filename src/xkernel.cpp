@@ -66,7 +66,9 @@ namespace xeus
         init();
     }
 
-    xkernel::~xkernel() {}
+    xkernel::~xkernel()
+    {
+    }
 
     void xkernel::init()
     {

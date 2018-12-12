@@ -41,7 +41,9 @@ namespace xeus
         m_heartbeat_controller.connect(get_heartbeat_controller_end_point());
     }
 
-    xserver_zmq::~xserver_zmq() {}
+    xserver_zmq::~xserver_zmq()
+    {
+    }
 
     void xserver_zmq::send_shell_impl(zmq::multipart_t& message)
     {

@@ -15,7 +15,10 @@ namespace xeus
         }
     }
 
-    xcomm_manager::xcomm_manager(xkernel_core* kernel) { p_kernel = kernel; }
+    xcomm_manager::xcomm_manager(xkernel_core* kernel)
+    {
+        p_kernel = kernel;
+    }
 
     xjson xcomm_manager::get_metadata() const
     {

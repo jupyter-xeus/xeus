@@ -22,7 +22,6 @@ namespace xeus
 {
     class XEUS_API xin_memory_history_manager : public xhistory_manager
     {
-
     public:
 
         using history_type = std::list<std::array<std::string, 3>>;

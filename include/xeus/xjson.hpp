@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XJSON_HPP
-#define XJSON_HPP
+#ifndef XEUS_JSON_HPP
+#define XEUS_JSON_HPP
 
 #include "nlohmann/json.hpp"
 

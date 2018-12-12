@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XHEARTBEAT_HPP
-#define XHEARTBEAT_HPP
+#ifndef XEUS_HEARTBEAT_HPP
+#define XEUS_HEARTBEAT_HPP
 
 #include <string>
 
