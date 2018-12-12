@@ -11,9 +11,11 @@
 
 #include <string>
 
+#include "xeus.hpp"
+
 namespace xeus
 {
-    std::string blocking_input_request(const std::string& prompt, bool password);
+    XEUS_API std::string blocking_input_request(const std::string& prompt, bool password);
 }
 
 #endif

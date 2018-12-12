@@ -27,6 +27,7 @@ namespace xeus
     class XEUS_API xinterpreter
     {
     public:
+
         xinterpreter();
         virtual ~xinterpreter() = default;
 
