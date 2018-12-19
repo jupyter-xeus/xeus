@@ -47,18 +47,23 @@ message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 # Dependencies
 # ============
 
-find_package(nlohmann_json 3.2.0 REQUIRED)
-find_package(xtl 0.5 REQUIRED)
-find_package(cppzmq 4.3.0 REQUIRED)
+set(nlohmann_json_REQUIRED_VERSION 3.2.0)
+set(xtl_REQUIRED_VERSION 0.5)
+set(cppzmq_REQUIRED_VERSION 4.3.0)
+set(zeromq_REQUIRED_VERSION 4.2.3)
+
+find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
+find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
+find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
 find_package(cryptopp REQUIRED)
 
 # On Unix platforms, ZeroMQ is built with autotools and pkg-config is
 # required to locate it.
 if (WIN32)
-    find_package(zeromq 4.2.3 REQUIRED)
+    find_package(zeromq ${zeromq_REQUIRED_VERSION} REQUIRED)
 else()
     find_package(PkgConfig)
-    pkg_check_modules(ZeroMQ libzmq>=4.2.3 REQUIRED)
+    pkg_check_modules(ZeroMQ libzmq>=${zeromq_REQUIRED_VERSION} REQUIRED)
 endif()
 
 # Source files
