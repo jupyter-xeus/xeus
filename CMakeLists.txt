@@ -55,15 +55,35 @@ set(zeromq_REQUIRED_VERSION 4.2.3)
 find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
 find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
 find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
-find_package(cryptopp REQUIRED)
 
-# On Unix platforms, ZeroMQ is built with autotools and pkg-config is
-# required to locate it.
 if (WIN32)
     find_package(zeromq ${zeromq_REQUIRED_VERSION} REQUIRED)
 else()
-    find_package(PkgConfig)
-    pkg_check_modules(ZeroMQ libzmq>=${zeromq_REQUIRED_VERSION} REQUIRED)
+    find_package(zeromq ${zeromq_REQUIRED_VERSION} QUIET)
+
+    if(NOT ZeroMQ_FOUND)
+        message(STATUS "CMake libzmq package not found, trying again with pkg-config")
+        pkg_check_modules(ZeroMQ libzmq>=${zeromq_REQUIRED_VERSION} REQUIRED)
+        set(ZeroMQ_VERSION ${PC_LIBZMQ_VERSION})
+        find_library(ZeroMQ_LIBRARY NAMES libzmq.so libzmq.dylib libzmq.dll
+             PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
+        find_library(ZeroMQ_STATIC_LIBRARY NAMES libzmq-static.a libzmq.a libzmq.dll.a
+             PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
+        message(STATUS "STATIC_LIBRARY" {ZeroMQ_LIBRARY})
+        message(STATUS "STATIC_STATIC_LIBRARY" {ZeroMQ_STATIC_LIBRARY})
+     endif()
+endif()
+
+if (WIN32)
+    find_package(cryptopp REQUIRED)
+else()
+    find_package(cryptopp QUIET)
+
+    if(NOT cryptopp_FOUND)
+        message(STATUS "CMake cryptopp package not found, trying again with pkg-config")
+        pkg_check_modules(cryptopp libcryptopp REQUIRED)
+        find_library(cryptopp_STATIC_LIBRARY NAMES cryptopp-static.lib libcryptopp.a) 
+     endif()
 endif()
 
 # Source files
