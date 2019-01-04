@@ -172,7 +172,7 @@ make install
 
 ### cryptopp
 
-[cryptopp-cmake](https://github.com/noloader/cryptopp-cmake) must be built as a static library. Building cryptopp as a shared library is not supported on Windows.
+By default, a static build of [cryptopp](https://github.com/weidai11/cryptopp) is used. To make use of a dynamic library for `cryptopp`, the `cmake` flag `XEUS_USE_SHARED_CRYPTOPP` must be enabled. Note that building cryptopp as a shared library is not supported on Windows.
 
 ```bash
 cmake -D BUILD_SHARED=OFF -D BUILD_TESTING=OFF -D CMAKE_BUILD_TYPE=Release
