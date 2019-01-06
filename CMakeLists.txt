@@ -43,7 +43,6 @@ set(XEUS_BINARY_VERSION
     ${XEUS_BINARY_CURRENT}.${XEUS_BINARY_REVISION}.${XEUS_BINARY_AGE})
 message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 
-
 # Dependencies
 # ============
 
@@ -58,11 +57,12 @@ find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
 
 if (WIN32)
     find_package(zeromq ${zeromq_REQUIRED_VERSION} REQUIRED)
-else()
+else ()
     find_package(zeromq ${zeromq_REQUIRED_VERSION} QUIET)
 
-    if(NOT ZeroMQ_FOUND)
+    if (NOT ZeroMQ_FOUND)
         message(STATUS "CMake libzmq package not found, trying again with pkg-config")
+        find_package(PkgConfig)
         pkg_check_modules(ZeroMQ libzmq>=${zeromq_REQUIRED_VERSION} REQUIRED)
         set(ZeroMQ_VERSION ${PC_LIBZMQ_VERSION})
         find_library(ZeroMQ_LIBRARY NAMES libzmq.so libzmq.dylib libzmq.dll
@@ -71,20 +71,26 @@ else()
              PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
         message(STATUS "STATIC_LIBRARY" {ZeroMQ_LIBRARY})
         message(STATUS "STATIC_STATIC_LIBRARY" {ZeroMQ_STATIC_LIBRARY})
-     endif()
-endif()
+     endif ()
+endif ()
 
 if (WIN32)
     find_package(cryptopp REQUIRED)
-else()
+else ()
     find_package(cryptopp QUIET)
 
-    if(NOT cryptopp_FOUND)
+    if (NOT cryptopp_FOUND)
         message(STATUS "CMake cryptopp package not found, trying again with pkg-config")
+        find_package(PkgConfig)
         pkg_check_modules(cryptopp libcryptopp REQUIRED)
-        find_library(cryptopp_STATIC_LIBRARY NAMES cryptopp-static.lib libcryptopp.a) 
-     endif()
-endif()
+        find_library(cryptopp_LIBRARY NAMES cryptopp-shared.dll libcryptopp.so libcryptopp.dylib)
+        add_library(cryptopp-shared SHARED IMPORTED)
+        set_target_properties(cryptopp-shared PROPERTIES IMPORTED_LOCATION ${cryptopp_LIBRARY})
+        find_library(cryptopp_STATIC_LIBRARY NAMES cryptopp-static.lib libcryptopp.a)
+        add_library(cryptopp-static STATIC IMPORTED)
+        set_target_properties(cryptopp-static PROPERTIES IMPORTED_LOCATION ${cryptopp_STATIC_LIBRARY})
+     endif ()
+endif ()
 
 # Source files
 # ============
@@ -156,8 +162,14 @@ target_include_directories(xeus PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
 target_link_libraries(xeus
                       PUBLIC cppzmq
                       PUBLIC nlohmann_json::nlohmann_json
-                      PUBLIC xtl
-                      PRIVATE cryptopp-static)
+                      PUBLIC xtl)
+
+OPTION(XEUS_USE_SHARED_CRYPTOPP "Used shared library for cryptopp" OFF)
+if (XEUS_USE_SHARED_CRYPTOPP)
+    target_link_libraries(xeus PRIVATE cryptopp-shared)
+else ()
+    target_link_libraries(xeus PRIVATE cryptopp-static)
+endif ()
 
 if(NOT MSVC)
     if(APPLE)
