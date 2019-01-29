@@ -69,7 +69,7 @@ if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
     # Add googletest directly to our build. This defines
     # the gtest and gtest_main targets.
     add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
-                     ${CMAKE_CURRENT_BINARY_DIR}/googletest-build)
+                     ${CMAKE_CURRENT_BINARY_DIR}/googletest-build EXCLUDE_FROM_ALL)
 
     set(GTEST_INCLUDE_DIRS "${gtest_SOURCE_DIR}/include")
     set(GTEST_BOTH_LIBRARIES  gtest_main gtest)
@@ -104,15 +104,13 @@ foreach(filename IN LISTS XEUS_TESTS)
     add_test(NAME ${targetname} COMMAND ${targetname})
 endforeach()
 
-set(XEUS_TARGET test_xeus)
-
-add_executable(${XEUS_TARGET} ${XEUS_TESTS} ${XEUS_HEADERS})
+add_executable(test_xeus ${XEUS_TESTS} ${XEUS_HEADERS})
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
-    add_dependencies(${XEUS_TARGET} gtest_main)
+    add_dependencies(test_xeus gtest_main)
 endif()
-target_link_libraries(${XEUS_TARGET} xeus ${GTEST_BOTH_LIBRARIES} Threads::Threads ${nlohmann_json_TARGET})
+target_link_libraries(test_xeus xeus ${GTEST_BOTH_LIBRARIES} Threads::Threads ${nlohmann_json_TARGET})
 
-add_custom_target(xtest COMMAND test_xeus DEPENDS ${XEUS_TARGET})
+add_custom_target(xtest COMMAND test_xeus DEPENDS test_xeus)
 
 # Echo_kernel tests
 # =================
