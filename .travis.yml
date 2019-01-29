@@ -49,9 +49,9 @@ install:
     - conda install cmake pkg-config -c conda-forge
     # Host dependencies
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        conda install gcc_linux-64 libgcc zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=7.0.0 -c conda-forge
+        conda install gcc_linux-64 libgcc zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=7.0.0 -c conda-forge;
       elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=7.0.0 -c conda-forge
+        conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=7.0.0 -c conda-forge;
       fi
     - conda install nlohmann_json=3.4.0 -c conda-forge/label/gcc7
     # Test dependencies
