@@ -21,7 +21,7 @@ a kernel for the C++ programming language based on the `cling` C++ interpreter.
 `xeus` has been packaged on all platforms for the conda package manager.
 
 ```
-conda install xeus -c QuantStack
+conda install xeus -c conda-forge 
 ```
 
 ## Documentation
