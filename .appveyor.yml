@@ -19,7 +19,6 @@ init:
 
 install:
   # Install conda
-  - ps: Set-MpPreference -DisableRealtimeMonitoring $true
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
