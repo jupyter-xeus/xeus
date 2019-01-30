@@ -14,7 +14,7 @@ With Conda
 
 .. code::
 
-    conda install xeus -c QuantStack -c conda-forge
+    conda install xeus -c conda-forge
 
 From Source
 -----------
@@ -29,7 +29,7 @@ We have packaged all these dependencies for the conda package manager. The simpl
 
 .. code::
 
-    conda install cmake zeromq cppzmq cryptopp xtl -c QuantStack -c conda-forge .
+    conda install cmake zeromq cppzmq cryptopp xtl -c conda-forge .
 
 On Linux platform, you will also need:
 
@@ -74,13 +74,15 @@ cppzmq
 cryptopp
 ~~~~~~~~~
 
-`cryptopp` must be built as a static library, building cryptopp as a shared library is not supported on Windows.
+`cryptopp` is can be built as a static or shared library. Building cryptopp as a shared library is not supported on Windows.
 
 .. code::
 
     cmake -D BUILD_SHARED=OFF -D BUILD_TESTING=OFF -D CMAKE_BUILD_TYPE=Release .
     make
     make install
+
+If cryptopp is built as a shared library, the `XEUS_USE_SHARED_CRYPTOPP` cmake flag must be used for xeus.
 
 xtl
 ~~~
