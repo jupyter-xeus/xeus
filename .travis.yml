@@ -47,24 +47,18 @@ install:
     - conda info -a
     # Build dependencies
     - conda install cmake pkg-config -c conda-forge
-    # Host dependencies
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        conda install gxx_linux-64 libgcc zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=7.0.0 -c conda-forge;
-      elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=7.0.0 -c conda-forge;
+        conda install gxx_linux-64 libgcc -c conda-forge;
       fi
-    - conda install nlohmann_json=3.4.0 -c conda-forge/label/gcc7
+    # Host dependencies
+    - conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=7.0.0 nlohmann_json=3.4.0 -c conda-forge;
     # Test dependencies
     - conda install pytest jupyter jupyter_kernel_test=0.3.0 -c conda-forge
     # Build
     - mkdir build
     - cd build
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        source activate root;
-        cmake -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DBUILD_EXAMPLES=ON -DDOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib ..;
-      else
-        cmake -D BUILD_EXAMPLES=ON -DDOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib ..;
-      fi
+    - source activate root
+    - cmake -DBUILD_EXAMPLES=ON -DDOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX ..
     - make
     - make install
 script:
