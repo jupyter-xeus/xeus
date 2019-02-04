@@ -3,13 +3,6 @@ dist: trusty
 matrix:
   include:
     - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
-      env: COMPILER=gcc GCC=4.9
     - os: osx
       osx_image: xcode8
       compiler: clang
@@ -18,19 +11,6 @@ env:
     - MINCONDA_VERSION="latest"
     - MINCONDA_LINUX="Linux-x86_64"
     - MINCONDA_OSX="MacOSX-x86_64"
-before_install:
-    - |
-      # Configure build variables
-      if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        if [[ "$COMPILER" == "gcc" ]]; then
-          export CXX=g++-$GCC CC=gcc-$GCC;
-        fi
-        if [[ "$COMPILER" == "clang" ]]; then
-          export CXX=clang++-$CLANG CC=clang-$CLANG;
-        fi
-      elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        export CXX=clang++ CC=clang;
-      fi
 install:
     # Install conda
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -45,15 +25,17 @@ install:
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
     - conda info -a
+    # Host dependencies
+    - conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=7.0.0 nlohmann_json=3.4.0 -c conda-forge;
     # Build dependencies
     - conda install cmake pkg-config -c conda-forge
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
         conda install gxx_linux-64 libgcc -c conda-forge;
       fi
-    # Host dependencies
-    - conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.5 cryptopp=7.0.0 nlohmann_json=3.4.0 -c conda-forge;
     # Test dependencies
     - conda install pytest jupyter jupyter_kernel_test=0.3.0 -c conda-forge
+    # Activate root environment
+    - source activate root
     # Build
     - mkdir build
     - cd build
