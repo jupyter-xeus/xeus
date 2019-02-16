@@ -141,7 +141,12 @@ set(XEUS_SOURCES
 # Output
 # ======
 
-add_library(xeus SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
+option(BUILD_SHARED_LIBS "Build shared instead of static libraries." ON)
+if (BUILD_SHARED_LIBS)
+    add_library(xeus SHARED ${XEUS_SOURCES} ${XEUS_HEADERS})
+else ()
+    add_library(xeus STATIC ${XEUS_SOURCES} ${XEUS_HEADERS})
+endif ()
 
 if (APPLE)
     set_target_properties(xeus PROPERTIES
@@ -166,9 +171,9 @@ target_link_libraries(xeus
 
 OPTION(XEUS_USE_SHARED_CRYPTOPP "Used shared library for cryptopp" OFF)
 if (XEUS_USE_SHARED_CRYPTOPP)
-    target_link_libraries(xeus PRIVATE cryptopp-shared)
+    target_link_libraries(xeus PUBLIC cryptopp-shared)
 else ()
-    target_link_libraries(xeus PRIVATE cryptopp-static)
+    target_link_libraries(xeus PUBLIC cryptopp-static)
 endif ()
 
 if(NOT MSVC)
@@ -225,6 +230,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"
     endif()
     message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 endif()
+
+if (NOT BUILD_SHARED_LIBS)
+    target_compile_definitions(xeus PUBLIC XEUS_STATIC_LIB)
+endif ()
 
 if(MSVC)
     target_compile_definitions(xeus PUBLIC -DNOMINMAX)

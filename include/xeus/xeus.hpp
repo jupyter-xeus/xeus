@@ -10,10 +10,14 @@
 #define XEUS_EXPORT_HPP
 
 #ifdef _WIN32
-    #ifdef XEUS_EXPORTS
-        #define XEUS_API __declspec(dllexport)
+    #ifdef XEUS_STATIC_LIB
+        #define XEUS_API
     #else
-        #define XEUS_API __declspec(dllimport)
+        #ifdef XEUS_EXPORTS
+            #define XEUS_API __declspec(dllexport)
+        #else
+            #define XEUS_API __declspec(dllimport)
+        #endif
     #endif
 #else
     #define XEUS_API
