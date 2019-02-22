@@ -115,6 +115,16 @@ endforeach()
 add_executable(test_xeus ${XEUS_TESTS} ${XEUS_HEADERS})
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
     add_dependencies(test_xeus gtest_main)
+
+    # https://github.com/QuantStack/xeus/pull/126
+    if (BUILD_SHARED_LIBS)
+        add_custom_command(
+            TARGET test_xeus POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:gtest>" "${CMAKE_CURRENT_BINARY_DIR}/")
+        add_custom_command(
+            TARGET test_xeus POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:gtest_main>" "${CMAKE_CURRENT_BINARY_DIR}/")
+    endif ()
 endif()
 target_link_libraries(test_xeus ${xeus_TARGET} ${GTEST_BOTH_LIBRARIES} Threads::Threads ${nlohmann_json_TARGET})
 
