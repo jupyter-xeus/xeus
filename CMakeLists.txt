@@ -146,9 +146,9 @@ option(XEUS_USE_SHARED_CRYPTOPP "Used shared library for cryptopp" OFF)
 option(DISABLE_ARCH_NATIVE "disable -march=native flag" OFF)
 
 option(BUILD_SHARED_LIBS "Build xeus shared library." ON)
-option(BUILD_STATIC_LIBS "Build xeus static library." ON)
+option(BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." ON)
 
-if (NOT BUILD_SHARED_LIBS)
+if (NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     set(BUILD_STATIC_LIBS ON)
 endif ()
 
