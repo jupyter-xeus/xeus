@@ -18,6 +18,8 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 
     find_package(xeus REQUIRED CONFIG)
     find_package(nlohmann_json QUIET CONFIG)
+
+    set(XEUS_TEST_DIR ${CMAKE_CURRENT_LIST_DIR})
 endif ()
 
 message(STATUS "Forcing tests build type to Release")
