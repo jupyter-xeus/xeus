@@ -213,10 +213,11 @@ namespace xeus
 
     std::string iso8601_now()
     {
+        constexpr std::size_t size = 20;
+        char buffer[size];
         std::time_t now;
         std::time(&now);
-        char buffer[sizeof "2016-12-02T15:10:00Z"];
-        std::strftime(buffer, sizeof buffer, "%FT%TZ", std::gmtime(&now));
+        std::strftime(buffer, size + 1, "%FT%TZ", std::gmtime(&now));
         return std::string(buffer, buffer + sizeof buffer);
     }
 
