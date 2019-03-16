@@ -8,11 +8,14 @@
 
 #include <array>
 #include <cstddef>
+
 #include "xeus/xauthentication.hpp"
 #include "xeus/make_unique.hpp"
-#include "xstring_utils.hpp"
+
 #include "cryptopp/sha.h"
 #include "cryptopp/hmac.h"
+
+#include "xstring_utils.hpp"
 
 namespace xeus
 {
