@@ -92,6 +92,6 @@ namespace xeus
         };
 #endif
 
-        return xguid(hex_string(buffer));
+        return xguid(hex_string(buffer).insert(8, "-"));
     }
 }
