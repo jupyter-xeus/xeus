@@ -6,8 +6,10 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <chrono>
 #include <cstddef>
 #include <stdexcept>
+#include <sstream>
 #include <string>
 #include <utility>
 
@@ -213,12 +215,21 @@ namespace xeus
 
     std::string iso8601_now()
     {
-        constexpr std::size_t size = 20;
-        char buffer[size];
-        std::time_t now;
-        std::time(&now);
-        std::strftime(buffer, size + 1, "%FT%TZ", std::gmtime(&now));
-        return std::string(buffer, buffer + sizeof buffer);
+        std::ostringstream ss;
+
+        // now
+        auto now = std::chrono::system_clock::now();
+
+        // down to seconds
+        auto itt = std::chrono::system_clock::to_time_t(now);
+        ss << std::put_time(std::gmtime(&itt), "%FT%T");
+
+        // down to microseconds
+        auto micros = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch());
+        auto fractionals = micros.count() % 1000000;
+        ss << "." << fractionals << "Z";
+
+        return ss.str();
     }
 
     std::string get_protocol_version()
