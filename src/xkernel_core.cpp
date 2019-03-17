@@ -59,6 +59,7 @@ namespace xeus
         p_interpreter->register_publisher(std::bind(&xkernel_core::publish_message, this, _1, _2, _3, _4));
         p_interpreter->register_stdin_sender(std::bind(&xkernel_core::send_stdin, this, _1, _2, _3));
         p_interpreter->register_comm_manager(&m_comm_manager);
+        p_interpreter->register_parent_header(std::bind(&xkernel_core::parent_header, this));
     }
 
     xkernel_core::~xkernel_core()
@@ -156,6 +157,11 @@ namespace xeus
     xcomm_manager xkernel_core::comm_manager() const && noexcept
     {
         return m_comm_manager;
+    }
+
+    const xjson& xkernel_core::parent_header() const noexcept
+    {
+        return m_parent_header;
     }
 
     void xkernel_core::dispatch(zmq::multipart_t& wire_msg, channel c)
@@ -420,7 +426,7 @@ namespace xeus
                                   const xjson& parent_header)
     {
         m_parent_id = parent_id;
-        m_parent_header = xjson(parent_header);
+        m_parent_header = parent_header;
     }
 
     const xkernel_core::guid_list& xkernel_core::get_parent_id() const

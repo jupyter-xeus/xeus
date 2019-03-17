@@ -172,6 +172,24 @@ namespace xeus
         p_comm_manager = manager;
     }
 
+    void xinterpreter::register_parent_header(const parent_header_type& parent_header)
+    {
+        m_parent_header = parent_header;
+    }
+
+    const xjson& xinterpreter::parent_header() const noexcept
+    {
+        static const auto dummy = xjson::object();
+        if (m_parent_header)
+        {
+            return m_parent_header();
+        }
+        else
+        {
+            return dummy;
+        }
+    }
+
     void xinterpreter::input_request(const std::string& prompt, bool pwd)
     {
         if (m_stdin)

@@ -78,9 +78,12 @@ namespace xeus
         void input_reply(const std::string& value);
 
         void register_comm_manager(xcomm_manager* manager);
-
         xcomm_manager& comm_manager() noexcept;
         const xcomm_manager& comm_manager() const noexcept;
+
+        using parent_header_type = std::function<const xjson&()>;
+        void register_parent_header(const parent_header_type&);
+        const xjson& parent_header() const noexcept;
 
     private:
 
@@ -112,6 +115,7 @@ namespace xeus
         stdin_sender_type m_stdin;
         int m_execution_count;
         xcomm_manager* p_comm_manager;
+        parent_header_type m_parent_header;
         input_reply_handler_type m_input_reply_handler;
     };
 
