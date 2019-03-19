@@ -26,7 +26,7 @@ install:
     - conda update -q conda
     - conda info -a
     # Host dependencies
-    - conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.6 cryptopp=7.0.0 nlohmann_json=3.4.0 -c conda-forge;
+    - conda install zeromq=4.2.5 cppzmq=4.3.0 xtl=0.6 OpenSSL=1 nlohmann_json=3.4.0 -c conda-forge;
     # Build dependencies
     - conda install cmake pkg-config -c conda-forge
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
