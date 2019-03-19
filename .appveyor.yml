@@ -22,7 +22,7 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda install cmake cppzmq=4.3.0 zeromq=4.2.5 xtl=0.5 nlohmann_json=3.4.0 cryptopp=7.0.0 -c conda-forge
+  - conda install cmake cppzmq=4.3.0 zeromq=4.2.5 xtl=0.6 nlohmann_json=3.4.0 cryptopp=7.0.0 -c conda-forge
   - conda install pytest jupyter jupyter_kernel_test=0.3.0 -c conda-forge
   - mkdir build
   - cd build
