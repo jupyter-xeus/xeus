@@ -6,13 +6,15 @@
 # The full license is in the file LICENSE, distributed with this software. #
 ############################################################################
 
+find_package(Threads REQUIRED)
+
 set(ECHO_CLIENT_SOURCES
     echo_client.cpp
     echo_client.hpp
     main.cpp)
 
 add_executable(echo_client ${ECHO_CLIENT_SOURCES})
-target_link_libraries(echo_client xeus "-lpthread")
+target_link_libraries(echo_client ${xeus_TARGET} Threads::Threads)
 
 target_compile_features(echo_client PRIVATE cxx_std_11)
 

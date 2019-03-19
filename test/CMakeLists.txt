@@ -18,6 +18,8 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 
     find_package(xeus REQUIRED CONFIG)
     find_package(nlohmann_json QUIET CONFIG)
+
+    set(XEUS_TEST_DIR ${CMAKE_CURRENT_LIST_DIR})
 endif ()
 
 message(STATUS "Forcing tests build type to Release")
@@ -95,11 +97,19 @@ if(nlohmann_json_FOUND)
     endif()
 endif()
 
+if (TARGET xeus)
+    set(xeus_TARGET xeus)
+    message("Found xeus shared library.")
+elseif (TARGET xeus_static)
+    set(xeus_TARGET xeus_static)
+    message("Found xeus static library.")
+endif ()
+
 foreach(filename IN LISTS XEUS_TESTS)
     get_filename_component(targetname ${filename} NAME_WE)
 
     add_executable(${targetname} ${filename})
-    target_link_libraries(${targetname} xeus ${GTEST_BOTH_LIBRARIES} Threads::Threads ${nlohmann_json_TARGET})
+    target_link_libraries(${targetname} ${xeus_TARGET} ${GTEST_BOTH_LIBRARIES} Threads::Threads ${nlohmann_json_TARGET})
 
     add_test(NAME ${targetname} COMMAND ${targetname})
 endforeach()
@@ -107,8 +117,18 @@ endforeach()
 add_executable(test_xeus ${XEUS_TESTS} ${XEUS_HEADERS})
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
     add_dependencies(test_xeus gtest_main)
+
+    # https://github.com/QuantStack/xeus/pull/126
+    if (BUILD_SHARED_LIBS)
+        add_custom_command(
+            TARGET test_xeus POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:gtest>" "${CMAKE_CURRENT_BINARY_DIR}/")
+        add_custom_command(
+            TARGET test_xeus POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:gtest_main>" "${CMAKE_CURRENT_BINARY_DIR}/")
+    endif ()
 endif()
-target_link_libraries(test_xeus xeus ${GTEST_BOTH_LIBRARIES} Threads::Threads ${nlohmann_json_TARGET})
+target_link_libraries(test_xeus ${xeus_TARGET} ${GTEST_BOTH_LIBRARIES} Threads::Threads ${nlohmann_json_TARGET})
 
 add_custom_target(xtest COMMAND test_xeus DEPENDS test_xeus)
 
@@ -126,7 +146,7 @@ configure_file (
 )
 
 add_executable(test_echo_kernel ${ECHO_KERNEL_SOURCES})
-target_link_libraries(test_echo_kernel xeus "-lpthread")
+target_link_libraries(test_echo_kernel ${xeus_TARGET} Threads::Threads)
 
 target_compile_features(test_echo_kernel PRIVATE cxx_std_11)
 
