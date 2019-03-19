@@ -159,7 +159,7 @@ endif ()
 
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib; ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 
-macro(xeus_create_target target_name linkage)
+macro(xeus_create_target target_name linkage output_name)
     string(TOUPPER "${linkage}" linkage_upper)
 
     if (NOT ${linkage_upper} MATCHES "^(SHARED|STATIC)$")
@@ -218,7 +218,7 @@ macro(xeus_create_target target_name linkage)
         PREFIX ""
         VERSION ${XEUS_BINARY_VERSION}
         SOVERSION ${XEUS_BINARY_CURRENT}
-        OUTPUT_NAME "lib${target_name}"
+        OUTPUT_NAME "lib${output_name}"
     )
 
     # Compilation flags
@@ -278,12 +278,19 @@ endmacro()
 set(xeus_targets "")
 
 if (BUILD_SHARED_LIBS)
-    xeus_create_target(xeus "SHARED")
+    xeus_create_target(xeus SHARED xeus)
     list(APPEND xeus_targets xeus)
 endif ()
 
 if (BUILD_STATIC_LIBS)
-    xeus_create_target(xeus_static "STATIC")
+    # On Windows, a static library should use a different output name
+    # to avoid the conflict with the import library of a shared one.  
+    if (CMAKE_HOST_WIN32)
+        xeus_create_target(xeus_static STATIC xeus_static)
+    else ()
+        xeus_create_target(xeus_static STATIC xeus)
+    endif ()
+
     list(APPEND xeus_targets xeus_static)
 endif ()
 
