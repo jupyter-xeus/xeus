@@ -30,10 +30,10 @@ install:
     # Build dependencies
     - conda install cmake pkg-config -c conda-forge
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        conda install gxx_linux-64 libgcc -c conda-forge;
+        conda install gxx_linux-64 libgcc libuuid -c conda-forge;
       fi
     # Test dependencies
-    - conda install pytest jupyter jupyter_kernel_test=0.3.0 -c conda-forge
+    - conda install pytest jupyter_kernel_test=0.3.0 -c conda-forge
     # Activate root environment
     - source activate root
     # Build
