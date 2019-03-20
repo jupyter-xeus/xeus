@@ -74,23 +74,8 @@ else ()
      endif ()
 endif ()
 
-if (WIN32)
-    find_package(cryptopp REQUIRED)
-else ()
-    find_package(cryptopp QUIET)
-
-    if (NOT cryptopp_FOUND)
-        message(STATUS "CMake cryptopp package not found, trying again with pkg-config")
-        find_package(PkgConfig)
-        pkg_check_modules(cryptopp libcryptopp REQUIRED)
-        find_library(cryptopp_LIBRARY NAMES cryptopp-shared.dll libcryptopp.so libcryptopp.dylib)
-        add_library(cryptopp-shared SHARED IMPORTED)
-        set_target_properties(cryptopp-shared PROPERTIES IMPORTED_LOCATION ${cryptopp_LIBRARY})
-        find_library(cryptopp_STATIC_LIBRARY NAMES cryptopp-static.lib libcryptopp.a)
-        add_library(cryptopp-static STATIC IMPORTED)
-        set_target_properties(cryptopp-static PROPERTIES IMPORTED_LOCATION ${cryptopp_STATIC_LIBRARY})
-     endif ()
-endif ()
+set(OPENSSL_ROOT_DIR ${CMAKE_INSTALL_PREFIX})
+find_package(OpenSSL REQUIRED)
 
 # Source files
 # ============
@@ -142,7 +127,6 @@ include(CheckCXXCompilerFlag)
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 
-option(XEUS_USE_SHARED_CRYPTOPP "Used shared library for cryptopp" OFF)
 option(DISABLE_ARCH_NATIVE "disable -march=native flag" OFF)
 
 option(BUILD_SHARED_LIBS "Build xeus shared library." ON)
@@ -195,11 +179,7 @@ macro(xeus_create_target target_name linkage output_name)
         PUBLIC xtl
     )
 
-    if (XEUS_USE_SHARED_CRYPTOPP)
-        target_link_libraries(${target_name} PUBLIC cryptopp-shared)
-    else ()
-        target_link_libraries(${target_name} PUBLIC cryptopp-static)
-    endif ()
+    target_link_libraries(${target_name} PUBLIC OpenSSL::Crypto)
 
     if (NOT MSVC)
         if (APPLE)

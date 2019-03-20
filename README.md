@@ -90,23 +90,23 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 ## Building from Source
 
 `xeus` depends on the following libraries: [`libzmq`](https://github.com/zeromq/libzmq),
-[`cppzmq`](https://github.com/zeromq/cppzmq), [`cryptopp`](https://github.com/weidai11/cryptopp),
+[`cppzmq`](https://github.com/zeromq/cppzmq), [`OpenSSL`](https://github.com/openssl/openssl),
 [`nlohmann_json`](https://github.com/nlohmann/json), and [`xtl`](https://github.com/QuantStack/xtl).
 
-|  xeus  | libzmq  | cppzmq  |    cryptopp    |   xtl          | nlohmann json |
-|--------|---------|---------|----------------|----------------|---------------|
-| master |  ^4.2.5 |  ^4.3.0 |         ^7.0.0 | >=0.5.0,<0.7.0 |      ^3.2.0   |
-| 0.18.1 |  ^4.2.5 |  ^4.3.0 |         ^7.0.0 | ^0.5.0         |      ^3.2.0   |
-| 0.18.0 |  ^4.2.5 |  ^4.3.0 |         ^7.0.0 | ^0.5.0         |      ^3.2.0   |
-| 0.17.0 |  ^4.2.5 |  ^4.3.0 |         ^7.0.0 | ^0.5.0         |      ^3.2.0   |
-| 0.16.0 |  ^4.2.5 |  ^4.3.0 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.2.0   |
-| 0.15.0 |  ^4.2.5 |  ^4.3.0 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.2.0   |
-| 0.14.1 |  ^4.2.5 |  ^4.3.0 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.1.2   |
-| 0.14.0 |  ^4.2.5 |  ^4.3.0 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.1.2   |
-| 0.13.0 |  ^4.2.3 |  ^4.2.5 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.1.1   |
-| 0.12.0 |  ^4.2.3 |  ^4.2.5 |          5.6.5 | ^0.4.0         |       3.1.1   |
-| 0.11.0 |  4.2.3  |   4.2.3 |          5.6.5 | ^0.4.0         |       3.1.1   |
-| 0.10.x |  4.2.3  |   4.2.3 |          5.6.5 | ^0.4.0         |               |
+|  xeus  | libzmq  | cppzmq  |    cryptopp    |   xtl          | nlohmann json | OpenSSL |
+|--------|---------|---------|----------------|----------------|---------------|---------|
+| master |  ^4.2.5 |  ^4.3.0 |  not required  | >=0.5.0,<0.7.0 |      ^3.2.0   |  ^1.0.1 |
+| 0.18.1 |  ^4.2.5 |  ^4.3.0 |         ^7.0.0 | ^0.5.0         |      ^3.2.0   |         |
+| 0.18.0 |  ^4.2.5 |  ^4.3.0 |         ^7.0.0 | ^0.5.0         |      ^3.2.0   |         |
+| 0.17.0 |  ^4.2.5 |  ^4.3.0 |         ^7.0.0 | ^0.5.0         |      ^3.2.0   |         |
+| 0.16.0 |  ^4.2.5 |  ^4.3.0 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.2.0   |         |
+| 0.15.0 |  ^4.2.5 |  ^4.3.0 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.2.0   |         |
+| 0.14.1 |  ^4.2.5 |  ^4.3.0 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.1.2   |         |
+| 0.14.0 |  ^4.2.5 |  ^4.3.0 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.1.2   |         |
+| 0.13.0 |  ^4.2.3 |  ^4.2.5 | ^5.6.5, ^7.0.0 | ^0.4.0         |       3.1.1   |         |
+| 0.12.0 |  ^4.2.3 |  ^4.2.5 |          5.6.5 | ^0.4.0         |       3.1.1   |         |
+| 0.11.0 |  4.2.3  |   4.2.3 |          5.6.5 | ^0.4.0         |       3.1.1   |         |
+| 0.10.x |  4.2.3  |   4.2.3 |          5.6.5 | ^0.4.0         |               |         |
 
 
 On Linux platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
@@ -115,7 +115,7 @@ We have packaged all these dependencies for the conda package manager. The simpl
 conda is to run:
 
 ```bash
-conda install cmake pkg-config zeromq cppzmq xtl cryptopp -c conda-forge
+conda install cmake pkg-config zeromq cppzmq xtl OpenSSL -c conda-forge
 conda install nlohmann_json -c conda-forge/label/gcc7
 ```
 

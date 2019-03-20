@@ -21,7 +21,7 @@ From Source
 
 ``xeus`` depends on the following libraries:
 
- - libzmq_, cppzmq_, cryptopp_ and xtl_
+ - libzmq_, cppzmq_, OpenSSL_ and xtl_
 
 On linux platforms, ``xeus`` also requires libuuid, which is available in all linux distributions.
 
@@ -29,7 +29,7 @@ We have packaged all these dependencies for the conda package manager. The simpl
 
 .. code::
 
-    conda install cmake zeromq cppzmq cryptopp xtl -c conda-forge .
+    conda install cmake zeromq cppzmq OpenSSL xtl -c conda-forge .
 
 On Linux platform, you will also need:
 
@@ -71,18 +71,10 @@ cppzmq
     cmake -D CMAKE_BUILD_TYPE=Release .
     make install
 
-cryptopp
-~~~~~~~~~
+OpenSSL
+~~~~~~~
 
-`cryptopp` is can be built as a static or shared library. Building cryptopp as a shared library is not supported on Windows.
-
-.. code::
-
-    cmake -D BUILD_SHARED=OFF -D BUILD_TESTING=OFF -D CMAKE_BUILD_TYPE=Release .
-    make
-    make install
-
-If cryptopp is built as a shared library, the `XEUS_USE_SHARED_CRYPTOPP` cmake flag must be used for xeus.
+`OpenSSL` has been packaged for most platforms and package manager. It should generally not be required for the user to build it. 
 
 xtl
 ~~~
@@ -96,6 +88,6 @@ xtl
 
 .. _libzmq: https://github.com/zeromq/libzmq
 .. _cppzmq: https://github.com/zeromq/cppzmq
-.. _cryptopp: https://github.com/weidai11/cryptopp
+.. _OpenSSL: https://github.com/OpenSSL/OpenSSL
 .. _xtl: https://github.com/QuantStack/xtl
 
