@@ -108,8 +108,10 @@ namespace xeus
             {"hmac-sha1", EVP_sha1},
             {"hmac-mdc2", EVP_mdc2},
             {"hmac-ripemd160", EVP_ripemd160},
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
             {"hmac-blake2b512", EVP_blake2b512},
             {"hmac-blake2s256", EVP_blake2s256},
+#endif
             {"hmac-sha224", EVP_sha224},
             {"hmac-sha256", EVP_sha256},
             {"hmac-sha384", EVP_sha384},
@@ -124,7 +126,7 @@ namespace xeus
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
         // OpenSSL 1.0.x
         m_hmac = new HMAC_CTX();
-        HMAC_CTX_init(m_hmac)
+        HMAC_CTX_init(m_hmac);
 #else
         m_hmac = HMAC_CTX_new();
 #endif
