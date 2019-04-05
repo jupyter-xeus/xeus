@@ -6,9 +6,10 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <memory>
+
 #include "xeus/xserver.hpp"
 #include "xeus/xserver_zmq.hpp"
-#include "xeus/make_unique.hpp"
 
 namespace xeus
 {
@@ -84,6 +85,6 @@ namespace xeus
 
     std::unique_ptr<xserver> make_xserver(zmq::context_t& context, const xconfiguration& config)
     {
-        return ::xeus::make_unique<xserver_zmq>(context, config);
+        return std::make_unique<xserver_zmq>(context, config);
     }
 }

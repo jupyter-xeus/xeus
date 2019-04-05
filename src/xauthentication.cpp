@@ -7,6 +7,7 @@
 ****************************************************************************/
 
 #include <map>
+#include <memory>
 #include <string>
 #include <stdexcept>
 #include <vector>
@@ -16,7 +17,6 @@
 #include <openssl/sha.h>
 
 #include "xeus/xauthentication.hpp"
-#include "xeus/make_unique.hpp"
 
 #include "xstring_utils.hpp"
 
@@ -93,11 +93,11 @@ namespace xeus
     {
         if (scheme == "none")
         {
-            return ::xeus::make_unique<no_xauthentication>();
+            return std::make_unique<no_xauthentication>();
         }
         else
         {
-            return ::xeus::make_unique<openssl_xauthentication>(scheme, key);
+            return std::make_unique<openssl_xauthentication>(scheme, key);
         }
     }
 
