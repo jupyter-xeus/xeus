@@ -169,16 +169,6 @@ cmake
 make install
 ```
 
-### cryptopp
-
-By default, a static build of [cryptopp](https://github.com/weidai11/cryptopp) is used. To make use of a dynamic library for `cryptopp`, the `cmake` flag `XEUS_USE_SHARED_CRYPTOPP` must be enabled. Note that building cryptopp as a shared library is not supported on Windows.
-
-```bash
-cmake -D BUILD_SHARED=OFF -D BUILD_TESTING=OFF -D CMAKE_BUILD_TYPE=Release
-make
-make install
-```
-
 ### xtl
 
 [xtl](https://github.com/QuantStack/xtl) is a header only library:
