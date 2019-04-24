@@ -315,6 +315,7 @@ namespace xeus
     {
         xjson reply = p_interpreter->kernel_info_request();
         reply["protocol_version"] = get_protocol_version();
+        reply["status"] = "ok";
         send_reply("kernel_info_reply", xjson::object(), std::move(reply), c);
     }
 
