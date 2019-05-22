@@ -29,6 +29,18 @@ The result and arguments of the execution request are described in the execute_r
 .. note::
     The other methods are all optional, but we encourage you to implement them in order to have a fully-featured kernel.
 
+Input request
+-------------
+
+For input request support, you would need to monkey-patch the language functions that prompt for a user input (``input`` and ``raw_input`` in Python, ``io.read`` in Lua etc) and call ``xeus::blocking_input_request`` instead. The second parameter should be set to False is what the user is typing should not be visible on the screen.
+
+.. code::
+
+    #include "xeus/xinput.hpp"
+
+    xeus::blocking_input_request("User name:", true);
+    xeus::blocking_input_request("Password:", false);
+
 Configuration
 -------------
 
