@@ -22,6 +22,7 @@ Then, you would need to implement all of those methods one by one in the ``custo
 
 .. literalinclude:: my_kernel/src/custom_interpreter.cpp
    :language: cpp
+   :dedent: 4
    :lines: 7-35
 
 The result and arguments of the execution request are described in the execute_request_ documentation.
@@ -48,6 +49,7 @@ The ``configure_impl`` method allows you to perform some operations after the ``
 
 .. literalinclude:: my_kernel/src/custom_interpreter.cpp
    :language: cpp
+   :dedent: 4
    :lines: 37-40
 
 Code Completion
@@ -57,6 +59,7 @@ The ``complete_request_impl`` method allows you to implement the auto-completion
 
 .. literalinclude:: my_kernel/src/custom_interpreter.cpp
    :language: cpp
+   :dedent: 4
    :lines: 42-65
 
 The result and arguments of the completion request are described in the complete_request_ documentation.
@@ -68,6 +71,7 @@ Allows the kernel user to inspect a variable/class/type in the code. It takes th
 
 .. literalinclude:: my_kernel/src/custom_interpreter.cpp
    :language: cpp
+   :dedent: 4
    :lines: 67-85
 
 The result and arguments of the inspection request are described in the inspect_request_ documentation.
@@ -94,6 +98,7 @@ So the kernel should return "complete".
 
 .. literalinclude:: my_kernel/src/custom_interpreter.cpp
    :language: cpp
+   :dedent: 4
    :lines: 87-102
 
 The result and arguments of the completness request are described in the is_complete_request_ documentation.
@@ -105,6 +110,7 @@ This request allows the client to get some informations about the kernel: kernel
 
 .. literalinclude:: my_kernel/src/custom_interpreter.cpp
    :language: cpp
+   :dedent: 4
    :lines: 104-114
 
 The result and arguments of the kernel info request are described in the kernel_info_request_ documentation.
@@ -116,6 +122,7 @@ This allows you to perform some operations before shutting down the kernel.
 
 .. literalinclude:: my_kernel/src/custom_interpreter.cpp
    :language: cpp
+   :dedent: 4
    :lines: 116-119
 
 
