@@ -43,6 +43,12 @@ install:
     - cmake -DBUILD_EXAMPLES=ON -DDOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX ..
     - make
     - make install
+    - pushd ../docs/source/my_kernel
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_INSTALL_PREFIX=$HOME/miniconda ..
+    - make
+    - popd
 script:
     - cd test
     - ./test_xeus

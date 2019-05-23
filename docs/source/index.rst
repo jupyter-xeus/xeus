@@ -34,9 +34,15 @@ for details.
 
 .. toctree::
    :caption: USAGE
-   :maxdepth: 2
+   :maxdepth: 3
 
    usage
+
+.. toctree::
+   :caption: DEVELOPER SECTION
+   :maxdepth: 2
+
+   dev
 
 .. toctree::
    :caption: MISCELLANEOUS
