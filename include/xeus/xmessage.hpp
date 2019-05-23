@@ -12,10 +12,13 @@
 #include <string>
 #include <vector>
 
+#include "nlohmann/json.hpp"
+
 #include "xauthentication.hpp"
 #include "xeus.hpp"
-#include "xjson.hpp"
 #include "zmq_addon.hpp"
+
+namespace nl = nlohmann;
 
 namespace xeus
 {
@@ -28,19 +31,19 @@ namespace xeus
         xmessage_base(const xmessage_base&) = delete;
         xmessage_base& operator=(const xmessage_base&) = delete;
 
-        const xjson& header() const;
-        const xjson& parent_header() const;
-        const xjson& metadata() const;
-        const xjson& content() const;
+        const nl::json& header() const;
+        const nl::json& parent_header() const;
+        const nl::json& metadata() const;
+        const nl::json& content() const;
         const buffer_sequence& buffers() const;
 
     protected:
 
         xmessage_base() = default;
-        xmessage_base(xjson header,
-                      xjson parent_header,
-                      xjson metadata,
-                      xjson content,
+        xmessage_base(nl::json header,
+                      nl::json parent_header,
+                      nl::json metadata,
+                      nl::json content,
                       buffer_sequence buffers);
 
         ~xmessage_base() = default;
@@ -56,10 +59,10 @@ namespace xeus
 
     private:
 
-        xjson m_header;
-        xjson m_parent_header;
-        xjson m_metadata;
-        xjson m_content;
+        nl::json m_header;
+        nl::json m_parent_header;
+        nl::json m_metadata;
+        nl::json m_content;
         buffer_sequence m_buffers;
     };
 
@@ -72,10 +75,10 @@ namespace xeus
 
         xmessage() = default;
         xmessage(const guid_list& zmq_id,
-                 xjson header,
-                 xjson parent_header,
-                 xjson metadata,
-                 xjson content,
+                 nl::json header,
+                 nl::json parent_header,
+                 nl::json metadata,
+                 nl::json content,
                  buffer_sequence buffers);
 
         ~xmessage() = default;
@@ -104,10 +107,10 @@ namespace xeus
 
         xpub_message() = default;
         xpub_message(const std::string& topic,
-                     xjson header,
-                     xjson parent_header,
-                     xjson metadata,
-                     xjson content,
+                     nl::json header,
+                     nl::json parent_header,
+                     nl::json metadata,
+                     nl::json content,
                      buffer_sequence buffers);
 
         ~xpub_message() = default;
@@ -132,7 +135,7 @@ namespace xeus
 
     XEUS_API std::string get_protocol_version();
 
-    XEUS_API xjson make_header(const std::string& msg_type,
+    XEUS_API nl::json make_header(const std::string& msg_type,
                                const std::string& user_name,
                                const std::string& session_id);
 }

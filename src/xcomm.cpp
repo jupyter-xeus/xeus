@@ -4,8 +4,8 @@
 namespace xeus
 {
     void xtarget::publish_message(const std::string& msg_type,
-                                  xjson metadata,
-                                  xjson content,
+                                  nl::json metadata,
+                                  nl::json content,
                                   buffer_sequence buffers) const
     {
         if (p_manager->p_kernel != nullptr)
@@ -20,10 +20,10 @@ namespace xeus
         p_kernel = kernel;
     }
 
-    xjson xcomm_manager::get_metadata() const
+    nl::json xcomm_manager::get_metadata() const
     {
         // TODO: handle duplication
-        xjson metadata;
+        nl::json metadata;
         metadata["started"] = iso8601_now();
         return metadata;
     }
@@ -51,7 +51,7 @@ namespace xeus
 
     void xcomm_manager::comm_open(const xmessage& request)
     {
-        const xjson& content = request.content();
+        const nl::json& content = request.content();
         std::string target_name = content["target_name"];
         auto position = m_targets.find(target_name);
 
@@ -70,7 +70,7 @@ namespace xeus
 
     void xcomm_manager::comm_close(const xmessage& request)
     {
-        const xjson& content = request.content();
+        const nl::json& content = request.content();
         xguid id = content["comm_id"];
         auto position = m_comms.find(id);
         if (position == m_comms.end())
@@ -86,7 +86,7 @@ namespace xeus
 
     void xcomm_manager::comm_msg(const xmessage& request)
     {
-        const xjson& content = request.content();
+        const nl::json& content = request.content();
         xguid id = content["comm_id"];
         auto position = m_comms.find(id);
         if (position == m_comms.end())

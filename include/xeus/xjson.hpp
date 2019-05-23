@@ -13,6 +13,7 @@
 
 namespace xeus
 {
+    // This is deprecated and will be removed
     using xjson = nlohmann::json;
 }
 

@@ -14,9 +14,12 @@
 #include <array>
 #include <string>
 
+#include "nlohmann/json.hpp"
+
 #include "xeus.hpp"
-#include "xjson.hpp"
 #include "xhistory_manager.hpp"
+
+namespace nl = nlohmann;
 
 namespace xeus
 {
@@ -33,9 +36,9 @@ namespace xeus
 
         void configure_impl() override;
         void store_inputs_impl(int line_num, const std::string& input) override;
-        xjson get_tail_impl(int n, bool raw, bool output) const override;
-        xjson get_range_impl(int session, int start, int stop, bool raw, bool output) const override;
-        xjson search_impl(const std::string& pattern, bool raw, bool output, int n, bool unique) const override;
+        nl::json get_tail_impl(int n, bool raw, bool output) const override;
+        nl::json get_range_impl(int session, int start, int stop, bool raw, bool output) const override;
+        nl::json search_impl(const std::string& pattern, bool raw, bool output, int n, bool unique) const override;
 
         history_type m_history;
     };

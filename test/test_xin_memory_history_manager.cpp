@@ -12,7 +12,11 @@
 #include <array>
 #include <string>
 
+#include "nlohmann/json.hpp"
+
 #include "xeus/xin_memory_history_manager.hpp"
+
+namespace nl = nlohmann;
 
 namespace xeus
 {
@@ -27,7 +31,7 @@ namespace xeus
         hist->store_inputs(3, "print(a)");
         hist->store_inputs(4, "a");
 
-        xjson tail1 = hist->get_tail(1000, true, false);
+        nl::json tail1 = hist->get_tail(1000, true, false);
         ASSERT_EQ(tail1["status"], "ok");
         auto history1 = tail1["history"].get<history_type>();
         ASSERT_EQ(history1.size(), std::size_t(4));
@@ -40,7 +44,7 @@ namespace xeus
         ASSERT_EQ(history1[3][1], "4");
         ASSERT_EQ(history1[3][2], "a");
 
-        xjson tail2 = hist->get_tail(2, true, false);
+        nl::json tail2 = hist->get_tail(2, true, false);
         ASSERT_EQ(tail2["status"], "ok");
         auto history2 = tail2["history"].get<history_type>();
         ASSERT_EQ(history2.size(), std::size_t(2));
@@ -58,14 +62,14 @@ namespace xeus
         hist->store_inputs(3, "print(a)");
         hist->store_inputs(4, "a");
 
-        xjson range1 = hist->get_range(0, 1, 2, true, false);
+        nl::json range1 = hist->get_range(0, 1, 2, true, false);
         ASSERT_EQ(range1["status"], "ok");
         auto history1 = range1["history"].get<history_type>();
         ASSERT_EQ(history1.size(), std::size_t(1));
         ASSERT_EQ(history1[0][1], "2");
         ASSERT_EQ(history1[0][2], "a = 3");
 
-        xjson range2 = hist->get_range(0, 1, 3, true, false);
+        nl::json range2 = hist->get_range(0, 1, 3, true, false);
         ASSERT_EQ(range2["status"], "ok");
         auto history2 = range2["history"].get<history_type>();
         ASSERT_EQ(history2.size(), std::size_t(2));
@@ -74,7 +78,7 @@ namespace xeus
         ASSERT_EQ(history2[1][1], "3");
         ASSERT_EQ(history2[1][2], "print(a)");
 
-        xjson range3 = hist->get_range(0, 1000, 2, true, false);
+        nl::json range3 = hist->get_range(0, 1000, 2, true, false);
         ASSERT_EQ(range3["status"], "error");
     }
 }

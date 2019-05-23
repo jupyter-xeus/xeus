@@ -47,16 +47,16 @@ namespace xeus
         void dispatch_stdin(zmq::multipart_t& wire_msg);
 
         void publish_message(const std::string& msg_type,
-                             xjson metadata,
-                             xjson content,
+                             nl::json metadata,
+                             nl::json content,
                              buffer_sequence buffers);
 
-        void send_stdin(const std::string& msg_type, xjson metadata, xjson content);
+        void send_stdin(const std::string& msg_type, nl::json metadata, nl::json content);
 
         xcomm_manager& comm_manager() & noexcept;
         const xcomm_manager& comm_manager() const & noexcept;
         xcomm_manager comm_manager() const && noexcept;
-        const xjson& parent_header() const noexcept;
+        const nl::json& parent_header() const noexcept;
 
     private:
 
@@ -91,25 +91,25 @@ namespace xeus
         void publish_execute_input(const std::string& code, int execution_count);
 
         void send_reply(const std::string& reply_type,
-                        xjson metadata,
-                        xjson reply_content,
+                        nl::json metadata,
+                        nl::json reply_content,
                         channel c);
 
         void send_reply(const guid_list& id_list,
                         const std::string& reply_type,
-                        xjson parent_header,
-                        xjson metadata,
-                        xjson reply_content,
+                        nl::json parent_header,
+                        nl::json metadata,
+                        nl::json reply_content,
                         channel c);
 
         void abort_request(zmq::multipart_t& wire_msg);
 
         std::string get_topic(const std::string& msg_type) const;
-        xjson get_metadata() const;
+        nl::json get_metadata() const;
 
-        void set_parent(const guid_list& list, const xjson& parent);
+        void set_parent(const guid_list& list, const nl::json& parent);
         const guid_list& get_parent_id() const;
-        xjson get_parent_header() const;
+        nl::json get_parent_header() const;
 
         std::string m_kernel_id;
         std::string m_user_name;
@@ -123,7 +123,7 @@ namespace xeus
         history_manager_ptr p_history_manager;
 
         guid_list m_parent_id;
-        xjson m_parent_header;
+        nl::json m_parent_header;
     };
 }
 

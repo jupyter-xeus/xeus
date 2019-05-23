@@ -24,11 +24,11 @@ namespace xeus
         configure_impl();
     }
 
-    xjson xinterpreter::execute_request(const std::string& code,
-                                        bool silent,
-                                        bool store_history,
-                                        xjson user_expressions,
-                                        bool allow_stdin)
+    nl::json xinterpreter::execute_request(const std::string& code,
+                                           bool silent,
+                                           bool store_history,
+                                           nl::json user_expressions,
+                                           bool allow_stdin)
     {
         if (!silent)
         {
@@ -36,7 +36,7 @@ namespace xeus
             publish_execution_input(code, m_execution_count);
         }
 
-        xjson reply = execute_request_impl(
+        nl::json reply = execute_request_impl(
             m_execution_count, code, silent,
             store_history, user_expressions, allow_stdin
         );
@@ -45,22 +45,22 @@ namespace xeus
         return reply;
     }
 
-    xjson xinterpreter::complete_request(const std::string& code, int cursor_pos)
+    nl::json xinterpreter::complete_request(const std::string& code, int cursor_pos)
     {
         return complete_request_impl(code, cursor_pos);
     }
 
-    xjson xinterpreter::inspect_request(const std::string& code, int cursor_pos, int detail_level)
+    nl::json xinterpreter::inspect_request(const std::string& code, int cursor_pos, int detail_level)
     {
         return inspect_request_impl(code, cursor_pos, detail_level);
     }
 
-    xjson xinterpreter::is_complete_request(const std::string& code)
+    nl::json xinterpreter::is_complete_request(const std::string& code)
     {
         return is_complete_request_impl(code);
     }
 
-    xjson xinterpreter::kernel_info_request()
+    nl::json xinterpreter::kernel_info_request()
     {
         return kernel_info_request_impl();
     }
@@ -79,32 +79,32 @@ namespace xeus
     {
         if (m_publisher)
         {
-            xjson content;
+            nl::json content;
             content["name"] = name;
             content["text"] = text;
-            m_publisher("stream", xjson::object(), std::move(content), buffer_sequence());
+            m_publisher("stream", nl::json::object(), std::move(content), buffer_sequence());
         }
     }
 
-    void xinterpreter::display_data(xjson data, xjson metadata, xjson transient)
+    void xinterpreter::display_data(nl::json data, nl::json metadata, nl::json transient)
     {
         if (m_publisher)
         {
             m_publisher(
                 "display_data",
-                xjson::object(),
+                nl::json::object(),
                 build_display_content(std::move(data), std::move(metadata), std::move(transient)),
                 buffer_sequence());
         }
     }
 
-    void xinterpreter::update_display_data(xjson data, xjson metadata, xjson transient)
+    void xinterpreter::update_display_data(nl::json data, nl::json metadata, nl::json transient)
     {
         if (m_publisher)
         {
             m_publisher(
                 "update_display_data",
-                xjson::object(),
+                nl::json::object(),
                 build_display_content(std::move(data), std::move(metadata), std::move(transient)),
                 buffer_sequence());
         }
@@ -114,22 +114,22 @@ namespace xeus
     {
         if (m_publisher)
         {
-            xjson content;
+            nl::json content;
             content["code"] = code;
             content["execution_count"] = execution_count;
-            m_publisher("execute_input", xjson::object(), std::move(content), buffer_sequence());
+            m_publisher("execute_input", nl::json::object(), std::move(content), buffer_sequence());
         }
     }
 
-    void xinterpreter::publish_execution_result(int execution_count, xjson data, xjson metadata)
+    void xinterpreter::publish_execution_result(int execution_count, nl::json data, nl::json metadata)
     {
         if (m_publisher)
         {
-            xjson content;
+            nl::json content;
             content["execution_count"] = execution_count;
             content["data"] = std::move(data);
             content["metadata"] = std::move(metadata);
-            m_publisher("execute_result", xjson::object(), std::move(content), buffer_sequence());
+            m_publisher("execute_result", nl::json::object(), std::move(content), buffer_sequence());
         }
     }
 
@@ -139,11 +139,11 @@ namespace xeus
     {
         if (m_publisher)
         {
-            xjson content;
+            nl::json content;
             content["ename"] = ename;
             content["evalue"] = evalue;
             content["traceback"] = trace_back;
-            m_publisher("error", xjson::object(), std::move(content), buffer_sequence());
+            m_publisher("error", nl::json::object(), std::move(content), buffer_sequence());
         }
     }
 
@@ -151,9 +151,9 @@ namespace xeus
     {
         if (m_publisher)
         {
-            xjson content;
+            nl::json content;
             content["wait"] = wait;
-            m_publisher("clear_output", xjson::object(), std::move(content), buffer_sequence());
+            m_publisher("clear_output", nl::json::object(), std::move(content), buffer_sequence());
         }
     }
 
@@ -177,9 +177,9 @@ namespace xeus
         m_parent_header = parent_header;
     }
 
-    const xjson& xinterpreter::parent_header() const noexcept
+    const nl::json& xinterpreter::parent_header() const noexcept
     {
-        static const auto dummy = xjson::object();
+        static const auto dummy = nl::json::object();
         if (m_parent_header)
         {
             return m_parent_header();
@@ -194,10 +194,10 @@ namespace xeus
     {
         if (m_stdin)
         {
-            xjson content;
+            nl::json content;
             content["prompt"] = prompt;
             content["pwd"] = pwd;
-            m_stdin("input_request", xjson::object(), std::move(content));
+            m_stdin("input_request", nl::json::object(), std::move(content));
         }
     }
 
@@ -209,9 +209,9 @@ namespace xeus
         }
     }
 
-    xjson xinterpreter::build_display_content(xjson data, xjson metadata, xjson transient)
+    nl::json xinterpreter::build_display_content(nl::json data, nl::json metadata, nl::json transient)
     {
-        xjson res;
+        nl::json res;
         res["data"] = std::move(data);
         res["metadata"] = std::move(metadata);
         res["transient"] = std::move(transient);
