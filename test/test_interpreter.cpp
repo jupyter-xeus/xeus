@@ -8,22 +8,22 @@
 
 #include <iostream>
 
-#include "echo_interpreter.hpp"
+#include "test_interpreter.hpp"
 #include "xeus/xguid.hpp"
 
-namespace echo_kernel
+namespace test_kernel
 {
 
-    void echo_interpreter::configure_impl()
+    void test_interpreter::configure_impl()
     {
         auto handle_comm_opened = [](xeus::xcomm&& comm, const xeus::xmessage&) {
             std::cout << "Comm opened for target: " << comm.target().name() << std::endl;
         };
-        comm_manager().register_comm_target("echo_target", handle_comm_opened);
+        comm_manager().register_comm_target("test_target", handle_comm_opened);
         using function_type = std::function<void(xeus::xcomm&&, const xeus::xmessage&)>;
     }
 
-    xeus::xjson echo_interpreter::execute_request_impl(int execution_counter,
+    xeus::xjson test_interpreter::execute_request_impl(int execution_counter,
                                                        const std::string& code,
                                                        bool /* silent */,
                                                        bool /* store_history */,
@@ -73,19 +73,19 @@ namespace echo_kernel
         return kernel_res;
     }
 
-    xeus::xjson echo_interpreter::complete_request_impl(const std::string& /* code */,
+    xeus::xjson test_interpreter::complete_request_impl(const std::string& /* code */,
                                                         int /* cursor_pos */)
     {
         xeus::xjson result;
         result["status"] = "ok";
-        result["matches"] = {"a.echo1", "a.echo2"};
+        result["matches"] = {"a.test1", "a.test2"};
         result["cursor_start"] = 2;
         result["cursor_end"] = 6;
 
         return result;
     }
 
-    xeus::xjson echo_interpreter::inspect_request_impl(const std::string& /* code */,
+    xeus::xjson test_interpreter::inspect_request_impl(const std::string& /* code */,
                                                        int /* cursor_pos */,
                                                        int /* detail_level */)
     {
@@ -97,7 +97,7 @@ namespace echo_kernel
         return result;
     }
 
-    xeus::xjson echo_interpreter::is_complete_request_impl(const std::string& code)
+    xeus::xjson test_interpreter::is_complete_request_impl(const std::string& code)
     {
         xeus::xjson result;
         result["status"] = code;
@@ -108,12 +108,12 @@ namespace echo_kernel
         return result;
     }
 
-    xeus::xjson echo_interpreter::kernel_info_request_impl()
+    xeus::xjson test_interpreter::kernel_info_request_impl()
     {
         xeus::xjson result;
-        result["implementation"] = "cpp_echo";
+        result["implementation"] = "cpp_test";
         result["implementation_version"] = "1.0.0";
-        result["banner"] = "echo_kernel";
+        result["banner"] = "test_kernel";
         result["language_info"]["name"] = "cpp";
         result["language_info"]["version"] = "14.0.0";
         result["language_info"]["mimetype"] = "text/x-c++src";
@@ -121,7 +121,7 @@ namespace echo_kernel
         return result;
     }
 
-    void echo_interpreter::shutdown_request_impl()
+    void test_interpreter::shutdown_request_impl()
     {
     }
 }

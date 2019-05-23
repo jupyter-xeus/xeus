@@ -10,6 +10,6 @@ Implementing the main entry
 Now let's edit the ``main.cpp`` file which is the main entry for the kernel executable.
 
 
-.. literalinclude:: my_kernel/src/main.cpp
+.. literalinclude:: ../../example/src/main.cpp
    :language: cpp
    :linenos:

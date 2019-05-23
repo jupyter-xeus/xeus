@@ -6,20 +6,20 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef ECHO_INTERPRETER_HPP
-#define ECHO_INTERPRETER_HPP
+#ifndef TEST_INTERPRETER_HPP
+#define TEST_INTERPRETER_HPP
 
 #include "xeus/xinterpreter.hpp"
 
-namespace echo_kernel
+namespace test_kernel
 {
-    class echo_interpreter : public xeus::xinterpreter
+    class test_interpreter : public xeus::xinterpreter
     {
 
     public:
 
-        echo_interpreter() = default;
-        virtual ~echo_interpreter() = default;
+        test_interpreter() = default;
+        virtual ~test_interpreter() = default;
 
     private:
 

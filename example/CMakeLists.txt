@@ -1,25 +1,84 @@
-############################################################################
-# Copyright (c) 2016, Johan Mabille and Sylvain Corlay                     #
-#                                                                          #
-# Distributed under the terms of the BSD 3-Clause License.                 #
-#                                                                          #
-# The full license is in the file LICENSE, distributed with this software. #
-############################################################################
+cmake_minimum_required(VERSION 3.4.3)
+project(my_kernel)
 
-if (NOT TARGET xeus AND NOT TARGET xeus_static)
-    cmake_minimum_required(VERSION 3.8)
-    project(xeus-echo-example)
+set(EXECUTABLE_NAME my_kernel)
 
-    find_package(xeus CONFIG REQUIRED)
-endif ()
+# Configuration
+# =============
 
-if (TARGET xeus)
-    set(xeus_TARGET xeus)
-    message("Found xeus shared library.")
-elseif (TARGET xeus_static)
-    set(xeus_TARGET xeus_static)
-    message("Found xeus static library.")
-endif ()
+include(GNUInstallDirs)
 
-add_subdirectory(echo_client)
-add_subdirectory(echo_kernel)
+# We generate the kernel.json file, given the installation prefix and the executable name
+configure_file (
+    "${CMAKE_CURRENT_SOURCE_DIR}/share/jupyter/kernels/my_kernel/kernel.json.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/share/jupyter/kernels/my_kernel/kernel.json"
+)
+
+# Dependencies
+# ============
+
+# Be sure to use recent versions
+set(xeus_REQUIRED_VERSION 0.19.1)
+set(cppzmq_REQUIRED_VERSION 4.3.0)
+
+find_package(xeus ${xeus_REQUIRED_VERSION} REQUIRED)
+find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
+
+# Flags
+# =====
+
+include(CheckCXXCompilerFlag)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
+    CHECK_CXX_COMPILER_FLAG("-std=c++14" HAS_CPP14_FLAG)
+
+    if (HAS_CPP14_FLAG)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+    else()
+        message(FATAL_ERROR "Unsupported compiler -- xeus requires C++14 support!")
+    endif()
+endif()
+
+# Target and link
+# ===============
+
+# my_kernel source files
+set(MY_KERNEL_SRC
+    src/custom_interpreter.cpp
+    src/custom_interpreter.hpp
+)
+
+# My kernel executable
+add_executable(${EXECUTABLE_NAME} src/main.cpp ${MY_KERNEL_SRC} )
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE xeus)
+
+if (APPLE)
+    set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+        MACOSX_RPATH ON
+    )
+else()
+    set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+        BUILD_WITH_INSTALL_RPATH 1
+        SKIP_BUILD_RPATH FALSE
+    )
+endif()
+
+set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+    INSTALL_RPATH_USE_LINK_PATH TRUE
+)
+
+# Installation
+# ============
+
+# Install my_kernel
+install(TARGETS ${EXECUTABLE_NAME}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# Configuration and data directories for jupyter and my_kernel
+set(XJUPYTER_DATA_DIR "share/jupyter" CACHE STRING "Jupyter data directory")
+
+# Install Jupyter kernelspecs
+set(MY_KERNELSPEC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/share/jupyter/kernels)
+install(DIRECTORY ${MY_KERNELSPEC_DIR}
+        DESTINATION ${XJUPYTER_DATA_DIR}
+        PATTERN "*.in" EXCLUDE)

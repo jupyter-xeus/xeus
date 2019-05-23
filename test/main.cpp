@@ -9,7 +9,7 @@
 #include <iostream>
 #include <memory>
 
-#include "echo_interpreter.hpp"
+#include "test_interpreter.hpp"
 #include "xeus/xkernel.hpp"
 #include "xeus/xkernel_configuration.hpp"
 
@@ -18,8 +18,8 @@ int main(int argc, char* argv[])
     std::string file_name = (argc == 1) ? "connection.json" : argv[2];
     xeus::xconfiguration config = xeus::load_configuration(file_name);
 
-    using interpreter_ptr = std::unique_ptr<echo_kernel::echo_interpreter>;
-    interpreter_ptr interpreter = interpreter_ptr(new echo_kernel::echo_interpreter());
+    using interpreter_ptr = std::unique_ptr<test_kernel::test_interpreter>;
+    interpreter_ptr interpreter = interpreter_ptr(new test_kernel::test_interpreter());
     xeus::xkernel kernel(config, xeus::get_user_name(), std::move(interpreter));
     std::cout << "starting kernel" << std::endl;
     kernel.start();

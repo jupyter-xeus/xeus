@@ -21,7 +21,7 @@ a kernel for the C++ programming language, and [`xeus-python`](https://github.co
 `xeus` has been packaged on all platforms for the conda package manager.
 
 ```
-conda install xeus -c conda-forge 
+conda install xeus -c conda-forge
 ```
 
 ## Documentation
@@ -41,46 +41,49 @@ The easiest way to get started with a new kernel is to inherit from the base int
 - `inspect_request_impl`
 - `is_complete_request_impl`
 
-as seen in the echo kernel provided as an example.
+as seen in the [documentation](http://xeus.readthedocs.io/).
 
 
 ```cpp
 #include "xeus/xinterpreter.hpp"
 
-using xeus::xinterpreter;
-using xeus::xjson;
+#include "nlohmann/json.hpp"
 
-namespace echo_kernel
+using xeus::xinterpreter;
+
+namespace nl = nlohmann;
+
+namespace custom
 {
-    class echo_interpreter : public xinterpreter
+    class custom_interpreter : public xinterpreter
     {
 
     public:
 
-        echo_interpreter() = default;
-        virtual ~echo_interpreter() = default;
+        custom_interpreter() = default;
+        virtual ~custom_interpreter() = default;
 
     private:
 
         void configure() override;
 
-        xjson execute_request_impl(int execution_counter,
-                                   const std::string& code,
-                                   bool silent,
-                                   bool store_history,
-                                   const xjson::node_type* user_expressions,
-                                   bool allow_stdin) override;
+        nl::json execute_request_impl(int execution_counter,
+                                      const std::string& code,
+                                      bool silent,
+                                      bool store_history,
+                                      const nl::json::node_type* user_expressions,
+                                      bool allow_stdin) override;
 
-        xjson complete_request_impl(const std::string& code,
-                                    int cursor_pos) override;
+        nl::json complete_request_impl(const std::string& code,
+                                       int cursor_pos) override;
 
-        xjson inspect_request_impl(const std::string& code,
-                                   int cursor_pos,
-                                   int detail_level) override;
+        nl::json inspect_request_impl(const std::string& code,
+                                      int cursor_pos,
+                                      int detail_level) override;
 
-        xjson is_complete_request_impl(const std::string& code) override;
+        nl::json is_complete_request_impl(const std::string& code) override;
 
-        xjson kernel_info_request_impl() override;
+        nl::json kernel_info_request_impl() override;
     };
 }
 ```
@@ -103,7 +106,7 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 | 0.17.0 |  ^4.2.5 |  ^4.3.0 | ^0.5.0         |      ^3.2.0   |         |         ^7.0.0 |
 | 0.16.0 |  ^4.2.5 |  ^4.3.0 | ^0.4.0         |       3.2.0   |         |         ^7.0.0 |
 | 0.15.0 |  ^4.2.5 |  ^4.3.0 | ^0.4.0         |       3.2.0   |         | ^5.6.5, ^7.0.0 |
-| 0.14.1 |  ^4.2.5 |  ^4.3.0 | ^0.4.0         |       3.1.2   |         | ^5.6.5, ^7.0.0 | 
+| 0.14.1 |  ^4.2.5 |  ^4.3.0 | ^0.4.0         |       3.1.2   |         | ^5.6.5, ^7.0.0 |
 | 0.14.0 |  ^4.2.5 |  ^4.3.0 | ^0.4.0         |       3.1.2   |         | ^5.6.5, ^7.0.0 |
 | 0.13.0 |  ^4.2.3 |  ^4.2.5 | ^0.4.0         |       3.1.1   |         | ^5.6.5, ^7.0.0 |
 | 0.12.0 |  ^4.2.3 |  ^4.2.5 | ^0.4.0         |       3.1.1   |         |          5.6.5 |
@@ -129,12 +132,10 @@ conda install util-linux -c conda-forge
 Once you have installed the dependencies, you can build and install `xeus`:
 
 ```bash
-cmake -D BUILD_EXAMPLES=ON -D CMAKE_BUILD_TYPE=Release
+cmake -D CMAKE_BUILD_TYPE=Release
 make
 make install
 ```
-
-If you need the `xeus` library only, you can omit the `BUILD_EXAMPLES` settings.
 
 ## Installing the Dependencies from Source
 

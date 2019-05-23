@@ -19,7 +19,7 @@ This ``json`` file contains:
 
 You can edit the ``kernel.json.in`` file as following. This file will be used by cmake for generating the actual ``kernel.json`` file which will be installed.
 
-.. literalinclude:: my_kernel/share/jupyter/kernels/my_kernel/kernel.json.in
+.. literalinclude:: ../../example/share/jupyter/kernels/my_kernel/kernel.json.in
    :language: json
    :linenos:
 

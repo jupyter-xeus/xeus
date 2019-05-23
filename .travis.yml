@@ -38,18 +38,21 @@ install:
     - source activate root
     # Build
     - mkdir build
-    - cd build
+    - pushd build
     - source activate root
-    - cmake -DBUILD_EXAMPLES=ON -DDOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX ..
+    - cmake -DDOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX ..
     - make
     - make install
-    - pushd ../docs/source/my_kernel
+    - popd
+    # Build example
+    - pushd example
     - mkdir build
-    - cd build
+    - pushd build
     - cmake -DCMAKE_INSTALL_PREFIX=$HOME/miniconda ..
     - make
-    - popd
+    - popd && popd
+    - cd build
 script:
     - cd test
     - ./test_xeus
-    - py.test test_echo_kernel.py
+    - py.test test_kernel.py
