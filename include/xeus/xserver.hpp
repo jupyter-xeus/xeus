@@ -41,12 +41,11 @@ namespace xeus
         void start(zmq::multipart_t& message);
         void abort_queue(const listener& l, long polling_interval);
         void stop();
+        void update_config(xconfiguration& config) const;
 
         void register_shell_listener(const listener& l);
         void register_control_listener(const listener& l);
         void register_stdin_listener(const listener& l);
-
-        void update_config(xconfiguration& config) const;
 
     protected:
 
@@ -63,11 +62,10 @@ namespace xeus
         virtual void send_stdin_impl(zmq::multipart_t& message) = 0;
         virtual void publish_impl(zmq::multipart_t& message) = 0;
 
-        virtual void update_config_impl(xconfiguration& config) const = 0;
-
         virtual void start_impl(zmq::multipart_t& message) = 0;
         virtual void abort_queue_impl(const listener& l, long polling_interval) = 0;
         virtual void stop_impl() = 0;
+        virtual void update_config_impl(xconfiguration& config) const = 0;
 
         listener m_shell_listener;
         listener m_control_listener;

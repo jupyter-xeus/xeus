@@ -39,7 +39,6 @@ namespace xeus
         void start_impl(zmq::multipart_t& message) override;
         void abort_queue_impl(const listener& l, long polling_interval) override;
         void stop_impl() override;
-
         void update_config_impl(xconfiguration& config) const override;
 
         void poll(long timeout);

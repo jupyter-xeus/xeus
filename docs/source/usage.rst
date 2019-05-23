@@ -9,6 +9,14 @@ Usage
 
 ``xeus`` enables custom kernel authors to implement Jupyter kernels more easily. It takes the burden of implementing the Jupyter Kernel protocol so developers can focus on implementing the interpreter part of the Kernel.
 
+.. image:: jupyter_archi.svg
+   :align: center
+   :alt: jupyter
+
+.. raw:: html
+
+   <br/>
+
 .. note::
     In the following documentation:
 
