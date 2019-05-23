@@ -132,29 +132,29 @@ target_link_libraries(test_xeus ${xeus_TARGET} ${GTEST_BOTH_LIBRARIES} Threads::
 
 add_custom_target(xtest COMMAND test_xeus DEPENDS test_xeus)
 
-# Echo_kernel tests
+# Test_kernel tests
 # =================
 
-set(ECHO_KERNEL_SOURCES
-    echo_interpreter.cpp
-    echo_interpreter.hpp
+set(TEST_KERNEL_SOURCES
+    test_interpreter.cpp
+    test_interpreter.hpp
     main.cpp)
 
 configure_file (
-    "${XEUS_TEST_DIR}/test_echo_kernel/kernel.json.in"
-    "${XEUS_TEST_DIR}/test_echo_kernel/kernel.json"
+    "${XEUS_TEST_DIR}/test_kernel/kernel.json.in"
+    "${XEUS_TEST_DIR}/test_kernel/kernel.json"
 )
 
-add_executable(test_echo_kernel ${ECHO_KERNEL_SOURCES})
-target_link_libraries(test_echo_kernel ${xeus_TARGET} Threads::Threads)
+add_executable(test_kernel ${TEST_KERNEL_SOURCES})
+target_link_libraries(test_kernel ${xeus_TARGET} Threads::Threads)
 
-target_compile_features(test_echo_kernel PRIVATE cxx_std_11)
+target_compile_features(test_kernel PRIVATE cxx_std_11)
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
 
 add_custom_command(
-    TARGET test_echo_kernel POST_BUILD
-    COMMAND jupyter-kernelspec install "${XEUS_TEST_DIR}/test_echo_kernel" --sys-prefix)
+    TARGET test_kernel POST_BUILD
+    COMMAND jupyter-kernelspec install "${XEUS_TEST_DIR}/test_kernel" --sys-prefix)
 add_custom_command(
-    TARGET test_echo_kernel POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_echo_kernel.py" "${CMAKE_CURRENT_BINARY_DIR}/")
+    TARGET test_kernel POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel.py" "${CMAKE_CURRENT_BINARY_DIR}/")

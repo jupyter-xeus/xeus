@@ -5,11 +5,11 @@ namespace custom
 {
 
     nl::json custom_interpreter::execute_request_impl(int execution_counter, // Typically the cell number
-                                                      const std::string& code, // Code to execute
-                                                      bool silent,
-                                                      bool store_history,
-                                                      nl::json user_expressions,
-                                                      bool allow_stdin)
+                                                      const std::string& /*code*/, // Code to execute
+                                                      bool /*silent*/,
+                                                      bool /*store_history*/,
+                                                      nl::json /*user_expressions*/,
+                                                      bool /*allow_stdin*/)
     {
         // You can use the C-API of your target language for executing the code,
         // e.g. `PyRun_String` for the Python C-API
@@ -65,8 +65,8 @@ namespace custom
     }
 
     nl::json custom_interpreter::inspect_request_impl(const std::string& code,
-                                                      int cursor_pos,
-                                                      int detail_level)
+                                                      int /*cursor_pos*/,
+                                                      int /*detail_level*/)
     {
         nl::json result;
 
@@ -84,7 +84,7 @@ namespace custom
         return result;
     }
 
-    nl::json custom_interpreter::is_complete_request_impl(const std::string& code)
+    nl::json custom_interpreter::is_complete_request_impl(const std::string& /*code*/)
     {
         nl::json result;
 

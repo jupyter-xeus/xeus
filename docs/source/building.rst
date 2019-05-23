@@ -9,7 +9,7 @@ Compiling and installing the kernel
 
 Your ``CMakeLists.txt`` file should look like the following:
 
-.. literalinclude:: my_kernel/CMakeLists.txt
+.. literalinclude:: ../../example/CMakeLists.txt
    :language: cmake
    :linenos:
 

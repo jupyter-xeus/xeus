@@ -209,7 +209,7 @@ macro(xeus_create_target target_name linkage output_name)
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
         CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
         CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-        
+
         target_compile_options(${target_name} PUBLIC -Wunused-parameter -Wextra -Wreorder)
 
         if (DISABLE_ARCH_NATIVE)
@@ -264,7 +264,7 @@ endif ()
 
 if (BUILD_STATIC_LIBS)
     # On Windows, a static library should use a different output name
-    # to avoid the conflict with the import library of a shared one.  
+    # to avoid the conflict with the import library of a shared one.
     if (CMAKE_HOST_WIN32)
         xeus_create_target(xeus_static STATIC xeus_static)
     else ()
@@ -273,15 +273,6 @@ if (BUILD_STATIC_LIBS)
 
     list(APPEND xeus_targets xeus_static)
 endif ()
-
-# Examples
-# ========
-
-option(BUILD_EXAMPLES "Build examples" OFF)
-
-if(BUILD_EXAMPLES)
-    add_subdirectory(example)
-endif()
 
 # Tests
 # =====

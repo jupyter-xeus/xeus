@@ -2,9 +2,9 @@ import unittest
 import jupyter_kernel_test
 
 
-class XeusEchoKernelTests(jupyter_kernel_test.KernelTests):
+class XeusKernelTests(jupyter_kernel_test.KernelTests):
 
-    kernel_name = "test_echo_kernel"
+    kernel_name = "test_kernel"
     language_name = "cpp"
 
     code_hello_world = "hello, world"
@@ -16,7 +16,7 @@ class XeusEchoKernelTests(jupyter_kernel_test.KernelTests):
     ]
 
     completion_samples = [
-        {'text': 'a.', 'matches': ['a.echo1', 'a.echo2']}
+        {'text': 'a.', 'matches': ['a.test1', 'a.test2']}
     ]
 
     complete_code_samples = ["complete"]

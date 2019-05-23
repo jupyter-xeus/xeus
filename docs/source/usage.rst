@@ -35,7 +35,7 @@ The easiest way to get started with a new kernel is to create a class inheriting
   Shutdown request from the client, this allows you to do some extra work before the kernel
   is shut down (e.g. free allocated memory).
 
-An EchoKernel is provided as an example_, this kernel implementation only prints what it receives from the client.
+A dummy kernel is provided as an example_.
 You can also find real kernel implementations based on xeus:
   - `xeus-cling <https://github.com/QuantStack/xeus-cling>`_: C++ kernel
   - `xeus-python <https://github.com/QuantStack/xeus-python>`_: Python kernel
@@ -50,7 +50,7 @@ The structure of your project should at least look like the following:
 
 .. code::
 
-    └── my_kernel/
+    └── example/
         ├── src/
         │   ├── custom_interpreter.cpp
         │   ├── custom_interpreter.hpp
@@ -90,8 +90,6 @@ And we build and install our kernel:
 
    building
 
-We provide the `example project <https://github.com/QuantStack/xeus/blob/master/docs/source/my_kernel>`_ in the source of the documentation.
-
 Finally we write unit tests for our kernel:
 
 .. toctree::
@@ -100,7 +98,7 @@ Finally we write unit tests for our kernel:
    testing
 
 
-.. _example: https://github.com/QuantStack/xeus/blob/master/example/echo_kernel
+.. _example: https://github.com/QuantStack/xeus/blob/master/docs/source/example
 .. _execute_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#execute
 .. _complete_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#completion
 .. _inspect_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#introspection

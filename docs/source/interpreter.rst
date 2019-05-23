@@ -9,7 +9,7 @@ Implementing the interpreter
 
 Let's start by editing the ``custom_interpreter.hpp`` file, it should contain the declaration of your interpreter class:
 
-.. literalinclude:: my_kernel/src/custom_interpreter.hpp
+.. literalinclude:: ../../example/src/custom_interpreter.hpp
    :language: cpp
 
 .. note::
@@ -20,7 +20,7 @@ Code Execution
 
 Then, you would need to implement all of those methods one by one in the ``custom_interpreter.cpp`` file. The main method is of course the ``execute_request_impl`` which executes the code whenever the client is sending an execute request.
 
-.. literalinclude:: my_kernel/src/custom_interpreter.cpp
+.. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 7-35
@@ -47,7 +47,7 @@ Configuration
 
 The ``configure_impl`` method allows you to perform some operations after the ``custom_interpreter`` creation and before executing any request. This is optional, but it can be useful, for example it is used in `xeus-python <https://github.com/QuantStack/xeus-python>`_ for initializing the auto-completion engine.
 
-.. literalinclude:: my_kernel/src/custom_interpreter.cpp
+.. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 37-40
@@ -57,7 +57,7 @@ Code Completion
 
 The ``complete_request_impl`` method allows you to implement the auto-completion logic for your kernel.
 
-.. literalinclude:: my_kernel/src/custom_interpreter.cpp
+.. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 42-65
@@ -69,7 +69,7 @@ Code Inspection
 
 Allows the kernel user to inspect a variable/class/type in the code. It takes the code and the cursor position as arguments, it is up to the kernel author to extract the token at the given cursor position in the code in order to know for which name the user wants inspection.
 
-.. literalinclude:: my_kernel/src/custom_interpreter.cpp
+.. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 67-85
@@ -96,7 +96,7 @@ The following code is considered as complete:
 
 So the kernel should return "complete".
 
-.. literalinclude:: my_kernel/src/custom_interpreter.cpp
+.. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 87-102
@@ -108,7 +108,7 @@ Kernel info
 
 This request allows the client to get some informations about the kernel: kernel language, language version, kernel version, etc.
 
-.. literalinclude:: my_kernel/src/custom_interpreter.cpp
+.. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 104-114
@@ -120,13 +120,12 @@ Kernel shutdown
 
 This allows you to perform some operations before shutting down the kernel.
 
-.. literalinclude:: my_kernel/src/custom_interpreter.cpp
+.. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 116-119
 
 
-.. _example: https://github.com/QuantStack/xeus/blob/master/example/echo_kernel
 .. _execute_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#execute
 .. _complete_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#completion
 .. _inspect_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#introspection
