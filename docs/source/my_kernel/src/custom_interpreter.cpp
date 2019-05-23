@@ -4,12 +4,12 @@
 namespace custom
 {
 
-    xjson custom_interpreter::execute_request_impl(int execution_counter, // Typically the cell number
-                                                   const std::string& code, // Code to execute
-                                                   bool silent,
-                                                   bool store_history,
-                                                   xjson user_expressions,
-                                                   bool allow_stdin)
+    nl::json custom_interpreter::execute_request_impl(int execution_counter, // Typically the cell number
+                                                      const std::string& code, // Code to execute
+                                                      bool silent,
+                                                      bool store_history,
+                                                      nl::json user_expressions,
+                                                      bool allow_stdin)
     {
         // You can use the C-API of your target language for executing the code,
         // e.g. `PyRun_String` for the Python C-API
@@ -20,16 +20,16 @@ namespace custom
         // the data to publish (mime type data) as second argument and metadata
         // as third argument.
         // Replace "Hello World !!" by what you want to be displayed under the execution cell
-        xjson pub_data;
+        nl::json pub_data;
         pub_data["text/plain"] = "Hello World !!";
-        publish_execution_result(execution_counter, std::move(pub_data), xjson());
+        publish_execution_result(execution_counter, std::move(pub_data), nl::json());
 
         // You can also use this method for publishing errors to the client, if the code
         // failed to execute
         // publish_execution_error(error_name, error_value, error_traceback);
         publish_execution_error("TypeError", "123", {"!@#$", "*(*"});
 
-        xjson result;
+        nl::json result;
         result["status"] = "ok";
         return result;
     }
@@ -39,10 +39,10 @@ namespace custom
         // Perform some operations
     }
 
-    xjson custom_interpreter::complete_request_impl(const std::string& code,
-                                                    int cursor_pos)
+    nl::json custom_interpreter::complete_request_impl(const std::string& code,
+                                                       int cursor_pos)
     {
-        xjson result;
+        nl::json result;
 
         // Code starts with 'H', it could be the following completion
         if (code[0] == 'H')
@@ -64,11 +64,11 @@ namespace custom
         return result;
     }
 
-    xjson custom_interpreter::inspect_request_impl(const std::string& code,
-                                                   int cursor_pos,
-                                                   int detail_level)
+    nl::json custom_interpreter::inspect_request_impl(const std::string& code,
+                                                      int cursor_pos,
+                                                      int detail_level)
     {
-        xjson result;
+        nl::json result;
 
         if (code.compare("print") == 0)
         {
@@ -84,9 +84,9 @@ namespace custom
         return result;
     }
 
-    xjson custom_interpreter::is_complete_request_impl(const std::string& code)
+    nl::json custom_interpreter::is_complete_request_impl(const std::string& code)
     {
-        xjson result;
+        nl::json result;
 
         // if (is_complete(code))
         // {
@@ -101,9 +101,9 @@ namespace custom
         return result;
     }
 
-    xjson custom_interpreter::kernel_info_request_impl()
+    nl::json custom_interpreter::kernel_info_request_impl()
     {
-        xjson result;
+        nl::json result;
         result["implementation"] = "my_kernel";
         result["implementation_version"] = "0.1.0";
         result["language_info"]["name"] = "python";

@@ -3,8 +3,11 @@
 
 #include "xeus/xinterpreter.hpp"
 
+#include "nlohmann/json.hpp"
+
 using xeus::xinterpreter;
-using xeus::xjson;
+
+namespace nl = nlohmann;
 
 namespace custom
 {
@@ -20,23 +23,23 @@ namespace custom
 
         void configure_impl() override;
 
-        xjson execute_request_impl(int execution_counter,
-                                   const std::string& code,
-                                   bool silent,
-                                   bool store_history,
-                                   xjson user_expressions,
-                                   bool allow_stdin) override;
+        nl::json execute_request_impl(int execution_counter,
+                                      const std::string& code,
+                                      bool silent,
+                                      bool store_history,
+                                      nl::json user_expressions,
+                                      bool allow_stdin) override;
 
-        xjson complete_request_impl(const std::string& code,
-                                    int cursor_pos) override;
+        nl::json complete_request_impl(const std::string& code,
+                                       int cursor_pos) override;
 
-        xjson inspect_request_impl(const std::string& code,
-                                   int cursor_pos,
-                                   int detail_level) override;
+        nl::json inspect_request_impl(const std::string& code,
+                                      int cursor_pos,
+                                      int detail_level) override;
 
-        xjson is_complete_request_impl(const std::string& code) override;
+        nl::json is_complete_request_impl(const std::string& code) override;
 
-        xjson kernel_info_request_impl() override;
+        nl::json kernel_info_request_impl() override;
 
         void shutdown_request_impl() override;
     };
