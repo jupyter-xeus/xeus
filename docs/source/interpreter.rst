@@ -13,7 +13,7 @@ Let's start by editing the ``custom_interpreter.hpp`` file, it should contain th
    :language: cpp
 
 .. note::
-    Almost all ``custom_interpreter`` methods return a ``xeus::xjson`` instance. This is actually using `nlohmann json <https://github.com/nlohmann/json>`_ which is a modern C++ JSON datastructure.
+    Almost all ``custom_interpreter`` methods return a ``nl::json`` instance. This is actually using `nlohmann json <https://github.com/nlohmann/json>`_ which is a modern C++ implementation of a JSON datastructure.
 
 Code Execution
 --------------
