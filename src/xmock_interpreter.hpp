@@ -37,36 +37,36 @@ namespace xeus
         {
         }
 
-        xjson execute_request_impl(int /*execution_counter*/,
+        nl::json execute_request_impl(int /*execution_counter*/,
                                    const std::string& /*code*/,
                                    bool /*silent*/,
                                    bool /*store_history*/,
-                                   xjson /*user_expressions*/,
+                                   nl::json /*user_expressions*/,
                                    bool /*allow_stdin*/) override
         {
-            return xjson();
+            return nl::json();
         }
 
-        xjson complete_request_impl(const std::string& /*code*/, int /*cursor_pos*/) override
+        nl::json complete_request_impl(const std::string& /*code*/, int /*cursor_pos*/) override
         {
-            return xjson();
+            return nl::json();
         }
 
-        xjson inspect_request_impl(const std::string& /*code*/,
+        nl::json inspect_request_impl(const std::string& /*code*/,
                                    int /*cursor_pos*/,
                                    int /*detail_level*/) override
         {
-            return xjson();
+            return nl::json();
         }
 
-        xjson is_complete_request_impl(const std::string& /*code*/) override
+        nl::json is_complete_request_impl(const std::string& /*code*/) override
         {
-            return xjson();
+            return nl::json();
         }
 
-        xjson kernel_info_request_impl() override
+        nl::json kernel_info_request_impl() override
         {
-            return xjson();
+            return nl::json();
         }
 
         void shutdown_request_impl() override

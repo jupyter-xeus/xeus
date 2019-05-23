@@ -20,20 +20,20 @@ namespace xeus
 {
     const std::string xmessage_base::DELIMITER = "<IDS|MSG>";
 
-    void parse_zmq_message(const zmq::message_t& msg, xjson& json)
+    void parse_zmq_message(const zmq::message_t& msg, nl::json& json)
     {
         const char* buf = msg.data<const char>();
-        json = xjson::parse(buf, buf + msg.size());
+        json = nl::json::parse(buf, buf + msg.size());
     }
 
-    zmq::message_t write_zmq_message(const xjson& json)
+    zmq::message_t write_zmq_message(const nl::json& json)
     {
         std::string buffer = json.dump();
         return zmq::message_t(buffer.c_str(), buffer.size());
     }
 
     xmessage_base::xmessage_base(
-        xjson header, xjson parent_header, xjson metadata, xjson content, buffer_sequence buffers)
+        nl::json header, nl::json parent_header, nl::json metadata, nl::json content, buffer_sequence buffers)
         : m_header(std::move(header))
         , m_parent_header(std::move(parent_header))
         , m_metadata(std::move(metadata))
@@ -103,22 +103,22 @@ namespace xeus
         }
     }
 
-    const xjson& xmessage_base::header() const
+    const nl::json& xmessage_base::header() const
     {
         return m_header;
     }
 
-    const xjson& xmessage_base::parent_header() const
+    const nl::json& xmessage_base::parent_header() const
     {
         return m_parent_header;
     }
 
-    const xjson& xmessage_base::metadata() const
+    const nl::json& xmessage_base::metadata() const
     {
         return m_metadata;
     }
 
-    const xjson& xmessage_base::content() const
+    const nl::json& xmessage_base::content() const
     {
         return m_content;
     }
@@ -129,10 +129,10 @@ namespace xeus
     }
 
     xmessage::xmessage(const guid_list& zmq_id,
-                       xjson header,
-                       xjson parent_header,
-                       xjson metadata,
-                       xjson content,
+                       nl::json header,
+                       nl::json parent_header,
+                       nl::json metadata,
+                       nl::json content,
                        buffer_sequence buffers)
         : xmessage_base(std::move(header),
                         std::move(parent_header),
@@ -179,10 +179,10 @@ namespace xeus
     }
 
     xpub_message::xpub_message(const std::string& topic,
-                               xjson header,
-                               xjson parent_header,
-                               xjson metadata,
-                               xjson content,
+                               nl::json header,
+                               nl::json parent_header,
+                               nl::json metadata,
+                               nl::json content,
                                buffer_sequence buffers)
         : xmessage_base(std::move(header),
                         std::move(parent_header),
@@ -237,11 +237,11 @@ namespace xeus
         return XEUS_KERNEL_PROTOCOL_VERSION;
     }
 
-    xjson make_header(const std::string& msg_type,
+    nl::json make_header(const std::string& msg_type,
                       const std::string& user_name,
                       const std::string& session_id)
     {
-        xjson header;
+        nl::json header;
         header["msg_id"] = new_xguid();
         header["username"] = user_name;
         header["session"] = session_id;

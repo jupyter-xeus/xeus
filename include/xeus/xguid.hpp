@@ -10,7 +10,6 @@
 #define XEUS_GUID_HPP
 
 #include "xtl/xbasic_fixed_string.hpp"
-#include "xtl/xjson.hpp"
 
 #include "xeus.hpp"
 

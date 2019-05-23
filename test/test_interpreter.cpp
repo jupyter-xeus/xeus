@@ -8,8 +8,12 @@
 
 #include <iostream>
 
+#include "nlohmann/json.hpp"
+
 #include "test_interpreter.hpp"
 #include "xeus/xguid.hpp"
+
+namespace nl = nlohmann;
 
 namespace test_kernel
 {
@@ -23,14 +27,14 @@ namespace test_kernel
         using function_type = std::function<void(xeus::xcomm&&, const xeus::xmessage&)>;
     }
 
-    xeus::xjson test_interpreter::execute_request_impl(int execution_counter,
-                                                       const std::string& code,
-                                                       bool /* silent */,
-                                                       bool /* store_history */,
-                                                       xeus::xjson /* user_expressions */,
-                                                       bool /* allow_stdin */)
+    nl::json test_interpreter::execute_request_impl(int execution_counter,
+                                                    const std::string& code,
+                                                    bool /* silent */,
+                                                    bool /* store_history */,
+                                                    nl::json /* user_expressions */,
+                                                    bool /* allow_stdin */)
     {
-        xeus::xjson kernel_res;
+        nl::json kernel_res;
 
         if (code.compare("hello, world") == 0)
         {
@@ -48,8 +52,8 @@ namespace test_kernel
                 https://xeus.readthedocs.io"></iframe>)";
 
             kernel_res["status"] = "ok";
-            kernel_res["payload"] = xeus::xjson::array();
-            kernel_res["payload"][0] = xeus::xjson::object({
+            kernel_res["payload"] = nl::json::array();
+            kernel_res["payload"][0] = nl::json::object({
                 {"data", {
                     {"text/plain", "https://xeus.readthedocs.io"},
                     {"text/html", html_content}}
@@ -57,26 +61,26 @@ namespace test_kernel
                 {"source", "page"},
                 {"start", 0}
             });
-            kernel_res["user_expressions"] = xeus::xjson::object();
+            kernel_res["user_expressions"] = nl::json::object();
 
             return kernel_res;
         }
 
-        xeus::xjson pub_data;
+        nl::json pub_data;
         pub_data["text/plain"] = code;
-        publish_execution_result(execution_counter, std::move(pub_data), xeus::xjson());
+        publish_execution_result(execution_counter, std::move(pub_data), nl::json());
 
         kernel_res["status"] = "ok";
-        kernel_res["payload"] = xeus::xjson::array();
-        kernel_res["user_expressions"] = xeus::xjson::object();
+        kernel_res["payload"] = nl::json::array();
+        kernel_res["user_expressions"] = nl::json::object();
 
         return kernel_res;
     }
 
-    xeus::xjson test_interpreter::complete_request_impl(const std::string& /* code */,
-                                                        int /* cursor_pos */)
+    nl::json test_interpreter::complete_request_impl(const std::string& /* code */,
+                                                     int /* cursor_pos */)
     {
-        xeus::xjson result;
+        nl::json result;
         result["status"] = "ok";
         result["matches"] = {"a.test1", "a.test2"};
         result["cursor_start"] = 2;
@@ -85,11 +89,11 @@ namespace test_kernel
         return result;
     }
 
-    xeus::xjson test_interpreter::inspect_request_impl(const std::string& /* code */,
-                                                       int /* cursor_pos */,
-                                                       int /* detail_level */)
+    nl::json test_interpreter::inspect_request_impl(const std::string& /* code */,
+                                                    int /* cursor_pos */,
+                                                    int /* detail_level */)
     {
-        xeus::xjson result;
+        nl::json result;
         result["status"] = "ok";
         result["found"] = true;
         result["data"] = {{"text/plain", ""}};
@@ -97,9 +101,9 @@ namespace test_kernel
         return result;
     }
 
-    xeus::xjson test_interpreter::is_complete_request_impl(const std::string& code)
+    nl::json test_interpreter::is_complete_request_impl(const std::string& code)
     {
-        xeus::xjson result;
+        nl::json result;
         result["status"] = code;
         if (code.compare("incomplete") == 0)
         {
@@ -108,9 +112,9 @@ namespace test_kernel
         return result;
     }
 
-    xeus::xjson test_interpreter::kernel_info_request_impl()
+    nl::json test_interpreter::kernel_info_request_impl()
     {
-        xeus::xjson result;
+        nl::json result;
         result["implementation"] = "cpp_test";
         result["implementation_version"] = "1.0.0";
         result["banner"] = "test_kernel";

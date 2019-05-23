@@ -9,8 +9,11 @@
 #include <fstream>
 #include <string>
 
+#include "nlohmann/json.hpp"
+
 #include "xeus/xkernel_configuration.hpp"
-#include "xeus/xjson.hpp"
+
+namespace nl = nlohmann;
 
 namespace xeus
 {
@@ -18,7 +21,7 @@ namespace xeus
     {
         std::ifstream ifs(file_name);
 
-        xjson doc;
+        nl::json doc;
         ifs >> doc;
 
         xconfiguration res;

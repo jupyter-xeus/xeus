@@ -11,7 +11,6 @@
 #include <string>
 
 #include "xeus/xin_memory_history_manager.hpp"
-#include "xeus/xjson.hpp"
 
 namespace xeus
 {
@@ -32,9 +31,9 @@ namespace xeus
         m_history.push_back({ "0", std::to_string(line_num), input });
     }
 
-    xjson xin_memory_history_manager::get_tail_impl(int n, bool /*raw*/, bool /*output*/) const
+    nl::json xin_memory_history_manager::get_tail_impl(int n, bool /*raw*/, bool /*output*/) const
     {
-        xjson reply;
+        nl::json reply;
         history_type history;
 
         int count = std::min(n, static_cast<int>(m_history.size()));
@@ -46,10 +45,10 @@ namespace xeus
         return reply;
     }
 
-    xjson xin_memory_history_manager::get_range_impl(
+    nl::json xin_memory_history_manager::get_range_impl(
         int /*session*/, int start, int stop, bool /*raw*/, bool /*output*/) const
     {
-        xjson reply;
+        nl::json reply;
         history_type history;
 
         int hist_size = static_cast<int>(m_history.size());
@@ -73,7 +72,7 @@ namespace xeus
         return reply;
     }
 
-    xjson xin_memory_history_manager::search_impl(const std::string& /*pattern*/,
+    nl::json xin_memory_history_manager::search_impl(const std::string& /*pattern*/,
                                                   bool /*raw*/,
                                                   bool /*output*/,
                                                   int /*n*/,

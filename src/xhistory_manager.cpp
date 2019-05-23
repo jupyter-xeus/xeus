@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "xeus/xhistory_manager.hpp"
-#include "xeus/xjson.hpp"
 
 namespace xeus
 {
@@ -29,9 +28,9 @@ namespace xeus
         store_inputs_impl(line_num, input);
     }
 
-    xjson xhistory_manager::process_request(const xjson& content) const
+    nl::json xhistory_manager::process_request(const nl::json& content) const
     {
-        xjson history;
+        nl::json history;
 
         std::string hist_access_type = content.value("hist_access_type", "tail");
 
@@ -69,17 +68,17 @@ namespace xeus
         return history;
     }
 
-    xjson xhistory_manager::get_tail(int n, bool raw, bool output) const
+    nl::json xhistory_manager::get_tail(int n, bool raw, bool output) const
     {
         return get_tail_impl(n, raw, output);
     }
 
-    xjson xhistory_manager::get_range(int session, int start, int stop, bool raw, bool output) const
+    nl::json xhistory_manager::get_range(int session, int start, int stop, bool raw, bool output) const
     {
         return get_range_impl(session, start, stop, raw, output);
     }
 
-    xjson xhistory_manager::search(const std::string& pattern, bool raw, bool output, int n, bool unique) const
+    nl::json xhistory_manager::search(const std::string& pattern, bool raw, bool output, int n, bool unique) const
     {
         return search_impl(pattern, raw, output, n, unique);
     }
