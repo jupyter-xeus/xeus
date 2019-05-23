@@ -11,6 +11,7 @@ Usage
 
 .. note::
     In the following documentation:
+
       - ``interpreter`` refers to the part of the kernel responsible for executing the code, completing the code etc.
       - ``client`` refers to the Jupyter client, which can be Jupyter Notebook/JupyterLab/Jupyter console etc.
       - ``user`` refers to people using the kernel on any Jupyter client.
