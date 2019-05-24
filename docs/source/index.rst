@@ -37,6 +37,7 @@ for details.
    :maxdepth: 3
 
    usage
+   kernel_implementation
 
 .. toctree::
    :caption: DEVELOPER SECTION
