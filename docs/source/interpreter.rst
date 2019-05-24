@@ -106,7 +106,7 @@ The result and arguments of the completness request are described in the is_comp
 Kernel info
 -----------
 
-This request allows the client to get some informations about the kernel: kernel language, language version, kernel version, etc.
+This request allows the client to get information about the kernel: language, language version, kernel version, etc.
 
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
