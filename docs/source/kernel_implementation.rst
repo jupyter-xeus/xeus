@@ -164,7 +164,6 @@ Now let's edit the ``main.cpp`` file which is the main entry for the kernel exec
 
 .. literalinclude:: ../../example/src/main.cpp
    :language: cpp
-   :linenos:
 
 Kernel file
 -----------
@@ -186,7 +185,6 @@ file which will be installed.
 
 .. literalinclude:: ../../example/share/jupyter/kernels/my_kernel/kernel.json.in
    :language: json
-   :linenos:
 
 
 .. note::
@@ -201,7 +199,6 @@ Your ``CMakeLists.txt`` file should look like the following:
 
 .. literalinclude:: ../../example/CMakeLists.txt
    :language: cmake
-   :linenos:
 
 Now you should be able to install your new kernel and use it with any Jupyter client.
 
