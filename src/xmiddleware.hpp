@@ -13,8 +13,7 @@
 
 namespace xeus
 {
-    std::string get_publisher_controller_end_point();
-    std::string get_heartbeat_controller_end_point();
+    std::string get_controller_end_point(const std::string& channel);
     std::string get_publisher_end_point();
 
     std::string get_end_point(const std::string& transport,

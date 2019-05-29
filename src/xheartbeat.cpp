@@ -23,7 +23,7 @@ namespace xeus
         , m_controller(context, zmq::socket_type::rep)
     {
         init_socket(m_heartbeat, transport, ip, port);
-        init_socket(m_controller, get_heartbeat_controller_end_point());
+        init_socket(m_controller, get_controller_end_point("heartbeat"));
     }
 
     xheartbeat::~xheartbeat()

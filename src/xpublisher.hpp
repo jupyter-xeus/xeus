@@ -11,8 +11,6 @@
 
 #include <string>
 
-#include <string>
-
 #include "zmq.hpp"
 
 namespace xeus

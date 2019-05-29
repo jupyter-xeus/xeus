@@ -60,13 +60,7 @@ namespace xeus
 
     private:
 
-        enum class channel
-        {
-            SHELL,
-            CONTROL
-        };
-
-        using handler_type = void (xkernel_core::*)(const xmessage&, xkernel_core::channel);
+        using handler_type = void (xkernel_core::*)(const xmessage&, channel);
         using guid_list = xmessage::guid_list;
 
         void dispatch(zmq::multipart_t& wire_msg, channel c);

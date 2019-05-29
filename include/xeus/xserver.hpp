@@ -19,6 +19,12 @@
 
 namespace xeus
 {
+    enum class channel
+    {
+        SHELL,
+        CONTROL
+    };
+
     class XEUS_API xserver
     {
     public:
@@ -36,7 +42,7 @@ namespace xeus
         void send_shell(zmq::multipart_t& message);
         void send_control(zmq::multipart_t& message);
         void send_stdin(zmq::multipart_t& message);
-        void publish(zmq::multipart_t& message);
+        void publish(zmq::multipart_t& message, channel c = channel::SHELL);
 
         void start(zmq::multipart_t& message);
         void abort_queue(const listener& l, long polling_interval);
@@ -60,7 +66,7 @@ namespace xeus
         virtual void send_shell_impl(zmq::multipart_t& message) = 0;
         virtual void send_control_impl(zmq::multipart_t& message) = 0;
         virtual void send_stdin_impl(zmq::multipart_t& message) = 0;
-        virtual void publish_impl(zmq::multipart_t& message) = 0;
+        virtual void publish_impl(zmq::multipart_t& message, channel c) = 0;
 
         virtual void start_impl(zmq::multipart_t& message) = 0;
         virtual void abort_queue_impl(const listener& l, long polling_interval) = 0;
