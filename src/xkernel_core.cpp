@@ -25,7 +25,8 @@ namespace xeus
                                authentication_ptr auth,
                                server_ptr server,
                                interpreter_ptr interpreter,
-                               history_manager_ptr history_manager)
+                               history_manager_ptr history_manager,
+                               debugger_ptr debugger)
         : m_kernel_id(std::move(kernel_id))
         , m_user_name(std::move(user_name))
         , m_session_id(std::move(session_id))
@@ -34,6 +35,7 @@ namespace xeus
         , p_server(server)
         , p_interpreter(interpreter)
         , p_history_manager(history_manager)
+        , p_debugger(debugger)
         , m_parent_id(0)
         , m_parent_header(nl::json::object())
     {
@@ -49,6 +51,7 @@ namespace xeus
         m_handler["comm_msg"] = &xkernel_core::comm_msg;
         m_handler["kernel_info_request"] = &xkernel_core::kernel_info_request;
         m_handler["shutdown_request"] = &xkernel_core::shutdown_request;
+        m_handler["debug_request"] = &xkernel_core::debug_request;
 
         // Server bindings
         p_server->register_shell_listener(std::bind(&xkernel_core::dispatch_shell, this, _1));
@@ -328,6 +331,14 @@ namespace xeus
         reply["restart"] = restart;
         publish_message("shutdown", nl::json::object(), nl::json(reply), buffer_sequence());
         send_reply("shutdown_reply", nl::json::object(), std::move(reply), c);
+    }
+
+    void xkernel_core::debug_request(const xmessage& request, channel)
+    {
+        if(p_debugger)
+        {
+            p_debugger->process_request(request.content());
+        }
     }
 
     void xkernel_core::publish_status(const std::string& status)

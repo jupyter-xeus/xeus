@@ -16,6 +16,7 @@
 #include "xeus/xserver.hpp"
 #include "xeus/xinterpreter.hpp"
 #include "xeus/xhistory_manager.hpp"
+#include "xeus/xdebugger.hpp"
 #include "xeus/xauthentication.hpp"
 #include "xeus/xmessage.hpp"
 
@@ -29,6 +30,7 @@ namespace xeus
         using server_ptr = xserver*;
         using interpreter_ptr = xinterpreter*;
         using history_manager_ptr = xhistory_manager*;
+        using debugger_ptr = xdebugger*;
 
         xkernel_core(const std::string& kernel_id,
                      const std::string& user_name,
@@ -36,7 +38,8 @@ namespace xeus
                      authentication_ptr auth,
                      server_ptr server,
                      interpreter_ptr p_interpreter,
-                     history_manager_ptr p_history_manager);
+                     history_manager_ptr p_history_manager,
+                     debugger_ptr debugger);
 
         ~xkernel_core();
 
@@ -79,6 +82,7 @@ namespace xeus
 
         void kernel_info_request(const xmessage& request, channel c);
         void shutdown_request(const xmessage& request, channel c);
+        void debug_request(const xmessage& request, channel c);
 
         void publish_status(const std::string& status);
 
@@ -115,6 +119,7 @@ namespace xeus
         server_ptr p_server;
         interpreter_ptr p_interpreter;
         history_manager_ptr p_history_manager;
+        debugger_ptr p_debugger;
 
         guid_list m_parent_id;
         nl::json m_parent_header;
