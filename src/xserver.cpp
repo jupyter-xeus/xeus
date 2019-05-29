@@ -10,6 +10,7 @@
 
 #include "xeus/xserver.hpp"
 #include "xeus/xserver_zmq.hpp"
+#include "xeus/xserver_zmq_split.hpp"
 
 namespace xeus
 {
@@ -28,9 +29,9 @@ namespace xeus
         send_stdin_impl(message);
     }
 
-    void xserver::publish(zmq::multipart_t& message)
+    void xserver::publish(zmq::multipart_t& message, channel c)
     {
-        publish_impl(message);
+        publish_impl(message, c);
     }
 
     void xserver::start(zmq::multipart_t& message)

@@ -33,12 +33,13 @@ namespace xeus
         init_socket(m_shell, config.m_transport, config.m_ip, config.m_shell_port);
         init_socket(m_controller, config.m_transport, config.m_ip, config.m_control_port);
         init_socket(m_stdin, config.m_transport, config.m_ip, config.m_stdin_port);
-        init_socket(m_publisher_pub, get_publisher_end_point());
+        m_publisher_pub.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_publisher_pub.connect(get_publisher_end_point());
 
         m_publisher_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_publisher_controller.connect(get_publisher_controller_end_point());
+        m_publisher_controller.connect(get_controller_end_point("publisher"));
         m_heartbeat_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_heartbeat_controller.connect(get_heartbeat_controller_end_point());
+        m_heartbeat_controller.connect(get_controller_end_point("heartbeat"));
     }
 
     xserver_zmq::~xserver_zmq()
@@ -63,7 +64,7 @@ namespace xeus
         xserver::notify_stdin_listener(wire_msg);
     }
 
-    void xserver_zmq::publish_impl(zmq::multipart_t& message)
+    void xserver_zmq::publish_impl(zmq::multipart_t& message, channel)
     {
         message.send(m_publisher_pub);
     }

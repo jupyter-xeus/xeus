@@ -7,6 +7,7 @@
 ****************************************************************************/
 
 #include <string>
+#include <iostream>
 
 #include "xpublisher.hpp"
 #include "zmq_addon.hpp"
@@ -23,10 +24,10 @@ namespace xeus
         , m_controller(context, zmq::socket_type::rep)
     {
         init_socket(m_publisher, transport, ip, port);
-        m_listener.connect(get_publisher_end_point());
         m_listener.setsockopt(ZMQ_SUBSCRIBE, "", 0);
+        m_listener.bind(get_publisher_end_point());
         m_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_controller.bind(get_publisher_controller_end_point());
+        m_controller.bind(get_controller_end_point("publisher"));
     }
 
     xpublisher::~xpublisher()

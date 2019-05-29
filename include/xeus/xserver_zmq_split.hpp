@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XEUS_SERVER_IMPL_HPP
-#define XEUS_SERVER_IMPL_HPP
+#ifndef XEUS_SERVER_ZMQ_SPLIT_HPP
+#define XEUS_SERVER_ZMQ_SPLIT_HPP
 
 #include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
@@ -15,19 +15,25 @@
 
 namespace xeus
 {
+    class xshell;
     class xpublisher;
     class xheartbeat;
 
-    class XEUS_API xserver_zmq : public xserver
+    class XEUS_API xserver_zmq_split : public xserver
     {
     public:
 
+        using shell_ptr = std::unique_ptr<xshell>;
         using publisher_ptr = std::unique_ptr<xpublisher>;
         using heartbeat_ptr = std::unique_ptr<xheartbeat>;
 
-        xserver_zmq(zmq::context_t& context, const xconfiguration& config);
+        xserver_zmq_split(zmq::context_t& context, const xconfiguration& config);
 
-        virtual ~xserver_zmq();
+        virtual ~xserver_zmq_split();
+
+        // The xshell object needs to call these methods
+        using xserver::notify_shell_listener;
+        using xserver::notify_stdin_listener;
 
     protected:
 
@@ -41,18 +47,21 @@ namespace xeus
         void stop_impl() override;
         void update_config_impl(xconfiguration& config) const override;
 
-        void poll(long timeout);
+        void start_shell_thread();
         void start_publisher_thread();
         void start_heartbeat_thread();
         void stop_channels();
 
-        zmq::socket_t m_shell;
+        // External socket for controller channel
         zmq::socket_t m_controller;
-        zmq::socket_t m_stdin;
+        // Internal socket for pusblishing
         zmq::socket_t m_publisher_pub;
+        // Internal sockets for controlling other threads
+        zmq::socket_t m_shell_controller;
         zmq::socket_t m_publisher_controller;
         zmq::socket_t m_heartbeat_controller;
 
+        shell_ptr p_shell;
         publisher_ptr p_publisher;
         heartbeat_ptr p_heartbeat;
 
@@ -61,3 +70,4 @@ namespace xeus
 }
 
 #endif
+
