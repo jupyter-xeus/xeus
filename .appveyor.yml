@@ -40,3 +40,4 @@ install:
 build_script:
   - .\test\test_xeus
   - py.test test\test_kernel.py
+  - py.test test\test_kernel_split.py
