@@ -44,11 +44,13 @@ namespace xeus
                      const std::string& user_name,
                      interpreter_ptr interpreter,
                      history_manager_ptr history_manager,
-                     server_builder builder)
+                     server_builder builder,
+                     debugger_ptr debugger)
         : m_config(config)
         , m_user_name(user_name)
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
+        , p_debugger(std::move(debugger))
         , m_builder(builder)
     {
         init();
@@ -57,10 +59,12 @@ namespace xeus
     xkernel::xkernel(const std::string& user_name,
                      interpreter_ptr interpreter,
                      history_manager_ptr history_manager,
-                     server_builder builder)
+                     server_builder builder,
+                     debugger_ptr debugger)
         : m_user_name(user_name)
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
+        , p_debugger(std::move(debugger))
         , m_builder(builder)
     {
         init();
@@ -92,7 +96,8 @@ namespace xeus
                                                   std::move(auth),
                                                   p_server.get(),
                                                   p_interpreter.get(),
-                                                  p_history_manager.get()));
+                                                  p_history_manager.get(),
+                                                  p_debugger.get()));
 
         p_interpreter->configure();
     }
