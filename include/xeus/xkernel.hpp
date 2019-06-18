@@ -32,24 +32,26 @@ namespace xeus
 
         using history_manager_ptr = std::unique_ptr<xhistory_manager>;
         using interpreter_ptr = std::unique_ptr<xinterpreter>;
-        using debugger_ptr = std::unique_ptr<xdebugger>;
         using kernel_core_ptr = std::unique_ptr<xkernel_core>;
         using server_ptr = std::unique_ptr<xserver>;
+        using debugger_ptr = std::unique_ptr<xdebugger>;
         using server_builder = server_ptr (*)(zmq::context_t& context,
                                               const xconfiguration& config);
+        using debugger_builder = debugger_ptr (*)(zmq::context_t& context,
+                                                  const xconfiguration& config);
 
         xkernel(const xconfiguration& config,
                 const std::string& user_name,
                 interpreter_ptr interpreter,
                 history_manager_ptr history_manager = history_manager_ptr(new xin_memory_history_manager()),
-                server_builder builder = make_xserver,
-                debugger_ptr debugger = nullptr);
+                server_builder sbuilder = make_xserver,
+                debugger_builder dbuilder = make_null_debugger);
 
         xkernel(const std::string& user_name,
                 interpreter_ptr interpreter,
                 history_manager_ptr history_manager = history_manager_ptr(new xin_memory_history_manager()),
-                server_builder builder = make_xserver,
-                debugger_ptr debugger = nullptr);
+                server_builder sbuilder = make_xserver,
+                debugger_builder dbuilder = make_null_debugger);
 
         ~xkernel();
 
@@ -67,9 +69,10 @@ namespace xeus
         std::string m_user_name;
         interpreter_ptr p_interpreter;
         history_manager_ptr p_history_manager;
-        debugger_ptr p_debugger;
-        server_builder m_builder;
+        server_builder m_server_builder;
         server_ptr p_server;
+        debugger_builder m_debugger_builder;
+        debugger_ptr p_debugger;
         zmq::context_t m_context;
         kernel_core_ptr p_core;
     };

@@ -9,9 +9,11 @@
 #ifndef XEUS_DEBUGGER_HPP
 #define XEUS_DEBUGGER_HPP
 
+#include "zmq.hpp"
 #include "nlohmann/json.hpp"
 
 #include "xeus.hpp"
+#include "xkernel_configuration.hpp"
 
 namespace xeus
 {
@@ -34,6 +36,10 @@ namespace xeus
 
         virtual void process_request_impl(const nlohmann::json& message) = 0;
     };
+
+    XEUS_API
+    std::unique_ptr<xdebugger> make_null_debugger(zmq::context_t&, const xconfiguration&);
+            
 }
 
 #endif

@@ -14,5 +14,10 @@ namespace xeus
     {
         process_request_impl(message);
     }
+
+    std::unique_ptr<xdebugger> make_null_debugger(zmq::context_t&, const xconfiguration&)
+    {
+        return nullptr;
+    }
 }
 
