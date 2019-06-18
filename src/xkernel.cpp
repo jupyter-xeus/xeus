@@ -44,14 +44,14 @@ namespace xeus
                      const std::string& user_name,
                      interpreter_ptr interpreter,
                      history_manager_ptr history_manager,
-                     server_builder builder,
-                     debugger_ptr debugger)
+                     server_builder sbuilder,
+                     debugger_builder dbuilder)
         : m_config(config)
         , m_user_name(user_name)
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
-        , p_debugger(std::move(debugger))
-        , m_builder(builder)
+        , m_server_builder(sbuilder)
+        , m_debugger_builder(dbuilder)
     {
         init();
     }
@@ -59,13 +59,13 @@ namespace xeus
     xkernel::xkernel(const std::string& user_name,
                      interpreter_ptr interpreter,
                      history_manager_ptr history_manager,
-                     server_builder builder,
-                     debugger_ptr debugger)
+                     server_builder sbuilder,
+                     debugger_builder dbuilder)
         : m_user_name(user_name)
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
-        , p_debugger(std::move(debugger))
-        , m_builder(builder)
+        , m_server_builder(sbuilder)
+        , m_debugger_builder(dbuilder)
     {
         init();
     }
@@ -87,8 +87,10 @@ namespace xeus
         using authentication_ptr = xkernel_core::authentication_ptr;
         authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
 
-        p_server = m_builder(m_context, m_config);
+        p_server = m_server_builder(m_context, m_config);
         p_server->update_config(m_config);
+
+        p_debugger = m_debugger_builder(m_context, m_config);
 
         p_core = kernel_core_ptr(new xkernel_core(m_kernel_id,
                                                   m_user_name,

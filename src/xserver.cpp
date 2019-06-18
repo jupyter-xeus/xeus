@@ -88,4 +88,9 @@ namespace xeus
     {
         return std::make_unique<xserver_zmq>(context, config);
     }
+
+    std::unique_ptr<xserver> make_xserver_split(zmq::context_t& context, const xconfiguration& config)
+    {
+        return std::make_unique<xserver_zmq_split>(context, config);
+    }
 }
