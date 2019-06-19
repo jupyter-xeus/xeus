@@ -333,11 +333,13 @@ namespace xeus
         send_reply("shutdown_reply", nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::debug_request(const xmessage& request, channel)
+    void xkernel_core::debug_request(const xmessage& request, channel c)
     {
         if(p_debugger)
         {
-            p_debugger->process_request(request.content());
+            nl::json reply = p_debugger->process_request(request.content());
+            nl::json metadata = get_metadata();
+            send_reply("debug_reply", std::move(metadata), std::move(reply), c);
         }
     }
 

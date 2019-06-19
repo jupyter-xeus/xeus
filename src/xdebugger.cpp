@@ -10,9 +10,9 @@
 
 namespace xeus
 {
-    void xdebugger::process_request(const nlohmann::json& message)
+    nl::json xdebugger::process_request(const nl::json& message)
     {
-        process_request_impl(message);
+        return process_request_impl(message);
     }
 
     std::unique_ptr<xdebugger> make_null_debugger(zmq::context_t&, const xconfiguration&)

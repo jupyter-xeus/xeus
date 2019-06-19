@@ -15,6 +15,8 @@
 #include "xeus.hpp"
 #include "xkernel_configuration.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     class XEUS_API xdebugger
@@ -30,11 +32,11 @@ namespace xeus
         xdebugger(xdebugger&&) = delete;
         xdebugger& operator=(xdebugger&&) = delete;
 
-        void process_request(const nlohmann::json& message);
+        nl::json process_request(const nl::json& message);
 
     private:
 
-        virtual void process_request_impl(const nlohmann::json& message) = 0;
+        virtual nl::json process_request_impl(const nl::json& message) = 0;
     };
 
     XEUS_API
