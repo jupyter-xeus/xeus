@@ -9,9 +9,9 @@
 #include <string>
 #include <iostream>
 
-#include "xpublisher.hpp"
 #include "zmq_addon.hpp"
-#include "xmiddleware.hpp"
+#include "xeus/xmiddleware.hpp"
+#include "xpublisher.hpp"
 
 namespace xeus
 {

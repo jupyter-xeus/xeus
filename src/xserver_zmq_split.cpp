@@ -12,8 +12,8 @@
 
 #include "xeus/xserver_zmq_split.hpp"
 #include "xeus/xguid.hpp"
+#include "xeus/xmiddleware.hpp"
 #include "zmq_addon.hpp"
-#include "xmiddleware.hpp"
 #include "xpublisher.hpp"
 #include "xheartbeat.hpp"
 #include "xshell.hpp"

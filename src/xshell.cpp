@@ -10,9 +10,9 @@
 #include <chrono>
 #include <iostream>
 
-#include "xshell.hpp"
-#include "xmiddleware.hpp"
+#include "xeus/xmiddleware.hpp"
 #include "xeus/xserver_zmq_split.hpp"
+#include "xshell.hpp"
 
 namespace xeus
 {
