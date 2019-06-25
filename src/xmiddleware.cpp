@@ -10,7 +10,7 @@
 #include <random>
 
 #include "zmq_addon.hpp"
-#include "xmiddleware.hpp"
+#include "xeus/xmiddleware.hpp"
 
 namespace xeus
 {

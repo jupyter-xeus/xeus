@@ -9,9 +9,9 @@
 #include <iterator>
 #include <string>
 
-#include "xheartbeat.hpp"
 #include "zmq_addon.hpp"
-#include "xmiddleware.hpp"
+#include "xeus/xmiddleware.hpp"
+#include "xheartbeat.hpp"
 
 namespace xeus
 {
