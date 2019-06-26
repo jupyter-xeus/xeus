@@ -99,7 +99,6 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 |  xeus  | libzmq  | cppzmq  |   xtl          | nlohmann json | OpenSSL |    cryptopp    |
 |--------|---------|---------|----------------|---------------|---------|----------------|
 | master |  ^4.2.5 |  ^4.3.0 | >=0.5.0,<0.7.0 |      ^3.2.0   |  ^1.0.1 |  not required  |
-| 0.19.3 |  ^4.2.5 |  ^4.3.0 | >=0.5.0,<0.7.0 |      ^3.2.0   |  ^1.0.1 |  not required  |
 | 0.19.2 |  ^4.2.5 |  ^4.3.0 | >=0.5.0,<0.7.0 |      ^3.2.0   |  ^1.0.1 |  not required  |
 | 0.19.1 |  ^4.2.5 |  ^4.3.0 | >=0.5.0,<0.7.0 |      ^3.2.0   |  ^1.0.1 |  not required  |
 | 0.19.0 |  ^4.2.5 |  ^4.3.0 | >=0.5.0,<0.7.0 |      ^3.2.0   |  ^1.0.1 |  not required  |
@@ -111,6 +110,9 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 | 0.14.1 |  ^4.2.5 |  ^4.3.0 | ^0.4.0         |       3.1.2   |         | ^5.6.5, ^7.0.0 |
 | 0.14.0 |  ^4.2.5 |  ^4.3.0 | ^0.4.0         |       3.1.2   |         | ^5.6.5, ^7.0.0 |
 | 0.13.0 |  ^4.2.3 |  ^4.2.5 | ^0.4.0         |       3.1.1   |         | ^5.6.5, ^7.0.0 |
+| 0.12.0 |  ^4.2.3 |  ^4.2.5 | ^0.4.0         |       3.1.1   |         |          5.6.5 |
+| 0.11.0 |  4.2.3  |   4.2.3 | ^0.4.0         |       3.1.1   |         |          5.6.5 |
+| 0.10.x |  4.2.3  |   4.2.3 | ^0.4.0         |               |         |          5.6.5 |
 
 On Linux platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
 
