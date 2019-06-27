@@ -7,6 +7,7 @@
 ****************************************************************************/
 
 #include <memory>
+#include <iostream>
 
 #include "xeus/xserver.hpp"
 #include "xeus/xserver_zmq.hpp"
@@ -35,7 +36,10 @@ namespace xeus
     }
 
     void xserver::start(zmq::multipart_t& message)
-    {
+    {   
+        std::clog << "Run with XEUS " << XEUS_VERSION_MAJOR << "."
+                                      << XEUS_VERSION_MINOR << "."
+                                      << XEUS_VERSION_PATCH << std::endl;
         start_impl(message);
     }
 
