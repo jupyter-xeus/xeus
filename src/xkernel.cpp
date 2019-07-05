@@ -90,7 +90,7 @@ namespace xeus
         p_server = m_server_builder(m_context, m_config);
         p_server->update_config(m_config);
 
-        p_debugger = m_debugger_builder(m_context, m_config);
+        p_debugger = m_debugger_builder(m_context, m_config, m_user_name, m_session_id);
 
         p_core = kernel_core_ptr(new xkernel_core(m_kernel_id,
                                                   m_user_name,

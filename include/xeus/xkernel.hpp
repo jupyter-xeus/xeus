@@ -38,7 +38,9 @@ namespace xeus
         using server_builder = server_ptr (*)(zmq::context_t& context,
                                               const xconfiguration& config);
         using debugger_builder = debugger_ptr (*)(zmq::context_t& context,
-                                                  const xconfiguration& config);
+                                                  const xconfiguration& config,
+                                                  const std::string&,
+                                                  const std::string&);
 
         xkernel(const xconfiguration& config,
                 const std::string& user_name,
