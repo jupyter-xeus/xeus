@@ -76,7 +76,7 @@ namespace xeus
 
         m_request_stop = false;
 
-        publish(message);
+        publish(message, channel::SHELL);
 
         while (!m_request_stop)
         {

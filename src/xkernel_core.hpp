@@ -52,14 +52,15 @@ namespace xeus
         void publish_message(const std::string& msg_type,
                              nl::json metadata,
                              nl::json content,
-                             buffer_sequence buffers);
+                             buffer_sequence buffers,
+                             channel origin);
 
         void send_stdin(const std::string& msg_type, nl::json metadata, nl::json content);
 
         xcomm_manager& comm_manager() & noexcept;
         const xcomm_manager& comm_manager() const & noexcept;
         xcomm_manager comm_manager() const && noexcept;
-        const nl::json& parent_header() const noexcept;
+        const nl::json& parent_header(channel c) const noexcept;
 
     private:
 
@@ -84,7 +85,7 @@ namespace xeus
         void shutdown_request(const xmessage& request, channel c);
         void debug_request(const xmessage& request, channel c);
 
-        void publish_status(const std::string& status);
+        void publish_status(const std::string& status, channel c);
 
         void publish_execute_input(const std::string& code, int execution_count);
 
@@ -105,9 +106,9 @@ namespace xeus
         std::string get_topic(const std::string& msg_type) const;
         nl::json get_metadata() const;
 
-        void set_parent(const guid_list& list, const nl::json& parent);
-        const guid_list& get_parent_id() const;
-        nl::json get_parent_header() const;
+        void set_parent(const guid_list& list, const nl::json& parent, channel c);
+        const guid_list& get_parent_id(channel c) const;
+        nl::json get_parent_header(channel c) const;
 
         std::string m_kernel_id;
         std::string m_user_name;
@@ -121,8 +122,8 @@ namespace xeus
         history_manager_ptr p_history_manager;
         debugger_ptr p_debugger;
 
-        guid_list m_parent_id;
-        nl::json m_parent_header;
+        std::array<guid_list, 2> m_parent_id;
+        std::array<nl::json, 2> m_parent_header;
     };
 }
 

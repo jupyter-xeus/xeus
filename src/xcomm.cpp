@@ -11,7 +11,7 @@ namespace xeus
         if (p_manager->p_kernel != nullptr)
         {
             p_manager->p_kernel->publish_message(
-                msg_type, std::move(metadata), std::move(content), std::move(buffers));
+                msg_type, std::move(metadata), std::move(content), std::move(buffers), channel::SHELL);
         }
     }
 

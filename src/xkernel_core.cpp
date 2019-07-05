@@ -36,8 +36,8 @@ namespace xeus
         , p_interpreter(interpreter)
         , p_history_manager(history_manager)
         , p_debugger(debugger)
-        , m_parent_id(0)
-        , m_parent_header(nl::json::object())
+        , m_parent_id({guid_list(0), guid_list(0)})
+        , m_parent_header({nl::json::object(), nl::json::object()})
     {
         // Request handlers
         m_handler["execute_request"] = &xkernel_core::execute_request;
@@ -59,10 +59,19 @@ namespace xeus
         p_server->register_stdin_listener(std::bind(&xkernel_core::dispatch_stdin, this, _1));
 
         // Interpreter bindings
-        p_interpreter->register_publisher(std::bind(&xkernel_core::publish_message, this, _1, _2, _3, _4));
+        p_interpreter->register_publisher([this](const std::string& msg_type,
+                                                 nl::json metadata,
+                                                 nl::json content,
+                                                 buffer_sequence buffers)
+        {
+            this->publish_message(msg_type, std::move(metadata), std::move(content), std::move(buffers),
+                                  channel::SHELL);
+        });
         p_interpreter->register_stdin_sender(std::bind(&xkernel_core::send_stdin, this, _1, _2, _3));
         p_interpreter->register_comm_manager(&m_comm_manager);
-        p_interpreter->register_parent_header(std::bind(&xkernel_core::parent_header, this));
+        p_interpreter->register_parent_header([this]() {
+            return this->parent_header(channel::SHELL);
+        });
     }
 
     xkernel_core::~xkernel_core()
@@ -119,17 +128,19 @@ namespace xeus
     void xkernel_core::publish_message(const std::string& msg_type,
                                        nl::json metadata,
                                        nl::json content,
-                                       buffer_sequence buffers)
+                                       buffer_sequence buffers,
+                                       channel c)
     {
+
         zmq::multipart_t wire_msg;
         xpub_message msg(get_topic(msg_type),
                          make_header(msg_type, m_user_name, m_session_id),
-                         get_parent_header(),
+                         get_parent_header(c),
                          std::move(metadata),
                          std::move(content),
                          std::move(buffers));
         std::move(msg).serialize(wire_msg, *p_auth);
-        p_server->publish(wire_msg);
+        p_server->publish(wire_msg, c);
     }
 
     void xkernel_core::send_stdin(const std::string& msg_type,
@@ -137,9 +148,9 @@ namespace xeus
                                   nl::json content)
     {
         zmq::multipart_t wire_msg;
-        xmessage msg(get_parent_id(),
+        xmessage msg(get_parent_id(channel::SHELL),
                      make_header(msg_type, m_user_name, m_session_id),
-                     get_parent_header(),
+                     get_parent_header(channel::SHELL),
                      std::move(metadata),
                      std::move(content),
                      buffer_sequence());
@@ -162,9 +173,9 @@ namespace xeus
         return m_comm_manager;
     }
 
-    const nl::json& xkernel_core::parent_header() const noexcept
+    const nl::json& xkernel_core::parent_header(channel c) const noexcept
     {
-        return m_parent_header;
+        return m_parent_header[std::size_t(c)];
     }
 
     void xkernel_core::dispatch(zmq::multipart_t& wire_msg, channel c)
@@ -182,8 +193,8 @@ namespace xeus
         }
 
         const nl::json& header = msg.header();
-        set_parent(msg.identities(), header);
-        publish_status("busy");
+        set_parent(msg.identities(), header, c);
+        publish_status("busy", c);
 
         std::string msg_type = header.value("msg_type", "");
         handler_type handler = get_handler(msg_type);
@@ -204,7 +215,7 @@ namespace xeus
             }
         }
 
-        publish_status("idle");
+        publish_status("idle", c);
     }
 
     auto xkernel_core::get_handler(const std::string& msg_type) -> handler_type
@@ -329,7 +340,7 @@ namespace xeus
         p_server->stop();
         nl::json reply;
         reply["restart"] = restart;
-        publish_message("shutdown", nl::json::object(), nl::json(reply), buffer_sequence());
+        publish_message("shutdown", nl::json::object(), nl::json(reply), buffer_sequence(), channel::CONTROL);
         send_reply("shutdown_reply", nl::json::object(), std::move(reply), c);
     }
 
@@ -343,11 +354,11 @@ namespace xeus
         }
     }
 
-    void xkernel_core::publish_status(const std::string& status)
+    void xkernel_core::publish_status(const std::string& status, channel c)
     {
         nl::json content;
         content["execution_state"] = status;
-        publish_message("status", nl::json::object(), std::move(content), buffer_sequence());
+        publish_message("status", nl::json::object(), std::move(content), buffer_sequence(), c);
     }
 
     void xkernel_core::publish_execute_input(const std::string& code,
@@ -356,7 +367,11 @@ namespace xeus
         nl::json content;
         content["code"] = code;
         content["execution_count"] = execution_count;
-        publish_message("execute_input", nl::json::object(), std::move(content), buffer_sequence());
+        publish_message("execute_input",
+                         nl::json::object(),
+                         std::move(content),
+                         buffer_sequence(),
+                         channel::SHELL);
     }
 
     void xkernel_core::send_reply(const std::string& reply_type,
@@ -364,9 +379,9 @@ namespace xeus
                                   nl::json reply_content,
                                   channel c)
     {
-        send_reply(get_parent_id(),
+        send_reply(get_parent_id(c),
                    reply_type,
-                   get_parent_header(),
+                   get_parent_header(c),
                    std::move(metadata),
                    std::move(reply_content),
                    c);
@@ -436,20 +451,22 @@ namespace xeus
     }
 
     void xkernel_core::set_parent(const guid_list& parent_id,
-                                  const nl::json& parent_header)
+                                  const nl::json& parent_header,
+                                  channel c)
     {
-        m_parent_id = parent_id;
-        m_parent_header = parent_header;
+        auto idx = static_cast<std::size_t>(c);
+        m_parent_id[idx] = parent_id;
+        m_parent_header[idx] = parent_header;
     }
 
-    const xkernel_core::guid_list& xkernel_core::get_parent_id() const
+    const xkernel_core::guid_list& xkernel_core::get_parent_id(channel c) const
     {
-        return m_parent_id;
+        return m_parent_id[std::size_t(c)];
     }
 
-    nl::json xkernel_core::get_parent_header() const
+    nl::json xkernel_core::get_parent_header(channel c) const
     {
-        return m_parent_header;
+        return m_parent_header[std::size_t(c)];
     }
 
     void xkernel_core::comm_open(const xmessage& request, channel)
