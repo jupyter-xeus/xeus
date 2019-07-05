@@ -348,7 +348,7 @@ namespace xeus
     {
         if(p_debugger)
         {
-            nl::json reply = p_debugger->process_request(request.content());
+            nl::json reply = p_debugger->process_request(request.header(), request.content());
             nl::json metadata = get_metadata();
             send_reply("debug_reply", std::move(metadata), std::move(reply), c);
         }

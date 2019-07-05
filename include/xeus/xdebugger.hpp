@@ -23,7 +23,6 @@ namespace xeus
     {
     public:
 
-        xdebugger() = default;
         virtual ~xdebugger() = default;
 
         xdebugger(const xdebugger&) = delete;
@@ -32,15 +31,24 @@ namespace xeus
         xdebugger(xdebugger&&) = delete;
         xdebugger& operator=(xdebugger&&) = delete;
 
-        nl::json process_request(const nl::json& message);
+        nl::json process_request(const nl::json& header,
+                                 const nl::json& message);
+
+    protected:
+
+        xdebugger() = default;
 
     private:
 
-        virtual nl::json process_request_impl(const nl::json& message) = 0;
+        virtual nl::json process_request_impl(const nl::json& header,
+                                              const nl::json& message) = 0;
     };
 
     XEUS_API
-    std::unique_ptr<xdebugger> make_null_debugger(zmq::context_t&, const xconfiguration&);
+    std::unique_ptr<xdebugger> make_null_debugger(zmq::context_t& context,
+                                                  const xconfiguration& kernel_configuration,
+                                                  const std::string& user_name,
+                                                  const std::string& session_id);
             
 }
 
