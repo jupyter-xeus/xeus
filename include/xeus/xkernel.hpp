@@ -16,6 +16,7 @@
 #include "xinterpreter.hpp"
 #include "xkernel_configuration.hpp"
 #include "xserver.hpp"
+#include "xlogger.hpp"
 #include <memory>
 #include <string>
 
@@ -33,6 +34,7 @@ namespace xeus
         using history_manager_ptr = std::unique_ptr<xhistory_manager>;
         using interpreter_ptr = std::unique_ptr<xinterpreter>;
         using kernel_core_ptr = std::unique_ptr<xkernel_core>;
+        using logger_ptr = std::unique_ptr<xlogger>;
         using server_ptr = std::unique_ptr<xserver>;
         using debugger_ptr = std::unique_ptr<xdebugger>;
         using server_builder = server_ptr (*)(zmq::context_t& context,
@@ -46,12 +48,14 @@ namespace xeus
                 const std::string& user_name,
                 interpreter_ptr interpreter,
                 history_manager_ptr history_manager = history_manager_ptr(new xin_memory_history_manager()),
+                logger_ptr logger = nullptr,
                 server_builder sbuilder = make_xserver,
                 debugger_builder dbuilder = make_null_debugger);
 
         xkernel(const std::string& user_name,
                 interpreter_ptr interpreter,
                 history_manager_ptr history_manager = history_manager_ptr(new xin_memory_history_manager()),
+                logger_ptr logger = nullptr,
                 server_builder sbuilder = make_xserver,
                 debugger_builder dbuilder = make_null_debugger);
 
@@ -71,6 +75,7 @@ namespace xeus
         std::string m_user_name;
         interpreter_ptr p_interpreter;
         history_manager_ptr p_history_manager;
+        logger_ptr p_logger;
         server_builder m_server_builder;
         server_ptr p_server;
         debugger_builder m_debugger_builder;

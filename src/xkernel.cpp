@@ -13,6 +13,7 @@
 #include "xeus/xguid.hpp"
 #include "xeus/xhistory_manager.hpp"
 #include "xkernel_core.hpp"
+#include "xlogger_impl.hpp"
 
 #if (defined(__linux__) || defined(__unix__))
 #define LINUX_PLATFORM
@@ -44,12 +45,14 @@ namespace xeus
                      const std::string& user_name,
                      interpreter_ptr interpreter,
                      history_manager_ptr history_manager,
+                     logger_ptr logger,
                      server_builder sbuilder,
                      debugger_builder dbuilder)
         : m_config(config)
         , m_user_name(user_name)
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
+        , p_logger(std::move(logger))
         , m_server_builder(sbuilder)
         , m_debugger_builder(dbuilder)
     {
@@ -59,11 +62,13 @@ namespace xeus
     xkernel::xkernel(const std::string& user_name,
                      interpreter_ptr interpreter,
                      history_manager_ptr history_manager,
+                     logger_ptr logger,
                      server_builder sbuilder,
                      debugger_builder dbuilder)
         : m_user_name(user_name)
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
+        , p_logger(std::move(logger))
         , m_server_builder(sbuilder)
         , m_debugger_builder(dbuilder)
     {
@@ -87,6 +92,11 @@ namespace xeus
         using authentication_ptr = xkernel_core::authentication_ptr;
         authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
 
+        if(p_logger == nullptr || std::getenv("XEUS_LOG") == nullptr)
+        {
+            p_logger = std::make_unique<xlogger_nolog>();
+        }
+
         p_server = m_server_builder(m_context, m_config);
         p_server->update_config(m_config);
 
@@ -96,6 +106,7 @@ namespace xeus
                                                   m_user_name,
                                                   m_session_id,
                                                   std::move(auth),
+                                                  p_logger.get(),
                                                   p_server.get(),
                                                   p_interpreter.get(),
                                                   p_history_manager.get(),

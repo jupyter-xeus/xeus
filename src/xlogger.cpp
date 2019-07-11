@@ -1,0 +1,46 @@
+/***************************************************************************
+* Copyright (c) 2016, Johan Mabille and Sylvain Corlay                     *
+*                                                                          *
+* Distributed under the terms of the BSD 3-Clause License.                 *
+*                                                                          *
+* The full license is in the file LICENSE, distributed with this software. *
+****************************************************************************/
+
+#include "xeus/xlogger.hpp"
+
+namespace xeus
+{
+    void xlogger::update_authentication(const xauthentication& auth)
+    {
+        update_authentication_impl(auth);
+    }
+
+    void xlogger::log_received_message(const xmessage& message, channel c) const
+    {
+        log_received_message_impl(message, c);
+    }
+
+    void xlogger::log_sent_message(const xmessage& message, channel c) const
+    {
+        log_sent_message_impl(message, c);
+    }
+
+    void xlogger::log_iopub_message(const xpub_message& message) const
+    {
+        log_iopub_message_impl(message);
+    }
+
+    void xlogger::log_message(const std::string& socket_info,
+                              const nl::json& header,
+                              const nl::json& parent_header,
+                              const nl::json& metadata,
+                              const nl::json& content) const
+    {
+        log_message_impl(socket_info,
+                         header,
+                         parent_header,
+                         metadata,
+                         content);
+    }
+}
+

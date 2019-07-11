@@ -23,6 +23,7 @@ namespace xeus
                                const std::string& user_name,
                                const std::string& session_id,
                                authentication_ptr auth,
+                               logger_ptr logger,
                                server_ptr server,
                                interpreter_ptr interpreter,
                                history_manager_ptr history_manager,
@@ -32,6 +33,7 @@ namespace xeus
         , m_session_id(std::move(session_id))
         , p_auth(std::move(auth))
         , m_comm_manager(this)
+        , p_logger(logger)
         , p_server(server)
         , p_interpreter(interpreter)
         , p_history_manager(history_manager)
@@ -113,6 +115,7 @@ namespace xeus
         try
         {
             msg.deserialize(wire_msg, *p_auth);
+            p_logger->log_received_message(msg, xlogger::stdinput);
             const nl::json& content = msg.content();
             std::string value = content.value("value", "");
             p_interpreter->input_reply(value);
@@ -139,6 +142,7 @@ namespace xeus
                          std::move(metadata),
                          std::move(content),
                          std::move(buffers));
+        p_logger->log_iopub_message(msg);
         std::move(msg).serialize(wire_msg, *p_auth);
         p_server->publish(wire_msg, c);
     }
@@ -154,6 +158,7 @@ namespace xeus
                      std::move(metadata),
                      std::move(content),
                      buffer_sequence());
+        p_logger->log_sent_message(msg, xlogger::stdinput);
         std::move(msg).serialize(wire_msg, *p_auth);
         p_server->send_stdin(wire_msg);
     }
@@ -192,6 +197,7 @@ namespace xeus
             return;
         }
 
+        p_logger->log_received_message(msg, c == channel::SHELL ? xlogger::shell : xlogger::control);
         const nl::json& header = msg.header();
         set_parent(msg.identities(), header, c);
         publish_status("busy", c);
@@ -401,6 +407,7 @@ namespace xeus
                        std::move(metadata),
                        std::move(reply_content),
                        buffer_sequence());
+        p_logger->log_sent_message(reply, c == channel::SHELL ? xlogger::shell : xlogger::control);
         std::move(reply).serialize(wire_msg, *p_auth);
         if (c == channel::SHELL)
         {
