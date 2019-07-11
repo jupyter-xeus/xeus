@@ -1,9 +1,0 @@
-{
-    "display_name": "test_kernel",
-    "language" : "cpp",
-    "argv": [
-        "/home/yoyo/dev/quantstack/xeus/build/test/test_kernel_split",
-        "-f",
-        "{connection_file}"
-    ]
-}

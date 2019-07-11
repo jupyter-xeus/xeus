@@ -85,6 +85,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 set(XEUS_TESTS
     test_xin_memory_history_manager.cpp
+    test_unit_kernel.cpp
 )
 
 if(nlohmann_json_FOUND)

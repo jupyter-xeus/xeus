@@ -19,23 +19,33 @@
 #define LINUX_PLATFORM
 #elif (defined(_WIN32) || defined(_WIN64))
 #define WINDOWS_PLATFORM
+#elif defined(__APPLE__)
+#define APPLE_PLATFORM
 #endif
 
-#if defined(LINUX_PLATFORM)
+#if (defined(LINUX_PLATFORM) || defined(APPLE_PLATFORM))
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
+#elif (defined(_WIN32) || defined(_WIN64))
+#include <windows.h>
+#include <Lmcons.h>
 #endif
 
 namespace xeus
 {
     std::string get_user_name()
     {
-#if defined(LINUX_PLATFORM)
+#if (defined(LINUX_PLATFORM) || defined(APPLE_PLATFORM))
         struct passwd* pws;
         pws = getpwuid(geteuid());
         std::string res = pws->pw_name;
         return res;
+#elif defined(WINDOWS_PLATFORM)
+        char username[UNLEN+1];
+        DWORD username_len = UNLEN+1;
+        GetUserName(username, &username_len);
+        return username;
 #else
         return "unspecified user";
 #endif
