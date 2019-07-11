@@ -14,11 +14,6 @@
 #include "xeus/xkernel_configuration.hpp"
 #include "xeus/xserver_zmq_split.hpp"
 
-std::unique_ptr<xeus::xserver> make_xserver_split(zmq::context_t& context, const xeus::xconfiguration& config)
-{
-    return std::make_unique<xeus::xserver_zmq_split>(context, config);
-}
-
 int main(int argc, char* argv[])
 {
     std::string file_name = (argc == 1) ? "connection.json" : argv[2];
@@ -34,7 +29,8 @@ int main(int argc, char* argv[])
                          xeus::get_user_name(),
                          std::move(interpreter),
                          std::move(hist),
-                         make_xserver_split);
+                         nullptr,
+                         xeus::make_xserver_split);
     std::cout << "starting kernel" << std::endl;
     kernel.start();
 
