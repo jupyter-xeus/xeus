@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "xeus/xin_memory_history_manager.hpp"
+#include "xin_memory_history_manager.hpp"
 
 namespace xeus
 {

@@ -16,14 +16,14 @@
 
 #include "nlohmann/json.hpp"
 
-#include "xeus.hpp"
-#include "xhistory_manager.hpp"
+#include "xeus/xeus.hpp"
+#include "xeus/xhistory_manager.hpp"
 
 namespace nl = nlohmann;
 
 namespace xeus
 {
-    class XEUS_API xin_memory_history_manager : public xhistory_manager
+    class xin_memory_history_manager : public xhistory_manager
     {
     public:
 
