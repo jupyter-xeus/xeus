@@ -88,7 +88,6 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xguid.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xhistory_manager.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinput.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xin_memory_history_manager.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinterpreter.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xjson.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xkernel.hpp
@@ -110,6 +109,7 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xheartbeat.hpp
     ${XEUS_SOURCE_DIR}/xhistory_manager.cpp
     ${XEUS_SOURCE_DIR}/xinput.cpp
+    ${XEUS_SOURCE_DIR}/xin_memory_history_manager.hpp
     ${XEUS_SOURCE_DIR}/xin_memory_history_manager.cpp
     ${XEUS_SOURCE_DIR}/xinterpreter.cpp
     ${XEUS_SOURCE_DIR}/xkernel.cpp

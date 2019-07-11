@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "xeus/xhistory_manager.hpp"
+#include "xin_memory_history_manager.hpp"
 
 namespace xeus
 {
@@ -81,5 +82,10 @@ namespace xeus
     nl::json xhistory_manager::search(const std::string& pattern, bool raw, bool output, int n, bool unique) const
     {
         return search_impl(pattern, raw, output, n, unique);
+    }
+
+    std::unique_ptr<xhistory_manager> make_in_memory_history_manager()
+    {
+        return std::make_unique<xin_memory_history_manager>();
     }
 }

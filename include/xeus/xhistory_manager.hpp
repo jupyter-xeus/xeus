@@ -51,6 +51,9 @@ namespace xeus
         virtual nl::json get_range_impl(int session, int start, int stop, bool raw, bool output) const = 0;
         virtual nl::json search_impl(const std::string& pattern, bool raw, bool output, int n, bool unique) const = 0;
     };
+
+    XEUS_API
+    std::unique_ptr<xhistory_manager> make_in_memory_history_manager();
 }
 
 #endif

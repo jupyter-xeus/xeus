@@ -12,7 +12,6 @@
 #include "xdebugger.hpp"
 #include "xeus.hpp"
 #include "xhistory_manager.hpp"
-#include "xin_memory_history_manager.hpp"
 #include "xinterpreter.hpp"
 #include "xkernel_configuration.hpp"
 #include "xserver.hpp"
@@ -47,14 +46,14 @@ namespace xeus
         xkernel(const xconfiguration& config,
                 const std::string& user_name,
                 interpreter_ptr interpreter,
-                history_manager_ptr history_manager = history_manager_ptr(new xin_memory_history_manager()),
+                history_manager_ptr history_manager = make_in_memory_history_manager(),
                 logger_ptr logger = nullptr,
                 server_builder sbuilder = make_xserver,
                 debugger_builder dbuilder = make_null_debugger);
 
         xkernel(const std::string& user_name,
                 interpreter_ptr interpreter,
-                history_manager_ptr history_manager = history_manager_ptr(new xin_memory_history_manager()),
+                history_manager_ptr history_manager = make_in_memory_history_manager(),
                 logger_ptr logger = nullptr,
                 server_builder sbuilder = make_xserver,
                 debugger_builder dbuilder = make_null_debugger);

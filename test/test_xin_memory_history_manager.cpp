@@ -14,7 +14,7 @@
 
 #include "nlohmann/json.hpp"
 
-#include "xeus/xin_memory_history_manager.hpp"
+#include "xeus/xhistory_manager.hpp"
 
 namespace nl = nlohmann;
 
@@ -25,7 +25,7 @@ namespace xeus
 
     TEST(xin_memory_history_manager, get_tail)
     {
-        history_manager_ptr hist = history_manager_ptr(new xin_memory_history_manager());
+        history_manager_ptr hist = xeus::make_in_memory_history_manager();
         hist->store_inputs(1, "print(3)");
         hist->store_inputs(2, "a = 3");
         hist->store_inputs(3, "print(a)");
@@ -56,7 +56,7 @@ namespace xeus
 
     TEST(xin_memory_history_manager, get_range)
     {
-        history_manager_ptr hist = history_manager_ptr(new xin_memory_history_manager());
+        history_manager_ptr hist = xeus::make_in_memory_history_manager();
         hist->store_inputs(1, "print(3)");
         hist->store_inputs(2, "a = 3");
         hist->store_inputs(3, "print(a)");

@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     xeus::xconfiguration config = xeus::load_configuration(file_name);
 
     using history_manager_ptr = std::unique_ptr<xeus::xhistory_manager>;
-    history_manager_ptr hist = history_manager_ptr(new xeus::xin_memory_history_manager());
+    history_manager_ptr hist = xeus::make_in_memory_history_manager();
     
     using interpreter_ptr = std::unique_ptr<test_kernel::test_interpreter>;
     interpreter_ptr interpreter = interpreter_ptr(new test_kernel::test_interpreter());
