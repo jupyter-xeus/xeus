@@ -19,10 +19,6 @@ namespace xeus
      * xlogger_nolog implementation *
      ********************************/
 
-    void xlogger_nolog::update_authentication_impl(const xauthentication&)
-    {
-    }
-
     void xlogger_nolog::log_received_message_impl(const xmessage&, xlogger::channel) const
     {
     }
@@ -64,12 +60,6 @@ namespace xeus
         p_authentication = nullptr;
     }
     
-    void xlogger_common::update_authentication_impl(const xauthentication& auth)
-    {
-        p_authentication = &auth;
-        p_next_logger->update_authentication(auth);
-    }
-
     void xlogger_common::log_received_message_impl(const xmessage& message, xlogger::channel c) const
     {
         std::string socket_info = "XEUS: received message on "

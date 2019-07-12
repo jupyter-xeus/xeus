@@ -28,8 +28,6 @@ namespace xeus
 
     private:
 
-        void update_authentication_impl(const xauthentication& auth) override;
-
         void log_received_message_impl(const xmessage& message, xlogger::channel c) const override;
         void log_sent_message_impl(const xmessage& message, xlogger::channel c) const override;
         void log_iopub_message_impl(const xpub_message& message) const override;
@@ -58,8 +56,6 @@ namespace xeus
 
     private:
         
-        void update_authentication_impl(const xauthentication& auth) override;
-
         void log_received_message_impl(const xmessage& message, xlogger::channel c) const override;
         void log_sent_message_impl(const xmessage& message, xlogger::channel c) const override;
         void log_iopub_message_impl(const xpub_message& message) const override;

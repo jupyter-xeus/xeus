@@ -22,7 +22,6 @@ namespace xeus
     {
         std::string username;
         username = get_user_name();
-        std::cout << "Username : " << username << std::endl;
         EXPECT_NE(username, "unspecified user");
     }
 }
