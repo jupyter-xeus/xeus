@@ -50,8 +50,6 @@ namespace xeus
         xlogger(xlogger&&) = delete;
         xlogger& operator=(xlogger&&) = delete;
 
-        void update_authentication(const xauthentication& auth);
-
         void log_received_message(const xmessage& message, channel c) const;
         void log_sent_message(const xmessage& message, channel c) const;
         void log_iopub_message(const xpub_message& message) const;
@@ -67,8 +65,6 @@ namespace xeus
         xlogger() = default;
 
     private:
-
-        virtual void update_authentication_impl(const xauthentication& auth) = 0;
 
         virtual void log_received_message_impl(const xmessage& message, channel c) const = 0;
         virtual void log_sent_message_impl(const xmessage& message, channel c) const = 0;

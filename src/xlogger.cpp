@@ -10,11 +10,6 @@
 
 namespace xeus
 {
-    void xlogger::update_authentication(const xauthentication& auth)
-    {
-        update_authentication_impl(auth);
-    }
-
     void xlogger::log_received_message(const xmessage& message, channel c) const
     {
         log_received_message_impl(message, c);

@@ -38,6 +38,7 @@ for details.
 
    usage
    kernel_implementation
+   kernel_customization
 
 .. toctree::
    :caption: DEVELOPER SECTION
