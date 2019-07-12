@@ -46,6 +46,58 @@ namespace xeus
     namespace
     {
         const std::array<std::string, xlogger::CHANNEL_SIZE> channel_str = { "shell", "control", "stdin", "heartbeat" };
+
+
+    
+        /**
+         * @copyright Copyright (c) 2008-2009 Bjoern Hoehrmann <bjoern@hoehrmann.de>
+         * @sa http://bjoern.hoehrmann.de/utf-8/decoder/dfa/
+         */
+        std::uint8_t decode_utf8(std::uint8_t& state, std::uint32_t& codep, const std::uint8_t byte) noexcept
+        {
+            static const uint8_t UTF8_ACCEPT = 0;
+            static const std::array<std::uint8_t, 400> utf8d =
+            {
+                {
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 00..1F
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 20..3F
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 40..5F
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 60..7F
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, // 80..9F
+                    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, // A0..BF
+                    8, 8, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, // C0..DF
+                    0xA, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x4, 0x3, 0x3, // E0..EF
+                    0xB, 0x6, 0x6, 0x6, 0x5, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, 0x8, // F0..FF
+                    0x0, 0x1, 0x2, 0x3, 0x5, 0x8, 0x7, 0x1, 0x1, 0x1, 0x4, 0x6, 0x1, 0x1, 0x1, 0x1, // s0..s0
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, // s1..s2
+                    1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, // s3..s4
+                    1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 1, // s5..s6
+                    1, 3, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 // s7..s8
+                }
+            };
+
+            const std::uint8_t type = utf8d[byte];
+
+            codep = (state != UTF8_ACCEPT)
+                    ? (byte & 0x3fu) | (codep << 6u)
+                    : (0xFFu >> type) & (byte);
+
+            state = utf8d[256u + state * 16u + type];
+            return state;
+        }
+
+        bool is_utf8_valid(const std::string& str)
+        {
+            std::uint32_t codepoint(0);
+            std::uint8_t state(0);
+
+            for (std::size_t i = 0; i < str.size(); ++i)
+            {
+                auto byte = static_cast<uint8_t>(str[i]);
+                decode_utf8(state, codepoint, byte);
+            }
+            return !state;
+        }
     }
 
     xlogger_common::xlogger_common(xlogger::level l, xlogger_ptr next_logger)
@@ -62,9 +114,10 @@ namespace xeus
     
     void xlogger_common::log_received_message_impl(const xmessage& message, xlogger::channel c) const
     {
+        std::string id = message.identities()[0];
         std::string socket_info = "XEUS: received message on "
                                 + channel_str[c] + " - "
-                                + message.identities()[0];
+                                + (is_utf8_valid(id) ? id : "invalid UTF8");
         xlogger::log_message(socket_info,
                              message.header(),
                              message.parent_header(),
@@ -74,9 +127,10 @@ namespace xeus
 
     void xlogger_common::log_sent_message_impl(const xmessage& message, xlogger::channel c) const
     {
+        std::string id = message.identities()[0];
         std::string socket_info = "XEUS: sent message on "
                                 + channel_str[c] + " - "
-                                + message.identities()[0];
+                                + (is_utf8_valid(id) ? id : "invalid UTF8");
         xlogger::log_message(socket_info,
                              message.header(),
                              message.parent_header(),
@@ -158,9 +212,12 @@ namespace xeus
     void xlogger_file::log_message_impl(const std::string& socket_info,
                                         const std::string& message) const
     {
+        nl::json log;
+        log["info"] = socket_info;
+        log["message"] = message;
         std::lock_guard<std::mutex> lock(m_mutex);
         std::ofstream out(m_file_name, std::ios_base::app);
-        out<< socket_info << '\n' << message << std::endl;
+        out << log.dump(4);
     }
 
     /************************************
