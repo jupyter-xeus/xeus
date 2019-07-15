@@ -77,9 +77,11 @@ namespace xeus
                                       const nl::json& content) const = 0;
     };
 
+    XEUS_API
     std::unique_ptr<xlogger> make_console_logger(xlogger::level log_level,
                                                  std::unique_ptr<xlogger> next_logger = nullptr);
 
+    XEUS_API
     std::unique_ptr<xlogger> make_file_logger(xlogger::level log_level,
                                               const std::string& file_name,
                                               std::unique_ptr<xlogger> next_logger = nullptr);
