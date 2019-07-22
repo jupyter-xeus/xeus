@@ -34,6 +34,7 @@ namespace xeus
         // The xshell object needs to call these methods
         using xserver::notify_shell_listener;
         using xserver::notify_stdin_listener;
+        using xserver::notify_internal_listener;
 
     protected:
 
@@ -41,6 +42,9 @@ namespace xeus
         void send_control_impl(zmq::multipart_t& message) override;
         void send_stdin_impl(zmq::multipart_t& message) override;
         void publish_impl(zmq::multipart_t& message, channel c) override;
+
+        zmq::multipart_t send_internal_request_impl(zmq::multipart_t& message) override;
+        void send_internal_reply_impl(zmq::multipart_t& message) override;
 
         void start_impl(zmq::multipart_t& message) override;
         void abort_queue_impl(const listener& l, long polling_interval) override;

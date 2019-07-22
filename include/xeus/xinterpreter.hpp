@@ -53,6 +53,8 @@ namespace xeus
 
         void shutdown_request();
 
+        nl::json internal_request(nl::json content);
+
         // publish(msg_type, metadata, content)
         using publisher_type = std::function<void(const std::string&, nl::json, nl::json, buffer_sequence)>;
         void register_publisher(const publisher_type& publisher);
@@ -75,6 +77,10 @@ namespace xeus
 
         void input_request(const std::string& prompt, bool pwd);
         void input_reply(const std::string& value);
+
+        using internal_sender_type = std::function<nl::json(nl::json)>;
+        void register_internal_sender(const internal_sender_type& sender);
+        nl::json send_internal_request(nl::json content);
 
         void register_comm_manager(xcomm_manager* manager);
         xcomm_manager& comm_manager() noexcept;
@@ -108,6 +114,8 @@ namespace xeus
 
         virtual void shutdown_request_impl() = 0;
 
+        virtual nl::json internal_request_impl(nl::json content);
+
         nl::json build_display_content(nl::json data, nl::json metadata, nl::json transient);
 
         publisher_type m_publisher;
@@ -116,6 +124,7 @@ namespace xeus
         xcomm_manager* p_comm_manager;
         parent_header_type m_parent_header;
         input_reply_handler_type m_input_reply_handler;
+        internal_sender_type m_internal_sender;
     };
 
     inline xcomm_manager& xinterpreter::comm_manager() noexcept

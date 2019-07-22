@@ -51,6 +51,7 @@ namespace xeus
         void dispatch_shell(zmq::multipart_t& wire_msg);
         void dispatch_control(zmq::multipart_t& wire_msg);
         void dispatch_stdin(zmq::multipart_t& wire_msg);
+        void dispatch_internal(zmq::multipart_t& wire_msg);
 
         void publish_message(const std::string& msg_type,
                              nl::json metadata,
@@ -59,6 +60,7 @@ namespace xeus
                              channel origin);
 
         void send_stdin(const std::string& msg_type, nl::json metadata, nl::json content);
+        nl::json send_internal_request(nl::json content);
 
         xcomm_manager& comm_manager() & noexcept;
         const xcomm_manager& comm_manager() const & noexcept;

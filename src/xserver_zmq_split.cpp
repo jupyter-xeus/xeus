@@ -77,6 +77,19 @@ namespace xeus
         }
     }
     
+    zmq::multipart_t xserver_zmq_split::send_internal_request_impl(zmq::multipart_t& message)
+    {
+        message.send(m_shell_controller);
+        zmq::multipart_t reply;
+        reply.recv(m_shell_controller);
+        return reply;
+    }
+
+    void xserver_zmq_split::send_internal_reply_impl(zmq::multipart_t& message)
+    {
+        p_shell->send_internal(message);
+    }
+
     void xserver_zmq_split::start_impl(zmq::multipart_t& message)
     {
         start_publisher_thread();

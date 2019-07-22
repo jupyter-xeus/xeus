@@ -70,6 +70,11 @@ namespace xeus
         shutdown_request_impl();
     }
 
+    nl::json xinterpreter::internal_request(nl::json content)
+    {
+        return internal_request_impl(std::move(content));
+    }
+
     void xinterpreter::register_publisher(const publisher_type& publisher)
     {
         m_publisher = publisher;
@@ -207,6 +212,21 @@ namespace xeus
         {
             m_input_reply_handler(value);
         }
+    }
+    
+    void xinterpreter::register_internal_sender(const internal_sender_type& sender)
+    {
+        m_internal_sender = sender;
+    }
+
+    nl::json xinterpreter::send_internal_request(nl::json content)
+    {
+        return m_internal_sender(std::move(content));
+    }
+    
+    nl::json xinterpreter::internal_request_impl(nl::json)
+    {
+        return nl::json::object();
     }
 
     nl::json xinterpreter::build_display_content(nl::json data, nl::json metadata, nl::json transient)

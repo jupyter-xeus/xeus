@@ -74,8 +74,16 @@ namespace xeus
                 // stop message
                 zmq::multipart_t wire_msg;
                 wire_msg.recv(m_controller);
-                wire_msg.send(m_controller);
-                break;
+                const zmq::message_t& msg = wire_msg[0];
+                if(std::string(msg.data<const char>(), msg.size()) != "stop")
+                {
+                    p_server->notify_internal_listener(wire_msg);
+                }
+                else
+                {
+                    wire_msg.send(m_controller);
+                    break;
+                }
             }
         }
     }
@@ -91,6 +99,11 @@ namespace xeus
         zmq::multipart_t wire_msg;
         wire_msg.recv(m_stdin);
         p_server->notify_stdin_listener(wire_msg);
+    }
+
+    void xshell::send_internal(zmq::multipart_t& message)
+    {
+        message.send(m_controller);
     }
 
     void xshell::publish(zmq::multipart_t& message)

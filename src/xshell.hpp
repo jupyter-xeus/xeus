@@ -37,6 +37,7 @@ namespace xeus
 
         void send_shell(zmq::multipart_t& message);
         void send_stdin(zmq::multipart_t& message);
+        void send_internal(zmq::multipart_t& message);
         void publish(zmq::multipart_t& message);
         void abort_queue(const listener& l, long polling_interval);
 

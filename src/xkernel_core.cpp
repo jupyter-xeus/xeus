@@ -59,6 +59,7 @@ namespace xeus
         p_server->register_shell_listener(std::bind(&xkernel_core::dispatch_shell, this, _1));
         p_server->register_control_listener(std::bind(&xkernel_core::dispatch_control, this, _1));
         p_server->register_stdin_listener(std::bind(&xkernel_core::dispatch_stdin, this, _1));
+        p_server->register_internal_listener(std::bind(&xkernel_core::dispatch_internal, this, _1));
 
         // Interpreter bindings
         p_interpreter->register_publisher([this](const std::string& msg_type,
@@ -74,6 +75,8 @@ namespace xeus
         p_interpreter->register_parent_header([this]() {
             return this->parent_header(channel::SHELL);
         });
+
+        p_interpreter->register_internal_sender(std::bind(&xkernel_core::send_internal_request, this, _1));
     }
 
     xkernel_core::~xkernel_core()
@@ -128,6 +131,25 @@ namespace xeus
         }
     }
 
+    void xkernel_core::dispatch_internal(zmq::multipart_t& wire_msg)
+    {
+        try
+        {
+            zmq::message_t msg = wire_msg.pop();
+            std::string raw_content = std::string(msg.data<const char>(), msg.size());
+            nl::json content = nl::json::parse(raw_content);
+            nl::json reply = p_interpreter->internal_request(std::move(content));
+            zmq::multipart_t reply_msg(reply.dump());
+            p_server->send_internal_reply(reply_msg);
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << "Error: could not handle internal message" << std::endl;
+            std::cerr << e.what() << std::endl;
+            return;
+        }
+    }
+
     void xkernel_core::publish_message(const std::string& msg_type,
                                        nl::json metadata,
                                        nl::json content,
@@ -161,6 +183,15 @@ namespace xeus
         p_logger->log_sent_message(msg, xlogger::stdinput);
         std::move(msg).serialize(wire_msg, *p_auth);
         p_server->send_stdin(wire_msg);
+    }
+
+    nl::json xkernel_core::send_internal_request(nl::json content)
+    {
+        zmq::multipart_t req(content.dump());
+        zmq::multipart_t mrep = p_server->send_internal_request(req);
+        zmq::message_t rep = mrep.pop();
+        std::string raw_content = std::string(rep.data<const char>(), rep.size());
+        return nl::json::parse(raw_content);
     }
 
     xcomm_manager& xkernel_core::comm_manager() & noexcept

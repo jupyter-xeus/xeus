@@ -69,6 +69,15 @@ namespace xeus
         message.send(m_publisher_pub);
     }
 
+    zmq::multipart_t xserver_zmq::send_internal_request_impl(zmq::multipart_t&)
+    {
+        return zmq::multipart_t();
+    }
+
+    void xserver_zmq::send_internal_reply_impl(zmq::multipart_t&)
+    {
+    }
+
     void xserver_zmq::start_impl(zmq::multipart_t& message)
     {
         start_publisher_thread();
