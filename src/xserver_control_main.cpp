@@ -10,7 +10,7 @@
 #include <chrono>
 #include <iostream>
 
-#include "xeus/xserver_zmq_split.hpp"
+#include "xeus/xserver_control_main.hpp"
 #include "xeus/xguid.hpp"
 #include "xeus/xmiddleware.hpp"
 #include "zmq_addon.hpp"
@@ -20,7 +20,7 @@
 
 namespace xeus
 {
-    xserver_zmq_split::xserver_zmq_split(zmq::context_t& context, const xconfiguration& config)
+    xserver_control_main::xserver_control_main(zmq::context_t& context, const xconfiguration& config)
         : m_controller(context, zmq::socket_type::router)
         , m_publisher_pub(context, zmq::socket_type::pub)
         , m_shell_controller(context, zmq::socket_type::req)
@@ -43,29 +43,29 @@ namespace xeus
         m_heartbeat_controller.connect(get_controller_end_point("heartbeat"));
     }
 
-    xserver_zmq_split::~xserver_zmq_split()
+    xserver_control_main::~xserver_control_main()
     {
     }
 
-    void xserver_zmq_split::send_shell_impl(zmq::multipart_t& message)
+    void xserver_control_main::send_shell_impl(zmq::multipart_t& message)
     {
         // Shell thread only
         p_shell->send_shell(message);
     }
 
-    void xserver_zmq_split::send_control_impl(zmq::multipart_t& message)
+    void xserver_control_main::send_control_impl(zmq::multipart_t& message)
     {
         // Control (or main) thread only
         message.send(m_controller);
     }
 
-    void xserver_zmq_split::send_stdin_impl(zmq::multipart_t& message)
+    void xserver_control_main::send_stdin_impl(zmq::multipart_t& message)
     {
         // Shell thread only
         p_shell->send_stdin(message);
     }
     
-    void xserver_zmq_split::publish_impl(zmq::multipart_t& message, channel c)
+    void xserver_control_main::publish_impl(zmq::multipart_t& message, channel c)
     {
         if(c == channel::SHELL)
         {
@@ -77,7 +77,7 @@ namespace xeus
         }
     }
     
-    void xserver_zmq_split::start_impl(zmq::multipart_t& message)
+    void xserver_control_main::start_impl(zmq::multipart_t& message)
     {
         start_publisher_thread();
         start_heartbeat_thread();
@@ -99,17 +99,17 @@ namespace xeus
         std::exit(0);
     }
 
-    void xserver_zmq_split::abort_queue_impl(const listener& l, long polling_interval)
+    void xserver_control_main::abort_queue_impl(const listener& l, long polling_interval)
     {
         p_shell->abort_queue(l, polling_interval);
     }
 
-    void xserver_zmq_split::stop_impl()
+    void xserver_control_main::stop_impl()
     {
         m_request_stop = true;
     }
 
-    void xserver_zmq_split::update_config_impl(xconfiguration& config) const
+    void xserver_control_main::update_config_impl(xconfiguration& config) const
     {
         config.m_control_port = get_socket_port(m_controller);
         config.m_shell_port = p_shell->get_shell_port();
@@ -118,25 +118,25 @@ namespace xeus
         config.m_hb_port = p_heartbeat->get_port();
     }
 
-    void xserver_zmq_split::start_shell_thread()
+    void xserver_control_main::start_shell_thread()
     {
         std::thread shell_thread(&xshell::run, p_shell.get());
         shell_thread.detach();
     }
 
-    void xserver_zmq_split::start_publisher_thread()
+    void xserver_control_main::start_publisher_thread()
     {
         std::thread iopub_thread(&xpublisher::run, p_publisher.get());
         iopub_thread.detach();
     }
 
-    void xserver_zmq_split::start_heartbeat_thread()
+    void xserver_control_main::start_heartbeat_thread()
     {
         std::thread hb_thread(&xheartbeat::run, p_heartbeat.get());
         hb_thread.detach();
     }
 
-    void xserver_zmq_split::stop_channels()
+    void xserver_control_main::stop_channels()
     {
         zmq::message_t stop_msg("stop", 4);
         zmq::message_t response;

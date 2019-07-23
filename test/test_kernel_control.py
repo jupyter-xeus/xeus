@@ -4,7 +4,7 @@ import jupyter_kernel_test
 
 class XeusKernelTests(jupyter_kernel_test.KernelTests):
 
-    kernel_name = "test_kernel_split"
+    kernel_name = "test_kernel_control"
     language_name = "cpp"
 
     code_hello_world = "hello, world"

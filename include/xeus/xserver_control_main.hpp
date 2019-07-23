@@ -6,8 +6,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XEUS_SERVER_ZMQ_SPLIT_HPP
-#define XEUS_SERVER_ZMQ_SPLIT_HPP
+#ifndef XEUS_SERVER_CONTROL_MAIN_HPP
+#define XEUS_SERVER_CONTROL_MAIN_HPP
 
 #include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
@@ -19,7 +19,7 @@ namespace xeus
     class xpublisher;
     class xheartbeat;
 
-    class XEUS_API xserver_zmq_split : public xserver
+    class XEUS_API xserver_control_main : public xserver
     {
     public:
 
@@ -27,9 +27,9 @@ namespace xeus
         using publisher_ptr = std::unique_ptr<xpublisher>;
         using heartbeat_ptr = std::unique_ptr<xheartbeat>;
 
-        xserver_zmq_split(zmq::context_t& context, const xconfiguration& config);
+        xserver_control_main(zmq::context_t& context, const xconfiguration& config);
 
-        virtual ~xserver_zmq_split();
+        virtual ~xserver_control_main();
 
         // The xshell object needs to call these methods
         using xserver::notify_shell_listener;
