@@ -13,7 +13,7 @@
 
 namespace xeus
 {
-    class xserver_zmq_split;
+    class xserver_control_main;
 
     class xshell
     {
@@ -26,7 +26,7 @@ namespace xeus
                const std::string& ip,
                const std::string& shell_port,
                const std::string& sdtin_port,
-               xserver_zmq_split* server);
+               xserver_control_main* server);
 
         ~xshell();
 
@@ -46,7 +46,7 @@ namespace xeus
         zmq::socket_t m_stdin;
         zmq::socket_t m_publisher_pub;
         zmq::socket_t m_controller;
-        xserver_zmq_split* p_server;
+        xserver_control_main* p_server;
     };
 }
 

@@ -82,7 +82,7 @@ namespace xeus
     std::unique_ptr<xserver> make_xserver(zmq::context_t& context, const xconfiguration& config);
 
     XEUS_API
-    std::unique_ptr<xserver> make_xserver_split(zmq::context_t& context, const xconfiguration& config);
+    std::unique_ptr<xserver> make_xserver_control_main(zmq::context_t& context, const xconfiguration& config);
 }
 
 #endif

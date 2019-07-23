@@ -160,29 +160,29 @@ add_custom_command(
     TARGET test_kernel POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel.py" "${CMAKE_CURRENT_BINARY_DIR}/")
 
-# Test_kernel_split tests
-# =======================
+# Test_kernel_control tests
+# =========================
 
 set(TEST_KERNEL_SPLIT_SOURCES
     test_interpreter.cpp
     test_interpreter.hpp
-    main_split.cpp)
+    main_control.cpp)
 
 configure_file(
-    "${XEUS_TEST_DIR}/test_kernel_split/kernel.json.in"
-    "${XEUS_TEST_DIR}/test_kernel_split/kernel.json"
+    "${XEUS_TEST_DIR}/test_kernel_control/kernel.json.in"
+    "${XEUS_TEST_DIR}/test_kernel_control/kernel.json"
 )
 
-add_executable(test_kernel_split ${TEST_KERNEL_SPLIT_SOURCES})
-target_link_libraries(test_kernel_split ${xeus_TARGET} Threads::Threads)
+add_executable(test_kernel_control ${TEST_KERNEL_SPLIT_SOURCES})
+target_link_libraries(test_kernel_control ${xeus_TARGET} Threads::Threads)
 
-target_compile_features(test_kernel_split PRIVATE cxx_std_11)
+target_compile_features(test_kernel_control PRIVATE cxx_std_11)
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
 
 add_custom_command(
-    TARGET test_kernel_split POST_BUILD
-    COMMAND jupyter-kernelspec install "${XEUS_TEST_DIR}/test_kernel_split" --sys-prefix)
+    TARGET test_kernel_control POST_BUILD
+    COMMAND jupyter-kernelspec install "${XEUS_TEST_DIR}/test_kernel_control" --sys-prefix)
 add_custom_command(
-    TARGET test_kernel_split POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel_split.py" "${CMAKE_CURRENT_BINARY_DIR}/")
+    TARGET test_kernel_control POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel_control.py" "${CMAKE_CURRENT_BINARY_DIR}/")

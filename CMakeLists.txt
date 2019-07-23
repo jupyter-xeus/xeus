@@ -97,7 +97,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xmiddleware.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq_split.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xserver_control_main.hpp
 )
 
 set(XEUS_SOURCES
@@ -127,7 +127,7 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xpublisher.hpp
     ${XEUS_SOURCE_DIR}/xserver.cpp
     ${XEUS_SOURCE_DIR}/xserver_zmq.cpp
-    ${XEUS_SOURCE_DIR}/xserver_zmq_split.cpp
+    ${XEUS_SOURCE_DIR}/xserver_control_main.cpp
     ${XEUS_SOURCE_DIR}/xshell.hpp
     ${XEUS_SOURCE_DIR}/xshell.cpp
     ${XEUS_SOURCE_DIR}/xstring_utils.hpp

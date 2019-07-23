@@ -12,7 +12,7 @@
 #include "test_interpreter.hpp"
 #include "xeus/xkernel.hpp"
 #include "xeus/xkernel_configuration.hpp"
-#include "xeus/xserver_zmq_split.hpp"
+#include "xeus/xserver_control_main.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
                          std::move(interpreter),
                          std::move(hist),
                          nullptr,
-                         xeus::make_xserver_split);
+                         xeus::make_xserver_control_main);
     std::cout << "starting kernel" << std::endl;
     kernel.start();
 
