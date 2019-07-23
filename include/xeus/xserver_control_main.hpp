@@ -12,6 +12,7 @@
 #include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
 #include "xeus/xkernel_configuration.hpp"
+#include "xeus/xcontrol_messenger.hpp"
 
 namespace xeus
 {
@@ -57,9 +58,7 @@ namespace xeus
         // Internal socket for pusblishing
         zmq::socket_t m_publisher_pub;
         // Internal sockets for controlling other threads
-        zmq::socket_t m_shell_controller;
-        zmq::socket_t m_publisher_controller;
-        zmq::socket_t m_heartbeat_controller;
+        xcontrol_messenger m_messenger;
 
         shell_ptr p_shell;
         publisher_ptr p_publisher;
