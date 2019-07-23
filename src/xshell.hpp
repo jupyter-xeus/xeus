@@ -6,6 +6,9 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#ifndef XEUS_SHELL_HPP
+#define XEUS_SHELL_HPP
+
 #include <string>
 
 #include "zmq.hpp"
@@ -49,4 +52,6 @@ namespace xeus
         xserver_control_main* p_server;
     };
 }
+
+#endif
 

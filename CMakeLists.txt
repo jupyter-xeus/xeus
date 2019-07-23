@@ -83,6 +83,7 @@ find_package(OpenSSL REQUIRED)
 set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xauthentication.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xcomm.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xcontrol_messenger.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xdebugger.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xguid.hpp
@@ -103,6 +104,7 @@ set(XEUS_HEADERS
 set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xauthentication.cpp
     ${XEUS_SOURCE_DIR}/xcomm.cpp
+    ${XEUS_SOURCE_DIR}/xcontrol_messenger.cpp
     ${XEUS_SOURCE_DIR}/xdebugger.cpp
     ${XEUS_SOURCE_DIR}/xguid.cpp
     ${XEUS_SOURCE_DIR}/xheartbeat.cpp

@@ -23,9 +23,7 @@ namespace xeus
     xserver_control_main::xserver_control_main(zmq::context_t& context, const xconfiguration& config)
         : m_controller(context, zmq::socket_type::router)
         , m_publisher_pub(context, zmq::socket_type::pub)
-        , m_shell_controller(context, zmq::socket_type::req)
-        , m_publisher_controller(context, zmq::socket_type::req)
-        , m_heartbeat_controller(context, zmq::socket_type::req)
+        , m_messenger(context)
         , p_shell(new xshell(context, config.m_transport, config.m_ip ,config.m_shell_port, config.m_stdin_port, this))
         , p_publisher(new xpublisher(context, config.m_transport, config.m_ip, config.m_iopub_port))
         , p_heartbeat(new xheartbeat(context, config.m_transport, config.m_ip, config.m_hb_port))
@@ -34,13 +32,6 @@ namespace xeus
         init_socket(m_controller, config.m_transport, config.m_ip, config.m_control_port);
         m_publisher_pub.setsockopt(ZMQ_LINGER, get_socket_linger());
         m_publisher_pub.connect(get_publisher_end_point());
-
-        m_shell_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_shell_controller.connect(get_controller_end_point("shell"));
-        m_publisher_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_publisher_controller.connect(get_controller_end_point("publisher"));
-        m_heartbeat_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_heartbeat_controller.connect(get_controller_end_point("heartbeat"));
     }
 
     xserver_control_main::~xserver_control_main()
@@ -138,20 +129,7 @@ namespace xeus
 
     void xserver_control_main::stop_channels()
     {
-        zmq::message_t stop_msg("stop", 4);
-        zmq::message_t response;
-
-        // Wait for shell answer
-        m_shell_controller.send(stop_msg);
-        m_shell_controller.recv(&response);
-
-        // Wait for publisher answer
-        m_publisher_controller.send(stop_msg);
-        m_publisher_controller.recv(&response);
-
-        // Wait for heartbeat answer
-        m_heartbeat_controller.send(stop_msg);
-        m_heartbeat_controller.recv(&response);
+        m_messenger.stop_channels();
     }
 }
 
