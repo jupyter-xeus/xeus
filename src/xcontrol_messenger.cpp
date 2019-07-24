@@ -16,6 +16,10 @@ namespace xeus
         , m_publisher_controller(context, zmq::socket_type::req)
         , m_heartbeat_controller(context, zmq::socket_type::req)
     {
+    }
+
+    void xcontrol_messenger::connect()
+    {
         m_shell_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
         m_shell_controller.connect(get_controller_end_point("shell"));
         m_publisher_controller.setsockopt(ZMQ_LINGER, get_socket_linger());

@@ -22,6 +22,7 @@ namespace xeus
 
         explicit xcontrol_messenger(zmq::context_t& context);
 
+        void connect();
         void stop_channels();
 
     private:
