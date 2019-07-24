@@ -32,6 +32,7 @@ namespace xeus
         init_socket(m_controller, config.m_transport, config.m_ip, config.m_control_port);
         m_publisher_pub.setsockopt(ZMQ_LINGER, get_socket_linger());
         m_publisher_pub.connect(get_publisher_end_point());
+        m_messenger.connect();
     }
 
     xserver_control_main::~xserver_control_main()
