@@ -12,6 +12,7 @@
 #include "xeus/xkernel.hpp"
 #include "xeus/xguid.hpp"
 #include "xeus/xhistory_manager.hpp"
+#include "xeus/xcontrol_messenger.hpp"
 #include "xkernel_core.hpp"
 #include "xlogger_impl.hpp"
 
@@ -122,6 +123,14 @@ namespace xeus
                                                 p_history_manager.get(),
                                                 p_debugger.get());
 
+        xcontrol_messenger& messenger = p_server->get_control_messenger();
+
+        if(p_debugger != nullptr)
+        {
+            p_debugger->register_control_messenger(messenger);
+        }
+
+        p_interpreter->register_control_messenger(messenger);
         p_interpreter->configure();
     }
 

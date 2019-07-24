@@ -8,7 +8,6 @@
 
 #include <thread>
 #include <chrono>
-#include <iostream>
 
 #include "xeus/xmiddleware.hpp"
 #include "xeus/xserver_zmq_split.hpp"
@@ -74,8 +73,17 @@ namespace xeus
                 // stop message
                 zmq::multipart_t wire_msg;
                 wire_msg.recv(m_controller);
-                wire_msg.send(m_controller);
-                break;
+                std::string msg = wire_msg.peekstr(0);
+                if(msg == "stop")
+                {
+                    wire_msg.send(m_controller);
+                    break;
+                }
+                else
+                {
+                    zmq::multipart_t wire_reply = p_server->notify_internal_listener(wire_msg);
+                    wire_reply.send(m_controller);
+                }
             }
         }
     }
@@ -112,6 +120,11 @@ namespace xeus
             l(wire_msg);
             std::this_thread::sleep_for(std::chrono::milliseconds(polling_interval));
         }
+    }
+
+    void xshell::reply_to_controller(zmq::multipart_t& message)
+    {
+        message.send(m_controller);
     }
 }
 

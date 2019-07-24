@@ -13,7 +13,7 @@
 
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
-#include "xeus/xcontrol_messenger.hpp"
+#include "xzmq_messenger.hpp"
 
 namespace xeus
 {
@@ -49,7 +49,7 @@ namespace xeus
         zmq::socket_t m_control;
         zmq::socket_t m_publisher_pub;
         // Internal sockets for controlling other threads
-        xcontrol_messenger m_messenger;
+        xzmq_messenger m_messenger;
         xserver_zmq_split* p_server;
         bool m_request_stop;
     };

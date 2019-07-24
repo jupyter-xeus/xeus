@@ -6,18 +6,26 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xeus/xcontrol_messenger.hpp"
-#include "xeus/xmiddleware.hpp"
+#include "xeus/xserver_zmq.hpp"
+#include "xtrivial_messenger.hpp"
 
 namespace xeus
 {
-    xcontrol_messenger::~xcontrol_messenger()
+    xtrivial_messenger::xtrivial_messenger(xserver_zmq* server)
+        : p_server(server)
     {
     }
-    
-    nl::json xcontrol_messenger::send_to_shell(const nl::json& message)
+
+    xtrivial_messenger::~xtrivial_messenger()
     {
-        return send_to_shell_impl(message);
+        p_server = nullptr;
+    }
+
+    nl::json xtrivial_messenger::send_to_shell_impl(const nl::json& message)
+    {
+        zmq::multipart_t wire_msg(message.dump());
+        zmq::multipart_t wire_rep = p_server->notify_internal_listener(wire_msg);
+        return nl::json::parse(wire_rep.popstr());
     }
 }
 

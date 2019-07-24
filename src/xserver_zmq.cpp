@@ -15,6 +15,7 @@
 #include "zmq_addon.hpp"
 #include "xpublisher.hpp"
 #include "xheartbeat.hpp"
+#include "xtrivial_messenger.hpp"
 
 namespace xeus
 {
@@ -28,6 +29,7 @@ namespace xeus
         , m_heartbeat_controller(context, zmq::socket_type::req)
         , p_publisher(new xpublisher(context, config.m_transport, config.m_ip, config.m_iopub_port))
         , p_heartbeat(new xheartbeat(context, config.m_transport, config.m_ip, config.m_hb_port))
+        , p_messenger(new xtrivial_messenger(this))
         , m_request_stop(false)
     {
         init_socket(m_shell, config.m_transport, config.m_ip, config.m_shell_port);
@@ -44,6 +46,11 @@ namespace xeus
 
     xserver_zmq::~xserver_zmq()
     {
+    }
+
+    xcontrol_messenger& xserver_zmq::get_control_messenger_impl()
+    {
+        return *p_messenger;
     }
 
     void xserver_zmq::send_shell_impl(zmq::multipart_t& message)

@@ -6,18 +6,35 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#ifndef XEUS_ZMQ_MESSENGER_HPP
+#define XEUS_ZMQ_MESSENGER_HPP
+
+#include "zmq.hpp"
+#include "zmq_addon.hpp"
+
+#include "xeus/xeus.hpp"
 #include "xeus/xcontrol_messenger.hpp"
-#include "xeus/xmiddleware.hpp"
 
 namespace xeus
 {
-    xcontrol_messenger::~xcontrol_messenger()
+    class XEUS_API xzmq_messenger : public xcontrol_messenger
     {
-    }
-    
-    nl::json xcontrol_messenger::send_to_shell(const nl::json& message)
-    {
-        return send_to_shell_impl(message);
-    }
+    public:
+
+        explicit xzmq_messenger(zmq::context_t& context);
+        virtual ~xzmq_messenger();
+
+        void connect();
+        void stop_channels();
+
+    private:
+
+        nl::json send_to_shell_impl(const nl::json& message) override;
+
+        zmq::socket_t m_shell_controller;
+        zmq::socket_t m_publisher_controller;
+        zmq::socket_t m_heartbeat_controller;
+    };
 }
 
+#endif

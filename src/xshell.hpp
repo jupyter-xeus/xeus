@@ -43,6 +43,8 @@ namespace xeus
         void publish(zmq::multipart_t& message);
         void abort_queue(const listener& l, long polling_interval);
 
+        void reply_to_controller(zmq::multipart_t& message);
+
     private:
 
         zmq::socket_t m_shell;

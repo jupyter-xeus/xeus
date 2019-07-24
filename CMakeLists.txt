@@ -139,6 +139,10 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xshell.hpp
     ${XEUS_SOURCE_DIR}/xshell.cpp
     ${XEUS_SOURCE_DIR}/xstring_utils.hpp
+    ${XEUS_SOURCE_DIR}/xtrivial_messenger.hpp
+    ${XEUS_SOURCE_DIR}/xtrivial_messenger.cpp
+    ${XEUS_SOURCE_DIR}/xzmq_messenger.hpp
+    ${XEUS_SOURCE_DIR}/xzmq_messenger.cpp
 )
 
 include(CheckCXXCompilerFlag)

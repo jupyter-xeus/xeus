@@ -16,6 +16,11 @@
 
 namespace xeus
 {
+    xcontrol_messenger& xserver::get_control_messenger()
+    {
+        return get_control_messenger_impl();
+    }
+
     void xserver::send_shell(zmq::multipart_t& message)
     {
         send_shell_impl(message);
@@ -74,6 +79,11 @@ namespace xeus
         m_stdin_listener = l;
     }
 
+    void xserver::register_internal_listener(const internal_listener& l)
+    {
+        m_internal_listener = l;
+    }
+
     void xserver::notify_shell_listener(zmq::multipart_t& message)
     {
         m_shell_listener(message);
@@ -87,6 +97,11 @@ namespace xeus
     void xserver::notify_stdin_listener(zmq::multipart_t& message)
     {
         m_stdin_listener(message);
+    }
+
+    zmq::multipart_t xserver::notify_internal_listener(zmq::multipart_t& message)
+    {
+        return m_internal_listener(message);
     }
 
     std::unique_ptr<xserver> make_xserver(zmq::context_t& context, const xconfiguration& config)

@@ -17,6 +17,7 @@ namespace xeus
 {
     class xpublisher;
     class xheartbeat;
+    class xtrivial_messenger;
 
     class XEUS_API xserver_zmq : public xserver
     {
@@ -29,7 +30,11 @@ namespace xeus
 
         virtual ~xserver_zmq();
 
+        using xserver::notify_internal_listener;
+
     protected:
+
+        xcontrol_messenger& get_control_messenger_impl() override;
 
         void send_shell_impl(zmq::multipart_t& message) override;
         void send_control_impl(zmq::multipart_t& message) override;
@@ -55,6 +60,9 @@ namespace xeus
 
         publisher_ptr p_publisher;
         heartbeat_ptr p_heartbeat;
+
+        using trivial_messenger_ptr = std::unique_ptr<xtrivial_messenger>;
+        trivial_messenger_ptr p_messenger;
 
         bool m_request_stop;
     };
