@@ -1,0 +1,9 @@
+{
+    "display_name": "test_kernel",
+    "language" : "cpp",
+    "argv": [
+        "@CMAKE_BINARY_DIR@/test/test_kernel_shell",
+        "-f",
+        "{connection_file}"
+    ]
+}
