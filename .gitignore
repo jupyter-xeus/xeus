@@ -38,8 +38,11 @@ test/test_xproperty
 test/CMakeCache.txt
 test/Makefile
 test/CMakeFiles/
+test/__pycache__/
 test/cmake_install.cmake
 test/test_kernel/kernel.json
+test/test_kernel_control/kernel.json
+test/test_kernel_shell/kernel.json
 
 # Documentation build artefacts
 docs/CMakeCache.txt
