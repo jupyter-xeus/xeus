@@ -18,6 +18,7 @@
 #include "xheartbeat.hpp"
 #include "xpublisher.hpp"
 #include "xshell.hpp"
+#include "xzmq_messenger.hpp"
 
 namespace xeus
 {
@@ -39,6 +40,11 @@ namespace xeus
     void xserver_zmq_split::notify_control_stopped()
     {
         m_control_stopped = true;
+    }
+
+    xcontrol_messenger& xserver_zmq_split::get_control_messenger_impl()
+    {
+        return p_controller->get_messenger();
     }
 
     void xserver_zmq_split::send_shell_impl(zmq::multipart_t& message)

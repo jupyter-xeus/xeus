@@ -70,6 +70,11 @@ namespace xeus
         shutdown_request_impl();
     }
 
+    nl::json xinterpreter::internal_request(const nl::json& message)
+    {
+        return internal_request_impl(message);
+    }
+
     void xinterpreter::register_publisher(const publisher_type& publisher)
     {
         m_publisher = publisher;
@@ -190,6 +195,16 @@ namespace xeus
         }
     }
 
+    void xinterpreter::register_control_messenger(xcontrol_messenger& messenger)
+    {
+        p_messenger = &messenger;
+    }
+
+    xcontrol_messenger& xinterpreter::get_control_messenger()
+    {
+        return *p_messenger;
+    }
+
     void xinterpreter::input_request(const std::string& prompt, bool pwd)
     {
         if (m_stdin)
@@ -207,6 +222,14 @@ namespace xeus
         {
             m_input_reply_handler(value);
         }
+    }
+
+    nl::json xinterpreter::internal_request_impl(const nl::json&)
+    {
+        nl::json res;
+        res["status"] = "error";
+        res["what"] = "internal request not supported";
+        return res;
     }
 
     nl::json xinterpreter::build_display_content(nl::json data, nl::json metadata, nl::json transient)

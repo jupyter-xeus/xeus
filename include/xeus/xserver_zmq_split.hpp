@@ -37,10 +37,13 @@ namespace xeus
         // The xshell object needs to call these methods
         using xserver::notify_shell_listener;
         using xserver::notify_stdin_listener;
+        using xserver::notify_internal_listener;
 
         void notify_control_stopped();
 
     protected:
+
+        xcontrol_messenger& get_control_messenger_impl() override;
 
         void send_shell_impl(zmq::multipart_t& message) override;
         void send_control_impl(zmq::multipart_t& message) override;

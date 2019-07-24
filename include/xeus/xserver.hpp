@@ -12,10 +12,12 @@
 #include <functional>
 #include <memory>
 
-#include "xeus.hpp"
-#include "xkernel_configuration.hpp"
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
+
+#include "xeus.hpp"
+#include "xkernel_configuration.hpp"
+#include "xcontrol_messenger.hpp"
 
 namespace xeus
 {
@@ -30,6 +32,7 @@ namespace xeus
     public:
 
         using listener = std::function<void(zmq::multipart_t&)>;
+        using internal_listener = std::function<zmq::multipart_t(zmq::multipart_t&)>;
 
         virtual ~xserver() = default;
 
@@ -38,6 +41,8 @@ namespace xeus
 
         xserver(xserver&&) = delete;
         xserver& operator=(xserver&&) = delete;
+
+        xcontrol_messenger& get_control_messenger();
 
         void send_shell(zmq::multipart_t& message);
         void send_control(zmq::multipart_t& message);
@@ -52,6 +57,7 @@ namespace xeus
         void register_shell_listener(const listener& l);
         void register_control_listener(const listener& l);
         void register_stdin_listener(const listener& l);
+        void register_internal_listener(const internal_listener& l);
 
     protected:
 
@@ -60,8 +66,11 @@ namespace xeus
         void notify_shell_listener(zmq::multipart_t& message);
         void notify_control_listener(zmq::multipart_t& message);
         void notify_stdin_listener(zmq::multipart_t& message);
+        zmq::multipart_t notify_internal_listener(zmq::multipart_t& message);
 
     private:
+
+        virtual xcontrol_messenger& get_control_messenger_impl() = 0;
 
         virtual void send_shell_impl(zmq::multipart_t& message) = 0;
         virtual void send_control_impl(zmq::multipart_t& message) = 0;
@@ -76,6 +85,7 @@ namespace xeus
         listener m_shell_listener;
         listener m_control_listener;
         listener m_stdin_listener;
+        internal_listener m_internal_listener;
     };
 
     XEUS_API

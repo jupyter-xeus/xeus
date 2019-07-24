@@ -59,6 +59,7 @@ namespace xeus
         p_server->register_shell_listener(std::bind(&xkernel_core::dispatch_shell, this, _1));
         p_server->register_control_listener(std::bind(&xkernel_core::dispatch_control, this, _1));
         p_server->register_stdin_listener(std::bind(&xkernel_core::dispatch_stdin, this, _1));
+        p_server->register_internal_listener(std::bind(&xkernel_core::dispatch_internal, this, _1));
 
         // Interpreter bindings
         p_interpreter->register_publisher([this](const std::string& msg_type,
@@ -126,6 +127,13 @@ namespace xeus
             std::cerr << e.what() << std::endl;
             return;
         }
+    }
+
+    zmq::multipart_t xkernel_core::dispatch_internal(zmq::multipart_t& wire_msg)
+    {
+        nl::json msg = nl::json::parse(wire_msg.popstr());
+        nl::json rep = p_interpreter->internal_request(msg);
+        return zmq::multipart_t(rep.dump());
     }
 
     void xkernel_core::publish_message(const std::string& msg_type,

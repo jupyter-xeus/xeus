@@ -12,7 +12,11 @@
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
 
+#include "nlohmann/json.hpp"
+
 #include "xeus/xeus.hpp"
+
+namespace nl = nlohmann;
 
 namespace xeus
 {
@@ -20,16 +24,23 @@ namespace xeus
     {
     public:
 
-        explicit xcontrol_messenger(zmq::context_t& context);
+        virtual ~xcontrol_messenger();
 
-        void connect();
-        void stop_channels();
+        xcontrol_messenger(const xcontrol_messenger&) = delete;
+        xcontrol_messenger& operator=(const xcontrol_messenger&) = delete;
+
+        xcontrol_messenger(xcontrol_messenger&&) = delete;
+        xcontrol_messenger& operator=(xcontrol_messenger&&) = delete;
+
+        nl::json send_to_shell(const nl::json& message);
+
+    protected:
+
+        xcontrol_messenger() = default;
 
     private:
 
-        zmq::socket_t m_shell_controller;
-        zmq::socket_t m_publisher_controller;
-        zmq::socket_t m_heartbeat_controller;
+        virtual nl::json send_to_shell_impl(const nl::json& message) = 0;
     };
 }
 
