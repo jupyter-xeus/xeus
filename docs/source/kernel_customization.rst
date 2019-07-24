@@ -139,6 +139,9 @@ two types of server:
 
 - ``xserver_zmq`` is the default server implementation, it runs three thread, one for publishing, one for the
   heartbeat messages, and the main thread handles the shell, control and stdin sockets.
-- ``xserver_zmq_split`` runs an additional thread for handling the shell and the stdin sockets. Therefore the main
-  thread only listen to the control socket. This allow to easily implement interruption of code execution. This
+- ``xserver_control_main`` runs an additional thread for handling the shell and the stdin sockets. Therefore the main
+  thread only listens to the control socket. This allow to easily implement interruption of code execution. This
   server is required if you want to plug a debugger in the kernel.
+- ``xserver_shell_main`` is similar to ``xserver_control_main`` except that the main thread handles the shell and
+  the stdin sockets while the additional thread listens to the control socket. This server is required if you want to
+  plug a debugger that does not support native threads and requires the code to be run by the main thread.
