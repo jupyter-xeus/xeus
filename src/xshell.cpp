@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "xeus/xmiddleware.hpp"
-#include "xeus/xserver_control_main.hpp"
+#include "xeus/xserver_zmq_split.hpp"
 #include "xshell.hpp"
 
 namespace xeus
@@ -21,7 +21,7 @@ namespace xeus
                    const std::string& ip,
                    const std::string& shell_port,
                    const std::string& stdin_port,
-                   xserver_control_main* server)
+                   xserver_zmq_split* server)
         : m_shell(context, zmq::socket_type::router)
         , m_stdin(context, zmq::socket_type::router)
         , m_publisher_pub(context, zmq::socket_type::pub)

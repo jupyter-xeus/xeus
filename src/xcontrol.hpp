@@ -17,7 +17,7 @@
 
 namespace xeus
 {
-    class xserver_shell_main;
+    class xserver_zmq_split;
 
     class xcontrol
     {
@@ -29,7 +29,7 @@ namespace xeus
                  const std::string& transport,
                  const std::string& ip,
                  const std::string& control_port,
-                 xserver_shell_main* server);
+                 xserver_zmq_split* server);
 
         ~xcontrol();
 
@@ -50,7 +50,7 @@ namespace xeus
         zmq::socket_t m_publisher_pub;
         // Internal sockets for controlling other threads
         xcontrol_messenger m_messenger;
-        xserver_shell_main* p_server;
+        xserver_zmq_split* p_server;
         bool m_request_stop;
     };
 }
