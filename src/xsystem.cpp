@@ -59,13 +59,23 @@ namespace xeus
 #ifdef WIN32
         return CreateDirectoryA(path.c_str(), NULL);
 #else
-        struct stat st = { 0 };
+        struct stat st;
+        st.st_dev = 0;
         int ret = 0;
         if(stat(path.c_str(), &st) == -1)
         {
             ret = mkdir(path.c_str(), 0700);
         }
         return ret == 0;
+#endif
+    }
+
+    int get_current_pid()
+    {
+#ifdef WIN32
+        return GetCurrentProcessId();
+#else
+        return ::getpid();
 #endif
     }
 }
