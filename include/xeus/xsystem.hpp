@@ -17,6 +17,9 @@ namespace xeus
 {
     XEUS_API
     std::string get_temp_directory_path();
+
+    XEUS_API
+    bool create_directory(const std::string& path);
 }
 
 #endif
