@@ -14,6 +14,7 @@
 
 #include "xeus/xkernel.hpp"
 #include "xeus/xmiddleware.hpp"
+#include "xeus/xsystem.hpp"
 
 namespace nl = nlohmann;
 
@@ -30,7 +31,14 @@ namespace xeus
     {
         std::string port = find_free_port();
         EXPECT_NE(port, "");
-        EXPECT_EQ(port.length(), 5);
+        EXPECT_EQ(port.length(), std::size_t(5));
+    }
+
+    TEST(kernel, tmep_directory_path)
+    {
+        std::string path = get_temp_directory_path();
+        std::cout << "Temporary directory path: " << path << std::endl;
+        EXPECT_NE(path, "");
     }
 }
 

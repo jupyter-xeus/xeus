@@ -101,6 +101,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xserver_shell_main.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq_split.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xsystem.hpp
 )
 
 set(XEUS_SOURCES
@@ -139,6 +140,7 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xshell.hpp
     ${XEUS_SOURCE_DIR}/xshell.cpp
     ${XEUS_SOURCE_DIR}/xstring_utils.hpp
+    ${XEUS_SOURCE_DIR}/xsystem.cpp
     ${XEUS_SOURCE_DIR}/xtrivial_messenger.hpp
     ${XEUS_SOURCE_DIR}/xtrivial_messenger.cpp
     ${XEUS_SOURCE_DIR}/xzmq_messenger.hpp
