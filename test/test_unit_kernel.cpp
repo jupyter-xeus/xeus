@@ -13,6 +13,7 @@
 #include "nlohmann/json.hpp"
 
 #include "xeus/xkernel.hpp"
+#include "xeus/xmiddleware.hpp"
 
 namespace nl = nlohmann;
 
@@ -23,6 +24,13 @@ namespace xeus
         std::string username;
         username = get_user_name();
         EXPECT_NE(username, "unspecified user");
+    }
+
+    TEST(kernel, find_free_port)
+    {
+        std::string port = find_free_port();
+        EXPECT_NE(port, "");
+        EXPECT_EQ(port.length(), 5);
     }
 }
 
