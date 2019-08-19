@@ -20,6 +20,9 @@ namespace xeus
 
     XEUS_API
     bool create_directory(const std::string& path);
+
+    XEUS_API
+    int get_current_pid();
 }
 
 #endif

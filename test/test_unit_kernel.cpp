@@ -48,5 +48,11 @@ namespace xeus
         bool res = create_directory(path);
         EXPECT_TRUE(res);
     }
+
+    TEST(kernel, get_current_pid)
+    {
+        int pid = get_current_pid();
+        EXPECT_NE(pid, -1);
+    }
 }
 
