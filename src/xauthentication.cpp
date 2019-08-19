@@ -8,6 +8,7 @@
 
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <stdexcept>
 #include <vector>
@@ -47,6 +48,7 @@ namespace xeus
         const EVP_MD* m_evp;
         std::string m_key;
         HMAC_CTX* m_hmac;
+        mutable std::mutex m_hmac_mutex;
     };
 
     // Specialization of xauthentication without any signature checking.
@@ -147,6 +149,7 @@ namespace xeus
                                                       const zmq::message_t& meta_data,
                                                       const zmq::message_t& content) const
     {
+        std::lock_guard<std::mutex> lock(m_hmac_mutex);
         HMAC_Init_ex(m_hmac, m_key.c_str(), m_key.size(), m_evp, nullptr);
 
         HMAC_Update(m_hmac, header.data<const unsigned char>(), header.size());
@@ -167,6 +170,7 @@ namespace xeus
                                               const zmq::message_t& meta_data,
                                               const zmq::message_t& content) const
     {
+        std::lock_guard<std::mutex> lock(m_hmac_mutex);
         HMAC_Init_ex(m_hmac, m_key.c_str(), m_key.size(), m_evp, nullptr);
 
         HMAC_Update(m_hmac, header.data<const unsigned char>(), header.size());
