@@ -25,7 +25,7 @@
 
 // Project version
 #define XEUS_VERSION_MAJOR 0
-#define XEUS_VERSION_MINOR 22
+#define XEUS_VERSION_MINOR 23
 #define XEUS_VERSION_PATCH 0
 
 // Binary version
