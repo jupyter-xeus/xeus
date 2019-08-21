@@ -78,6 +78,13 @@ namespace xeus
         return ::getpid();
 #endif
     }
+    
+    std::string get_cell_tmp_file(const std::string& prefix,
+                                  int execution_count,
+                                  const std::string& extension)
+    {
+        return prefix + "/[" + std::to_string(execution_count) + "]" + extension;
+    }
 }
 
 
