@@ -6,6 +6,7 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <cstdlib>
 #include <exception>
 #include <functional>
 #include <iostream>
@@ -53,6 +54,7 @@ namespace xeus
         m_handler["comm_msg"] = &xkernel_core::comm_msg;
         m_handler["kernel_info_request"] = &xkernel_core::kernel_info_request;
         m_handler["shutdown_request"] = &xkernel_core::shutdown_request;
+        m_handler["interrupt_request"] = &xkernel_core::interrupt_request;
         m_handler["debug_request"] = &xkernel_core::debug_request;
 
         // Server bindings
@@ -356,6 +358,15 @@ namespace xeus
         reply["restart"] = restart;
         publish_message("shutdown", nl::json::object(), nl::json(reply), buffer_sequence(), channel::CONTROL);
         send_reply("shutdown_reply", nl::json::object(), std::move(reply), c);
+    }
+
+    void xkernel_core::interrupt_request(const xmessage&, channel c)
+    {
+        nl::json reply = nl::json::object();
+        publish_message("interrupt", nl::json::object(), nl::json(reply), buffer_sequence(), channel::CONTROL);
+        send_reply("interrupt_reply", nl::json::object(), std::move(reply), c);
+        // \o/
+        std::exit(EXIT_FAILURE);
     }
 
     void xkernel_core::debug_request(const xmessage& request, channel c)
