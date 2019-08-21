@@ -87,6 +87,7 @@ namespace xeus
 
         void kernel_info_request(const xmessage& request, channel c);
         void shutdown_request(const xmessage& request, channel c);
+        void interrupt_request(const xmessage& request, channel c);
         void debug_request(const xmessage& request, channel c);
 
         void publish_status(const std::string& status, channel c);
