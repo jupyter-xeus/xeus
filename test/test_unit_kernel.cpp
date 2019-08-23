@@ -39,6 +39,8 @@ namespace xeus
         std::string path = get_temp_directory_path();
         std::cout << "Temporary directory path: " << path << std::endl;
         EXPECT_NE(path, "");
+        EXPECT_NE(path.back(), '/');
+        EXPECT_NE(path.back(), '\\');
     }
 
     TEST(kernel, create_directory)

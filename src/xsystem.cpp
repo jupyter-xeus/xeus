@@ -7,9 +7,11 @@
 ****************************************************************************/
 
 #include <cstdlib>
+#include <cstring>
 
-#ifdef WIN32
+#ifdef _WIN32
 #include "Windows.h"
+#include <algorithm>
 #else
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -20,25 +22,36 @@
 
 namespace xeus
 {
+    std::string remove_ending_separator(const char* path)
+    {
+        std::size_t s = strlen(path);
+        if(path[s - 1] == '/')
+        {
+            --s;
+        }
+        return std::string(path, s);
+    }
+
     std::string get_temp_directory_path_impl()
     {
-#ifdef WIN32
+#ifdef _WIN32
         std::string tmp_prefix;
         char char_path[MAX_PATH];
-        if(GetTempPathA(MAX_PATH, char_path))
+        if(auto s = GetTempPathA(MAX_PATH, char_path))
         {
-            tmp_prefix = char_path;
+            tmp_prefix = std::string(char_path, std::size_t(s - 1));
         }
+        std::replace(tmp_prefix.begin(), tmp_prefix.end(), '\\', '/');
         return tmp_prefix;
 #else
         const char* tmpdir = std::getenv("TMPDIR");
         const char* tmp = std::getenv("TMP");
         const char* tempdir = std::getenv("TEMPDIR");
         const char* temp = std::getenv("TEMP");
-        if(tmpdir != nullptr) return tmpdir;
-        else if(tmp != nullptr) return tmp;
-        else if(tempdir != nullptr) return tempdir;
-        else if(temp != nullptr) return temp;
+        if(tmpdir != nullptr) return remove_ending_separator(tmpdir);
+        else if(tmp != nullptr) return remove_ending_separator(tmp);
+        else if(tempdir != nullptr) return remove_ending_separator(tempdir);
+        else if(temp != nullptr) return remove_ending_separator(temp);
         else return "/tmp";
 #endif
     }
@@ -56,7 +69,7 @@ namespace xeus
         {
             create_directory(path.substr(0, pos));
         }
-#ifdef WIN32
+#ifdef _WIN32
         return CreateDirectoryA(path.c_str(), NULL);
 #else
         struct stat st;
@@ -72,7 +85,7 @@ namespace xeus
 
     int get_current_pid()
     {
-#ifdef WIN32
+#ifdef _WIN32
         return GetCurrentProcessId();
 #else
         return ::getpid();
