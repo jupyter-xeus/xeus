@@ -108,7 +108,8 @@ namespace xeus
         static const std::map<std::string, const EVP_MD*(*)()> schemes = {
             {"hmac-md5", EVP_md5},
             {"hmac-sha1", EVP_sha1},
-            {"hmac-mdc2", EVP_mdc2},
+            // MDC2 is disabled by default unless enable-mdc2 is specified
+            // {"hmac-mdc2", EVP_mdc2},
             {"hmac-ripemd160", EVP_ripemd160},
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
             {"hmac-blake2b512", EVP_blake2b512},
