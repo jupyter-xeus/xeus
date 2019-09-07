@@ -153,9 +153,10 @@ target_compile_features(test_kernel PRIVATE cxx_std_11)
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
 
-add_custom_command(
-    TARGET test_kernel POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel.py" "${CMAKE_CURRENT_BINARY_DIR}/")
+configure_file(
+    "${XEUS_TEST_DIR}/test_kernel.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/"
+    COPYONLY)
 
 # Test_kernel_control tests
 # =========================
@@ -177,9 +178,10 @@ target_compile_features(test_kernel_control PRIVATE cxx_std_11)
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
 
-add_custom_command(
-    TARGET test_kernel_control POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel_control.py" "${CMAKE_CURRENT_BINARY_DIR}/")
+configure_file(
+    "${XEUS_TEST_DIR}/test_kernel_control.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/"
+    COPYONLY)
 
 # Test_kernel_shell tests
 # =======================
@@ -201,6 +203,7 @@ target_compile_features(test_kernel_shell PRIVATE cxx_std_11)
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
 
-add_custom_command(
-    TARGET test_kernel_shell POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel_shell.py" "${CMAKE_CURRENT_BINARY_DIR}/")
+configure_file(
+    "${XEUS_TEST_DIR}/test_kernel_shell.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/"
+    COPYONLY)
