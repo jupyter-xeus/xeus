@@ -53,7 +53,4 @@ install:
     - popd && popd
     - cd build
 script:
-    - cd test
-    - ./test_xeus
-    - JUPYTER_PATH=$PWD py.test test_kernel.py
-    - JUPYTER_PATH=$PWD py.test test_kernel_control.py
+    - make test

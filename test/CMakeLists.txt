@@ -81,6 +81,9 @@ endif()
 
 find_package(Threads)
 
+find_program(PYTEST
+    NAMES pytest-3 pytest py.test-3 py.test)
+
 include_directories(${GTEST_INCLUDE_DIRS})
 
 set(XEUS_TESTS
@@ -158,6 +161,12 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/"
     COPYONLY)
 
+add_test(NAME test_kernel
+    COMMAND ${PYTEST} test_kernel.py)
+set_tests_properties(test_kernel
+    PROPERTIES
+    ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
+
 # Test_kernel_control tests
 # =========================
 
@@ -183,6 +192,12 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/"
     COPYONLY)
 
+add_test(NAME test_kernel_control
+    COMMAND ${PYTEST} test_kernel_control.py)
+set_tests_properties(test_kernel_control
+    PROPERTIES
+    ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
+
 # Test_kernel_shell tests
 # =======================
 
@@ -207,3 +222,9 @@ configure_file(
     "${XEUS_TEST_DIR}/test_kernel_shell.py"
     "${CMAKE_CURRENT_BINARY_DIR}/"
     COPYONLY)
+
+add_test(NAME test_kernel_shell
+    COMMAND ${PYTEST} test_kernel_shell.py)
+set_tests_properties(test_kernel_shell
+    PROPERTIES
+    ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
