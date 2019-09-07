@@ -53,4 +53,4 @@ install:
     - popd && popd
     - cd build
 script:
-    - make test
+    - ctest --output-on-failure
