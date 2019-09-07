@@ -39,5 +39,6 @@ install:
 
 build_script:
   - .\test\test_xeus
+  - "set JUPYTER_PATH=%CD%\\test"
   - py.test test\test_kernel.py
   - py.test test\test_kernel_control.py

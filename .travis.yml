@@ -55,5 +55,5 @@ install:
 script:
     - cd test
     - ./test_xeus
-    - py.test test_kernel.py
-    - py.test test_kernel_control.py
+    - JUPYTER_PATH=$PWD py.test test_kernel.py
+    - JUPYTER_PATH=$PWD py.test test_kernel_control.py
