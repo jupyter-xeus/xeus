@@ -236,9 +236,7 @@ macro(xeus_create_target target_name linkage output_name)
 
         target_compile_options(${target_name} PUBLIC -Wunused-parameter -Wextra -Wreorder)
 
-        if (DISABLE_ARCH_NATIVE)
-            target_compile_options(${target_name} PUBLIC -mtune=generic)
-        else ()
+	if (NOT DISABLE_ARCH_NATIVE)
             target_compile_options(${target_name} PUBLIC -march=native)
         endif ()
 
