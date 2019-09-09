@@ -301,14 +301,14 @@ endif ()
 # Tests
 # =====
 
-OPTION(BUILD_TESTS "xeus test suite" OFF)
+include(CTest)
 OPTION(DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
 
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
-    set(BUILD_TESTS ON)
+    set(BUILD_TESTING ON)
 endif()
 
-if(BUILD_TESTS)
+if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
 

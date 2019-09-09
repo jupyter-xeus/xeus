@@ -81,6 +81,9 @@ endif()
 
 find_package(Threads)
 
+find_program(PYTEST
+    NAMES pytest-3 pytest py.test-3 py.test)
+
 include_directories(${GTEST_INCLUDE_DIRS})
 
 set(XEUS_TESTS
@@ -115,23 +118,21 @@ foreach(filename IN LISTS XEUS_TESTS)
     add_test(NAME ${targetname} COMMAND ${targetname})
 endforeach()
 
-add_executable(test_xeus ${XEUS_TESTS} ${XEUS_HEADERS})
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
-    add_dependencies(test_xeus gtest_main)
-
     # https://github.com/QuantStack/xeus/pull/126
+    # This should really just be post gtest and gtest_main targets, but CMake
+    # won't allow us to do that. So do it after the last test (which depends on
+    # those anyway.)
     if (BUILD_SHARED_LIBS)
         add_custom_command(
-            TARGET test_xeus POST_BUILD
+            TARGET ${targetname} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:gtest>" "${CMAKE_CURRENT_BINARY_DIR}/")
+
         add_custom_command(
-            TARGET test_xeus POST_BUILD
+            TARGET ${targetname} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:gtest_main>" "${CMAKE_CURRENT_BINARY_DIR}/")
     endif ()
 endif()
-target_link_libraries(test_xeus ${xeus_TARGET} ${GTEST_BOTH_LIBRARIES} Threads::Threads ${nlohmann_json_TARGET})
-
-add_custom_target(xtest COMMAND test_xeus DEPENDS test_xeus)
 
 # Test_kernel tests
 # =================
@@ -141,9 +142,9 @@ set(TEST_KERNEL_SOURCES
     test_interpreter.hpp
     main.cpp)
 
-configure_file (
+configure_file(
     "${XEUS_TEST_DIR}/test_kernel/kernel.json.in"
-    "${XEUS_TEST_DIR}/test_kernel/kernel.json"
+    "kernels/test_kernel/kernel.json"
 )
 
 add_executable(test_kernel ${TEST_KERNEL_SOURCES})
@@ -153,12 +154,16 @@ target_compile_features(test_kernel PRIVATE cxx_std_11)
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
 
-add_custom_command(
-    TARGET test_kernel POST_BUILD
-    COMMAND jupyter-kernelspec install "${XEUS_TEST_DIR}/test_kernel" --sys-prefix)
-add_custom_command(
-    TARGET test_kernel POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel.py" "${CMAKE_CURRENT_BINARY_DIR}/")
+configure_file(
+    "${XEUS_TEST_DIR}/test_kernel.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/"
+    COPYONLY)
+
+add_test(NAME test_kernel
+    COMMAND ${PYTEST} test_kernel.py)
+set_tests_properties(test_kernel
+    PROPERTIES
+    ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
 
 # Test_kernel_control tests
 # =========================
@@ -170,7 +175,7 @@ set(TEST_KERNEL_SPLIT_SOURCES
 
 configure_file(
     "${XEUS_TEST_DIR}/test_kernel_control/kernel.json.in"
-    "${XEUS_TEST_DIR}/test_kernel_control/kernel.json"
+    "kernels/test_kernel_control/kernel.json"
 )
 
 add_executable(test_kernel_control ${TEST_KERNEL_SPLIT_SOURCES})
@@ -180,12 +185,16 @@ target_compile_features(test_kernel_control PRIVATE cxx_std_11)
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
 
-add_custom_command(
-    TARGET test_kernel_control POST_BUILD
-    COMMAND jupyter-kernelspec install "${XEUS_TEST_DIR}/test_kernel_control" --sys-prefix)
-add_custom_command(
-    TARGET test_kernel_control POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel_control.py" "${CMAKE_CURRENT_BINARY_DIR}/")
+configure_file(
+    "${XEUS_TEST_DIR}/test_kernel_control.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/"
+    COPYONLY)
+
+add_test(NAME test_kernel_control
+    COMMAND ${PYTEST} test_kernel_control.py)
+set_tests_properties(test_kernel_control
+    PROPERTIES
+    ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
 
 # Test_kernel_shell tests
 # =======================
@@ -197,7 +206,7 @@ set(TEST_KERNEL_SPLIT_SOURCES
 
 configure_file(
     "${XEUS_TEST_DIR}/test_kernel_shell/kernel.json.in"
-    "${XEUS_TEST_DIR}/test_kernel_shell/kernel.json"
+    "kernels/test_kernel_shell/kernel.json"
 )
 
 add_executable(test_kernel_shell ${TEST_KERNEL_SPLIT_SOURCES})
@@ -207,9 +216,13 @@ target_compile_features(test_kernel_shell PRIVATE cxx_std_11)
 
 set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
 
-add_custom_command(
-    TARGET test_kernel_shell POST_BUILD
-    COMMAND jupyter-kernelspec install "${XEUS_TEST_DIR}/test_kernel_shell" --sys-prefix)
-add_custom_command(
-    TARGET test_kernel_shell POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${XEUS_TEST_DIR}/test_kernel_shell.py" "${CMAKE_CURRENT_BINARY_DIR}/")
+configure_file(
+    "${XEUS_TEST_DIR}/test_kernel_shell.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/"
+    COPYONLY)
+
+add_test(NAME test_kernel_shell
+    COMMAND ${PYTEST} test_kernel_shell.py)
+set_tests_properties(test_kernel_shell
+    PROPERTIES
+    ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
