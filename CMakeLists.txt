@@ -299,8 +299,9 @@ endif ()
 # Tests
 # =====
 
+option(BUILD_TESTING "Build tests" OFF)
+option(DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
 include(CTest)
-OPTION(DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
 
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
     set(BUILD_TESTING ON)
