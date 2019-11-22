@@ -56,7 +56,7 @@ namespace custom
         else
         {
             result["status"] = "ok";
-            result["matches"] = {};
+            result["matches"] = nl::json::array();
             result["cursor_start"] = cursor_pos;
             result["cursor_end"] = cursor_pos;
         }
