@@ -22,7 +22,7 @@ namespace custom
         // Replace "Hello World !!" by what you want to be displayed under the execution cell
         nl::json pub_data;
         pub_data["text/plain"] = "Hello World !!";
-        publish_execution_result(execution_counter, std::move(pub_data), nl::json());
+        publish_execution_result(execution_counter, std::move(pub_data), nl::json::object());
 
         // You can also use this method for publishing errors to the client, if the code
         // failed to execute
@@ -56,7 +56,7 @@ namespace custom
         else
         {
             result["status"] = "ok";
-            result["matches"] = {};
+            result["matches"] = nl::json::array();
             result["cursor_start"] = cursor_pos;
             result["cursor_end"] = cursor_pos;
         }
