@@ -25,8 +25,8 @@ namespace xeus
         ifs >> doc;
 
         xconfiguration res;
-        res.m_transport = doc["transport"].get<std::string>();
-        res.m_ip = doc["ip"].get<std::string>();
+        res.m_transport = doc["transport"];
+        res.m_ip = doc["ip"];
         res.m_control_port = std::to_string(doc["control_port"].get<int>());
         res.m_shell_port = std::to_string(doc["shell_port"].get<int>());
         res.m_stdin_port = std::to_string(doc["stdin_port"].get<int>());
@@ -35,7 +35,7 @@ namespace xeus
         res.m_signature_scheme = doc.value("signature_scheme", "");
         if (res.m_signature_scheme != "")
         {
-            res.m_key = doc["key"].get<std::string>();
+            res.m_key = doc["key"];
         }
         else
         {
