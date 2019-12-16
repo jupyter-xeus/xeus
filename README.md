@@ -117,14 +117,13 @@ We have packaged all these dependencies for the conda package manager. The simpl
 conda is to run:
 
 ```bash
-conda install cmake pkg-config zeromq cppzmq xtl OpenSSL -c conda-forge
-conda install nlohmann_json -c conda-forge/label/gcc7
+conda install cmake pkg-config zeromq cppzmq xtl OpenSSL nlohmann_json -c conda-forge
 ```
 
-On Linux platforms, you will also need:
+On Linux platforms, you will also need `libuuid`:
 
 ```bash
-conda install util-linux -c conda-forge
+conda install libuuid -c conda-forge
 ```
 
 Once you have installed the dependencies, you can build and install `xeus`:
@@ -149,6 +148,13 @@ cmake -D WITH_PERF_TOOL=OFF -D ZMQ_BUILD_TESTS=OFF -D ENABLE_CPACK=OFF
 make
 make install
 ```
+
+## OpenSSL
+
+[OpenSSL](https://www.openssl.org/) is packaged for most package managers (apt-get, rpm, conda).
+We recommend making use of an off-the-shelf build of OpenSSL for your system.
+
+For more information on building OpenSSL, check out the official [OpenSSL wiki](https://wiki.openssl.org/index.php/Compilation_and_Installation).
 
 ### cppzmq
 
@@ -176,6 +182,10 @@ make install
 cmake -D CMAKE_BUILD_TYPE
 make install
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) to know how to contribute and set up a development environment.
 
 ## License
 
