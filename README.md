@@ -92,11 +92,11 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 ## Building from Source
 
-`xeus` depends on the following libraries: [`libzmq`](https://github.com/zeromq/libzmq),
+`xeus` depends on the following libraries: [`ZeroMQ`](https://github.com/zeromq/libzmq),
 [`cppzmq`](https://github.com/zeromq/cppzmq), [`OpenSSL`](https://github.com/openssl/openssl),
 [`nlohmann_json`](https://github.com/nlohmann/json), and [`xtl`](https://github.com/QuantStack/xtl).
 
-|  xeus  | libzmq  | cppzmq  |   xtl          | nlohmann json | OpenSSL |
+|  xeus  | ZeroMQ  | cppzmq  |   xtl          | nlohmann json | OpenSSL |
 |--------|---------|---------|----------------|---------------|---------|
 | master |  ^4.2.5 |  ^4.3.0 | >=0.5.0,<0.7.0 |      ^3.2.0   |  ^1.0.1 |
 | 0.23.3 |  ^4.2.5 |  ^4.3.0 | >=0.5.0,<0.7.0 |      ^3.2.0   |  ^1.0.1 |
@@ -138,9 +138,9 @@ make install
 
 The dependencies can also be installed from source. Simply clone the directories and run the following cmake (cmake >= 3.8)  and make instructions.
 
-### libzmq
+### ZeroMQ
 
-[libzmq](https://github.com/zeromq/libzmq):
+[ZeroMQ](https://github.com/zeromq/libzmq) is the messaging library underlying the Jupyter kernel protocol.
 
 ```bash
 cmake -D WITH_PERF_TOOL=OFF -D ZMQ_BUILD_TESTS=OFF -D ENABLE_CPACK=OFF
