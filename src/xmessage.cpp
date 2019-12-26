@@ -1,5 +1,6 @@
 /***************************************************************************
-* Copyright (c) 2016, Johan Mabille and Sylvain Corlay                     *
+* Copyright (c) 2016, Johan Mabille, Sylvain Corlay, Martin Renou          *
+* Copyright (c) 2016, QuantStack                                           *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *
@@ -12,6 +13,8 @@
 #include <sstream>
 #include <string>
 #include <utility>
+
+#include "nlohmann/json.hpp"
 
 #include "xeus/xguid.hpp"
 #include "xeus/xmessage.hpp"

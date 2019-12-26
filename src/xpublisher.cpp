@@ -1,5 +1,6 @@
 /***************************************************************************
-* Copyright (c) 2018, Johan Mabille, Sylvain Corlay and Martin Renou       *
+* Copyright (c) 2016, Johan Mabille, Sylvain Corlay, Martin Renou          *
+* Copyright (c) 2016, QuantStack                                           *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *
