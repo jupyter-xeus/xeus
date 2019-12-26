@@ -1,5 +1,6 @@
 /***************************************************************************
-* Copyright (c) 2018, Johan Mabille, Sylvain Corlay and Martin Renou       *
+* Copyright (c) 2016, Johan Mabille, Sylvain Corlay, Martin Renou          *
+* Copyright (c) 2016, QuantStack                                           *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *
@@ -8,6 +9,8 @@
 
 #ifndef XEUS_TRIVIAL_MESSENGER_HPP
 #define XEUS_TRIVIAL_MESSENGER_HPP
+
+#include "nlohmann/json.hpp"
 
 #include "xeus/xeus.hpp"
 #include "xeus/xcontrol_messenger.hpp"

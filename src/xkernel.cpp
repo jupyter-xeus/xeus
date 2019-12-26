@@ -1,5 +1,6 @@
 /***************************************************************************
-* Copyright (c) 2016, Johan Mabille and Sylvain Corlay                     *
+* Copyright (c) 2016, Johan Mabille, Sylvain Corlay, Martin Renou          *
+* Copyright (c) 2016, QuantStack                                           *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *
@@ -43,8 +44,8 @@ namespace xeus
         std::string res = pws->pw_name;
         return res;
 #elif defined(WINDOWS_PLATFORM)
-        char username[UNLEN+1];
-        DWORD username_len = UNLEN+1;
+        char username[UNLEN + 1];
+        DWORD username_len = UNLEN + 1;
         GetUserName(username, &username_len);
         return username;
 #else

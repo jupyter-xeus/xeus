@@ -1,6 +1,6 @@
 /***************************************************************************
-* Copyright (c) 2018, Martin Renou, Johan Mabille, Sylvain Corlay and      *
-* Wolf Vollprecht                                                          *
+* Copyright (c) 2016, Johan Mabille, Sylvain Corlay, Martin Renou          *
+* Copyright (c) 2016, QuantStack                                           *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *
@@ -9,6 +9,8 @@
 
 #include <stdexcept>
 #include <string>
+
+#include "nlohmann/json.hpp"
 
 #include "xin_memory_history_manager.hpp"
 
