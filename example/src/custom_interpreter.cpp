@@ -8,7 +8,13 @@
 ****************************************************************************/
 
 #include <iostream>
+
+#include "nlohmann/json.hpp"
+
 #include "custom_interpreter.hpp"
+
+namespace nl = nlohmann;
+
 
 namespace custom
 {

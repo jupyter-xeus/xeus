@@ -11,6 +11,8 @@
 
 #include "nlohmann/json.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     void xlogger::log_received_message(const xmessage& message, channel c) const

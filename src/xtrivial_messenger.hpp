@@ -15,6 +15,8 @@
 #include "xeus/xeus.hpp"
 #include "xeus/xcontrol_messenger.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     class xserver_zmq;

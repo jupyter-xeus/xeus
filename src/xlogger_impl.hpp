@@ -15,6 +15,8 @@
 
 #include "xeus/xlogger.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
 
