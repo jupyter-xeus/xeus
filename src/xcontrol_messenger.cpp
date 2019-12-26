@@ -12,6 +12,8 @@
 #include "xeus/xcontrol_messenger.hpp"
 #include "xeus/xmiddleware.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     xcontrol_messenger::~xcontrol_messenger()

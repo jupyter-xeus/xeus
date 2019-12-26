@@ -22,7 +22,6 @@ namespace custom
 {
     class custom_interpreter : public xinterpreter
     {
-
     public:
 
         custom_interpreter() = default;

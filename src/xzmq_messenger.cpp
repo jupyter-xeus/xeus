@@ -13,6 +13,8 @@
 
 #include "xzmq_messenger.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     xzmq_messenger::xzmq_messenger(zmq::context_t& context)

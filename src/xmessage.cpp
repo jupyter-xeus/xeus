@@ -19,6 +19,8 @@
 #include "xeus/xguid.hpp"
 #include "xeus/xmessage.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     const std::string xmessage_base::DELIMITER = "<IDS|MSG>";

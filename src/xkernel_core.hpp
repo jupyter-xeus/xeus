@@ -24,6 +24,8 @@
 #include "xeus/xmessage.hpp"
 #include "xeus/xlogger.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     class xkernel_core

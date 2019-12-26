@@ -14,6 +14,8 @@
 
 #include "xin_memory_history_manager.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     xin_memory_history_manager::xin_memory_history_manager()

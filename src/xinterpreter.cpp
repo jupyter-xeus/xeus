@@ -15,6 +15,8 @@
 
 #include "xeus/xinterpreter.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     xinterpreter::xinterpreter()

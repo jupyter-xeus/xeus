@@ -18,6 +18,8 @@
 #include "xeus/xeus.hpp"
 #include "xeus/xcontrol_messenger.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     class XEUS_API xzmq_messenger : public xcontrol_messenger

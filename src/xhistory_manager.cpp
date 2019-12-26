@@ -15,6 +15,8 @@
 #include "xeus/xhistory_manager.hpp"
 #include "xin_memory_history_manager.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     xhistory_manager::xhistory_manager()

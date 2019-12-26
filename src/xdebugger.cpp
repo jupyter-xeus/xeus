@@ -11,6 +11,8 @@
 
 #include "xeus/xdebugger.hpp"
 
+namespace nl = nlohmann;
+
 namespace xeus
 {
     xdebugger::xdebugger()
