@@ -71,7 +71,7 @@ Configuration
 ~~~~~~~~~~~~~
 
 The ``configure_impl`` method allows you to perform some operations after the ``custom_interpreter`` creation and before executing
-any request. This is optional, but it can be useful, for example it is used in `xeus-python <https://github.com/QuantStack/xeus-python>`_
+any request. This is optional, but it can be useful, for example it is used in `xeus-python <https://github.com/jupyter-xeus/xeus-python>`_
 for initializing the auto-completion engine.
 
 .. literalinclude:: ../../example/src/custom_interpreter.cpp

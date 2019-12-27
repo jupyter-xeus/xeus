@@ -120,7 +120,7 @@ foreach(filename IN LISTS XEUS_TESTS)
 endforeach()
 
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
-    # https://github.com/QuantStack/xeus/pull/126
+    # https://github.com/jupyter-xeus/xeus/pull/126
     # This should really just be post gtest and gtest_main targets, but CMake
     # won't allow us to do that. So do it after the last test (which depends on
     # those anyway.)

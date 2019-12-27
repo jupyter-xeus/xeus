@@ -45,11 +45,11 @@ The easiest way to get started with a new kernel is to create a class inheriting
 
 A dummy kernel is provided as an example_.
 You can also find real kernel implementations based on xeus:
-  - `xeus-cling <https://github.com/QuantStack/xeus-cling>`_: C++ kernel
-  - `xeus-python <https://github.com/QuantStack/xeus-python>`_: Python kernel
+  - `xeus-cling <https://github.com/jupyter-xeus/xeus-cling>`_: C++ kernel
+  - `xeus-python <https://github.com/jupyter-xeus/xeus-python>`_: Python kernel
   - `JuniperKernel <https://github.com/JuniperKernel/JuniperKernel>`_: R kernel
 
-.. _example: https://github.com/QuantStack/xeus/blob/master/docs/source/example
+.. _example: https://github.com/jupyter-xeus/xeus/blob/master/docs/source/example
 .. _execute_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#execute
 .. _complete_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#completion
 .. _inspect_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#introspection
