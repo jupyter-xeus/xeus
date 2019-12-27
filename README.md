@@ -1,7 +1,7 @@
 # ![xeus](docs/source/xeus.svg)
 
-[![Travis](https://travis-ci.org/QuantStack/xeus.svg?branch=master)](https://travis-ci.org/QuantStack/xeus)
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/5alkw5iiere4mox2?svg=true)](https://ci.appveyor.com/project/QuantStack/xeus)
+[![Travis](https://travis-ci.org/jupyter-xeus/xeus.svg?branch=master)](https://travis-ci.org/jupyter-xeus/xeus)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/hit9rhq3e09m2qwg?svg=true)](https://ci.appveyor.com/project/jupyter-xeus/xeus)
 [![Documentation Status](http://readthedocs.org/projects/xeus/badge/?version=latest)](https://xeus.readthedocs.io/en/latest/?badge=latest)
 [![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
