@@ -70,8 +70,8 @@ built with Xeus and Rcpp_.
 .. image:: rwidgets-screenshot.png
    :alt: rwidgets screenshot
 
-.. _xeus-cling: https://github.com/QuantStack/xeus-cling
-.. _xeus-python: https://github.com/QuantStack/xeus-python
+.. _xeus-cling: https://github.com/jupyter-xeus/xeus-cling
+.. _xeus-python: https://github.com/jupyter-xeus/xeus-python
 .. _xwidgets: https://github.com/QuantStack/xwidgets
 .. _JuniperKernel: https://github.com/JuniperKernel/JuniperKernel
 .. _Rcpp: https://github.com/RcppCore/Rcpp

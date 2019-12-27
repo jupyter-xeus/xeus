@@ -13,8 +13,8 @@ C++ implementation of the Jupyter Kernel protocol
 burden of implementing the Jupyter Kernel protocol so developers can focus on implementing the
 interpreter part of the kernel.
 
-Several Jupyter kernels are built upon xeus, such as [`xeus-cling`](https://github.com/QuantStack/xeus-cling),
-a kernel for the C++ programming language, and [`xeus-python`](https://github.com/QuantStack/xeus-python), an alternative Python kernel for Jupyter.
+Several Jupyter kernels are built upon xeus, such as [`xeus-cling`](https://github.com/jupyter-xeus/xeus-cling),
+a kernel for the C++ programming language, and [`xeus-python`](https://github.com/jupyter-xeus/xeus-python), an alternative Python kernel for Jupyter.
 
 ## Installation
 
@@ -94,7 +94,7 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 `xeus` depends on the following libraries: [`ZeroMQ`](https://github.com/zeromq/libzmq),
 [`cppzmq`](https://github.com/zeromq/cppzmq), [`OpenSSL`](https://github.com/openssl/openssl),
-[`nlohmann_json`](https://github.com/nlohmann/json), and [`xtl`](https://github.com/QuantStack/xtl).
+[`nlohmann_json`](https://github.com/nlohmann/json), and [`xtl`](https://github.com/xtensor-stack/xtl).
 
 |  xeus  | ZeroMQ  | cppzmq  |   xtl          | nlohmann json | OpenSSL |
 |--------|---------|---------|----------------|---------------|---------|
@@ -176,7 +176,7 @@ make install
 
 ### xtl
 
-[xtl](https://github.com/QuantStack/xtl) is a header only library:
+[xtl](https://github.com/xtensor-stack/xtl) is a header only library:
 
 ```bash
 cmake -D CMAKE_BUILD_TYPE

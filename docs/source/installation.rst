@@ -89,5 +89,5 @@ xtl
 .. _libzmq: https://github.com/zeromq/libzmq
 .. _cppzmq: https://github.com/zeromq/cppzmq
 .. _OpenSSL: https://github.com/OpenSSL/OpenSSL
-.. _xtl: https://github.com/QuantStack/xtl
+.. _xtl: https://github.com/xtensor-stack/xtl
 
