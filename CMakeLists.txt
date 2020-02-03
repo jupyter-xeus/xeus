@@ -52,31 +52,43 @@ set(xtl_REQUIRED_VERSION 0.5)
 set(cppzmq_REQUIRED_VERSION 4.3.0)
 set(zeromq_REQUIRED_VERSION 4.2.5)
 
-find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
-find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
-find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
-
-if (WIN32)
-    find_package(zeromq ${zeromq_REQUIRED_VERSION} REQUIRED)
-else ()
-    find_package(zeromq ${zeromq_REQUIRED_VERSION} QUIET)
-
-    if (NOT ZeroMQ_FOUND)
-        message(STATUS "CMake libzmq package not found, trying again with pkg-config")
-        find_package(PkgConfig)
-        pkg_check_modules(ZeroMQ libzmq>=${zeromq_REQUIRED_VERSION} REQUIRED)
-        set(ZeroMQ_VERSION ${PC_LIBZMQ_VERSION})
-        find_library(ZeroMQ_LIBRARY NAMES libzmq.so libzmq.dylib libzmq.dll
-             PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
-        find_library(ZeroMQ_STATIC_LIBRARY NAMES libzmq-static.a libzmq.a libzmq.dll.a
-             PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
-        message(STATUS "STATIC_LIBRARY" {ZeroMQ_LIBRARY})
-        message(STATUS "STATIC_STATIC_LIBRARY" {ZeroMQ_STATIC_LIBRARY})
-     endif ()
+if (NOT TARGET nlohmman_json)
+    find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
 endif ()
 
-set(OPENSSL_ROOT_DIR ${CMAKE_INSTALL_PREFIX})
-find_package(OpenSSL REQUIRED)
+if (NOT TARGET xtl)
+    find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
+endif ()
+
+if (NOT TARGET cppzmq)
+    find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
+endif ()
+
+if (NOT TARGET libzmq)
+    if (WIN32)
+        find_package(zeromq ${zeromq_REQUIRED_VERSION} REQUIRED)
+    else ()
+        find_package(zeromq ${zeromq_REQUIRED_VERSION} QUIET)
+
+        if (NOT ZeroMQ_FOUND)
+            message(STATUS "CMake libzmq package not found, trying again with pkg-config")
+            find_package(PkgConfig)
+            pkg_check_modules(ZeroMQ libzmq>=${zeromq_REQUIRED_VERSION} REQUIRED)
+            set(ZeroMQ_VERSION ${PC_LIBZMQ_VERSION})
+            find_library(ZeroMQ_LIBRARY NAMES libzmq.so libzmq.dylib libzmq.dll
+                 PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
+            find_library(ZeroMQ_STATIC_LIBRARY NAMES libzmq-static.a libzmq.a libzmq.dll.a
+                 PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
+            message(STATUS "STATIC_LIBRARY" {ZeroMQ_LIBRARY})
+            message(STATUS "STATIC_STATIC_LIBRARY" {ZeroMQ_STATIC_LIBRARY})
+         endif ()
+    endif ()
+endif ()
+
+if (NOT DEFINED OPENSSL_LIBRARY)
+    set(OPENSSL_ROOT_DIR ${CMAKE_INSTALL_PREFIX})
+    find_package(OpenSSL REQUIRED)
+endif ()
 
 # Source files
 # ============
