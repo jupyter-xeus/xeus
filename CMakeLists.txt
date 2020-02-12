@@ -52,7 +52,7 @@ set(xtl_REQUIRED_VERSION 0.5)
 set(cppzmq_REQUIRED_VERSION 4.3.0)
 set(zeromq_REQUIRED_VERSION 4.2.5)
 
-if (NOT TARGET nlohmman_json)
+if (NOT TARGET nlohmann_json)
     find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
 endif ()
 
