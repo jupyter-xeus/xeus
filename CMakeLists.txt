@@ -49,8 +49,8 @@ message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)
 set(xtl_REQUIRED_VERSION 0.5)
-set(cppzmq_REQUIRED_VERSION 4.3.0)
-set(zeromq_REQUIRED_VERSION 4.2.5)
+set(cppzmq_REQUIRED_VERSION 4.4.1)
+set(zeromq_REQUIRED_VERSION 4.3.2)
 
 if (NOT TARGET nlohmann_json)
     find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
