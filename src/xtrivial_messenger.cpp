@@ -7,6 +7,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include "nlohmann/json.hpp"
+
 #include "xeus/xserver_zmq.hpp"
 #include "xtrivial_messenger.hpp"
 

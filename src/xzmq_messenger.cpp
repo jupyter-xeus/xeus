@@ -44,16 +44,16 @@ namespace xeus
         zmq::message_t response;
 
         // Wait for shell answer
-        m_shell_controller.send(stop_msg);
-        m_shell_controller.recv(&response);
+        m_shell_controller.send(stop_msg, zmq::send_flags::none);
+        m_shell_controller.recv(response);
 
         // Wait for publisher answer
-        m_publisher_controller.send(stop_msg);
-        m_publisher_controller.recv(&response);
+        m_publisher_controller.send(stop_msg, zmq::send_flags::none);
+        m_publisher_controller.recv(response);
 
         // Wait for heartbeat answer
-        m_heartbeat_controller.send(stop_msg);
-        m_heartbeat_controller.recv(&response);
+        m_heartbeat_controller.send(stop_msg, zmq::send_flags::none);
+        m_heartbeat_controller.recv(response);
     }
 
     nl::json xzmq_messenger::send_to_shell_impl(const nl::json& message)
