@@ -1,7 +1,7 @@
 name: xeus-docs
 
 channels:
-  - conda-forge
+  - QuantStack
 
 dependencies:
   - breathe
