@@ -52,6 +52,7 @@ option(XEUS_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
 if (XEUS_STATIC_DEPENDENCIES)
     set(CPPZMQ_TARGET_NAME cppzmq-static)
     set(OPENSSL_USE_STATIC_LIBS ON)
+
 else()
     set(CPPZMQ_TARGET_NAME cppzmq)
     set(OPENSSL_USE_STATIC_LIBS OFF)
@@ -182,6 +183,10 @@ option(DISABLE_ARCH_NATIVE "disable -march=native flag" OFF)
 option(BUILD_SHARED_LIBS "Build xeus shared library." ON)
 option(BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." ON)
 
+if (XEUS_STATIC_DEPENDENCIES)
+    set(BUILD_SHARED_LIBS OFF)
+endif ()
+
 if (NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     set(BUILD_STATIC_LIBS ON)
 endif ()
@@ -241,6 +246,14 @@ macro(xeus_create_target target_name linkage output_name)
                 find_library(LIBUUID_LIBRARY libuuid.a)
                 target_include_directories(${target_name} PRIVATE ${LIBUUID_INCLUDE_DIR})
                 target_link_libraries(${target_name} PUBLIC ${LIBUUID_LIBRARY})
+            
+                # Explicitly finds and links with libsodium.a
+                # because it is not exported as a dependency by
+                # the static build of libzmq. Remove this when
+                # it is fixed upstream.
+                set(sodium_USE_STATIC_LIBS ON)
+                find_package(sodium REQUIRED)
+                target_link_libraries(${target_name} PUBLIC ${sodium_LIBRARY_RELEASE})
             else ()
                 find_package(LibUUID REQUIRED)
                 target_link_libraries(${target_name} PUBLIC LibUUID::LibUUID)

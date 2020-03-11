@@ -1,13 +1,13 @@
 language: cpp
-dist: trusty
+dist: xenial
 matrix:
   include:
-    - os: linux
+      #- os: linux
     - os: linux
       env: XEUS_STATIC_DEPENDENCIES=1
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
+      #- os: osx
+      #osx_image: xcode8
+      #compiler: clang
 env:
   global:
     - MINCONDA_VERSION="latest"
