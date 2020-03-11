@@ -322,6 +322,11 @@ macro(xeus_create_target target_name linkage output_name)
     else ()
         target_compile_definitions(${target_name} PUBLIC -DGUID_LIBUUID)
     endif ()
+
+    if (XEUS_STATIC_DEPENDENCIES AND CMAKE_DL_LIBS)
+        target_link_libraries(${target_name} PRIVATE ${CMAKE_DL_LIBS} util rt)
+    endif ()
+
 endmacro()
 
 set(xeus_targets "")

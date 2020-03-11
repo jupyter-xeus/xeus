@@ -23,6 +23,13 @@ configure_file (
     "${CMAKE_CURRENT_SOURCE_DIR}/share/jupyter/kernels/my_kernel/kernel.json"
 )
 
+option(XEUS_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
+if (XEUS_STATIC_DEPENDENCIES)
+    set(xeus_target "xeus_static")
+else ()
+    set(xeus_target "xeus")
+endif ()
+
 # Dependencies
 # ============
 
@@ -32,6 +39,7 @@ set(cppzmq_REQUIRED_VERSION 4.3.0)
 
 find_package(xeus ${xeus_REQUIRED_VERSION} REQUIRED)
 find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
+find_package(Threads)
 
 # Flags
 # =====
@@ -59,7 +67,7 @@ set(MY_KERNEL_SRC
 
 # My kernel executable
 add_executable(${EXECUTABLE_NAME} src/main.cpp ${MY_KERNEL_SRC} )
-target_link_libraries(${EXECUTABLE_NAME} PRIVATE xeus)
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE ${xeus_target} Threads::Threads)
 
 if (APPLE)
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES
