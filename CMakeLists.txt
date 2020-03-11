@@ -312,11 +312,15 @@ endif ()
 # Tests
 # =====
 
-option(BUILD_TESTING "Build tests" OFF)
+# We need to control from outside whether we enable testing or not. We cannot
+# rely on BUILD_TESTING since it doe snot exist until CTest is included.
+
+option(BUILD_TESTS "xeus test suite" OFF)
 option(DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
+
 include(CTest)
 
-if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
+if(DOWNLOAD_GTEST OR GTEST_SRC_DIR OR BUILD_TESTS)
     set(BUILD_TESTING ON)
 endif()
 
