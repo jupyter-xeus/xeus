@@ -44,6 +44,20 @@ set(XEUS_BINARY_VERSION
     ${XEUS_BINARY_CURRENT}.${XEUS_BINARY_REVISION}.${XEUS_BINARY_AGE})
 message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 
+# Static build options
+# ====================
+
+option(XEUS_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
+
+if (XEUS_STATIC_DEPENDENCIES)
+    set(CPPZMQ_TARGET_NAME cppzmq-static)
+    set(OPENSSL_USE_STATIC_LIBS ON)
+
+else()
+    set(CPPZMQ_TARGET_NAME cppzmq)
+    set(OPENSSL_USE_STATIC_LIBS OFF)
+endif()
+
 # Dependencies
 # ============
 
@@ -60,11 +74,11 @@ if (NOT TARGET xtl)
     find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
 endif ()
 
-if (NOT TARGET cppzmq)
+if (NOT TARGET cppzmq AND NOT TARGET cppzmq-static)
     find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
 endif ()
 
-if (NOT TARGET libzmq)
+if (NOT TARGET libzmq AND NOT TARGET libzmq-static)
     if (WIN32)
         find_package(zeromq ${zeromq_REQUIRED_VERSION} REQUIRED)
     else ()
@@ -169,6 +183,10 @@ option(DISABLE_ARCH_NATIVE "disable -march=native flag" OFF)
 option(BUILD_SHARED_LIBS "Build xeus shared library." ON)
 option(BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." ON)
 
+if (XEUS_STATIC_DEPENDENCIES)
+    set(BUILD_SHARED_LIBS OFF)
+endif ()
+
 if (NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
     set(BUILD_STATIC_LIBS ON)
 endif ()
@@ -209,9 +227,10 @@ macro(xeus_create_target target_name linkage output_name)
         PUBLIC $<BUILD_INTERFACE:${XEUS_INCLUDE_DIR}>
         $<INSTALL_INTERFACE:include>
     )
+
     target_link_libraries(
         ${target_name}
-        PUBLIC cppzmq
+        PUBLIC ${CPPZMQ_TARGET_NAME}
         PUBLIC nlohmann_json::nlohmann_json
         PUBLIC xtl
     )
@@ -222,8 +241,23 @@ macro(xeus_create_target target_name linkage output_name)
         if (APPLE)
             target_link_libraries(${target_name} PUBLIC "-framework CoreFoundation")
         else ()
-            find_package(LibUUID REQUIRED)
-            target_link_libraries(${target_name} PUBLIC LibUUID::LibUUID)
+            if (XEUS_STATIC_DEPENDENCIES)
+                find_path(LIBUUID_INCLUDE_DIR uuid.h PATH_SUFFIXES uuid)
+                find_library(LIBUUID_LIBRARY libuuid.a)
+                target_include_directories(${target_name} PRIVATE ${LIBUUID_INCLUDE_DIR})
+                target_link_libraries(${target_name} PUBLIC ${LIBUUID_LIBRARY})
+            
+                # Explicitly finds and links with libsodium.a
+                # because it is not exported as a dependency by
+                # the static build of libzmq. Remove this when
+                # it is fixed upstream.
+                set(sodium_USE_STATIC_LIBS ON)
+                find_package(sodium REQUIRED)
+                target_link_libraries(${target_name} PUBLIC ${sodium_LIBRARY_RELEASE})
+            else ()
+                find_package(LibUUID REQUIRED)
+                target_link_libraries(${target_name} PUBLIC LibUUID::LibUUID)
+            endif ()
         endif ()
     endif ()
 
@@ -288,6 +322,11 @@ macro(xeus_create_target target_name linkage output_name)
     else ()
         target_compile_definitions(${target_name} PUBLIC -DGUID_LIBUUID)
     endif ()
+
+    if (XEUS_STATIC_DEPENDENCIES AND CMAKE_DL_LIBS)
+        target_link_libraries(${target_name} PRIVATE ${CMAKE_DL_LIBS} util rt)
+    endif ()
+
 endmacro()
 
 set(xeus_targets "")
