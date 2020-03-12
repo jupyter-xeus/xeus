@@ -361,8 +361,10 @@ include(CTest)
 
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR OR BUILD_TESTS)
     set(BUILD_TESTING ON)
+    message(STATUS "tests enabled")
 else ()
     set(BUILD_TESTING OFF)
+    message(STATUS "tests disabled")
 endif()
 
 if(BUILD_TESTING)
