@@ -43,13 +43,14 @@ The easiest way to get started with a new kernel is to create a class inheriting
   Shutdown request from the client, this allows you to do some extra work before the kernel
   is shut down (e.g. free allocated memory).
 
-A dummy kernel is provided as an example_.
+A dummy kernel is provided as an example_ and a more advanced example kernel can be found here_.
 You can also find real kernel implementations based on xeus:
   - `xeus-cling <https://github.com/jupyter-xeus/xeus-cling>`_: C++ kernel
   - `xeus-python <https://github.com/jupyter-xeus/xeus-python>`_: Python kernel
   - `JuniperKernel <https://github.com/JuniperKernel/JuniperKernel>`_: R kernel
 
-.. _example: https://github.com/jupyter-xeus/xeus/blob/master/docs/source/example
+.. _example: https://github.com/jupyter-xeus/xeus/tree/master/example
+.. _here: https://github.com/jupyter-xeus/xeus-calc/
 .. _execute_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#execute
 .. _complete_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#completion
 .. _inspect_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#introspection
