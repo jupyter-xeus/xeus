@@ -361,6 +361,8 @@ include(CTest)
 
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR OR BUILD_TESTS)
     set(BUILD_TESTING ON)
+else ()
+    set(BUILD_TESTING OFF)
 endif()
 
 if(BUILD_TESTING)

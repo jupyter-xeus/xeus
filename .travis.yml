@@ -47,7 +47,7 @@ install:
       else
         cmake -DDOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX ..;
       fi
-    - make VERBOSE=1
+    - make -j2
     - make install
     - popd
     # Build example
@@ -59,7 +59,7 @@ install:
       else
         cmake -DCMAKE_INSTALL_PREFIX=$HOME/miniconda ..;
       fi
-    - make VERBOSE=1
+    - make -j2
     - popd && popd
     - cd build
 script:
