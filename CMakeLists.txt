@@ -44,15 +44,26 @@ set(XEUS_BINARY_VERSION
     ${XEUS_BINARY_CURRENT}.${XEUS_BINARY_REVISION}.${XEUS_BINARY_AGE})
 message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 
-# Static build options
-# ====================
+# Build options
+# =============
 
+# Compilation options
+option(XEUS_DISABLE_ARCH_NATIVE "disable -march=native flag" OFF)
+option(XEUS_BUILD_SHARED_LIBS "Build xeus shared library." ON)
+option(XEUS_BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." ON)
 option(XEUS_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
+
+# Test options
+option(XEUS_BUILD_TESTS "xeus test suite" OFF)
+option(XEUS_DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
+
+# Static build configuration
+# ==========================
 
 if (XEUS_STATIC_DEPENDENCIES)
     set(CPPZMQ_TARGET_NAME cppzmq-static)
     set(OPENSSL_USE_STATIC_LIBS ON)
-
+    set(XEUS_BUILD_SHARED_LIBS OFF)
 else()
     set(CPPZMQ_TARGET_NAME cppzmq)
     set(OPENSSL_USE_STATIC_LIBS OFF)
@@ -174,21 +185,15 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xzmq_messenger.cpp
 )
 
+# Targets and link
+# ================
+
 include(CheckCXXCompilerFlag)
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 
-option(DISABLE_ARCH_NATIVE "disable -march=native flag" OFF)
-
-option(BUILD_SHARED_LIBS "Build xeus shared library." ON)
-option(BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." ON)
-
-if (XEUS_STATIC_DEPENDENCIES)
-    set(BUILD_SHARED_LIBS OFF)
-endif ()
-
-if (NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
-    set(BUILD_STATIC_LIBS ON)
+if (NOT XEUS_BUILD_SHARED_LIBS AND NOT XEUS_BUILD_STATIC_LIBS)
+    set(XEUS_BUILD_STATIC_LIBS ON)
 endif ()
 
 if (NOT APPLE)
@@ -283,7 +288,7 @@ macro(xeus_create_target target_name linkage output_name)
 
         target_compile_options(${target_name} PUBLIC -Wunused-parameter -Wextra -Wreorder)
 
-	if (NOT DISABLE_ARCH_NATIVE)
+        if (NOT XEUS_DISABLE_ARCH_NATIVE)
             target_compile_options(${target_name} PUBLIC -march=native)
         endif ()
 
@@ -331,12 +336,12 @@ endmacro()
 
 set(xeus_targets "")
 
-if (BUILD_SHARED_LIBS)
+if (XEUS_BUILD_SHARED_LIBS)
     xeus_create_target(xeus SHARED xeus)
     list(APPEND xeus_targets xeus)
 endif ()
 
-if (BUILD_STATIC_LIBS)
+if (XEUS_BUILD_STATIC_LIBS)
     # On Windows, a static library should use a different output name
     # to avoid the conflict with the import library of a shared one.
     if (CMAKE_HOST_WIN32)
@@ -354,12 +359,9 @@ endif ()
 # We need to control from outside whether we enable testing or not. We cannot
 # rely on BUILD_TESTING since it doe snot exist until CTest is included.
 
-option(BUILD_TESTS "xeus test suite" OFF)
-option(DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
-
 include(CTest)
 
-if(DOWNLOAD_GTEST OR GTEST_SRC_DIR OR BUILD_TESTS)
+if(XEUS_DOWNLOAD_GTEST OR GTEST_SRC_DIR OR XEUS_BUILD_TESTS)
     set(BUILD_TESTING ON)
     message(STATUS "tests enabled")
 else ()

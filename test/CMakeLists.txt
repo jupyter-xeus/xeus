@@ -48,8 +48,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     set(CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO)
 endif()
 
-if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
-    if(DOWNLOAD_GTEST)
+if(XEUS_DOWNLOAD_GTEST OR GTEST_SRC_DIR)
+    if(XEUS_DOWNLOAD_GTEST)
         # Download and unpack googletest at configure time
         configure_file(downloadGTest.cmake.in googletest-download/CMakeLists.txt)
     else()
@@ -119,12 +119,12 @@ foreach(filename IN LISTS XEUS_TESTS)
     add_test(NAME ${targetname} COMMAND ${targetname})
 endforeach()
 
-if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
+if(XEUS_DOWNLOAD_GTEST OR GTEST_SRC_DIR)
     # https://github.com/jupyter-xeus/xeus/pull/126
     # This should really just be post gtest and gtest_main targets, but CMake
     # won't allow us to do that. So do it after the last test (which depends on
     # those anyway.)
-    if (BUILD_SHARED_LIBS)
+    if (XEUS_BUILD_SHARED_LIBS)
         add_custom_command(
             TARGET ${targetname} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:gtest>" "${CMAKE_CURRENT_BINARY_DIR}/")
