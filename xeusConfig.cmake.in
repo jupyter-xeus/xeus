@@ -13,6 +13,7 @@
 #   xeus_FOUND - true if xeus found on the system
 #   xeus_INCLUDE_DIRS - the directory containing xeus headers
 #   xeus_LIBRARY - the library for dynamic linking
+#   xeus_STATIC_LIBRARY - the library for static linking
 
 @PACKAGE_INIT@
 
@@ -44,19 +45,19 @@ endif()
 
 find_dependency(OpenSSL)
 
-if(NOT TARGET xeus AND NOT TARGET xeus_static)
+if(NOT TARGET xeus AND NOT TARGET xeus-static)
     include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
 
-    if (TARGET xeus AND TARGET xeus_static)
+    if (TARGET xeus AND TARGET xeus-static)
         get_target_property(@PROJECT_NAME@_INCLUDE_DIR xeus INTERFACE_INCLUDE_DIRECTORIES)
         get_target_property(@PROJECT_NAME@_LIBRARY xeus LOCATION)
-        get_target_property(@PROJECT_NAME@_STATIC_LIBRARY xeus_static LOCATION)
+        get_target_property(@PROJECT_NAME@_STATIC_LIBRARY xeus-static LOCATION)
     elseif (TARGET xeus)
         get_target_property(@PROJECT_NAME@_INCLUDE_DIR xeus INTERFACE_INCLUDE_DIRECTORIES)
         get_target_property(@PROJECT_NAME@_LIBRARY xeus LOCATION)
-    elseif (TARGET xeus_static)
-        get_target_property(@PROJECT_NAME@_INCLUDE_DIR xeus_static INTERFACE_INCLUDE_DIRECTORIES)
-        get_target_property(@PROJECT_NAME@_STATIC_LIBRARY xeus_static LOCATION)
+    elseif (TARGET xeus-static)
+        get_target_property(@PROJECT_NAME@_INCLUDE_DIR xeus-static INTERFACE_INCLUDE_DIRECTORIES)
+        get_target_property(@PROJECT_NAME@_STATIC_LIBRARY xeus-static LOCATION)
         set(@PROJECT_NAME@_LIBRARY ${@PROJECT_NAME@_STATIC_LIBRARY})
     endif ()
 endif()
