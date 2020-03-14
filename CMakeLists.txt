@@ -345,12 +345,12 @@ if (XEUS_BUILD_STATIC_LIBS)
     # On Windows, a static library should use a different output name
     # to avoid the conflict with the import library of a shared one.
     if (CMAKE_HOST_WIN32)
-        xeus_create_target(xeus_static STATIC xeus_static)
+        xeus_create_target(xeus-static STATIC xeus-static)
     else ()
-        xeus_create_target(xeus_static STATIC xeus)
+        xeus_create_target(xeus-static STATIC xeus)
     endif ()
 
-    list(APPEND xeus_targets xeus_static)
+    list(APPEND xeus_targets xeus-static)
 endif ()
 
 # Tests

@@ -25,7 +25,7 @@ configure_file (
 
 option(XEUS_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
 if (XEUS_STATIC_DEPENDENCIES)
-    set(xeus_target "xeus_static")
+    set(xeus_target "xeus-static")
 else ()
     set(xeus_target "xeus")
 endif ()
