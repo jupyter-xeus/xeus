@@ -25,11 +25,13 @@ class XeusConan(ConanFile):
         cmake.test()
 
     def package(self):
-        self.copy("*.hpp", dst="include", src="hello")
-        self.copy("*xeus.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.dylib", dst="lib", keep_path=False)
+        self.copy("*.hpp", dst="include", src="include")
+        # Not pretty: (sorry, but I just wanted static lib!)
+        if False:
+            self.copy("*xeus.lib", dst="lib", keep_path=False)
+            self.copy("*.dll", dst="lib", keep_path=False)
+            self.copy("*.so", dst="lib", keep_path=False)
+            self.copy("*.dylib", dst=".", keep_path=False)
         self.copy("*.a", dst="lib", keep_path=False)
 
     def package_info(self):
