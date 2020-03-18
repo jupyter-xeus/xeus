@@ -10,6 +10,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(xeus)
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
+
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 set(XEUS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -68,52 +71,6 @@ else()
     set(CPPZMQ_TARGET_NAME cppzmq)
     set(OPENSSL_USE_STATIC_LIBS OFF)
 endif()
-
-# Dependencies
-# ============
-
-set(nlohmann_json_REQUIRED_VERSION 3.2.0)
-set(xtl_REQUIRED_VERSION 0.5)
-set(cppzmq_REQUIRED_VERSION 4.4.1)
-set(zeromq_REQUIRED_VERSION 4.3.2)
-
-if (NOT TARGET nlohmann_json)
-    find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
-endif ()
-
-if (NOT TARGET xtl)
-    find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
-endif ()
-
-if (NOT TARGET cppzmq AND NOT TARGET cppzmq-static)
-    find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
-endif ()
-
-if (NOT TARGET libzmq AND NOT TARGET libzmq-static)
-    if (WIN32)
-        find_package(zeromq ${zeromq_REQUIRED_VERSION} REQUIRED)
-    else ()
-        find_package(zeromq ${zeromq_REQUIRED_VERSION} QUIET)
-
-        if (NOT ZeroMQ_FOUND)
-            message(STATUS "CMake libzmq package not found, trying again with pkg-config")
-            find_package(PkgConfig)
-            pkg_check_modules(ZeroMQ libzmq>=${zeromq_REQUIRED_VERSION} REQUIRED)
-            set(ZeroMQ_VERSION ${PC_LIBZMQ_VERSION})
-            find_library(ZeroMQ_LIBRARY NAMES libzmq.so libzmq.dylib libzmq.dll
-                 PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
-            find_library(ZeroMQ_STATIC_LIBRARY NAMES libzmq-static.a libzmq.a libzmq.dll.a
-                 PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
-            message(STATUS "STATIC_LIBRARY" {ZeroMQ_LIBRARY})
-            message(STATUS "STATIC_STATIC_LIBRARY" {ZeroMQ_STATIC_LIBRARY})
-         endif ()
-    endif ()
-endif ()
-
-if (NOT DEFINED OPENSSL_LIBRARY)
-    set(OPENSSL_ROOT_DIR ${CMAKE_INSTALL_PREFIX})
-    find_package(OpenSSL REQUIRED)
-endif ()
 
 # Source files
 # ============
@@ -233,38 +190,7 @@ macro(xeus_create_target target_name linkage output_name)
         $<INSTALL_INTERFACE:include>
     )
 
-    target_link_libraries(
-        ${target_name}
-        PUBLIC ${CPPZMQ_TARGET_NAME}
-        PUBLIC nlohmann_json::nlohmann_json
-        PUBLIC xtl
-    )
-
-    target_link_libraries(${target_name} PUBLIC OpenSSL::Crypto)
-
-    if (NOT MSVC)
-        if (APPLE)
-            target_link_libraries(${target_name} PUBLIC "-framework CoreFoundation")
-        else ()
-            if (XEUS_STATIC_DEPENDENCIES)
-                find_path(LIBUUID_INCLUDE_DIR uuid.h PATH_SUFFIXES uuid)
-                find_library(LIBUUID_LIBRARY libuuid.a)
-                target_include_directories(${target_name} PRIVATE ${LIBUUID_INCLUDE_DIR})
-                target_link_libraries(${target_name} PUBLIC ${LIBUUID_LIBRARY})
-            
-                # Explicitly finds and links with libsodium.a
-                # because it is not exported as a dependency by
-                # the static build of libzmq. Remove this when
-                # it is fixed upstream.
-                set(sodium_USE_STATIC_LIBS ON)
-                find_package(sodium REQUIRED)
-                target_link_libraries(${target_name} PUBLIC ${sodium_LIBRARY_RELEASE})
-            else ()
-                find_package(LibUUID REQUIRED)
-                target_link_libraries(${target_name} PUBLIC LibUUID::LibUUID)
-            endif ()
-        endif ()
-    endif ()
+    conan_target_link_libraries(${target_name})
 
     set_target_properties(
         ${target_name}
