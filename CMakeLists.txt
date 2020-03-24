@@ -302,6 +302,13 @@ macro(xeus_create_target target_name linkage output_name)
                 target_compile_options(${target_name} PUBLIC -flto)
             endif ()
 
+            # Avoids removing symbols from the static library
+            CHECK_CXX_COMPILER_FLAG("-ffat-lto-objects" HAS_FATLTO_FLAG)
+            if (${linkage_upper} MATCHES "STATIC" AND  HAS_FATLTO_FLAG)
+                message(STATUS "ENABLE FAT LTO OBJECTS")
+                target_compile_options(${target_name} PUBLIC -ffat-lto-objects)
+            endif ()
+
             # Intel equivalent to LTO is called IPO
             if (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
                 CHECK_CXX_COMPILER_FLAG("-ipo" HAS_IPO_FLAG)
