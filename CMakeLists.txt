@@ -345,6 +345,13 @@ set(xeus_targets "")
 
 if (XEUS_BUILD_SHARED_LIBS)
     xeus_create_target(xeus SHARED xeus)
+    if(CMAKE_TARGET_SYSTEM MATCHES "Linux" AND XEUS_STATIC_DEPENDENCIES)
+        # Do not reexport OpenSSL symbols from xeus, for libraries
+        #   Prevents conflicts with other versions of OpenSSL
+        #   loaded in the same process namespace, which can cause
+        #   crashes if the versions are not compatible.
+        set_target_properties(xeus PROPERTIES LINK_FLAGS "-Wl,--exclude-libs,libcrypto.a")
+    endif()
     list(APPEND xeus_targets xeus)
 endif ()
 
