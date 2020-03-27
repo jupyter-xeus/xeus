@@ -45,6 +45,7 @@ for details.
    :maxdepth: 2
 
    dev
+   server
 
 .. toctree::
    :caption: MISCELLANEOUS
