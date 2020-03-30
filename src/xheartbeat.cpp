@@ -11,8 +11,9 @@
 #include <string>
 
 #include "zmq_addon.hpp"
-#include "xeus/xmiddleware.hpp"
+
 #include "xheartbeat.hpp"
+#include "xserver_utils.hpp"
 
 namespace xeus
 {
@@ -23,8 +24,8 @@ namespace xeus
         : m_heartbeat(context, zmq::socket_type::router)
         , m_controller(context, zmq::socket_type::rep)
     {
-        init_socket(m_heartbeat, transport, ip, port);
-        init_socket(m_controller, get_controller_end_point("heartbeat"));
+        bind_socket("xheartbeat", "heartbeat", m_heartbeat, transport, ip, port);
+        bind_socket("xheartbeat", "controller", m_controller, get_controller_end_point("heartbeat"));
     }
 
     xheartbeat::~xheartbeat()
@@ -38,6 +39,7 @@ namespace xeus
 
     void xheartbeat::run()
     {
+        console_log("xheartbeat started");
         zmq::pollitem_t items[] = {
             { m_heartbeat, 0, ZMQ_POLLIN, 0 },
             { m_controller, 0, ZMQ_POLLIN, 0 }
@@ -63,5 +65,6 @@ namespace xeus
                 break;
             }
         }
+        console_log("xheartbeat stopped");
     }
 }

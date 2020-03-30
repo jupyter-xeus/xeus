@@ -11,9 +11,9 @@
 #include <chrono>
 #include <iostream>
 
-#include "xeus/xmiddleware.hpp"
 #include "xeus/xserver_zmq_split.hpp"
 #include "xcontrol.hpp"
+#include "xserver_utils.hpp"
 
 namespace xeus
 {
@@ -28,9 +28,8 @@ namespace xeus
         , p_server(server)
         , m_request_stop(false)
     {
-        init_socket(m_control, transport, ip, control_port);
-        m_publisher_pub.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_publisher_pub.connect(get_publisher_end_point());
+        bind_socket("xcontrol", "control", m_control, transport, ip, control_port);
+        connect_socket("xcontrol", "publisher_pub", m_publisher_pub, get_publisher_end_point());
     }
     
     xcontrol::~xcontrol()
@@ -54,6 +53,7 @@ namespace xeus
 
     void xcontrol::run()
     {
+        console_log("xcontrol started");
         m_request_stop = false;
 
         while (!m_request_stop)
@@ -63,6 +63,7 @@ namespace xeus
             p_server->notify_control_listener(wire_msg);
         }
 
+        console_log("xcontrol stopped");
         m_messenger.stop_channels();
         p_server->notify_control_stopped();
     }

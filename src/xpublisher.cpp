@@ -11,8 +11,9 @@
 #include <iostream>
 
 #include "zmq_addon.hpp"
-#include "xeus/xmiddleware.hpp"
+
 #include "xpublisher.hpp"
+#include "xserver_utils.hpp"
 
 namespace xeus
 {
@@ -24,11 +25,10 @@ namespace xeus
         , m_listener(context, zmq::socket_type::sub)
         , m_controller(context, zmq::socket_type::rep)
     {
-        init_socket(m_publisher, transport, ip, port);
+        bind_socket("xpublisher", "iopub", m_publisher, transport, ip, port);
         m_listener.setsockopt(ZMQ_SUBSCRIBE, "", 0);
-        m_listener.bind(get_publisher_end_point());
-        m_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_controller.bind(get_controller_end_point("publisher"));
+        bind_socket("xpublisher", "listener", m_listener, get_publisher_end_point());
+        bind_socket("xpublisher", "controller", m_controller, get_controller_end_point("publisher"));
     }
 
     xpublisher::~xpublisher()
@@ -42,6 +42,7 @@ namespace xeus
 
     void xpublisher::run()
     {
+        console_log("xpublisher started");
         zmq::pollitem_t items[] = {
             { m_listener, 0, ZMQ_POLLIN, 0 },
             { m_controller, 0, ZMQ_POLLIN, 0 }
@@ -67,5 +68,6 @@ namespace xeus
                 break;
             }
         }
+        console_log("xpublisher stopped");
     }
 }
