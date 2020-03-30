@@ -9,9 +9,9 @@
 
 #include "nlohmann/json.hpp"
 
-#include "xeus/xmiddleware.hpp"
-
 #include "xzmq_messenger.hpp"
+
+#include "xserver_utils.hpp"
 
 namespace nl = nlohmann;
 
@@ -30,12 +30,12 @@ namespace xeus
 
     void xzmq_messenger::connect()
     {
-        m_shell_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_shell_controller.connect(get_controller_end_point("shell"));
-        m_publisher_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_publisher_controller.connect(get_controller_end_point("publisher"));
-        m_heartbeat_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
-        m_heartbeat_controller.connect(get_controller_end_point("heartbeat"));
+        connect_socket("xzmq_messenger", "shell_controller", m_shell_controller,
+                       get_controller_end_point("shell"));
+        connect_socket("xzmq_messenger", "publisher_controller", m_publisher_controller,
+                       get_controller_end_point("shell"));
+        connect_socket("xzmq_messenger", "heartbeat_controller", m_heartbeat_controller,
+                       get_controller_end_point("shell"));
     }
 
     void xzmq_messenger::stop_channels()
