@@ -77,6 +77,8 @@ set(xtl_REQUIRED_VERSION 0.5)
 set(cppzmq_REQUIRED_VERSION 4.4.1)
 set(zeromq_REQUIRED_VERSION 4.3.2)
 
+find_package(Threads REQUIRED)
+
 if (NOT TARGET nlohmann_json)
     find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
 endif ()
@@ -238,9 +240,8 @@ macro(xeus_create_target target_name linkage output_name)
         PUBLIC ${CPPZMQ_TARGET_NAME}
         PUBLIC nlohmann_json::nlohmann_json
         PUBLIC xtl
+        PUBLIC OpenSSL::Crypto
     )
-
-    target_link_libraries(${target_name} PUBLIC OpenSSL::Crypto)
 
     if (NOT MSVC)
         if (APPLE)
@@ -339,6 +340,10 @@ macro(xeus_create_target target_name linkage output_name)
         target_link_libraries(${target_name} PRIVATE ${CMAKE_DL_LIBS} util rt)
     endif ()
 
+    target_link_libraries(
+        ${target_name}
+        PUBLIC ${CMAKE_THREAD_LIBS_INIT}
+    )
 endmacro()
 
 set(xeus_targets "")
