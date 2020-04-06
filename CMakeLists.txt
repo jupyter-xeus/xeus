@@ -173,8 +173,6 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xserver.cpp
     ${XEUS_SOURCE_DIR}/xserver_control_main.cpp
     ${XEUS_SOURCE_DIR}/xserver_shell_main.cpp
-    ${XEUS_SOURCE_DIR}/xserver_utils.hpp
-    ${XEUS_SOURCE_DIR}/xserver_utils.cpp
     ${XEUS_SOURCE_DIR}/xserver_zmq.cpp
     ${XEUS_SOURCE_DIR}/xserver_zmq_split.cpp
     ${XEUS_SOURCE_DIR}/xshell.hpp
