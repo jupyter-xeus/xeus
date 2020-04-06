@@ -10,13 +10,12 @@
 #include <thread>
 #include <chrono>
 
-#include "zmq_addon.hpp"
-
 #include "xeus/xserver_zmq.hpp"
 #include "xeus/xguid.hpp"
+#include "xeus/xmiddleware.hpp"
+#include "zmq_addon.hpp"
 #include "xpublisher.hpp"
 #include "xheartbeat.hpp"
-#include "xserver_utils.hpp"
 #include "xtrivial_messenger.hpp"
 
 namespace xeus
@@ -34,12 +33,16 @@ namespace xeus
         , p_messenger(new xtrivial_messenger(this))
         , m_request_stop(false)
     {
-        bind_socket("xserver_zmq", "shell", m_shell, config.m_transport, config.m_ip, config.m_shell_port);
-        bind_socket("xserver_zmq", "control", m_controller, config.m_transport, config.m_ip, config.m_control_port);
-        bind_socket("xserver_zmq", "stdin", m_stdin, config.m_transport, config.m_ip, config.m_stdin_port);
-        connect_socket("xserver_zmq", "publisher", m_publisher_pub, get_publisher_end_point());
-        connect_socket("xserver_zmq", "publisher_controller", m_publisher_controller, get_controller_end_point("publisher"));
-        connect_socket("xserver_zmq", "heartbeat_controller", m_heartbeat_controller, get_controller_end_point("heartbeat"));
+        init_socket(m_shell, config.m_transport, config.m_ip, config.m_shell_port);
+        init_socket(m_controller, config.m_transport, config.m_ip, config.m_control_port);
+        init_socket(m_stdin, config.m_transport, config.m_ip, config.m_stdin_port);
+        m_publisher_pub.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_publisher_pub.connect(get_publisher_end_point());
+
+        m_publisher_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_publisher_controller.connect(get_controller_end_point("publisher"));
+        m_heartbeat_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_heartbeat_controller.connect(get_controller_end_point("heartbeat"));
     }
 
     xserver_zmq::~xserver_zmq()
@@ -79,8 +82,8 @@ namespace xeus
         start_publisher_thread();
         start_heartbeat_thread();
 
-        console_log("xserver_zmq started");
         m_request_stop = false;
+
         publish(message, channel::SHELL);
 
         while (!m_request_stop)
@@ -88,7 +91,6 @@ namespace xeus
             poll(-1);
         }
 
-        console_log("xserver_zmq stopped");
         stop_channels();
 
         std::exit(0);

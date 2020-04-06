@@ -78,11 +78,7 @@ namespace xeus
         }
         else
         {
-            std::string port = find_free_port_impl(socket, transport, ip, 100, 49152, 65536);
-            if(port.empty())
-            {
-                throw zmq::error_t();
-            }
+            find_free_port_impl(socket, transport, ip, 100, 49152, 65536);
         }
     }
 
