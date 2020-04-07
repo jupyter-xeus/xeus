@@ -277,7 +277,7 @@ macro(xeus_create_target target_name linkage output_name)
     # Compilation flags
     # =================
 
-    target_compile_features(${target_name} PUBLIC cxx_std_11)
+    target_compile_features(${target_name} PRIVATE cxx_std_11)
 
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
         CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
