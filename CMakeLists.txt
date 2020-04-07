@@ -63,7 +63,6 @@ option(XEUS_DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
 if (XEUS_STATIC_DEPENDENCIES)
     set(CPPZMQ_TARGET_NAME cppzmq-static)
     set(OPENSSL_USE_STATIC_LIBS ON)
-    set(XEUS_BUILD_SHARED_LIBS OFF)
 else()
     set(CPPZMQ_TARGET_NAME cppzmq)
     set(OPENSSL_USE_STATIC_LIBS OFF)
@@ -192,16 +191,21 @@ include(CheckCXXCompilerFlag)
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 
-if (NOT XEUS_BUILD_SHARED_LIBS AND NOT XEUS_BUILD_STATIC_LIBS)
-    set(XEUS_BUILD_STATIC_LIBS ON)
-endif ()
-
 if (NOT APPLE)
     set(CMAKE_SKIP_BUILD_RPATH FALSE)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif ()
 
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib; ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+
+if (XEUS_STATIC_DEPENDENCIES AND NOT MSVC AND NOT APPLE)
+	# Explicitly finds and links with libsodium.a
+	# because it is not exported as a dependency by
+	# the static build of libzmq. Remove this when
+	# it is fixed upstream.
+	set(sodium_USE_STATIC_LIBS ON)
+	find_package(sodium REQUIRED)
+endif ()
 
 macro(xeus_create_target target_name linkage output_name)
     string(TOUPPER "${linkage}" linkage_upper)
@@ -250,14 +254,7 @@ macro(xeus_create_target target_name linkage output_name)
                 find_path(LIBUUID_INCLUDE_DIR uuid.h PATH_SUFFIXES uuid)
                 find_library(LIBUUID_LIBRARY libuuid.a)
                 target_include_directories(${target_name} PRIVATE ${LIBUUID_INCLUDE_DIR})
-                target_link_libraries(${target_name} PUBLIC ${LIBUUID_LIBRARY})
-            
-                # Explicitly finds and links with libsodium.a
-                # because it is not exported as a dependency by
-                # the static build of libzmq. Remove this when
-                # it is fixed upstream.
-                set(sodium_USE_STATIC_LIBS ON)
-                find_package(sodium REQUIRED)
+                target_link_libraries(${target_name} PUBLIC ${LIBUUID_LIBRARY}) 
                 target_link_libraries(${target_name} PUBLIC ${sodium_LIBRARY_RELEASE})
             else ()
                 find_package(LibUUID REQUIRED)
