@@ -4,7 +4,7 @@ matrix:
   include:
     - os: linux
     - os: linux
-      env: XEUS_STATIC_DEPENDENCIES=1 
+      env: XEUS_STATIC_DEPENDENCIES=1 XEUS_BUILD_SHARED_LIBS=0 
     - os: osx
       osx_image: xcode8
       compiler: clang
@@ -41,12 +41,13 @@ install:
     # Build
     - mkdir build
     - pushd build
-    - source activate root
     - if [[ "$XEUS_STATIC_DEPENDENCIES" == 1 ]]; then
-        cmake -DXEUS_DOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DXEUS_STATIC_DEPENDENCIES=ON ..;
-      else
-        cmake -DXEUS_DOWNLOAD_GTEST=ON -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX ..;
+        CMAKE_EXTRA_ARGS="$CMAKE_EXTRA_ARGS -DXEUS_STATIC_DEPENDENCIES=ON";
       fi
+    - if [[ "$XEUS_BUILD_SHARED_LIBS" == 0 ]]; then
+        CMAKE_EXTRA_ARGS="$CMAKE_EXTRA_ARGS -DXEUS_BUILD_SHARED_LIBS=OFF";
+      fi
+    - cmake -DCMAKE_INSTALL_PREFIX=$HOME/miniconda -DXEUS_DOWNLOAD_GTEST=ON -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX ${CMAKE_EXTRA_ARGS} ..
     - make -j2
     - make install
     - popd
