@@ -34,19 +34,19 @@ Let's start by editing the ``custom_interpreter.hpp`` file, it should contain th
    :language: cpp
 
 .. note::
-    Almost all ``custom_interpreter`` methods return a ``nl::json`` instance. This is actually using `nlohmann json 
+    Almost all ``custom_interpreter`` methods return a ``nl::json`` instance. This is actually using `nlohmann json
     <https://github.com/nlohmann/json>`_ which is a modern C++ implementation of a JSON datastructure.
 
 Code Execution
 ~~~~~~~~~~~~~~
 
-Then, you would need to implement all of those methods one by one in the ``custom_interpreter.cpp`` file. The main method is of 
+Then, you would need to implement all of those methods one by one in the ``custom_interpreter.cpp`` file. The main method is of
 course the ``execute_request_impl`` which executes the code whenever the client is sending an execute request.
 
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 7-35
+   :lines: 22-50
 
 The result and arguments of the execution request are described in the execute_request_ documentation.
 
@@ -77,7 +77,7 @@ for initializing the auto-completion engine.
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 37-40
+   :lines: 52-55
 
 Code Completion
 ~~~~~~~~~~~~~~~
@@ -87,7 +87,7 @@ The ``complete_request_impl`` method allows you to implement the auto-completion
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 42-65
+   :lines: 57-80
 
 The result and arguments of the completion request are described in the complete_request_ documentation.
 
@@ -95,20 +95,20 @@ Code Inspection
 ~~~~~~~~~~~~~~~
 
 Allows the kernel user to inspect a variable/class/type in the code. It takes the code and the cursor position as arguments,
-it is up to the kernel author to extract the token at the given cursor position in the code in order to know for which name the 
+it is up to the kernel author to extract the token at the given cursor position in the code in order to know for which name the
 user wants inspection.
 
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 67-85
+   :lines: 82-100
 
 The result and arguments of the inspection request are described in the inspect_request_ documentation.
 
 Code Completeness
 ~~~~~~~~~~~~~~~~~
 
-This request is never called from the Notebook or from JupyterLab clients, but it is called from the Jupyter console client. It 
+This request is never called from the Notebook or from JupyterLab clients, but it is called from the Jupyter console client. It
 allows the client to know if the user finished typing his code, before sending an execute request. For example, in Python, the
 following code is not considered as complete:
 
@@ -130,7 +130,7 @@ So the kernel should return "complete".
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 87-102
+   :lines: 102-117
 
 The result and arguments of the completness request are described in the is_complete_request_ documentation.
 
@@ -142,7 +142,7 @@ This request allows the client to get information about the kernel: language, la
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 104-114
+   :lines: 119-129
 
 The result and arguments of the kernel info request are described in the kernel_info_request_ documentation.
 
@@ -154,7 +154,7 @@ This allows you to perform some operations before shutting down the kernel.
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 116-119
+   :lines: 131-133
 
 Implementing the main entry
 ---------------------------
