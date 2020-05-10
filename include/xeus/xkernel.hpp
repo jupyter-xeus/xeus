@@ -64,6 +64,7 @@ namespace xeus
         void start();
 
         const xconfiguration& get_config();
+        xserver& get_server();
 
     private:
 
