@@ -145,4 +145,9 @@ namespace xeus
     {
         return m_config;
     }
+
+    xserver& xkernel::get_server()
+    {
+        return *p_server;
+    }
 }
