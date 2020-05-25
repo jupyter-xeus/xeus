@@ -17,6 +17,7 @@
 #include "xcomm.hpp"
 #include "xeus.hpp"
 #include "xcontrol_messenger.hpp"
+#include "xhistory_manager.hpp"
 
 namespace xeus
 {
@@ -90,6 +91,9 @@ namespace xeus
 
         void register_control_messenger(xcontrol_messenger& messenger);
 
+        void register_history_manager(const xhistory_manager& history);
+        const xhistory_manager& get_history_manager() const noexcept;
+
     protected:
 
         xcontrol_messenger& get_control_messenger();
@@ -129,6 +133,7 @@ namespace xeus
         parent_header_type m_parent_header;
         input_reply_handler_type m_input_reply_handler;
         xcontrol_messenger* p_messenger;
+        const xhistory_manager* p_history;
     };
 
     inline xcomm_manager& xinterpreter::comm_manager() noexcept

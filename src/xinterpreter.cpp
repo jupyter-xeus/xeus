@@ -205,6 +205,16 @@ namespace xeus
         p_messenger = &messenger;
     }
 
+    void xinterpreter::register_history_manager(const xhistory_manager& history)
+    {
+        p_history = &history;
+    }
+
+    const xhistory_manager& xinterpreter::get_history_manager() const noexcept
+    {
+        return *p_history;
+    }
+
     xcontrol_messenger& xinterpreter::get_control_messenger()
     {
         return *p_messenger;

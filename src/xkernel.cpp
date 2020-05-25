@@ -132,6 +132,7 @@ namespace xeus
         }
 
         p_interpreter->register_control_messenger(messenger);
+        p_interpreter->register_history_manager(*p_history_manager);
         p_interpreter->configure();
     }
 
