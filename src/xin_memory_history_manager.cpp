@@ -9,6 +9,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <regex>
 
 #include "nlohmann/json.hpp"
 
@@ -76,12 +77,29 @@ namespace xeus
         return reply;
     }
 
-    nl::json xin_memory_history_manager::search_impl(const std::string& /*pattern*/,
-                                                  bool /*raw*/,
-                                                  bool /*output*/,
-                                                  int /*n*/,
-                                                  bool /*unique*/) const
+    nl::json xin_memory_history_manager::search_impl(
+        const std::string& pattern, bool /*raw*/, bool /*output*/, int /*n*/, bool /*unique*/) const
     {
-        throw std::runtime_error("search not implemented for xin_memory_history_manager");
+        nl::json reply;
+        history_type history;
+
+        // Sanitize the pattern from special regex characters
+        std::regex special_chars(R"([-[\]{}()+.,\^$|#\s])");
+        std::string sanitized = std::regex_replace(pattern, special_chars, R"(\$&)");
+
+        // Turn the glob pattern into regex (simple version)
+        std::string regex_pattern = std::regex_replace(std::regex_replace(sanitized, std::regex("\\?"), "."), std::regex("\\*"), ".*");
+
+        std::regex regex(regex_pattern);
+        std::cmatch m;
+
+        std::copy_if(m_history.cbegin(), m_history.cend(), std::back_inserter(history), [&] (const std::array<std::string, 3>& item) {
+            return std::regex_search(item[2].c_str(), m, regex);
+        });
+
+        reply["status"] = "ok";
+        reply["history"] = history;
+
+        return reply;
     }
 }
