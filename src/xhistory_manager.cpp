@@ -28,9 +28,12 @@ namespace xeus
         configure_impl();
     }
 
-    void xhistory_manager::store_inputs(int line_num, const std::string& input)
+    void xhistory_manager::store_inputs(int session,
+                                        int line_num,
+                                        const std::string& input,
+                                        const std::string& output)
     {
-        store_inputs_impl(line_num, input);
+        store_inputs_impl(session, line_num, input, output);
     }
 
     nl::json xhistory_manager::process_request(const nl::json& content) const
