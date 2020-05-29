@@ -81,4 +81,38 @@ namespace xeus
         nl::json range3 = hist->get_range(0, 1000, 2, true, false);
         ASSERT_EQ(range3["status"], "error");
     }
+
+    TEST(xin_memory_history_manager, search)
+    {
+        history_manager_ptr hist = xeus::make_in_memory_history_manager();
+        hist->store_inputs(1, "print(36)");
+        hist->store_inputs(2, "a = 3");
+        hist->store_inputs(3, "print(a)");
+        hist->store_inputs(4, "a");
+
+        nl::json search1 = hist->search("print*", true, false, 10, false);
+        ASSERT_EQ(search1["status"], "ok");
+        auto history1 = search1["history"].get<history_type>();
+        ASSERT_EQ(history1.size(), std::size_t(2));
+        ASSERT_EQ(history1[0][1], "1");
+        ASSERT_EQ(history1[0][2], "print(36)");
+        ASSERT_EQ(history1[1][1], "3");
+        ASSERT_EQ(history1[1][2], "print(a)");
+
+        nl::json search2 = hist->search("print(*)", true, false, 10, false);
+        ASSERT_EQ(search2["status"], "ok");
+        auto history2 = search2["history"].get<history_type>();
+        ASSERT_EQ(history2.size(), std::size_t(2));
+        ASSERT_EQ(history2[0][1], "1");
+        ASSERT_EQ(history2[0][2], "print(36)");
+        ASSERT_EQ(history2[1][1], "3");
+        ASSERT_EQ(history2[1][2], "print(a)");
+
+        nl::json search3 = hist->search("print(?)", true, false, 10, false);
+        ASSERT_EQ(search3["status"], "ok");
+        auto history3 = search3["history"].get<history_type>();
+        ASSERT_EQ(history3.size(), std::size_t(1));
+        ASSERT_EQ(history3[0][1], "3");
+        ASSERT_EQ(history3[0][2], "print(a)");
+    }
 }
