@@ -48,10 +48,10 @@ namespace xeus
         ASSERT_EQ(tail2["status"], "ok");
         auto history2 = tail2["history"].get<history_type>();
         ASSERT_EQ(history2.size(), std::size_t(2));
-        ASSERT_EQ(history2[0][1], "1");
-        ASSERT_EQ(history2[0][2], "print(3)");
-        ASSERT_EQ(history2[1][1], "2");
-        ASSERT_EQ(history2[1][2], "a = 3");
+        ASSERT_EQ(history2[3][1], "3");
+        ASSERT_EQ(history2[3][2], "print(a)");
+        ASSERT_EQ(history2[4][1], "4");
+        ASSERT_EQ(history2[4][2], "a");
     }
 
     TEST(xin_memory_history_manager, get_range)
