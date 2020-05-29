@@ -114,5 +114,32 @@ namespace xeus
         ASSERT_EQ(history3.size(), std::size_t(1));
         ASSERT_EQ(history3[0][1], "3");
         ASSERT_EQ(history3[0][2], "print(a)");
+
+        nl::json search4 = hist->search("print*", true, false, 1, false);
+        ASSERT_EQ(search4["status"], "ok");
+        auto history4 = search4["history"].get<history_type>();
+        ASSERT_EQ(history4.size(), std::size_t(1));
+        ASSERT_EQ(history4[0][1], "3");
+        ASSERT_EQ(history4[0][2], "print(a)");
+
+        hist->store_inputs(3, "print(a)");
+        nl::json search5 = hist->search("print*", true, false, 10, false);
+        ASSERT_EQ(search5["status"], "ok");
+        auto history5 = search5["history"].get<history_type>();
+        ASSERT_EQ(history5.size(), std::size_t(3));
+        ASSERT_EQ(history2[0][1], "1");
+        ASSERT_EQ(history2[0][2], "print(36)");
+        ASSERT_EQ(history5[1][1], "3");
+        ASSERT_EQ(history5[1][2], "print(a)");
+        ASSERT_EQ(history5[2][1], "3");
+        ASSERT_EQ(history5[2][2], "print(a)");
+
+        nl::json search6 = hist->search("print*", true, false, 10, true);
+        ASSERT_EQ(search6["status"], "ok");
+        auto history6 = search6["history"].get<history_type>();
+        ASSERT_EQ(history2[0][1], "1");
+        ASSERT_EQ(history2[0][2], "print(36)");
+        ASSERT_EQ(history5[1][1], "3");
+        ASSERT_EQ(history5[1][2], "print(a)");
     }
 }

@@ -7,6 +7,7 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <iterator>
 #include <stdexcept>
 #include <string>
 #include <regex>
@@ -78,7 +79,7 @@ namespace xeus
     }
 
     nl::json xin_memory_history_manager::search_impl(
-        const std::string& pattern, bool /*raw*/, bool /*output*/, int /*n*/, bool /*unique*/) const
+        const std::string& pattern, bool /*raw*/, bool /*output*/, int n, bool unique) const
     {
         nl::json reply;
         history_type history;
@@ -96,6 +97,20 @@ namespace xeus
         std::copy_if(m_history.cbegin(), m_history.cend(), std::back_inserter(history), [&] (const std::array<std::string, 3>& item) {
             return std::regex_search(item[2].c_str(), m, regex);
         });
+
+        if (unique)
+        {
+            auto last = std::unique(history.begin(), history.end());
+            history.erase(last, history.end());
+        }
+
+        int nb_erase = static_cast<int>(history.size()) - n;
+        if (nb_erase > 0)
+        {
+            auto erase_end = history.begin();
+            std::advance(erase_end, nb_erase);
+            history.erase(history.begin(), erase_end);
+        }
 
         reply["status"] = "ok";
         reply["history"] = history;
