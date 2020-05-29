@@ -268,7 +268,7 @@ namespace xeus
 
             if (!silent && store_history)
             {
-                p_history_manager->store_inputs(execution_count, code);
+                p_history_manager->store_inputs(0, execution_count, code);
             }
 
             if (!silent && status == "error" && stop_on_error)

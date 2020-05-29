@@ -26,10 +26,10 @@ namespace xeus
     TEST(xin_memory_history_manager, get_tail)
     {
         history_manager_ptr hist = xeus::make_in_memory_history_manager();
-        hist->store_inputs(1, "print(3)");
-        hist->store_inputs(2, "a = 3");
-        hist->store_inputs(3, "print(a)");
-        hist->store_inputs(4, "a");
+        hist->store_inputs(0, 1, "print(3)");
+        hist->store_inputs(0, 2, "a = 3");
+        hist->store_inputs(0, 3, "print(a)");
+        hist->store_inputs(0, 4, "a");
 
         nl::json tail1 = hist->get_tail(1000, true, false);
         ASSERT_EQ(tail1["status"], "ok");
@@ -57,10 +57,10 @@ namespace xeus
     TEST(xin_memory_history_manager, get_range)
     {
         history_manager_ptr hist = xeus::make_in_memory_history_manager();
-        hist->store_inputs(1, "print(3)");
-        hist->store_inputs(2, "a = 3");
-        hist->store_inputs(3, "print(a)");
-        hist->store_inputs(4, "a");
+        hist->store_inputs(0, 1, "print(3)");
+        hist->store_inputs(0, 2, "a = 3");
+        hist->store_inputs(0, 3, "print(a)");
+        hist->store_inputs(0, 4, "a");
 
         nl::json range1 = hist->get_range(0, 1, 2, true, false);
         ASSERT_EQ(range1["status"], "ok");
@@ -85,10 +85,10 @@ namespace xeus
     TEST(xin_memory_history_manager, search)
     {
         history_manager_ptr hist = xeus::make_in_memory_history_manager();
-        hist->store_inputs(1, "print(36)");
-        hist->store_inputs(2, "a = 3");
-        hist->store_inputs(3, "print(a)");
-        hist->store_inputs(4, "a");
+        hist->store_inputs(0, 1, "print(36)");
+        hist->store_inputs(0, 2, "a = 3");
+        hist->store_inputs(0, 3, "print(a)");
+        hist->store_inputs(0, 4, "a");
 
         nl::json search1 = hist->search("print*", true, false, 10, false);
         ASSERT_EQ(search1["status"], "ok");
@@ -122,7 +122,7 @@ namespace xeus
         ASSERT_EQ(history4[0][1], "3");
         ASSERT_EQ(history4[0][2], "print(a)");
 
-        hist->store_inputs(3, "print(a)");
+        hist->store_inputs(0, 3, "print(a)");
         nl::json search5 = hist->search("print*", true, false, 10, false);
         ASSERT_EQ(search5["status"], "ok");
         auto history5 = search5["history"].get<history_type>();

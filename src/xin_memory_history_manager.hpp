@@ -27,7 +27,10 @@ namespace xeus
     {
     public:
 
-        using history_type = std::list<std::array<std::string, 3>>;
+        using entry = std::array<std::string, 4>;
+        using history_type = std::list<entry>;
+        using short_entry = std::array<std::string, 3>;
+        using short_history_type = std::list<short_entry>;
 
         xin_memory_history_manager();
         virtual ~xin_memory_history_manager();
@@ -35,7 +38,11 @@ namespace xeus
     private:
 
         void configure_impl() override;
-        void store_inputs_impl(int line_num, const std::string& input) override;
+        void store_inputs_impl(int session,
+                               int line_num,
+                               const std::string& input,
+                               const std::string& output) override;
+
         nl::json get_tail_impl(int n, bool raw, bool output) const override;
         nl::json get_range_impl(int session, int start, int stop, bool raw, bool output) const override;
         nl::json search_impl(const std::string& pattern, bool raw, bool output, int n, bool unique) const override;
