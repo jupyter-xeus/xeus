@@ -42,8 +42,15 @@ namespace xeus
         history_type history;
 
         int count = std::min(n, static_cast<int>(m_history.size()));
-        std::copy_n(m_history.cbegin(), count, std::back_inserter(history));
 
+        if (n > count) 
+            history = m_history;
+        else
+            std::copy(
+                m_history.rbegin(), 
+                std::next(m_history.rbegin(), n),
+                std::front_inserter(history));
+        
         reply["status"] = "ok";
         reply["history"] = history;
 
