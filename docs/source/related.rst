@@ -4,14 +4,6 @@
 
    The full license is in the file LICENSE, distributed with this software.
 
-.. raw:: html
-
-   <style>
-   h2 {
-        display: none;
-   }
-   </style>
-
 Related projects
 ================
 
