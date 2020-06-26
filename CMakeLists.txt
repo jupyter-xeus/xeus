@@ -62,10 +62,10 @@ option(XEUS_DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
 
 if (XEUS_STATIC_DEPENDENCIES)
     set(CPPZMQ_TARGET_NAME cppzmq-static)
-    set(OPENSSL_USE_STATIC_LIBS ON)
+    set(OPENSSL_USE_STATIC_LIBS ON CACHE BOOL "Linking statically with OpenSSL")
 else()
     set(CPPZMQ_TARGET_NAME cppzmq)
-    set(OPENSSL_USE_STATIC_LIBS OFF)
+    set(OPENSSL_USE_STATIC_LIBS OFF CACHE BOOL "Not linking statically with OpenSSL")
 endif()
 
 # Dependencies
@@ -342,7 +342,7 @@ set(xeus_targets "")
 
 if (XEUS_BUILD_SHARED_LIBS)
     xeus_create_target(xeus SHARED xeus)
-    if(CMAKE_TARGET_SYSTEM MATCHES "Linux" AND XEUS_STATIC_DEPENDENCIES)
+    if(CMAKE_TARGET_SYSTEM MATCHES "Linux" AND OPENSSL_USE_STATIC_LIBS)
         # Do not reexport OpenSSL symbols from xeus, for libraries
         #   Prevents conflicts with other versions of OpenSSL
         #   loaded in the same process namespace, which can cause
