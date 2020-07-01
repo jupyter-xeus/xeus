@@ -31,9 +31,9 @@ namespace xeus
         json = nl::json::parse(buf, buf + msg.size());
     }
 
-    zmq::message_t write_zmq_message(const nl::json& json)
+    zmq::message_t write_zmq_message(const nl::json& json, nl::json::error_handler_t error_handler)
     {
-        std::string buffer = json.dump();
+        std::string buffer = json.dump(-1, ' ', false, error_handler);
         return zmq::message_t(buffer.c_str(), buffer.size());
     }
 
@@ -84,15 +84,17 @@ namespace xeus
         }
     }
 
-    void xmessage_base::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&
+    void xmessage_base::serialize(zmq::multipart_t& wire_msg,
+                                  const xauthentication& auth,
+                                  nl::json::error_handler_t error_handler) &&
     {
         // DELIMITER is written in the inheriting class so serialize/ deserialize
         // are symmetric
 
-        zmq::message_t header = write_zmq_message(m_header);
-        zmq::message_t parent_header = write_zmq_message(m_parent_header);
-        zmq::message_t metadata = write_zmq_message(m_metadata);
-        zmq::message_t content = write_zmq_message(m_content);
+        zmq::message_t header = write_zmq_message(m_header, error_handler);
+        zmq::message_t parent_header = write_zmq_message(m_parent_header, error_handler);
+        zmq::message_t metadata = write_zmq_message(m_metadata, error_handler);
+        zmq::message_t content = write_zmq_message(m_content, error_handler);
         zmq::message_t signature = auth.sign(header, parent_header, metadata, content);
 
         wire_msg.add(std::move(signature));
@@ -168,14 +170,16 @@ namespace xeus
         base_type::deserialize(wire_msg, auth);
     }
 
-    void xmessage::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&
+    void xmessage::serialize(zmq::multipart_t& wire_msg,
+                             const xauthentication& auth,
+                             nl::json::error_handler_t error_handler) &&
     {
         auto app = [&wire_msg](const std::string& uid) {
             wire_msg.add(zmq::message_t(uid.begin(), uid.end()));
         };
         std::for_each(m_zmq_id.begin(), m_zmq_id.end(), app);
         wire_msg.add(zmq::message_t(DELIMITER.begin(), DELIMITER.end()));
-        std::move(*this).base_type::serialize(wire_msg, auth);
+        std::move(*this).base_type::serialize(wire_msg, auth, error_handler);
     }
 
     auto xmessage::identities() const -> const guid_list&
@@ -206,11 +210,13 @@ namespace xeus
         base_type::deserialize(wire_msg, auth);
     }
 
-    void xpub_message::serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&
+    void xpub_message::serialize(zmq::multipart_t& wire_msg,
+                                 const xauthentication& auth,
+                                 nl::json::error_handler_t error_handler) &&
     {
         wire_msg.add(zmq::message_t(m_topic.begin(), m_topic.end()));
         wire_msg.add(zmq::message_t(DELIMITER.begin(), DELIMITER.end()));
-        std::move(*this).base_type::serialize(wire_msg, auth);
+        std::move(*this).base_type::serialize(wire_msg, auth, error_handler);
     }
 
     const std::string& xpub_message::topic() const
