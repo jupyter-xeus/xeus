@@ -54,7 +54,9 @@ namespace xeus
 
         bool is_delimiter(zmq::message_t& frame) const;
         void deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth);
-        void serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&;
+        void serialize(zmq::multipart_t& wire_msg,
+                       const xauthentication& auth,
+                       nl::json::error_handler_t) &&;
 
         static const std::string DELIMITER;
 
@@ -91,7 +93,9 @@ namespace xeus
         xmessage& operator=(const xmessage&) = delete;
 
         void deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth);
-        void serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&;
+        void serialize(zmq::multipart_t& wire_msg,
+                       const xauthentication& auth,
+                       nl::json::error_handler_t error_handler = nl::json::error_handler_t::strict) &&;
 
         const guid_list& identities() const;
 
@@ -123,7 +127,9 @@ namespace xeus
         xpub_message& operator=(const xpub_message&) = delete;
 
         void deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth);
-        void serialize(zmq::multipart_t& wire_msg, const xauthentication& auth) &&;
+        void serialize(zmq::multipart_t& wire_msg,
+                       const xauthentication& auth,
+                       nl::json::error_handler_t error_handler = nl::json::error_handler_t::strict) &&;
 
         const std::string& topic() const;
 
@@ -137,8 +143,8 @@ namespace xeus
     XEUS_API std::string get_protocol_version();
 
     XEUS_API nl::json make_header(const std::string& msg_type,
-                               const std::string& user_name,
-                               const std::string& session_id);
+                                  const std::string& user_name,
+                                  const std::string& session_id);
 }
 
 #endif

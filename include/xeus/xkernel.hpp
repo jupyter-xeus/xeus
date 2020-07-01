@@ -50,14 +50,16 @@ namespace xeus
                 history_manager_ptr history_manager = make_in_memory_history_manager(),
                 logger_ptr logger = nullptr,
                 server_builder sbuilder = make_xserver,
-                debugger_builder dbuilder = make_null_debugger);
+                debugger_builder dbuilder = make_null_debugger,
+                nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 
         xkernel(const std::string& user_name,
                 interpreter_ptr interpreter,
                 history_manager_ptr history_manager = make_in_memory_history_manager(),
                 logger_ptr logger = nullptr,
                 server_builder sbuilder = make_xserver,
-                debugger_builder dbuilder = make_null_debugger);
+                debugger_builder dbuilder = make_null_debugger,
+                nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 
         ~xkernel();
 
@@ -83,6 +85,7 @@ namespace xeus
         debugger_ptr p_debugger;
         zmq::context_t m_context;
         kernel_core_ptr p_core;
+        nl::json::error_handler_t m_error_handler;
     };
 }
 

@@ -47,7 +47,8 @@ namespace xeus
                      server_ptr server,
                      interpreter_ptr p_interpreter,
                      history_manager_ptr p_history_manager,
-                     debugger_ptr debugger);
+                     debugger_ptr debugger,
+                     nl::json::error_handler_t eh);
 
         ~xkernel_core();
 
@@ -135,6 +136,8 @@ namespace xeus
 
         std::array<guid_list, 2> m_parent_id;
         std::array<nl::json, 2> m_parent_header;
+
+        nl::json::error_handler_t m_error_handler;
     };
 }
 

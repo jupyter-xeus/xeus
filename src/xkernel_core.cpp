@@ -31,7 +31,8 @@ namespace xeus
                                server_ptr server,
                                interpreter_ptr interpreter,
                                history_manager_ptr history_manager,
-                               debugger_ptr debugger)
+                               debugger_ptr debugger,
+                               nl::json::error_handler_t eh)
         : m_kernel_id(std::move(kernel_id))
         , m_user_name(std::move(user_name))
         , m_session_id(std::move(session_id))
@@ -44,6 +45,7 @@ namespace xeus
         , p_debugger(debugger)
         , m_parent_id({guid_list(0), guid_list(0)})
         , m_parent_header({nl::json::object(), nl::json::object()})
+        , m_error_handler(eh)
     {
         // Request handlers
         m_handler["execute_request"] = &xkernel_core::execute_request;
@@ -100,7 +102,7 @@ namespace xeus
                          nl::json::object(),
                          std::move(content),
                          buffer_sequence());
-        std::move(msg).serialize(start_msg, *p_auth);
+        std::move(msg).serialize(start_msg, *p_auth, m_error_handler);
 
         return start_msg;
     }
@@ -138,7 +140,7 @@ namespace xeus
     {
         nl::json msg = nl::json::parse(wire_msg.popstr());
         nl::json rep = p_interpreter->internal_request(msg);
-        return zmq::multipart_t(rep.dump());
+        return zmq::multipart_t(rep.dump(-1, ' ', false, m_error_handler));
     }
 
     void xkernel_core::publish_message(const std::string& msg_type,
@@ -156,7 +158,7 @@ namespace xeus
                          std::move(content),
                          std::move(buffers));
         p_logger->log_iopub_message(msg);
-        std::move(msg).serialize(wire_msg, *p_auth);
+        std::move(msg).serialize(wire_msg, *p_auth, m_error_handler);
         p_server->publish(wire_msg, c);
     }
 
@@ -172,7 +174,7 @@ namespace xeus
                      std::move(content),
                      buffer_sequence());
         p_logger->log_sent_message(msg, xlogger::stdinput);
-        std::move(msg).serialize(wire_msg, *p_auth);
+        std::move(msg).serialize(wire_msg, *p_auth, m_error_handler);
         p_server->send_stdin(wire_msg);
     }
 
@@ -430,7 +432,7 @@ namespace xeus
                        std::move(reply_content),
                        buffer_sequence());
         p_logger->log_sent_message(reply, c == channel::SHELL ? xlogger::shell : xlogger::control);
-        std::move(reply).serialize(wire_msg, *p_auth);
+        std::move(reply).serialize(wire_msg, *p_auth, m_error_handler);
         if (c == channel::SHELL)
         {
             p_server->send_shell(wire_msg);
