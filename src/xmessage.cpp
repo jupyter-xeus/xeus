@@ -72,7 +72,7 @@ namespace xeus
         parse_zmq_message(metadata, m_metadata);
         parse_zmq_message(content, m_content);
 
-        while (not wire_msg.empty())
+        while (!wire_msg.empty())
         {
             m_buffers.push_back(wire_msg.pop());
         }
