@@ -160,24 +160,22 @@ namespace xeus
                                           const nl::json& metadata,
                                           const nl::json& json_content) const
     {
-        std::string message_type = header.value("msg_type", "");
-        std::string message = "msg_type: " + message_type;
+        nl::json message;
+        message["msg_type"] = header.value("msg_type", "");
         switch(m_level)
         {
         case msg_type:
             break;
         case content:
-            message += '\n' + json_content.dump(4);
+            message["content"] = json_content;
             break;
         case full:
         default:
             {
-                nl::json j;
-                j["header"] = header;
-                j["parent_header"] = parent_header;
-                j["metadata"] = metadata;
-                j["content"] = json_content;
-                message += '\n' + j.dump(4);
+                message["header"] = header;
+                message["parent_header"] = parent_header;
+                message["metadata"] = metadata;
+                message["content"] = json_content;
             }
             break;
         }
@@ -196,10 +194,10 @@ namespace xeus
     }
 
     void xlogger_console::log_message_impl(const std::string& socket_info,
-                                           const std::string& message) const
+                                           const nl::json& json_message) const
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-        std::clog << socket_info << '\n' << message << std::endl;
+        std::clog << socket_info << '\n' << json_message.dump(4) << std::endl;
     }
 
     /*******************************
@@ -215,14 +213,14 @@ namespace xeus
     }
 
     void xlogger_file::log_message_impl(const std::string& socket_info,
-                                        const std::string& message) const
+                                        const nl::json& json_message) const
     {
         nl::json log;
         log["info"] = socket_info;
-        log["message"] = message;
+        log["message"] = json_message;
         std::lock_guard<std::mutex> lock(m_mutex);
         std::ofstream out(m_file_name, std::ios_base::app);
-        out << log.dump(4);
+        out << log.dump(4) << std::endl;
     }
 
     /************************************
