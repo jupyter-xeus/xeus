@@ -197,7 +197,7 @@ namespace xeus
                                            const nl::json& json_message) const
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-        std::clog << socket_info << '\n' << json_message.dump(4) << std::endl;
+        std::cout << socket_info << '\n' << json_message.dump(4) << std::endl;
     }
 
     /*******************************
