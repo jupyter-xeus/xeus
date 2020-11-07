@@ -29,7 +29,7 @@ namespace xeus
         , m_request_stop(false)
     {
         init_socket(m_control, transport, ip, control_port);
-        m_publisher_pub.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_publisher_pub.set(zmq::sockopt::linger, get_socket_linger());
         m_publisher_pub.connect(get_publisher_end_point());
     }
     

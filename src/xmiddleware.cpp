@@ -70,7 +70,7 @@ namespace xeus
                      const std::string& ip,
                      const std::string& port)
     {
-        socket.setsockopt(ZMQ_LINGER, get_socket_linger());
+        socket.set(zmq::sockopt::linger, get_socket_linger());
 
         if (!port.empty())
         {
@@ -84,16 +84,13 @@ namespace xeus
 
     void init_socket(zmq::socket_t& socket, const std::string& end_point)
     {
-        socket.setsockopt(ZMQ_LINGER, get_socket_linger());
+        socket.set(zmq::sockopt::linger, get_socket_linger());
         socket.bind(end_point);
     }
 
     std::string get_socket_port(const zmq::socket_t& socket)
     {
-        char opt[32];
-        std::size_t len = sizeof(opt);
-        socket.getsockopt(ZMQ_LAST_ENDPOINT, &opt, &len);
-        std::string end_point(opt, len);
+        std::string end_point = socket.get(zmq::sockopt::last_endpoint, 32);
         return end_point.substr(end_point.find_last_of(":") + 1);
     }
 

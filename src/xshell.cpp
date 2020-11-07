@@ -30,10 +30,10 @@ namespace xeus
     {
         init_socket(m_shell, transport, ip, shell_port);
         init_socket(m_stdin, transport, ip, stdin_port);
-        m_publisher_pub.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_publisher_pub.set(zmq::sockopt::linger, get_socket_linger());
         m_publisher_pub.connect(get_publisher_end_point());
 
-        m_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_controller.set(zmq::sockopt::linger, get_socket_linger());
         m_controller.bind(get_controller_end_point("shell"));
     }
 

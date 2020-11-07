@@ -36,12 +36,12 @@ namespace xeus
         init_socket(m_shell, config.m_transport, config.m_ip, config.m_shell_port);
         init_socket(m_controller, config.m_transport, config.m_ip, config.m_control_port);
         init_socket(m_stdin, config.m_transport, config.m_ip, config.m_stdin_port);
-        m_publisher_pub.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_publisher_pub.set(zmq::sockopt::linger, get_socket_linger());
         m_publisher_pub.connect(get_publisher_end_point());
 
-        m_publisher_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_publisher_controller.set(zmq::sockopt::linger, get_socket_linger());
         m_publisher_controller.connect(get_controller_end_point("publisher"));
-        m_heartbeat_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_heartbeat_controller.set(zmq::sockopt::linger, get_socket_linger());
         m_heartbeat_controller.connect(get_controller_end_point("heartbeat"));
     }
 

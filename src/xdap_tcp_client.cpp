@@ -187,11 +187,9 @@ namespace xeus
         if (m_dap_tcp_type == dap_tcp_type::client)
         {
             m_tcp_socket.connect(tcp_end_point);
-            const size_t cid_size = 256;
-            size_t id_size = cid_size;
-            uint8_t id[cid_size];
-            m_tcp_socket.getsockopt(ZMQ_IDENTITY, id, &id_size);
-            m_socket_id = zmq::message_t(id, id_size);
+            size_t id_size = 256;
+            std::string id = m_tcp_socket.get(zmq::sockopt::routing_id, id_size);
+            m_socket_id = zmq::message_t(id);
         }
         else
         {
