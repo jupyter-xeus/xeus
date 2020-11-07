@@ -30,11 +30,11 @@ namespace xeus
 
     void xzmq_messenger::connect()
     {
-        m_shell_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_shell_controller.set(zmq::sockopt::linger, get_socket_linger());
         m_shell_controller.connect(get_controller_end_point("shell"));
-        m_publisher_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_publisher_controller.set(zmq::sockopt::linger, get_socket_linger());
         m_publisher_controller.connect(get_controller_end_point("publisher"));
-        m_heartbeat_controller.setsockopt(ZMQ_LINGER, get_socket_linger());
+        m_heartbeat_controller.set(zmq::sockopt::linger, get_socket_linger());
         m_heartbeat_controller.connect(get_controller_end_point("heartbeat"));
     }
 

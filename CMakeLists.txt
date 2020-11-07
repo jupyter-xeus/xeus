@@ -121,7 +121,9 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xauthentication.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xcomm.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xcontrol_messenger.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xdap_tcp_client.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xdebugger.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xdebugger_base.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xguid.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xhistory_manager.hpp
@@ -147,7 +149,9 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xcontrol.hpp
     ${XEUS_SOURCE_DIR}/xcontrol.cpp
     ${XEUS_SOURCE_DIR}/xcontrol_messenger.cpp
+    ${XEUS_SOURCE_DIR}/xdap_tcp_client.cpp
     ${XEUS_SOURCE_DIR}/xdebugger.cpp
+    ${XEUS_SOURCE_DIR}/xdebugger_base.cpp
     ${XEUS_SOURCE_DIR}/xguid.cpp
     ${XEUS_SOURCE_DIR}/xheartbeat.cpp
     ${XEUS_SOURCE_DIR}/xheartbeat.hpp
