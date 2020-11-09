@@ -107,7 +107,7 @@ namespace xeus
         std::string code;
         try
         {
-            code = message["arguments"]["code"];
+            code = message["arguments"]["code"].get<std::string>();
         }
         catch(nl::json::type_error& e)
         {
@@ -143,7 +143,7 @@ namespace xeus
 
     nl::json xdebugger_base::set_breakpoints_request(const nl::json& message)
     {
-        std::string source = message["arguments"]["source"]["path"];
+        std::string source = message["arguments"]["source"]["path"].get<std::string>();
         m_breakpoint_list.erase(source);
         nl::json bp_json = message["arguments"]["breakpoints"];
         std::vector<nl::json> bp_list(bp_json.begin(), bp_json.end());
@@ -157,7 +157,7 @@ namespace xeus
         std::string sourcePath;
         try
         {
-            sourcePath = message["arguments"]["source"]["path"];
+            sourcePath = message["arguments"]["source"]["path"].get<std::string>();
         }
         catch(nl::json::type_error& e)
         {
