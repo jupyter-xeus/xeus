@@ -44,7 +44,8 @@ namespace xeus
     std::unique_ptr<xdebugger> make_null_debugger(zmq::context_t&,
                                                   const xconfiguration&,
                                                   const std::string&,
-                                                  const std::string&)
+                                                  const std::string&,
+                                                  const nl::json&)
     {
         return nullptr;
     }

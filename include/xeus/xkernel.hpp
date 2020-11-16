@@ -42,7 +42,8 @@ namespace xeus
         using debugger_builder = debugger_ptr (*)(zmq::context_t& context,
                                                   const xconfiguration& config,
                                                   const std::string&,
-                                                  const std::string&);
+                                                  const std::string&,
+                                                  const nl::json&);
 
         xkernel(const xconfiguration& config,
                 const std::string& user_name,
@@ -51,6 +52,7 @@ namespace xeus
                 logger_ptr logger = nullptr,
                 server_builder sbuilder = make_xserver,
                 debugger_builder dbuilder = make_null_debugger,
+                nl::json debugger_config = nl::json::object(),
                 nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 
         xkernel(const std::string& user_name,
@@ -59,6 +61,7 @@ namespace xeus
                 logger_ptr logger = nullptr,
                 server_builder sbuilder = make_xserver,
                 debugger_builder dbuilder = make_null_debugger,
+                nl::json debugger_config = nl::json::object(),
                 nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 
         ~xkernel();
@@ -85,6 +88,7 @@ namespace xeus
         debugger_ptr p_debugger;
         zmq::context_t m_context;
         kernel_core_ptr p_core;
+        nl::json m_debugger_config;
         nl::json::error_handler_t m_error_handler;
     };
 }
