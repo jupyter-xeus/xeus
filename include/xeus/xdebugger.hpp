@@ -56,7 +56,8 @@ namespace xeus
     std::unique_ptr<xdebugger> make_null_debugger(zmq::context_t& context,
                                                   const xconfiguration& kernel_configuration,
                                                   const std::string& user_name,
-                                                  const std::string& session_id);
+                                                  const std::string& session_id,
+                                                  const nl::json& debugger_config);
             
 }
 

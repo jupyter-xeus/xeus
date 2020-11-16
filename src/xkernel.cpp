@@ -60,6 +60,7 @@ namespace xeus
                      logger_ptr logger,
                      server_builder sbuilder,
                      debugger_builder dbuilder,
+                     nl::json debugger_config,
                      nl::json::error_handler_t eh)
         : m_config(config)
         , m_user_name(user_name)
@@ -68,6 +69,7 @@ namespace xeus
         , p_logger(std::move(logger))
         , m_server_builder(sbuilder)
         , m_debugger_builder(dbuilder)
+        , m_debugger_config(debugger_config)
         , m_error_handler(eh)
     {
         init();
@@ -79,6 +81,7 @@ namespace xeus
                      logger_ptr logger,
                      server_builder sbuilder,
                      debugger_builder dbuilder,
+                     nl::json debugger_config,
                      nl::json::error_handler_t eh)
         : m_user_name(user_name)
         , p_interpreter(std::move(interpreter))
@@ -86,6 +89,7 @@ namespace xeus
         , p_logger(std::move(logger))
         , m_server_builder(sbuilder)
         , m_debugger_builder(dbuilder)
+        , m_debugger_config(debugger_config)
         , m_error_handler(eh)
     {
         init();
@@ -116,7 +120,7 @@ namespace xeus
         p_server = m_server_builder(m_context, m_config);
         p_server->update_config(m_config);
 
-        p_debugger = m_debugger_builder(m_context, m_config, m_user_name, m_session_id);
+        p_debugger = m_debugger_builder(m_context, m_config, m_user_name, m_session_id, m_debugger_config);
 
         p_core = std::make_unique<xkernel_core>(m_kernel_id,
                                                 m_user_name,
