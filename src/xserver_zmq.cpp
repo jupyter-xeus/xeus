@@ -167,10 +167,10 @@ namespace xeus
 
         // Wait for publisher answer
         m_publisher_controller.send(stop_msg, zmq::send_flags::none);
-        m_publisher_controller.recv(response);
+        (void)m_publisher_controller.recv(response);
 
         // Wait for heartbeat answer
         m_heartbeat_controller.send(stop_msg, zmq::send_flags::none);
-        m_heartbeat_controller.recv(response);
+        (void)m_heartbeat_controller.recv(response);
     }
 }
