@@ -370,8 +370,6 @@ namespace xeus
         nl::json reply = nl::json::object();
         publish_message("interrupt", nl::json::object(), nl::json(reply), buffer_sequence(), channel::CONTROL);
         send_reply("interrupt_reply", nl::json::object(), std::move(reply), c);
-        // \o/
-        std::exit(EXIT_FAILURE);
     }
 
     void xkernel_core::debug_request(const xmessage& request, channel c)
