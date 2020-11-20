@@ -289,32 +289,6 @@ macro(xeus_create_target target_name linkage output_name)
             target_compile_options(${target_name} PUBLIC -march=native)
         endif ()
 
-        # Enable link time optimization and set the default symbol
-        # visibility to hidden (very important to obtain small binaries)
-        if (NOT ${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
-            # Check for Link Time Optimization support
-            # (GCC/Clang)
-            CHECK_CXX_COMPILER_FLAG("-flto" HAS_LTO_FLAG)
-            if (HAS_LTO_FLAG)
-                target_compile_options(${target_name} PUBLIC -flto)
-            endif ()
-
-            # Avoids removing symbols from the static library
-            CHECK_CXX_COMPILER_FLAG("-ffat-lto-objects" HAS_FATLTO_FLAG)
-            if (${linkage_upper} MATCHES "STATIC" AND  HAS_FATLTO_FLAG)
-                message(STATUS "ENABLE FAT LTO OBJECTS")
-                target_compile_options(${target_name} PUBLIC -ffat-lto-objects)
-            endif ()
-
-            # Intel equivalent to LTO is called IPO
-            if (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-                CHECK_CXX_COMPILER_FLAG("-ipo" HAS_IPO_FLAG)
-                if (HAS_IPO_FLAG)
-                    target_compile_options(${target_name} PUBLIC -ipo)
-                endif ()
-            endif ()
-        endif ()
-
         message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
     endif()
 
