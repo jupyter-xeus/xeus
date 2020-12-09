@@ -19,6 +19,8 @@
 #include <unistd.h>
 #endif
 
+#include "xtl/xhash.hpp"
+
 #include "xeus/xsystem.hpp"
 
 namespace xeus
@@ -98,6 +100,29 @@ namespace xeus
                                   const std::string& extension)
     {
         return prefix + "/[" + std::to_string(execution_count) + "]" + extension;
+    }
+
+    std::size_t get_hash_seed()
+    {
+        return static_cast<std::size_t>(0xc70f6907UL);
+    }
+
+    std::string get_tmp_prefix(const std::string& process_name)
+    {
+        std::string tmp_prefix = xeus::get_temp_directory_path()
+                                      + '/' + process_name + '/'
+                                      + std::to_string(xeus::get_current_pid())
+                                      + '/';
+        return tmp_prefix;
+    }
+
+    std::string get_cell_tmp_file(const std::string& prefix,
+                                  const std::string& content,
+                                  const std::string& suffix)
+    {
+        std::uint32_t seed = static_cast<uint32_t>(get_hash_seed());
+        std::string id = std::to_string(xtl::murmur2_x86(content.data(), content.size(), seed));
+        return prefix + id + suffix;
     }
 }
 
