@@ -110,7 +110,7 @@ namespace xeus
     std::string get_tmp_prefix(const std::string& process_name)
     {
         std::string tmp_prefix = xeus::get_temp_directory_path()
-                                      + '/' + process_name + '/'
+                                      + '/' + process_name + '_'
                                       + std::to_string(xeus::get_current_pid())
                                       + '/';
         return tmp_prefix;
