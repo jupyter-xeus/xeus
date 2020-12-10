@@ -56,5 +56,12 @@ namespace xeus
         int pid = get_current_pid();
         EXPECT_NE(pid, -1);
     }
+
+    TEST(kernel, get_tmp_hash_seed)
+    {
+        size_t hs = get_tmp_hash_seed();
+        size_t expected = static_cast<std::size_t>(0xc70f6907UL);
+        EXPECT_EQ(hs, expected);
+    }
 }
 
