@@ -102,7 +102,7 @@ namespace xeus
         return prefix + "/[" + std::to_string(execution_count) + "]" + extension;
     }
 
-    std::size_t get_hash_seed()
+    std::size_t get_tmp_hash_seed()
     {
         return static_cast<std::size_t>(0xc70f6907UL);
     }
@@ -120,7 +120,7 @@ namespace xeus
                                   const std::string& content,
                                   const std::string& suffix)
     {
-        std::uint32_t seed = static_cast<uint32_t>(get_hash_seed());
+        std::uint32_t seed = static_cast<uint32_t>(get_tmp_hash_seed());
         std::string id = std::to_string(xtl::murmur2_x86(content.data(), content.size(), seed));
         return prefix + id + suffix;
     }
