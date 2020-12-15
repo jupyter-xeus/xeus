@@ -40,6 +40,16 @@ The `xeus-sqlite`_ project is a Jupyter kernel for the SQLite.
 .. image:: xeus-sqlite-screenshot.png
    :alt: xeus-sqlite screenshot
 
+xeus-robot
+----------
+
+The `xeus-robot`_ project is a Jupyter kernel for RobotFramework
+
+SlicerJupyter
+-------------
+
+The SlicerJupyter_ project is an integration of the xeus-python kernel in the 3D-Slicer desktop application.
+
 xwidgets
 ---------
 
@@ -73,6 +83,8 @@ built with Xeus and Rcpp_.
 .. _xeus-cling: https://github.com/jupyter-xeus/xeus-cling
 .. _xeus-python: https://github.com/jupyter-xeus/xeus-python
 .. _xeus-sqlite: https://github.com/jupyter-xeus/xeus-sqlite
+.. _xeus-robot: https://github.com/jupyter-xeus/xeus-robot
+.. _SlicerJupyter: https://github.com/Slicer/SlicerJupyter
 .. _xwidgets: https://github.com/QuantStack/xwidgets
 .. _JuniperKernel: https://github.com/JuniperKernel/JuniperKernel
 .. _Rcpp: https://github.com/RcppCore/Rcpp
