@@ -72,7 +72,7 @@ endif()
 # ============
 
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)
-set(xtl_REQUIRED_VERSION 0.5)
+set(xtl_REQUIRED_VERSION 0.7)
 set(cppzmq_REQUIRED_VERSION 4.4.1)
 set(zeromq_REQUIRED_VERSION 4.3.2)
 
