@@ -272,10 +272,10 @@ namespace xeus
                 header_pos = buffer.find(HEADER, hint);
             }
 
-            separator_pos = buffer.find(SEPARATOR, header_pos + HEADER_LENGTH);
+            hint = header_pos + HEADER_LENGTH;
+            separator_pos = buffer.find(SEPARATOR, hint);
             while(separator_pos == std::string::npos)
             {
-                hint = buffer.size();
                 append_tcp_message(buffer);
                 separator_pos = buffer.find(SEPARATOR, hint);
             }
