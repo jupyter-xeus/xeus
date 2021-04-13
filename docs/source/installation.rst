@@ -7,14 +7,14 @@
 Installation
 ============
 
-With Conda
-----------
+With Mamba or Conda
+-------------------
 
-``xeus`` has been packaged on all platforms for the conda package manager.
+``xeus`` has been packaged on all platforms for the mamba (or conda) package manager.
 
 .. code::
 
-    conda install xeus -c conda-forge
+    mamba install xeus -c conda-forge
 
 From Source
 -----------
@@ -25,17 +25,17 @@ From Source
 
 On linux platforms, ``xeus`` also requires libuuid, which is available in all linux distributions.
 
-We have packaged all these dependencies for the conda package manager. The simplest way to install them with conda is to run:
+We have packaged all these dependencies on conda-forge. The simplest way to install them is to run:
 
 .. code::
 
-    conda install cmake zeromq cppzmq OpenSSL xtl -c conda-forge
+    mamba install cmake zeromq cppzmq OpenSSL xtl -c conda-forge
 
 On Linux platform, you will also need:
 
 .. code::
 
-    conda install libuuid -c conda-forge
+    mamba install libuuid -c conda-forge
 
 Once you have installed the dependencies, you can build and install `xeus`:
 

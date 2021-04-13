@@ -17,10 +17,10 @@ a kernel for the C++ programming language, and [`xeus-python`](https://github.co
 
 ## Installation
 
-`xeus` has been packaged on all platforms for the conda package manager.
+`xeus` has been packaged on all platforms for the mamba (or conda) package manager.
 
 ```
-conda install xeus -c conda-forge
+mamba install xeus -c conda-forge
 ```
 
 ## Documentation
@@ -107,17 +107,16 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 On Linux platforms, `xeus` also requires `libuuid`, which is available in all linux distributions (`uuid-dev` on Debian).
 
-We have packaged all these dependencies for the conda package manager. The simplest way to install them with
-conda is to run:
+We have packaged all these dependencies on conda-forge. The simplest way to install them is to run:
 
 ```bash
-conda install cmake pkg-config zeromq cppzmq xtl OpenSSL nlohmann_json -c conda-forge
+mamba install cmake pkg-config zeromq cppzmq xtl OpenSSL nlohmann_json -c conda-forge
 ```
 
 On Linux platforms, you will also need `libuuid`:
 
 ```bash
-conda install libuuid -c conda-forge
+mamba install libuuid -c conda-forge
 ```
 
 Once you have installed the dependencies, you can build and install `xeus`:
@@ -145,7 +144,7 @@ make install
 
 ## OpenSSL
 
-[OpenSSL](https://www.openssl.org/) is packaged for most package managers (apt-get, rpm, conda).
+[OpenSSL](https://www.openssl.org/) is packaged for most package managers (apt-get, rpm, mamba).
 We recommend making use of an off-the-shelf build of OpenSSL for your system.
 
 For more information on building OpenSSL, check out the official [OpenSSL wiki](https://wiki.openssl.org/index.php/Compilation_and_Installation).
