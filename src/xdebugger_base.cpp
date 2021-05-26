@@ -287,6 +287,11 @@ namespace xeus
         m_stopped_threads.insert(id);
     }
 
+    const std::set<int>& xdebugger_base::get_stopped_threads() const
+    {
+        return m_stopped_threads;
+    }
+
     /**************************
      * Private implementation *
      **************************/

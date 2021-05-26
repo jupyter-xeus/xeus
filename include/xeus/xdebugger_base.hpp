@@ -79,6 +79,8 @@ namespace xeus
         void continued_event(const nl::json& message);
         void stopped_event(const nl::json& message);
 
+        const std::set<int>& get_stopped_threads() const;
+
     private:
 
         void handle_event(const nl::json& message);

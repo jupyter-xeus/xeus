@@ -116,6 +116,7 @@ namespace xeus
         using authentication_ptr = std::unique_ptr<xeus::xauthentication>;
         authentication_ptr p_auth;
 
+        // Saves parent header for future debug events
         std::string m_parent_header;
 
         bool m_request_stop;
