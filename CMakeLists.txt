@@ -267,16 +267,33 @@ macro(xeus_create_target target_name linkage output_name)
         endif ()
     endif ()
 
-    set_target_properties(
-        ${target_name}
-        PROPERTIES
-        PUBLIC_HEADER "${XEUS_HEADERS}"
-        COMPILE_DEFINITIONS "XEUS_EXPORTS"
-        PREFIX ""
-        VERSION ${XEUS_BINARY_VERSION}
-        SOVERSION ${XEUS_BINARY_CURRENT}
-        OUTPUT_NAME "lib${output_name}"
-    )
+    if (UNIX AND NOT APPLE)
+        # CMake does not compute the version number of so files as libtool
+        # does on Linux. Strictly speaking, we should exclude FreeBSD from
+        # this conditional branch.
+        math(EXPR XEUS_BINARY_COMPATIBLE "${XEUS_BINARY_CURRENT} - ${XEUS_BINARY_AGE}")
+        set_target_properties(
+            ${target_name}
+            PROPERTIES
+            PUBLIC_HEADER "${XEUS_HEADERS}"
+            COMPILE_DEFINITIONS "XEUS_EXPORTS"
+            PREFIX ""
+            VERSION "${XEUS_BINARY_COMPATIBLE}.${XEUS_BINARY_REVISION}.${XEUS_BINARY_AGE}"
+            SOVERSION ${XEUS_BINARY_COMPATIBLE}
+            OUTPUT_NAME "lib${output_name}"
+        )
+    else()
+        set_target_properties(
+            ${target_name}
+            PROPERTIES
+            PUBLIC_HEADER "${XEUS_HEADERS}"
+            COMPILE_DEFINITIONS "XEUS_EXPORTS"
+            PREFIX ""
+            VERSION ${XEUS_BINARY_VERSION}
+            SOVERSION ${XEUS_BINARY_CURRENT}
+            OUTPUT_NAME "lib${output_name}"
+        )
+    endif()
 
     # Compilation flags
     # =================
