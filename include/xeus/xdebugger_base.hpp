@@ -32,10 +32,14 @@ namespace xeus
         std::size_t m_hash_seed;
         std::string m_tmp_file_prefix;
         std::string m_tmp_file_suffix;
+        bool m_rich_rendering;
+        std::vector<std::string> m_exception_paths;
 
         xdebugger_info(std::size_t hash_seed,
                        const std::string& tmp_file_prefix,
-                       const std::string& tmp_file_suffix);
+                       const std::string& tmp_file_suffix,
+                       bool rich_rendering = false,
+                       std::vector<std::string> exception_paths = {});
     };
 
     class XEUS_API xdebugger_base : public xdebugger
