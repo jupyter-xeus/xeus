@@ -21,10 +21,14 @@ namespace xeus
 {
     xdebugger_info::xdebugger_info(std::size_t hash_seed,
                                    const std::string& tmp_file_prefix,
-                                   const std::string& tmp_file_suffix)
+                                   const std::string& tmp_file_suffix,
+                                   bool rich_rendering,
+                                   std::vector<std::string> exception_paths)
         : m_hash_seed(hash_seed)
         , m_tmp_file_prefix(tmp_file_prefix)
         , m_tmp_file_suffix(tmp_file_suffix)
+        , m_rich_rendering(rich_rendering)
+        , m_exception_paths(exception_paths)
     {
     }
 
@@ -96,7 +100,9 @@ namespace xeus
                 {"tmpFilePrefix", info.m_tmp_file_prefix},
                 {"tmpFileSuffix", info.m_tmp_file_suffix},
                 {"breakpoints", breakpoint_list},
-                {"stoppedThreads", m_stopped_threads}
+                {"stoppedThreads", m_stopped_threads},
+                {"richRendering", info.m_rich_rendering},
+                {"exceptionPaths", info.m_exception_paths}
             }}
         };
         return reply;
