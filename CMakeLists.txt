@@ -267,10 +267,12 @@ macro(xeus_create_target target_name linkage output_name)
         endif ()
     endif ()
 
-    if (UNIX AND NOT APPLE)
+    if (UNIX)
         # CMake does not compute the version number of so files as libtool
-        # does on Linux. Strictly speaking, we should exclude FreeBSD from
-        # this conditional branch.
+        # does on Linux. Strictly speaking, we should exclude FreeBSD and
+        # Apple from this, but that would require having different version
+        # numbers depending on the platform. We prefer to follow the
+        # libtool pattern everywhere.
         math(EXPR XEUS_BINARY_COMPATIBLE "${XEUS_BINARY_CURRENT} - ${XEUS_BINARY_AGE}")
         set_target_properties(
             ${target_name}
