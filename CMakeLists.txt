@@ -196,7 +196,6 @@ include(CheckCXXCompilerFlag)
 string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 
 if (NOT APPLE)
-    set(CMAKE_SKIP_BUILD_RPATH FALSE)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif ()
 
@@ -223,12 +222,7 @@ macro(xeus_create_target target_name linkage output_name)
 
     add_library(${target_name} ${linkage_upper} ${XEUS_SOURCES} ${XEUS_HEADERS})
 
-    if (APPLE)
-        set_target_properties(
-            ${target_name} PROPERTIES
-            MACOSX_RPATH ON
-        )
-    else ()
+    if (NOT APPLE)
         set_target_properties(
             ${target_name} PROPERTIES
             BUILD_WITH_INSTALL_RPATH 1
