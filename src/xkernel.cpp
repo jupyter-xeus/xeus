@@ -26,6 +26,7 @@
 #endif
 
 #if (defined(LINUX_PLATFORM) || defined(APPLE_PLATFORM))
+#include <cstdlib>
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
@@ -41,8 +42,24 @@ namespace xeus
 #if (defined(LINUX_PLATFORM) || defined(APPLE_PLATFORM))
         struct passwd* pws;
         pws = getpwuid(geteuid());
-        std::string res = pws->pw_name;
-        return res;
+        if (pws != nullptr)
+        {
+            std::string res = pws->pw_name;
+            return res;
+        }
+        else
+        {
+            const char* user = std::getenv("USER");
+            if (user != nullptr)
+            {
+                std::string res = user;
+                return res;
+            }
+            else
+            {
+                return "unspecified user";
+            }
+        }
 #elif defined(WINDOWS_PLATFORM)
         char username[UNLEN + 1];
         DWORD username_len = UNLEN + 1;
