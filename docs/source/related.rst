@@ -32,6 +32,14 @@ language based on the Xeus implementation of the protocol.
 .. image:: xeus-python-screencast.gif
    :alt: xeus-python screencast
 
+xeus-sql
+--------
+
+The `xeus-sql`_ is a Jupyter kernel for general SQL implementations based on the native implementation of the Jupyter protocol xeus and SOCI.
+
+ .. image:: xeus-sql-screenshot.gif
+    :alt: xeus-sql screencast
+
 xeus-sqlite
 -----------
 
