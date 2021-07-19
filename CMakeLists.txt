@@ -173,8 +173,6 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xlogger_impl.hpp
     ${XEUS_SOURCE_DIR}/xlogger_impl.cpp
     ${XEUS_SOURCE_DIR}/xmessage.cpp
-    ${XEUS_SOURCE_DIR}/xmessage_builder.hpp
-    ${XEUS_SOURCE_DIR}/xmessage_builder.cpp
     ${XEUS_SOURCE_DIR}/xmock_interpreter.cpp
     ${XEUS_SOURCE_DIR}/xmock_interpreter.hpp
     ${XEUS_SOURCE_DIR}/xmiddleware.cpp
@@ -361,7 +359,7 @@ endif ()
 
 include(CTest)
 
-if(XEUS_BUILD_TESTS)
+if(XEUS_DOWNLOAD_GTEST OR GTEST_SRC_DIR OR XEUS_BUILD_TESTS)
     set(BUILD_TESTING ON)
     message(STATUS "tests enabled")
 else ()
