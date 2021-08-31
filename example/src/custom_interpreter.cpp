@@ -47,6 +47,9 @@ namespace custom
         nl::json result;
         result["status"] = "ok";
         return result;
+
+        // Alternatively use create_successful_reply:
+        // return create_successful_reply();
     }
 
     void custom_interpreter::configure_impl()
@@ -66,6 +69,9 @@ namespace custom
             result["matches"] = {"Hello", "Hey", "Howdy"};
             result["cursor_start"] = 5;
             result["cursor_end"] = cursor_pos;
+
+            // Alternatively use the create_complete_reply method:
+            // return create_complete_reply({"Hello", "Hey", "Howdy"}, 5, cursor_pos);
         }
         // No completion result
         else
@@ -74,6 +80,8 @@ namespace custom
             result["matches"] = nl::json::array();
             result["cursor_start"] = cursor_pos;
             result["cursor_end"] = cursor_pos;
+
+            // return create_complete_reply({}, cursor_pos, cursor_pos);
         }
 
         return result;
@@ -89,10 +97,14 @@ namespace custom
         {
             result["found"] = true;
             result["text/plain"] = "Print objects to the text stream file, [...]";
+
+            // Alternatively use create_inspect_reply:
+            // return create_inspect_reply("{{"text/plain", "Print objects to the text stream file, [...]"}}", "", true)
         }
         else
         {
             result["found"] = false;
+            // return create_inspect_reply();
         }
 
         result["status"] = "ok";
@@ -113,6 +125,9 @@ namespace custom
         //    result["indent"] = 4;
         //}
 
+        //Alternatively use create_is_complete_reply:
+        //return create_is_complete_reply("incomplete");
+
         return result;
     }
 
@@ -126,6 +141,9 @@ namespace custom
         result["language_info"]["mimetype"] = "text/x-python";
         result["language_info"]["file_extension"] = ".py";
         return result;
+
+        //Alternatively you can use create_info_reply:
+        //return create_info_reply("", "my_kernel", "0.1.0", "python", "3.7", "text/x-python", ".py")
     }
 
     void custom_interpreter::shutdown_request_impl() {
