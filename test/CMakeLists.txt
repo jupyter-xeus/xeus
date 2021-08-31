@@ -179,3 +179,34 @@ add_test(NAME test_kernel_shell
 set_tests_properties(test_kernel_shell
     PROPERTIES
     ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
+
+# Test_kernel_repllies tests
+# ==========================
+
+set(TEST_KERNEL_SPLIT_SOURCES
+    test_kernel_replies.cpp
+    test_interpreter.hpp
+    main_shell.cpp)
+
+configure_file(
+    "${XEUS_TEST_DIR}/test_kernel_replies/kernel.json.in"
+    "kernels/test_kernel_replies/kernel.json"
+)
+
+add_executable(test_kernel_replies ${TEST_KERNEL_SPLIT_SOURCES})
+target_link_libraries(test_kernel_replies PRIVATE ${xeus_TARGET} Threads::Threads)
+target_compile_features(test_kernel_replies PRIVATE cxx_std_11)
+
+set(CONNECTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/connection.json)
+
+configure_file(
+    "${XEUS_TEST_DIR}/test_kernel_replies.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/"
+    COPYONLY)
+
+add_test(NAME test_kernel_replies
+    COMMAND ${PYTEST} test_kernel_replies.py)
+set_tests_properties(test_kernel_replies
+    PROPERTIES
+    ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
+
