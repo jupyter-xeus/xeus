@@ -85,6 +85,10 @@ namespace xeus
 
         const std::set<int>& get_stopped_threads() const;
 
+    protected:
+
+        virtual nl::json variables_request_impl(const nl::json& message);
+
     private:
 
         void handle_event(const nl::json& message);

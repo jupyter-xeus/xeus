@@ -228,28 +228,7 @@ namespace xeus
 
     nl::json xdebugger_base::variables_request(const nl::json& message)
     {
-        nl::json reply = forward_message(message);
-        auto start_it =  message["arguments"].find("start");
-        auto count_it = message["arguments"].find("count");
-        auto end_it = message["arguments"].end();
-        if(start_it != end_it || count_it != end_it)
-        {
-            int start = start_it != end_it ? start_it->get<int>() : 0;
-            int count = count_it != end_it ? count_it->get<int>() : 0;
-            if(start != 0 || count != 0)
-            {
-                int end = count == 0 ? reply["body"]["variables"].size() : start + count;
-                nl::json old_variables_list = reply["body"]["variables"];
-                reply["body"].erase("variables");
-                nl::json variables_list;
-                for(int i = start; i < end; ++i)
-                {
-                    variables_list.push_back(old_variables_list.at(i));
-                }
-                reply["body"]["variables"] = variables_list;
-            }
-        }
-        return reply;
+        return variables_request_impl(message);
     }
 
     nl::json xdebugger_base::forward_message(const nl::json& message)
@@ -296,6 +275,32 @@ namespace xeus
     const std::set<int>& xdebugger_base::get_stopped_threads() const
     {
         return m_stopped_threads;
+    }
+
+    nl::json xdebugger_base::variables_request_impl(const nl::json& message)
+    {
+        nl::json reply = forward_message(message);
+        auto start_it =  message["arguments"].find("start");
+        auto count_it = message["arguments"].find("count");
+        auto end_it = message["arguments"].end();
+        if(start_it != end_it || count_it != end_it)
+        {
+            int start = start_it != end_it ? start_it->get<int>() : 0;
+            int count = count_it != end_it ? count_it->get<int>() : 0;
+            if(start != 0 || count != 0)
+            {
+                int end = count == 0 ? reply["body"]["variables"].size() : start + count;
+                nl::json old_variables_list = reply["body"]["variables"];
+                reply["body"].erase("variables");
+                nl::json variables_list;
+                for(int i = start; i < end; ++i)
+                {
+                    variables_list.push_back(old_variables_list.at(i));
+                }
+                reply["body"]["variables"] = variables_list;
+            }
+        }
+        return reply;
     }
 
     /**************************
