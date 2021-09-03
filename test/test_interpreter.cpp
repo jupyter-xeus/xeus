@@ -96,7 +96,6 @@ namespace test_kernel
         nl::json result;
         result["status"] = "ok";
         result["found"] = true;
-        result["data"] = {{"text/plain", ""}};
         result["metadata"] = {{"text/plain", ""}};
         return result;
     }

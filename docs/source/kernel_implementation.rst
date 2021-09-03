@@ -169,9 +169,9 @@ Error reply
 Creates a default error reply to the kernel or allows custom input. The signature of the method is the following:
 
 .. code::
-     nl:\:json create_error_reply(const std:\:string& evalue,
-                                   const std:\:string& ename,
-                                   const std:\:vector<std:\:string>& trace_back)
+     nl:\:json create_error_reply(const std:\:string& ename,
+                                  const std:\:string& evalue,
+                                  const std:\:vector<std:\:string>& trace_back)
 
 Where ``evalue`` is exception value, ``ename`` is exception name and ``trace_back`` a vector of strings with the exception stack.
 
@@ -181,12 +181,10 @@ Successful reply
 Creates a default success reply to the kernel or allows custom input. The signature of the method is the following:
 
 .. code::
-    nl:\:json create_successful_reply(const std:\:string& data,
-                                     const std:\:vector<nl:\:json>& payload,
-                                     const nl:\:json& data,
+    nl:\:json create_successful_reply(const std:\:vector<nl:\:json>& payload,
                                      const nl:\:json& user_expressions)
 
-Where ``data`` is the content of the information you want to be transmitted to the kernel's frontend. ``payload`` is a way to trigger frontend actions from the kernel (payloads are deprecated but since there are still no replecement for it you might need to use it) more information about the different kinds of payloads in the official docs_. ``data`` is a dictionary which the keys is a ``MIME_type`` (this is the type of data to be shown it must be a valid MIME type, for a list of the possibilities check MDN_, note that you're not limited by these types) and the values are the content of the information intended to be displayed in the frontend. And ``user_expressions`` is a dictionary of strings of arbitrary code, more information about it on the official docs_.
+Where ``payload`` is a way to trigger frontend actions from the kernel (payloads are deprecated but since there are still no replecement for it you might need to use it) more information about the different kinds of payloads in the official docs_. ``data`` is a dictionary which the keys is a ``MIME_type`` (this is the type of data to be shown it must be a valid MIME type, for a list of the possibilities check MDN_, note that you're not limited by these types) and the values are the content of the information intended to be displayed in the frontend. And ``user_expressions`` is a dictionary of strings of arbitrary code, more information about it on the official docs_.
 
 Complete reply
 ~~~~~~~~~~~~~~
@@ -197,10 +195,9 @@ Creates a custom completion reply to the kernel. The signature of the method is 
     nl:\:json create_complete_reply(const std:\:vector<std:\:string>& matches,
                                    const int cursor_start,
                                    const int cursor_end,
-                                   const std:\:string& code,
                                    const nl:\:json metadata)
 
-Where ``matches`` the list of all matches to the completion request, it's a mandatory argument. ``cursor_start`` and ``cursor_end`` mark the range of text that should be replaced by the above matches when a completion is accepted, typically ``cursor_end`` is the same as ``cursor_pos`` in the request and both these arguments are mandatory for the implementation of the method. ``code`` the code context in which completion is requested. ``metadata`` a dictionary of strings that contains information that frontend plugins might use for extra display information about completions.
+Where ``matches`` the list of all matches to the completion request, it's a mandatory argument. ``cursor_start`` and ``cursor_end`` mark the range of text that should be replaced by the above matches when a completion is accepted, typically ``cursor_end`` is the same as ``cursor_pos`` in the request and both these arguments are mandatory for the implementation of the method. ``metadata`` a dictionary of strings that contains information that frontend plugins might use for extra display information about completions.
 
 In case you do not wish to implement completion in your kernel, instead of creating a complete reply you can use the ``create_successful_reply`` with its default arguments.
 

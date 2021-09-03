@@ -36,8 +36,6 @@ namespace test_kernel
                                                     nl::json /* user_expressions */,
                                                     bool /* allow_stdin */)
     {
-        nl::json kernel_res;
-
         if (code.compare("hello, world") == 0)
         {
             publish_stream("stdout", code);
@@ -51,25 +49,26 @@ namespace test_kernel
         if (code.compare("?") == 0)
         {
             std::string html_content = R"(<iframe class="xpyt-iframe-pager" src="
-                https://xeus.readthedocs.io"></iframe>)";
-            nl::json kernel_res;
-            kernel_res["payload"] = nl::json::array();
-            kernel_res["payload"][0] = nl::json::object({
-                {"data", {
-                    {"text/plain", "https://xeus.readthedocs.io"},
-                    {"text/html", html_content}}
-                },
-                {"source", "page"},
-                {"start", 0}
-            });
-            return xeus::create_successful_reply("", kernel_res["payload"]);
+                                            https://xeus.readthedocs.io"></iframe>)";
+
+            auto payload = nl::json::array();
+            payload[0] = nl::json::object({
+                            {"data", {
+                                {"text/plain", "https://xeus.readthedocs.io"},
+                                {"text/html", html_content}}
+                            },
+                            {"source", "page"},
+                            {"start", 0}
+                        });
+
+            return xeus::create_successful_reply(payload)[0];
         }
 
         nl::json pub_data;
         pub_data["text/plain"] = code;
         publish_execution_result(execution_counter, std::move(pub_data), nl::json());
 
-        return xeus::create_successful_reply(code);
+        return xeus::create_successful_reply();
     }
 
     nl::json test_interpreter::complete_request_impl(const std::string& /* code */,
@@ -82,7 +81,8 @@ namespace test_kernel
                                                     int /* cursor_pos */,
                                                     int /* detail_level */)
     {
-        return xeus::create_inspect_reply({{"text/plain", ""}}, {{"text/plain", ""}}, true);
+        nl::json data = nl::json::object();
+        return xeus::create_inspect_reply(true, data, {{"text/plain", ""}});
     }
 
     nl::json test_interpreter::is_complete_request_impl(const std::string& code)
