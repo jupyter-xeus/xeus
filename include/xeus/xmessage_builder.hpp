@@ -22,12 +22,12 @@ namespace xeus
 {
     nl::json create_error_reply(const std::string& ename = std::string(),
                                 const std::string& evalue = std::string(),
-                                const std::vector<std::string>& trace_back = nl::json::array());
+                                const nl::json& trace_back = nl::json::array());
 
-    nl::json create_successful_reply(const std::vector<std::string>& payload = nl::json::array(),
+    nl::json create_successful_reply(const nl::json& payload = nl::json::array(),
                                      const nl::json& user_expressions = nl::json::object());
 
-    nl::json create_complete_reply(const std::vector<std::string>& matches,
+    nl::json create_complete_reply(const nl::json& matches,
                                    const int& cursor_start,
                                    const int& cursor_end,
                                    const nl::json& metadata = nl::json::object());
