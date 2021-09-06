@@ -1,6 +1,7 @@
 #include "zmq_addon.hpp"
 #include "nlohmann/json.hpp"
 #include "xeus/xmessage.hpp"
+#include "xeus/xzmq_serializer.hpp"
 #include "xeus/xdap_tcp_client.hpp"
 
 namespace xeus
@@ -53,7 +54,6 @@ namespace xeus
     void xdap_tcp_client::forward_event(nl::json message)
     {
         m_event_callback(message);
-        zmq::multipart_t wire_msg;
         nl::json header = xeus::make_header("debug_event", m_user_name, m_session_id);
         nl::json parent_header = m_parent_header.empty() ? nl::json::object() : nl::json::parse(m_parent_header);
         xeus::xpub_message msg("debug_event",
@@ -62,7 +62,8 @@ namespace xeus
                                 nl::json::object(),
                                 std::move(message),
                                 xeus::buffer_sequence());
-        std::move(msg).serialize(wire_msg, *p_auth);
+        zmq::multipart_t wire_msg = xzmq_serializer::serialize_iopub(std::move(msg), *p_auth);
+        //std::move(msg).serialize(wire_msg, *p_auth);
         wire_msg.send(m_publisher);
     }
 

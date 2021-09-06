@@ -18,6 +18,7 @@
 
 #include "xkernel_core.hpp"
 #include "xeus/xhistory_manager.hpp"
+#include "xeus/xzmq_serializer.hpp"
 
 using namespace std::placeholders;
 
@@ -90,8 +91,6 @@ namespace xeus
 
     zmq::multipart_t xkernel_core::build_start_msg() const
     {
-        zmq::multipart_t start_msg;
-
         std::string topic = "kernel_core." + m_kernel_id + ".status";
         nl::json content;
         content["execution_state"] = "starting";
@@ -102,8 +101,7 @@ namespace xeus
                          nl::json::object(),
                          std::move(content),
                          buffer_sequence());
-        std::move(msg).serialize(start_msg, *p_auth, m_error_handler);
-
+        zmq::multipart_t start_msg = xzmq_serializer::serialize_iopub(std::move(msg), *p_auth, m_error_handler);
         return start_msg;
     }
 
@@ -119,10 +117,9 @@ namespace xeus
 
     void xkernel_core::dispatch_stdin(zmq::multipart_t& wire_msg)
     {
-        xmessage msg;
         try
         {
-            msg.deserialize(wire_msg, *p_auth);
+            xmessage msg = xzmq_serializer::deserialize(wire_msg, *p_auth);
             p_logger->log_received_message(msg, xlogger::stdinput);
             const nl::json& content = msg.content();
             std::string value = content.value("value", "");
@@ -149,8 +146,6 @@ namespace xeus
                                        buffer_sequence buffers,
                                        channel c)
     {
-
-        zmq::multipart_t wire_msg;
         xpub_message msg(get_topic(msg_type),
                          make_header(msg_type, m_user_name, m_session_id),
                          get_parent_header(c),
@@ -158,7 +153,7 @@ namespace xeus
                          std::move(content),
                          std::move(buffers));
         p_logger->log_iopub_message(msg);
-        std::move(msg).serialize(wire_msg, *p_auth, m_error_handler);
+        zmq::multipart_t wire_msg = xzmq_serializer::serialize_iopub(std::move(msg), *p_auth, m_error_handler);
         p_server->publish(wire_msg, c);
     }
 
@@ -166,7 +161,6 @@ namespace xeus
                                   nl::json metadata,
                                   nl::json content)
     {
-        zmq::multipart_t wire_msg;
         xmessage msg(get_parent_id(channel::SHELL),
                      make_header(msg_type, m_user_name, m_session_id),
                      get_parent_header(channel::SHELL),
@@ -174,7 +168,7 @@ namespace xeus
                      std::move(content),
                      buffer_sequence());
         p_logger->log_sent_message(msg, xlogger::stdinput);
-        std::move(msg).serialize(wire_msg, *p_auth, m_error_handler);
+        zmq::multipart_t wire_msg = xzmq_serializer::serialize(std::move(msg), *p_auth, m_error_handler);
         p_server->send_stdin(wire_msg);
     }
 
@@ -203,7 +197,7 @@ namespace xeus
         xmessage msg;
         try
         {
-            msg.deserialize(wire_msg, *p_auth);
+            msg = xzmq_serializer::deserialize(wire_msg, *p_auth);
         }
         catch (std::exception& e)
         {
@@ -422,7 +416,6 @@ namespace xeus
                                   nl::json reply_content,
                                   channel c)
     {
-        zmq::multipart_t wire_msg;
         xmessage reply(id_list,
                        make_header(reply_type, m_user_name, m_session_id),
                        std::move(parent_header),
@@ -430,7 +423,7 @@ namespace xeus
                        std::move(reply_content),
                        buffer_sequence());
         p_logger->log_sent_message(reply, c == channel::SHELL ? xlogger::shell : xlogger::control);
-        std::move(reply).serialize(wire_msg, *p_auth, m_error_handler);
+        zmq::multipart_t wire_msg = xzmq_serializer::serialize(std::move(reply), *p_auth, m_error_handler);
         if (c == channel::SHELL)
         {
             p_server->send_shell(wire_msg);
@@ -446,7 +439,7 @@ namespace xeus
         xmessage msg;
         try
         {
-            msg.deserialize(wire_msg, *p_auth);
+            msg = xzmq_serializer::deserialize(wire_msg, *p_auth);
         }
         catch (std::exception& e)
         {

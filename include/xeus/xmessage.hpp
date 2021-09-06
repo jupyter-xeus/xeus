@@ -25,6 +25,15 @@ namespace xeus
 {
     using buffer_sequence = std::vector<zmq::message_t>;
 
+    struct XEUS_API xmessage_base_data
+    {
+        nl::json m_header;
+        nl::json m_parent_header;
+        nl::json m_metadata;
+        nl::json m_content;
+        buffer_sequence m_buffers;
+    };
+
     class XEUS_API xmessage_base
     {
     public:
@@ -36,7 +45,9 @@ namespace xeus
         const nl::json& parent_header() const;
         const nl::json& metadata() const;
         const nl::json& content() const;
-        const buffer_sequence& buffers() const;
+
+        const buffer_sequence& buffers() const&;
+        buffer_sequence&& buffers() &&;
 
     protected:
 
@@ -46,19 +57,11 @@ namespace xeus
                       nl::json metadata,
                       nl::json content,
                       buffer_sequence buffers);
-
+        xmessage_base(xmessage_base_data&& data);
         ~xmessage_base() = default;
 
         xmessage_base(xmessage_base&&) = default;
         xmessage_base& operator=(xmessage_base&&) = default;
-
-        bool is_delimiter(zmq::message_t& frame) const;
-        void deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth);
-        void serialize(zmq::multipart_t& wire_msg,
-                       const xauthentication& auth,
-                       nl::json::error_handler_t) &&;
-
-        static const std::string DELIMITER;
 
     private:
 
@@ -83,6 +86,8 @@ namespace xeus
                  nl::json metadata,
                  nl::json content,
                  buffer_sequence buffers);
+        xmessage(const guid_list& zmq_id,
+                 xmessage_base_data&& data);
 
         ~xmessage() = default;
 
@@ -91,11 +96,6 @@ namespace xeus
 
         xmessage(const xmessage&) = delete;
         xmessage& operator=(const xmessage&) = delete;
-
-        void deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth);
-        void serialize(zmq::multipart_t& wire_msg,
-                       const xauthentication& auth,
-                       nl::json::error_handler_t error_handler = nl::json::error_handler_t::strict) &&;
 
         const guid_list& identities() const;
 
@@ -117,6 +117,8 @@ namespace xeus
                      nl::json metadata,
                      nl::json content,
                      buffer_sequence buffers);
+        xpub_message(const std::string& topic,
+                     xmessage_base_data&& data);
 
         ~xpub_message() = default;
 
@@ -125,11 +127,6 @@ namespace xeus
 
         xpub_message(const xpub_message&) = delete;
         xpub_message& operator=(const xpub_message&) = delete;
-
-        void deserialize(zmq::multipart_t& wire_msg, const xauthentication& auth);
-        void serialize(zmq::multipart_t& wire_msg,
-                       const xauthentication& auth,
-                       nl::json::error_handler_t error_handler = nl::json::error_handler_t::strict) &&;
 
         const std::string& topic() const;
 
