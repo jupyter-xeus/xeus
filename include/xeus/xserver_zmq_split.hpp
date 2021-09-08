@@ -30,7 +30,9 @@ namespace xeus
         using publisher_ptr = std::unique_ptr<xpublisher>;
         using shell_ptr = std::unique_ptr<xshell>;
 
-        xserver_zmq_split(zmq::context_t& context, const xconfiguration& config);
+        xserver_zmq_split(zmq::context_t& context,
+                          const xconfiguration& config,
+                          nl::json::error_handler_t eh);
         virtual ~xserver_zmq_split();
 
         // The xcontrol object needs to call this method
@@ -46,11 +48,12 @@ namespace xeus
 
         xcontrol_messenger& get_control_messenger_impl() override;
 
-        void send_shell_impl(zmq::multipart_t& message) override;
-        void send_control_impl(zmq::multipart_t& message) override;
-        void send_stdin_impl(zmq::multipart_t& message) override;
-        void publish_impl(zmq::multipart_t& message, channel c) override;
+        void send_shell_impl(xmessage msg) override;
+        void send_control_impl(xmessage msg) override;
+        void send_stdin_impl(xmessage msg) override;
+        void publish_impl(xpub_message msg, channel c) override;
 
+        void start_impl(xpub_message msg) override;
         void abort_queue_impl(const listener& l, long polling_interval) override;
         void stop_impl() override;
         void update_config_impl(xconfiguration& config) const override;
@@ -67,11 +70,17 @@ namespace xeus
 
     private:
 
+        virtual void start_server(zmq::multipart_t& wire_msg) = 0;
+
         controller_ptr p_controller;
         heartbeat_ptr p_heartbeat;
         publisher_ptr p_publisher;
         shell_ptr p_shell;
 
+        using authentication_ptr = std::unique_ptr<xauthentication>;
+        authentication_ptr p_auth;
+        nl::json::error_handler_t m_error_handler;
+        
         bool m_control_stopped;
     };
 }

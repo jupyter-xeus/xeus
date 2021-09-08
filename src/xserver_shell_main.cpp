@@ -20,8 +20,10 @@
 namespace xeus
 {
 
-    xserver_shell_main::xserver_shell_main(zmq::context_t& context, const xconfiguration& config)
-        : xserver_zmq_split(context, config)
+    xserver_shell_main::xserver_shell_main(zmq::context_t& context,
+                                           const xconfiguration& config,
+                                           nl::json::error_handler_t eh)
+        : xserver_zmq_split(context, config, eh)
     {
     }
 
@@ -29,13 +31,13 @@ namespace xeus
     {
     }
 
-    void xserver_shell_main::start_impl(zmq::multipart_t& message)
+    void xserver_shell_main::start_server(zmq::multipart_t& wire_msg)
     {
         xserver_zmq_split::start_publisher_thread();
         xserver_zmq_split::start_heartbeat_thread();
         xserver_zmq_split::start_control_thread();
 
-        xserver_zmq_split::get_shell().publish(message);
+        xserver_zmq_split::get_shell().publish(wire_msg);
         xserver_zmq_split::get_shell().run();
 
         while(!xserver_zmq_split::is_control_stopped())

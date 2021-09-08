@@ -38,7 +38,8 @@ namespace xeus
         using server_ptr = std::unique_ptr<xserver>;
         using debugger_ptr = std::unique_ptr<xdebugger>;
         using server_builder = server_ptr (*)(zmq::context_t& context,
-                                              const xconfiguration& config);
+                                              const xconfiguration& config,
+                                              nl::json::error_handler_t eh);
         using debugger_builder = debugger_ptr (*)(zmq::context_t& context,
                                                   const xconfiguration& config,
                                                   const std::string&,

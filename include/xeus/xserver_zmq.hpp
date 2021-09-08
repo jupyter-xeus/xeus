@@ -12,6 +12,7 @@
 
 #include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
+#include "xeus/xauthentication.hpp"
 #include "xeus/xkernel_configuration.hpp"
 
 namespace xeus
@@ -27,7 +28,9 @@ namespace xeus
         using publisher_ptr = std::unique_ptr<xpublisher>;
         using heartbeat_ptr = std::unique_ptr<xheartbeat>;
 
-        xserver_zmq(zmq::context_t& context, const xconfiguration& config);
+        xserver_zmq(zmq::context_t& context,
+                    const xconfiguration& config,
+                    nl::json::error_handler_t eh);
 
         virtual ~xserver_zmq();
 
@@ -37,12 +40,12 @@ namespace xeus
 
         xcontrol_messenger& get_control_messenger_impl() override;
 
-        void send_shell_impl(zmq::multipart_t& message) override;
-        void send_control_impl(zmq::multipart_t& message) override;
-        void send_stdin_impl(zmq::multipart_t& message) override;
-        void publish_impl(zmq::multipart_t& message, channel c) override;
+        void send_shell_impl(xmessage msg) override;
+        void send_control_impl(xmessage msg) override;
+        void send_stdin_impl(xmessage msg) override;
+        void publish_impl(xpub_message msg, channel c) override;
 
-        void start_impl(zmq::multipart_t& message) override;
+        void start_impl(xpub_message msg) override;
         void abort_queue_impl(const listener& l, long polling_interval) override;
         void stop_impl() override;
         void update_config_impl(xconfiguration& config) const override;
@@ -65,6 +68,10 @@ namespace xeus
         using trivial_messenger_ptr = std::unique_ptr<xtrivial_messenger>;
         trivial_messenger_ptr p_messenger;
 
+        using authentication_ptr = std::unique_ptr<xauthentication>;
+        authentication_ptr p_auth;
+        nl::json::error_handler_t m_error_handler;
+        
         bool m_request_stop;
     };
 }

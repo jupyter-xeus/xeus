@@ -13,6 +13,7 @@
 #include "xeus/xserver_zmq.hpp"
 #include "xeus/xguid.hpp"
 #include "xeus/xmiddleware.hpp"
+#include "xeus/xzmq_serializer.hpp"
 #include "zmq_addon.hpp"
 #include "xpublisher.hpp"
 #include "xheartbeat.hpp"
@@ -21,7 +22,9 @@
 namespace xeus
 {
 
-    xserver_zmq::xserver_zmq(zmq::context_t& context, const xconfiguration& config)
+    xserver_zmq::xserver_zmq(zmq::context_t& context,
+                             const xconfiguration& config,
+                             nl::json::error_handler_t eh)
         : m_shell(context, zmq::socket_type::router)
         , m_controller(context, zmq::socket_type::router)
         , m_stdin(context, zmq::socket_type::router)
@@ -31,6 +34,8 @@ namespace xeus
         , p_publisher(new xpublisher(context, config.m_transport, config.m_ip, config.m_iopub_port))
         , p_heartbeat(new xheartbeat(context, config.m_transport, config.m_ip, config.m_hb_port))
         , p_messenger(new xtrivial_messenger(this))
+        , p_auth(make_xauthentication(config.m_signature_scheme, config.m_key))
+        , m_error_handler(eh)
         , m_request_stop(false)
     {
         init_socket(m_shell, config.m_transport, config.m_ip, config.m_shell_port);
@@ -54,37 +59,41 @@ namespace xeus
         return *p_messenger;
     }
 
-    void xserver_zmq::send_shell_impl(zmq::multipart_t& message)
+    void xserver_zmq::send_shell_impl(xmessage msg)
     {
-        message.send(m_shell);
+        zmq::multipart_t wire_msg = xzmq_serializer::serialize(std::move(msg), *p_auth, m_error_handler);
+        wire_msg.send(m_shell);
     }
 
-    void xserver_zmq::send_control_impl(zmq::multipart_t& message)
+    void xserver_zmq::send_control_impl(xmessage msg)
     {
-        message.send(m_controller);
+        zmq::multipart_t wire_msg = xzmq_serializer::serialize(std::move(msg), *p_auth, m_error_handler);
+        wire_msg.send(m_controller);
     }
 
-    void xserver_zmq::send_stdin_impl(zmq::multipart_t& message)
+    void xserver_zmq::send_stdin_impl(xmessage msg)
     {
-        message.send(m_stdin);
-        zmq::multipart_t wire_msg;
-        wire_msg.recv(m_stdin);
-        xserver::notify_stdin_listener(wire_msg);
+        zmq::multipart_t wire_msg = xzmq_serializer::serialize(std::move(msg), *p_auth, m_error_handler);
+        wire_msg.send(m_stdin);
+        zmq::multipart_t wire_reply;
+        wire_reply.recv(m_stdin);
+        xserver::notify_stdin_listener(wire_reply);
     }
 
-    void xserver_zmq::publish_impl(zmq::multipart_t& message, channel)
+    void xserver_zmq::publish_impl(xpub_message msg, channel)
     {
-        message.send(m_publisher_pub);
+        zmq::multipart_t wire_msg = xzmq_serializer::serialize_iopub(std::move(msg), *p_auth, m_error_handler);
+        wire_msg.send(m_publisher_pub);
     }
 
-    void xserver_zmq::start_impl(zmq::multipart_t& message)
+    void xserver_zmq::start_impl(xpub_message message)
     {
         start_publisher_thread();
         start_heartbeat_thread();
 
         m_request_stop = false;
 
-        publish(message, channel::SHELL);
+        publish(std::move(message), channel::SHELL);
 
         while (!m_request_stop)
         {

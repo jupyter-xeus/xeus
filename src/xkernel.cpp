@@ -134,7 +134,7 @@ namespace xeus
             p_logger = std::make_unique<xlogger_nolog>();
         }
 
-        p_server = m_server_builder(m_context, m_config);
+        p_server = m_server_builder(m_context, m_config, m_error_handler);
         p_server->update_config(m_config);
 
         p_debugger = m_debugger_builder(m_context, m_config, m_user_name, m_session_id, m_debugger_config);
@@ -164,8 +164,8 @@ namespace xeus
 
     void xkernel::start()
     {
-        zmq::multipart_t start_msg = p_core->build_start_msg();
-        p_server->start(start_msg);
+        xpub_message start_msg = p_core->build_start_msg();
+        p_server->start(std::move(start_msg));
     }
 
     const xconfiguration& xkernel::get_config()

@@ -20,12 +20,14 @@ namespace xeus
     {
     public:
 
-        xserver_shell_main(zmq::context_t& context, const xconfiguration& config);
+        xserver_shell_main(zmq::context_t& context,
+                           const xconfiguration& config,
+                           nl::json::error_handler_t he);
         virtual ~xserver_shell_main();
 
-    protected:
+    private:
 
-        void start_impl(zmq::multipart_t& message) override;
+        void start_server(zmq::multipart_t& wire_msg) override;
     };
 }
 

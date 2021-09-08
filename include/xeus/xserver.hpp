@@ -19,6 +19,7 @@
 #include "xeus.hpp"
 #include "xkernel_configuration.hpp"
 #include "xcontrol_messenger.hpp"
+#include "xmessage.hpp"
 
 namespace xeus
 {
@@ -45,12 +46,12 @@ namespace xeus
 
         xcontrol_messenger& get_control_messenger();
 
-        void send_shell(zmq::multipart_t& message);
-        void send_control(zmq::multipart_t& message);
-        void send_stdin(zmq::multipart_t& message);
-        void publish(zmq::multipart_t& message, channel c);
+        void send_shell(xmessage message);
+        void send_control(xmessage message);
+        void send_stdin(xmessage message);
+        void publish(xpub_message message, channel c);
 
-        void start(zmq::multipart_t& message);
+        void start(xpub_message message);
         void abort_queue(const listener& l, long polling_interval);
         void stop();
         void update_config(xconfiguration& config) const;
@@ -73,12 +74,12 @@ namespace xeus
 
         virtual xcontrol_messenger& get_control_messenger_impl() = 0;
 
-        virtual void send_shell_impl(zmq::multipart_t& message) = 0;
-        virtual void send_control_impl(zmq::multipart_t& message) = 0;
-        virtual void send_stdin_impl(zmq::multipart_t& message) = 0;
-        virtual void publish_impl(zmq::multipart_t& message, channel c) = 0;
+        virtual void send_shell_impl(xmessage message) = 0;
+        virtual void send_control_impl(xmessage message) = 0;
+        virtual void send_stdin_impl(xmessage message) = 0;
+        virtual void publish_impl(xpub_message message, channel c) = 0;
 
-        virtual void start_impl(zmq::multipart_t& message) = 0;
+        virtual void start_impl(xpub_message message) = 0;
         virtual void abort_queue_impl(const listener& l, long polling_interval) = 0;
         virtual void stop_impl() = 0;
         virtual void update_config_impl(xconfiguration& config) const = 0;
@@ -90,13 +91,19 @@ namespace xeus
     };
 
     XEUS_API
-    std::unique_ptr<xserver> make_xserver(zmq::context_t& context, const xconfiguration& config);
+    std::unique_ptr<xserver> make_xserver(zmq::context_t& context,
+                                          const xconfiguration& config,
+                                          nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 
     XEUS_API
-    std::unique_ptr<xserver> make_xserver_control_main(zmq::context_t& context, const xconfiguration& config);
+    std::unique_ptr<xserver> make_xserver_control_main(zmq::context_t& context,
+                                                       const xconfiguration& config,
+                                                       nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 
     XEUS_API
-    std::unique_ptr<xserver> make_xserver_shell_main(zmq::context_t& context, const xconfiguration& config);
+    std::unique_ptr<xserver> make_xserver_shell_main(zmq::context_t& context,
+                                                     const xconfiguration& config,
+                                                     nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 }
 
 #endif

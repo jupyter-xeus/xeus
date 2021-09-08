@@ -52,7 +52,7 @@ namespace xeus
 
         ~xkernel_core();
 
-        zmq::multipart_t build_start_msg() const;
+        xpub_message build_start_msg() const;
 
         void dispatch_shell(zmq::multipart_t& wire_msg);
         void dispatch_control(zmq::multipart_t& wire_msg);
