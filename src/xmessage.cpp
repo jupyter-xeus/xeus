@@ -90,6 +90,17 @@ namespace xeus
     {
     }
 
+    xmessage::xmessage(const guid_list& zmq_id,
+                       xmessage_base_data&& data)
+        : xmessage_base(std::move(data.m_header),
+                        std::move(data.m_parent_header),
+                        std::move(data.m_metadata),
+                        std::move(data.m_content),
+                        std::move(data.m_buffers))
+        , m_zmq_id(zmq_id)
+    {
+    }
+
     auto xmessage::identities() const -> const guid_list&
     {
         return m_zmq_id;
@@ -106,6 +117,17 @@ namespace xeus
                         std::move(metadata),
                         std::move(content),
                         std::move(buffers))
+        , m_topic(topic)
+    {
+    }
+
+    xpub_message::xpub_message(const std::string& topic,
+                               xmessage_base_data&& data)
+        : xmessage_base(std::move(data.m_header),
+                        std::move(data.m_parent_header),
+                        std::move(data.m_metadata),
+                        std::move(data.m_content),
+                        std::move(data.m_buffers))
         , m_topic(topic)
     {
     }

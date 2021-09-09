@@ -11,6 +11,7 @@
 
 #include "xeus/xkernel.hpp"
 #include "xeus/xkernel_configuration.hpp"
+#include "xeus/xserver_zmq.hpp"
 
 #include "custom_interpreter.hpp"
 
@@ -25,7 +26,7 @@ int main(int argc, char* argv[])
     interpreter_ptr interpreter = interpreter_ptr(new custom::custom_interpreter());
 
     // Create kernel instance and start it
-    xeus::xkernel kernel(config, xeus::get_user_name(), std::move(interpreter));
+    xeus::xkernel kernel(config, xeus::get_user_name(), std::move(interpreter), make_xserver);
     kernel.start();
 
     return 0;
