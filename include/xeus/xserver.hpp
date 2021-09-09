@@ -33,8 +33,8 @@ namespace xeus
     {
     public:
 
-        using listener = std::function<void(zmq::multipart_t&)>;
-        using internal_listener = std::function<zmq::multipart_t(zmq::multipart_t&)>;
+        using listener = std::function<void(xmessage)>;
+        using internal_listener = std::function<nl::json(nl::json)>;
 
         virtual ~xserver() = default;
 
@@ -65,10 +65,10 @@ namespace xeus
 
         xserver() = default;
 
-        void notify_shell_listener(zmq::multipart_t& message);
-        void notify_control_listener(zmq::multipart_t& message);
-        void notify_stdin_listener(zmq::multipart_t& message);
-        zmq::multipart_t notify_internal_listener(zmq::multipart_t& message);
+        void notify_shell_listener(xmessage msg);
+        void notify_control_listener(xmessage msg);
+        void notify_stdin_listener(xmessage msg);
+        nl::json notify_internal_listener(nl::json msg);
 
     private:
 

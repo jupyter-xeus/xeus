@@ -9,6 +9,7 @@
 
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 #include "xeus/xserver_zmq.hpp"
 #include "xeus/xguid.hpp"
@@ -77,7 +78,15 @@ namespace xeus
         wire_msg.send(m_stdin);
         zmq::multipart_t wire_reply;
         wire_reply.recv(m_stdin);
-        xserver::notify_stdin_listener(wire_reply);
+        try
+        {
+            xmessage reply = xzmq_serializer::deserialize(wire_reply, *p_auth);
+            xserver::notify_stdin_listener(std::move(reply));
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
     }
 
     void xserver_zmq::publish_impl(xpub_message msg, channel)
@@ -124,18 +133,27 @@ namespace xeus
 
         zmq::poll(&items[0], 2, std::chrono::milliseconds(timeout));
 
-        if (items[0].revents & ZMQ_POLLIN)
+        try
         {
-            zmq::multipart_t wire_msg;
-            wire_msg.recv(m_controller);
-            xserver::notify_control_listener(wire_msg);
-        }
+            if (items[0].revents & ZMQ_POLLIN)
+            {
+                zmq::multipart_t wire_msg;
+                wire_msg.recv(m_controller);
+                xmessage msg = xzmq_serializer::deserialize(wire_msg, *p_auth);
+                xserver::notify_control_listener(std::move(msg));
+            }
 
-        if (!m_request_stop && (items[1].revents & ZMQ_POLLIN))
+            if (!m_request_stop && (items[1].revents & ZMQ_POLLIN))
+            {
+                zmq::multipart_t wire_msg;
+                wire_msg.recv(m_shell);
+                xmessage msg = xzmq_serializer::deserialize(wire_msg, *p_auth);
+                xserver::notify_shell_listener(std::move(msg));
+            }
+        }
+        catch (std::exception& e)
         {
-            zmq::multipart_t wire_msg;
-            wire_msg.recv(m_shell);
-            xserver::notify_shell_listener(wire_msg);
+            std::cerr << e.what() << std::endl;
         }
     }
 
@@ -150,7 +168,15 @@ namespace xeus
                 return;
             }
 
-            l(wire_msg);
+            try
+            {
+                xmessage msg = xzmq_serializer::deserialize(wire_msg, *p_auth);
+                l(std::move(msg));
+            }
+            catch (std::exception& e)
+            {
+                std::cerr << e.what() << std::endl;
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(polling_interval));
         }
     }

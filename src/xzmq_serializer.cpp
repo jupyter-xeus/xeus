@@ -77,7 +77,7 @@ namespace xeus
             // TODO: should we verify with buffers
             if (!auth.verify(signature, header, parent_header, metadata, content))
             {
-                throw std::runtime_error("Signatures don't match");
+                throw std::runtime_error("ERROR: Signatures don't match");
             }
 
             return data;
@@ -107,7 +107,7 @@ namespace xeus
             // if wire_msg is empty, that means frame doesn't contain <IDS|MSG>
             if (wire_msg.size() == 0)
             {
-                throw std::runtime_error("Delimiter not present in message");
+                throw std::runtime_error("ERROR: Delimiter not present in message");
             }
             return zmq_id;
         }

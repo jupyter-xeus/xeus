@@ -43,9 +43,21 @@ namespace xeus
     {
     }
     
+    zmq::multipart_t xserver_zmq_split::notify_internal_listener(zmq::multipart_t& wire_msg)
+    {
+        nl::json msg = nl::json::parse(wire_msg.popstr());
+        nl::json reply = xserver::notify_internal_listener(msg);
+        return zmq::multipart_t(reply.dump(-1, ' ', false, m_error_handler));
+    }
+
     void xserver_zmq_split::notify_control_stopped()
     {
         m_control_stopped = true;
+    }
+
+    xmessage xserver_zmq_split::deserialize(zmq::multipart_t& wire_msg) const
+    {
+        return xzmq_serializer::deserialize(wire_msg, *p_auth);
     }
 
     xcontrol_messenger& xserver_zmq_split::get_control_messenger_impl()

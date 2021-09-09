@@ -40,9 +40,11 @@ namespace xeus
         // The xshell object needs to call these methods
         using xserver::notify_shell_listener;
         using xserver::notify_stdin_listener;
-        using xserver::notify_internal_listener;
 
+        zmq::multipart_t notify_internal_listener(zmq::multipart_t& wire_msg);
         void notify_control_stopped();
+
+        xmessage deserialize(zmq::multipart_t& wire_msg) const;
 
     protected:
 

@@ -54,10 +54,10 @@ namespace xeus
 
         xpub_message build_start_msg() const;
 
-        void dispatch_shell(zmq::multipart_t& wire_msg);
-        void dispatch_control(zmq::multipart_t& wire_msg);
-        void dispatch_stdin(zmq::multipart_t& wire_msg);
-        zmq::multipart_t dispatch_internal(zmq::multipart_t& wire_msg);
+        void dispatch_shell(xmessage msg);
+        void dispatch_control(xmessage msg);
+        void dispatch_stdin(xmessage msg);
+        nl::json dispatch_internal(nl::json msg);
 
         void publish_message(const std::string& msg_type,
                              nl::json metadata,
@@ -77,7 +77,7 @@ namespace xeus
         using handler_type = void (xkernel_core::*)(const xmessage&, channel);
         using guid_list = xmessage::guid_list;
 
-        void dispatch(zmq::multipart_t& wire_msg, channel c);
+        void dispatch(xmessage msg, channel c);
 
         handler_type get_handler(const std::string& msg_type);
 
@@ -112,7 +112,7 @@ namespace xeus
                         nl::json reply_content,
                         channel c);
 
-        void abort_request(zmq::multipart_t& wire_msg);
+        void abort_request(xmessage msg);
 
         std::string get_topic(const std::string& msg_type) const;
         nl::json get_metadata() const;

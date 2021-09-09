@@ -85,24 +85,24 @@ namespace xeus
         m_internal_listener = l;
     }
 
-    void xserver::notify_shell_listener(zmq::multipart_t& message)
+    void xserver::notify_shell_listener(xmessage msg)
     {
-        m_shell_listener(message);
+        m_shell_listener(std::move(msg));
     }
 
-    void xserver::notify_control_listener(zmq::multipart_t& message)
+    void xserver::notify_control_listener(xmessage msg)
     {
-        m_control_listener(message);
+        m_control_listener(std::move(msg));
     }
 
-    void xserver::notify_stdin_listener(zmq::multipart_t& message)
+    void xserver::notify_stdin_listener(xmessage msg)
     {
-        m_stdin_listener(message);
+        m_stdin_listener(std::move(msg));
     }
 
-    zmq::multipart_t xserver::notify_internal_listener(zmq::multipart_t& message)
+    nl::json xserver::notify_internal_listener(nl::json msg)
     {
-        return m_internal_listener(message);
+        return m_internal_listener(std::move(msg));
     }
 
     std::unique_ptr<xserver> make_xserver(zmq::context_t& context,

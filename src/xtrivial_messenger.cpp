@@ -26,9 +26,7 @@ namespace xeus
 
     nl::json xtrivial_messenger::send_to_shell_impl(const nl::json& message)
     {
-        zmq::multipart_t wire_msg(message.dump());
-        zmq::multipart_t wire_rep = p_server->notify_internal_listener(wire_msg);
-        return nl::json::parse(wire_rep.popstr());
+        return p_server->notify_internal_listener(message);
     }
 }
 
