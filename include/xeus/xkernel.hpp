@@ -49,18 +49,18 @@ namespace xeus
         xkernel(const xconfiguration& config,
                 const std::string& user_name,
                 interpreter_ptr interpreter,
+                server_builder sbuilder,
                 history_manager_ptr history_manager = make_in_memory_history_manager(),
                 logger_ptr logger = nullptr,
-                server_builder sbuilder = make_xserver,
                 debugger_builder dbuilder = make_null_debugger,
                 nl::json debugger_config = nl::json::object(),
                 nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 
         xkernel(const std::string& user_name,
                 interpreter_ptr interpreter,
+                server_builder sbuilder,
                 history_manager_ptr history_manager = make_in_memory_history_manager(),
                 logger_ptr logger = nullptr,
-                server_builder sbuilder = make_xserver,
                 debugger_builder dbuilder = make_null_debugger,
                 nl::json debugger_config = nl::json::object(),
                 nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
@@ -74,7 +74,7 @@ namespace xeus
 
     private:
 
-        void init();
+        void init(server_builder sbuilder);
 
         xconfiguration m_config;
         std::string m_kernel_id;
@@ -83,7 +83,6 @@ namespace xeus
         interpreter_ptr p_interpreter;
         history_manager_ptr p_history_manager;
         logger_ptr p_logger;
-        server_builder m_server_builder;
         server_ptr p_server;
         debugger_builder m_debugger_builder;
         debugger_ptr p_debugger;

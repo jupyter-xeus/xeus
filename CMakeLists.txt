@@ -139,6 +139,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xserver_control_main.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver_shell_main.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq_factory.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq_split.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xsystem.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xzmq_serializer.hpp
@@ -178,6 +179,7 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xserver_control_main.cpp
     ${XEUS_SOURCE_DIR}/xserver_shell_main.cpp
     ${XEUS_SOURCE_DIR}/xserver_zmq.cpp
+    ${XEUS_SOURCE_DIR}/xserver_zmq_factory.cpp
     ${XEUS_SOURCE_DIR}/xserver_zmq_split.cpp
     ${XEUS_SOURCE_DIR}/xshell.hpp
     ${XEUS_SOURCE_DIR}/xshell.cpp

@@ -73,9 +73,9 @@ namespace xeus
     xkernel::xkernel(const xconfiguration& config,
                      const std::string& user_name,
                      interpreter_ptr interpreter,
+                     server_builder sbuilder,
                      history_manager_ptr history_manager,
                      logger_ptr logger,
-                     server_builder sbuilder,
                      debugger_builder dbuilder,
                      nl::json debugger_config,
                      nl::json::error_handler_t eh)
@@ -84,19 +84,18 @@ namespace xeus
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
         , p_logger(std::move(logger))
-        , m_server_builder(sbuilder)
         , m_debugger_builder(dbuilder)
         , m_debugger_config(debugger_config)
         , m_error_handler(eh)
     {
-        init();
+        init(sbuilder);
     }
 
     xkernel::xkernel(const std::string& user_name,
                      interpreter_ptr interpreter,
+                     server_builder sbuilder,
                      history_manager_ptr history_manager,
                      logger_ptr logger,
-                     server_builder sbuilder,
                      debugger_builder dbuilder,
                      nl::json debugger_config,
                      nl::json::error_handler_t eh)
@@ -104,19 +103,18 @@ namespace xeus
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
         , p_logger(std::move(logger))
-        , m_server_builder(sbuilder)
         , m_debugger_builder(dbuilder)
         , m_debugger_config(debugger_config)
         , m_error_handler(eh)
     {
-        init();
+        init(sbuilder);
     }
 
     xkernel::~xkernel()
     {
     }
 
-    void xkernel::init()
+    void xkernel::init(server_builder sbuilder)
     {
         m_kernel_id = new_xguid();
         m_session_id = new_xguid();
@@ -134,7 +132,7 @@ namespace xeus
             p_logger = std::make_unique<xlogger_nolog>();
         }
 
-        p_server = m_server_builder(m_context, m_config, m_error_handler);
+        p_server = sbuilder(m_context, m_config, m_error_handler);
         p_server->update_config(m_config);
 
         p_debugger = m_debugger_builder(m_context, m_config, m_user_name, m_session_id, m_debugger_config);
