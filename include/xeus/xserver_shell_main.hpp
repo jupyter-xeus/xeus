@@ -29,6 +29,11 @@ namespace xeus
 
         void start_server(zmq::multipart_t& wire_msg) override;
     };
+
+    XEUS_API
+    std::unique_ptr<xserver> make_xserver_shell_main(zmq::context_t& context,
+                                                     const xconfiguration& config,
+                                                     nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 }
 
 #endif

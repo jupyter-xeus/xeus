@@ -12,7 +12,7 @@
 #include "test_interpreter.hpp"
 #include "xeus/xkernel.hpp"
 #include "xeus/xkernel_configuration.hpp"
-#include "xeus/xserver_zmq_factory.hpp"
+#include "xeus/xserver_zmq.hpp"
 
 int main(int argc, char* argv[])
 {
