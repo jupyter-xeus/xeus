@@ -9,6 +9,7 @@
 
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 #include "xeus/xmiddleware.hpp"
 #include "xeus/xserver_zmq_split.hpp"
@@ -66,7 +67,15 @@ namespace xeus
             {
                 zmq::multipart_t wire_msg;
                 wire_msg.recv(m_shell);
-                p_server->notify_shell_listener(wire_msg);
+                try
+                {
+                    xmessage msg = p_server->deserialize(wire_msg);
+                    p_server->notify_shell_listener(std::move(msg));
+                }
+                catch(std::exception& e)
+                {
+                    std::cerr << e.what() << std::endl;
+                }
             }
 
             if (items[1].revents & ZMQ_POLLIN)
@@ -99,7 +108,15 @@ namespace xeus
         message.send(m_stdin);
         zmq::multipart_t wire_msg;
         wire_msg.recv(m_stdin);
-        p_server->notify_stdin_listener(wire_msg);
+        try
+        {
+            xmessage msg = p_server->deserialize(wire_msg);
+            p_server->notify_stdin_listener(std::move(msg));
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
     }
 
     void xshell::publish(zmq::multipart_t& message)
@@ -112,13 +129,21 @@ namespace xeus
         while (true)
         {
             zmq::multipart_t wire_msg;
-            bool msg = wire_msg.recv(m_shell, ZMQ_NOBLOCK);
-            if (!msg)
+            bool received = wire_msg.recv(m_shell, ZMQ_NOBLOCK);
+            if (!received)
             {
                 return;
             }
 
-            l(wire_msg);
+            try
+            {
+                xmessage msg = p_server->deserialize(wire_msg);
+                l(std::move(msg));
+            }
+            catch (std::exception& e)
+            {
+                std::cerr << e.what() << std::endl;
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(polling_interval));
         }
     }

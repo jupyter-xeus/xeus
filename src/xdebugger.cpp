@@ -41,7 +41,7 @@ namespace xeus
         return *p_messenger;
     }
 
-    std::unique_ptr<xdebugger> make_null_debugger(zmq::context_t&,
+    std::unique_ptr<xdebugger> make_null_debugger(xcontext&,
                                                   const xconfiguration&,
                                                   const std::string&,
                                                   const std::string&,

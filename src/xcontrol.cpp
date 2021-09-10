@@ -60,7 +60,15 @@ namespace xeus
         {
             zmq::multipart_t wire_msg;
             wire_msg.recv(m_control);
-            p_server->notify_control_listener(wire_msg);
+            try
+            {
+                xmessage msg = p_server->deserialize(wire_msg);
+                p_server->notify_control_listener(std::move(msg));
+            }
+            catch (std::exception& e)
+            {
+                std::cerr << e.what() << std::endl;
+            }
         }
 
         m_messenger.stop_channels();

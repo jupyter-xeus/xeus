@@ -15,6 +15,8 @@
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
 
+#include "xeus/xmessage.hpp"
+
 namespace xeus
 {
     class xserver_zmq_split;
@@ -23,7 +25,7 @@ namespace xeus
     {
     public:
 
-        using listener = std::function<void(zmq::multipart_t&)>;
+        using listener = std::function<void(xmessage)>;
 
         xshell(zmq::context_t& context,
                const std::string& transport,

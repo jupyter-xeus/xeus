@@ -10,9 +10,6 @@
 #ifndef XEUS_CONTROL_MESSENGER_HPP
 #define XEUS_CONTROL_MESSENGER_HPP
 
-#include "zmq.hpp"
-#include "zmq_addon.hpp"
-
 #include "nlohmann/json.hpp"
 
 #include "xeus/xeus.hpp"

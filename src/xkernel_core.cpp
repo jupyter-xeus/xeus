@@ -18,6 +18,7 @@
 
 #include "xkernel_core.hpp"
 #include "xeus/xhistory_manager.hpp"
+#include "xeus/xzmq_serializer.hpp"
 
 using namespace std::placeholders;
 
@@ -88,10 +89,8 @@ namespace xeus
     {
     }
 
-    zmq::multipart_t xkernel_core::build_start_msg() const
+    xpub_message xkernel_core::build_start_msg() const
     {
-        zmq::multipart_t start_msg;
-
         std::string topic = "kernel_core." + m_kernel_id + ".status";
         nl::json content;
         content["execution_state"] = "starting";
@@ -102,27 +101,23 @@ namespace xeus
                          nl::json::object(),
                          std::move(content),
                          buffer_sequence());
-        std::move(msg).serialize(start_msg, *p_auth, m_error_handler);
-
-        return start_msg;
+        return msg;
     }
 
-    void xkernel_core::dispatch_shell(zmq::multipart_t& wire_msg)
+    void xkernel_core::dispatch_shell(xmessage msg)
     {
-        dispatch(wire_msg, channel::SHELL);
+        dispatch(std::move(msg), channel::SHELL);
     }
 
-    void xkernel_core::dispatch_control(zmq::multipart_t& wire_msg)
+    void xkernel_core::dispatch_control(xmessage msg)
     {
-        dispatch(wire_msg, channel::CONTROL);
+        dispatch(std::move(msg), channel::CONTROL);
     }
 
-    void xkernel_core::dispatch_stdin(zmq::multipart_t& wire_msg)
+    void xkernel_core::dispatch_stdin(xmessage msg)
     {
-        xmessage msg;
         try
         {
-            msg.deserialize(wire_msg, *p_auth);
             p_logger->log_received_message(msg, xlogger::stdinput);
             const nl::json& content = msg.content();
             std::string value = content.value("value", "");
@@ -136,11 +131,10 @@ namespace xeus
         }
     }
 
-    zmq::multipart_t xkernel_core::dispatch_internal(zmq::multipart_t& wire_msg)
+    nl::json xkernel_core::dispatch_internal(nl::json msg)
     {
-        nl::json msg = nl::json::parse(wire_msg.popstr());
         nl::json rep = p_interpreter->internal_request(msg);
-        return zmq::multipart_t(rep.dump(-1, ' ', false, m_error_handler));
+        return rep;
     }
 
     void xkernel_core::publish_message(const std::string& msg_type,
@@ -149,8 +143,6 @@ namespace xeus
                                        buffer_sequence buffers,
                                        channel c)
     {
-
-        zmq::multipart_t wire_msg;
         xpub_message msg(get_topic(msg_type),
                          make_header(msg_type, m_user_name, m_session_id),
                          get_parent_header(c),
@@ -158,15 +150,13 @@ namespace xeus
                          std::move(content),
                          std::move(buffers));
         p_logger->log_iopub_message(msg);
-        std::move(msg).serialize(wire_msg, *p_auth, m_error_handler);
-        p_server->publish(wire_msg, c);
+        p_server->publish(std::move(msg), c);
     }
 
     void xkernel_core::send_stdin(const std::string& msg_type,
                                   nl::json metadata,
                                   nl::json content)
     {
-        zmq::multipart_t wire_msg;
         xmessage msg(get_parent_id(channel::SHELL),
                      make_header(msg_type, m_user_name, m_session_id),
                      get_parent_header(channel::SHELL),
@@ -174,8 +164,7 @@ namespace xeus
                      std::move(content),
                      buffer_sequence());
         p_logger->log_sent_message(msg, xlogger::stdinput);
-        std::move(msg).serialize(wire_msg, *p_auth, m_error_handler);
-        p_server->send_stdin(wire_msg);
+        p_server->send_stdin(std::move(msg));
     }
 
     xcomm_manager& xkernel_core::comm_manager() & noexcept
@@ -198,20 +187,8 @@ namespace xeus
         return m_parent_header[std::size_t(c)];
     }
 
-    void xkernel_core::dispatch(zmq::multipart_t& wire_msg, channel c)
+    void xkernel_core::dispatch(xmessage msg, channel c)
     {
-        xmessage msg;
-        try
-        {
-            msg.deserialize(wire_msg, *p_auth);
-        }
-        catch (std::exception& e)
-        {
-            std::cerr << "ERROR: could not deserialize message" << std::endl;
-            std::cerr << e.what() << std::endl;
-            return;
-        }
-
         p_logger->log_received_message(msg, c == channel::SHELL ? xlogger::shell : xlogger::control);
         const nl::json& header = msg.header();
         set_parent(msg.identities(), header, c);
@@ -422,7 +399,6 @@ namespace xeus
                                   nl::json reply_content,
                                   channel c)
     {
-        zmq::multipart_t wire_msg;
         xmessage reply(id_list,
                        make_header(reply_type, m_user_name, m_session_id),
                        std::move(parent_header),
@@ -430,29 +406,18 @@ namespace xeus
                        std::move(reply_content),
                        buffer_sequence());
         p_logger->log_sent_message(reply, c == channel::SHELL ? xlogger::shell : xlogger::control);
-        std::move(reply).serialize(wire_msg, *p_auth, m_error_handler);
         if (c == channel::SHELL)
         {
-            p_server->send_shell(wire_msg);
+            p_server->send_shell(std::move(reply));
         }
         else
         {
-            p_server->send_control(wire_msg);
+            p_server->send_control(std::move(reply));
         }
     }
 
-    void xkernel_core::abort_request(zmq::multipart_t& wire_msg)
+    void xkernel_core::abort_request(xmessage msg)
     {
-        xmessage msg;
-        try
-        {
-            msg.deserialize(wire_msg, *p_auth);
-        }
-        catch (std::exception& e)
-        {
-            std::cerr << "ERROR: during execute_request: " << e.what() << std::endl;
-            return;
-        }
         const nl::json& header = msg.header();
         std::string msg_type = header.value("msg_type", "");
         // replace "_request" part of message type by "_reply"

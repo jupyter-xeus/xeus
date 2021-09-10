@@ -125,11 +125,11 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xdebugger.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xdebugger_base.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xeus_context.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xguid.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xhistory_manager.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinput.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinterpreter.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xjson.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xkernel.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xkernel_configuration.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xlogger.hpp
@@ -141,6 +141,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq_split.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xsystem.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xzmq_serializer.hpp
 )
 
 set(XEUS_SOURCES
@@ -186,6 +187,7 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xtrivial_messenger.cpp
     ${XEUS_SOURCE_DIR}/xzmq_messenger.hpp
     ${XEUS_SOURCE_DIR}/xzmq_messenger.cpp
+    ${XEUS_SOURCE_DIR}/xzmq_serializer.cpp
 )
 
 # Targets and link

@@ -10,10 +10,10 @@
 #ifndef XEUS_DEBUGGER_HPP
 #define XEUS_DEBUGGER_HPP
 
-#include "zmq.hpp"
 #include "nlohmann/json.hpp"
 
 #include "xeus.hpp"
+#include "xeus_context.hpp"
 #include "xkernel_configuration.hpp"
 #include "xcontrol_messenger.hpp"
 
@@ -53,7 +53,7 @@ namespace xeus
     };
 
     XEUS_API
-    std::unique_ptr<xdebugger> make_null_debugger(zmq::context_t& context,
+    std::unique_ptr<xdebugger> make_null_debugger(xcontext& context,
                                                   const xconfiguration& kernel_configuration,
                                                   const std::string& user_name,
                                                   const std::string& session_id,

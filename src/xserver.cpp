@@ -7,13 +7,9 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include <memory>
 #include <iostream>
 
 #include "xeus/xserver.hpp"
-#include "xeus/xserver_zmq.hpp"
-#include "xeus/xserver_control_main.hpp"
-#include "xeus/xserver_shell_main.hpp"
 
 namespace xeus
 {
@@ -22,32 +18,32 @@ namespace xeus
         return get_control_messenger_impl();
     }
 
-    void xserver::send_shell(zmq::multipart_t& message)
+    void xserver::send_shell(xmessage message)
     {
-        send_shell_impl(message);
+        send_shell_impl(std::move(message));
     }
 
-    void xserver::send_control(zmq::multipart_t& message)
+    void xserver::send_control(xmessage message)
     {
-        send_control_impl(message);
+        send_control_impl(std::move(message));
     }
 
-    void xserver::send_stdin(zmq::multipart_t& message)
+    void xserver::send_stdin(xmessage message)
     {
-        send_stdin_impl(message);
+        send_stdin_impl(std::move(message));
     }
 
-    void xserver::publish(zmq::multipart_t& message, channel c)
+    void xserver::publish(xpub_message message, channel c)
     {
-        publish_impl(message, c);
+        publish_impl(std::move(message), c);
     }
 
-    void xserver::start(zmq::multipart_t& message)
+    void xserver::start(xpub_message message)
     {   
         std::clog << "Run with XEUS " << XEUS_VERSION_MAJOR << "."
                                       << XEUS_VERSION_MINOR << "."
                                       << XEUS_VERSION_PATCH << std::endl;
-        start_impl(message);
+        start_impl(std::move(message));
     }
 
     void xserver::abort_queue(const listener& l, long polling_interval)
@@ -85,38 +81,23 @@ namespace xeus
         m_internal_listener = l;
     }
 
-    void xserver::notify_shell_listener(zmq::multipart_t& message)
+    void xserver::notify_shell_listener(xmessage msg)
     {
-        m_shell_listener(message);
+        m_shell_listener(std::move(msg));
     }
 
-    void xserver::notify_control_listener(zmq::multipart_t& message)
+    void xserver::notify_control_listener(xmessage msg)
     {
-        m_control_listener(message);
+        m_control_listener(std::move(msg));
     }
 
-    void xserver::notify_stdin_listener(zmq::multipart_t& message)
+    void xserver::notify_stdin_listener(xmessage msg)
     {
-        m_stdin_listener(message);
+        m_stdin_listener(std::move(msg));
     }
 
-    zmq::multipart_t xserver::notify_internal_listener(zmq::multipart_t& message)
+    nl::json xserver::notify_internal_listener(nl::json msg)
     {
-        return m_internal_listener(message);
-    }
-
-    std::unique_ptr<xserver> make_xserver(zmq::context_t& context, const xconfiguration& config)
-    {
-        return std::make_unique<xserver_zmq>(context, config);
-    }
-
-    std::unique_ptr<xserver> make_xserver_control_main(zmq::context_t& context, const xconfiguration& config)
-    {
-        return std::make_unique<xserver_control_main>(context, config);
-    }
-
-    std::unique_ptr<xserver> make_xserver_shell_main(zmq::context_t& context, const xconfiguration& config)
-    {
-        return std::make_unique<xserver_shell_main>(context, config);
+        return m_internal_listener(std::move(msg));
     }
 }
