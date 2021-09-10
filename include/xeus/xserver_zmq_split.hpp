@@ -10,6 +10,8 @@
 #ifndef XEUS_SERVER_ZMQ_SPLIT_HPP
 #define XEUS_SERVER_ZMQ_SPLIT_HPP
 
+#include "zmq_addon.hpp"
+
 #include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
 #include "xeus/xkernel_configuration.hpp"

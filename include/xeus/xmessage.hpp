@@ -17,13 +17,13 @@
 
 #include "xauthentication.hpp"
 #include "xeus.hpp"
-#include "zmq_addon.hpp"
 
 namespace nl = nlohmann;
 
 namespace xeus
 {
-    using buffer_sequence = std::vector<zmq::message_t>;
+    using binary_buffer = std::vector<char>;
+    using buffer_sequence = std::vector<binary_buffer>;
 
     struct XEUS_API xmessage_base_data
     {

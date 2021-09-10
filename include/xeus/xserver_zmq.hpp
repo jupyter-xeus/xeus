@@ -10,6 +10,8 @@
 #ifndef XEUS_SERVER_IMPL_HPP
 #define XEUS_SERVER_IMPL_HPP
 
+#include "zmq.hpp"
+
 #include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
 #include "xeus/xauthentication.hpp"

@@ -9,6 +9,7 @@
 
 #include <chrono>
 #include <cstddef>
+#include <iomanip>
 #include <stdexcept>
 #include <sstream>
 #include <string>
@@ -23,18 +24,6 @@ namespace nl = nlohmann;
 
 namespace xeus
 {
-    void parse_zmq_message(const zmq::message_t& msg, nl::json& json)
-    {
-        const char* buf = msg.data<const char>();
-        json = nl::json::parse(buf, buf + msg.size());
-    }
-
-    zmq::message_t write_zmq_message(const nl::json& json, nl::json::error_handler_t error_handler)
-    {
-        std::string buffer = json.dump(-1, ' ', false, error_handler);
-        return zmq::message_t(buffer.c_str(), buffer.size());
-    }
-
     xmessage_base::xmessage_base(
         nl::json header, nl::json parent_header, nl::json metadata, nl::json content, buffer_sequence buffers)
         : m_header(std::move(header))

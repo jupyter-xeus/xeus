@@ -13,11 +13,26 @@
 #include <memory>
 #include <string>
 
-#include "zmq.hpp"
 #include "xeus.hpp"
 
 namespace xeus
 {
+    class XEUS_API xraw_buffer
+    {
+    public:
+
+        xraw_buffer(const unsigned char* data,
+                    size_t size);
+
+        const unsigned char* data() const;
+        size_t size() const;
+
+    private:
+
+        const unsigned char* m_data;
+        size_t m_size;
+    };
+
     class XEUS_API xauthentication
     {
     public:
@@ -30,16 +45,16 @@ namespace xeus
         xauthentication(xauthentication&&) = delete;
         xauthentication& operator=(xauthentication&&) = delete;
 
-        zmq::message_t sign(const zmq::message_t& header,
-                            const zmq::message_t& parent_header,
-                            const zmq::message_t& meta_data,
-                            const zmq::message_t& content) const;
+        std::string sign(const xraw_buffer& header,
+                         const xraw_buffer& parent_header,
+                         const xraw_buffer& meta_data,
+                         const xraw_buffer& content) const;
 
-        bool verify(const zmq::message_t& signature,
-                    const zmq::message_t& header,
-                    const zmq::message_t& parent_header,
-                    const zmq::message_t& meta_data,
-                    const zmq::message_t& content) const;
+        bool verify(const xraw_buffer& signature,
+                    const xraw_buffer& header,
+                    const xraw_buffer& parent_header,
+                    const xraw_buffer& meta_data,
+                    const xraw_buffer& content) const;
 
     protected:
 
@@ -47,16 +62,16 @@ namespace xeus
 
     private:
 
-        virtual zmq::message_t sign_impl(const zmq::message_t& header,
-                                         const zmq::message_t& parent_header,
-                                         const zmq::message_t& meta_data,
-                                         const zmq::message_t& content) const = 0;
+        virtual std::string sign_impl(const xraw_buffer& header,
+                                      const xraw_buffer& parent_header,
+                                      const xraw_buffer& meta_data,
+                                      const xraw_buffer& content) const = 0;
 
-        virtual bool verify_impl(const zmq::message_t& signature,
-                                 const zmq::message_t& header,
-                                 const zmq::message_t& parent_header,
-                                 const zmq::message_t& meta_data,
-                                 const zmq::message_t& content) const = 0;
+        virtual bool verify_impl(const xraw_buffer& signature,
+                                 const xraw_buffer& header,
+                                 const xraw_buffer& parent_header,
+                                 const xraw_buffer& meta_data,
+                                 const xraw_buffer& content) const = 0;
     };
 
     XEUS_API std::unique_ptr<xauthentication> make_xauthentication(const std::string& scheme,

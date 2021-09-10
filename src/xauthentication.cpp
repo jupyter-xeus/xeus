@@ -24,6 +24,22 @@
 
 namespace xeus
 {
+    // xraw_buffer implementation
+    xraw_buffer::xraw_buffer(const unsigned char* data, size_t size)
+        : m_data(data), m_size(size)
+    {
+    }
+
+    const unsigned char* xraw_buffer::data() const
+    {
+        return m_data;
+    }
+
+    size_t xraw_buffer::size() const
+    {
+        return m_size;
+    }
+
     // Specialization of xauthentication using OpenSSL.
     class openssl_xauthentication : public xauthentication
     {
@@ -35,16 +51,16 @@ namespace xeus
 
     private:
 
-        zmq::message_t sign_impl(const zmq::message_t& header,
-                                 const zmq::message_t& parent_header,
-                                 const zmq::message_t& meta_data,
-                                 const zmq::message_t& content) const override;
+        std::string sign_impl(const xraw_buffer& header,
+                              const xraw_buffer& parent_header,
+                              const xraw_buffer& meta_data,
+                              const xraw_buffer& content) const override;
 
-        bool verify_impl(const zmq::message_t& signature,
-                         const zmq::message_t& header,
-                         const zmq::message_t& parent_header,
-                         const zmq::message_t& meta_data,
-                         const zmq::message_t& content) const override;
+        bool verify_impl(const xraw_buffer& signature,
+                         const xraw_buffer& header,
+                         const xraw_buffer& parent_header,
+                         const xraw_buffer& meta_data,
+                         const xraw_buffer& content) const override;
 
         const EVP_MD* m_evp;
         std::string m_key;
@@ -62,31 +78,31 @@ namespace xeus
 
     private:
 
-        zmq::message_t sign_impl(const zmq::message_t& header,
-                                 const zmq::message_t& parent_header,
-                                 const zmq::message_t& meta_data,
-                                 const zmq::message_t& content) const override;
+        std::string sign_impl(const xraw_buffer& header,
+                              const xraw_buffer& parent_header,
+                              const xraw_buffer& meta_data,
+                              const xraw_buffer& content) const override;
 
-        bool verify_impl(const zmq::message_t& signature,
-                         const zmq::message_t& header,
-                         const zmq::message_t& parent_header,
-                         const zmq::message_t& meta_data,
-                         const zmq::message_t& content) const override;
+        bool verify_impl(const xraw_buffer& signature,
+                         const xraw_buffer& header,
+                         const xraw_buffer& parent_header,
+                         const xraw_buffer& meta_data,
+                         const xraw_buffer& content) const override;
     };
 
-    zmq::message_t xauthentication::sign(const zmq::message_t& header,
-                                         const zmq::message_t& parent_header,
-                                         const zmq::message_t& meta_data,
-                                         const zmq::message_t& content) const
+    std::string xauthentication::sign(const xraw_buffer& header,
+                                      const xraw_buffer& parent_header,
+                                      const xraw_buffer& meta_data,
+                                      const xraw_buffer& content) const
     {
         return sign_impl(header, parent_header, meta_data, content);
     }
 
-    bool xauthentication::verify(const zmq::message_t& signature,
-                                 const zmq::message_t& header,
-                                 const zmq::message_t& parent_header,
-                                 const zmq::message_t& meta_data,
-                                 const zmq::message_t& content) const
+    bool xauthentication::verify(const xraw_buffer& signature,
+                                 const xraw_buffer& header,
+                                 const xraw_buffer& parent_header,
+                                 const xraw_buffer& meta_data,
+                                 const xraw_buffer& content) const
     {
         return verify_impl(signature, header, parent_header, meta_data, content);
     }
@@ -146,39 +162,39 @@ namespace xeus
 #endif
     }
 
-    zmq::message_t openssl_xauthentication::sign_impl(const zmq::message_t& header,
-                                                      const zmq::message_t& parent_header,
-                                                      const zmq::message_t& meta_data,
-                                                      const zmq::message_t& content) const
+    std::string openssl_xauthentication::sign_impl(const xraw_buffer& header,
+                                                   const xraw_buffer& parent_header,
+                                                   const xraw_buffer& meta_data,
+                                                   const xraw_buffer& content) const
     {
         std::lock_guard<std::mutex> lock(m_hmac_mutex);
         HMAC_Init_ex(m_hmac, m_key.c_str(), m_key.size(), m_evp, nullptr);
 
-        HMAC_Update(m_hmac, header.data<const unsigned char>(), header.size());
-        HMAC_Update(m_hmac, parent_header.data<const unsigned char>(), parent_header.size());
-        HMAC_Update(m_hmac, meta_data.data<const unsigned char>(), meta_data.size());
-        HMAC_Update(m_hmac, content.data<const unsigned char>(), content.size());
+        HMAC_Update(m_hmac, header.data(), header.size());
+        HMAC_Update(m_hmac, parent_header.data(), parent_header.size());
+        HMAC_Update(m_hmac, meta_data.data(), meta_data.size());
+        HMAC_Update(m_hmac, content.data(), content.size());
 
         auto sig = std::vector<unsigned char>(EVP_MD_size(m_evp));
         HMAC_Final(m_hmac, sig.data(), nullptr);
 
         std::string hex_sig = hex_string(sig);
-        return zmq::message_t(hex_sig.begin(), hex_sig.end());
+        return hex_sig;
     }
 
-    bool openssl_xauthentication::verify_impl(const zmq::message_t& signature,
-                                              const zmq::message_t& header,
-                                              const zmq::message_t& parent_header,
-                                              const zmq::message_t& meta_data,
-                                              const zmq::message_t& content) const
+    bool openssl_xauthentication::verify_impl(const xraw_buffer& signature,
+                                              const xraw_buffer& header,
+                                              const xraw_buffer& parent_header,
+                                              const xraw_buffer& meta_data,
+                                              const xraw_buffer& content) const
     {
         std::lock_guard<std::mutex> lock(m_hmac_mutex);
         HMAC_Init_ex(m_hmac, m_key.c_str(), m_key.size(), m_evp, nullptr);
 
-        HMAC_Update(m_hmac, header.data<const unsigned char>(), header.size());
-        HMAC_Update(m_hmac, parent_header.data<const unsigned char>(), parent_header.size());
-        HMAC_Update(m_hmac, meta_data.data<const unsigned char>(), meta_data.size());
-        HMAC_Update(m_hmac, content.data<const unsigned char>(), content.size());
+        HMAC_Update(m_hmac, header.data(), header.size());
+        HMAC_Update(m_hmac, parent_header.data(), parent_header.size());
+        HMAC_Update(m_hmac, meta_data.data(), meta_data.size());
+        HMAC_Update(m_hmac, content.data(), content.size());
 
         auto sig = std::vector<unsigned char>(EVP_MD_size(m_evp));
         HMAC_Final(m_hmac, sig.data(), nullptr);
@@ -188,19 +204,19 @@ namespace xeus
         return cmp == 0;
     }
 
-    zmq::message_t no_xauthentication::sign_impl(const zmq::message_t& /*header*/,
-                                                 const zmq::message_t& /*parent_header*/,
-                                                 const zmq::message_t& /*meta_data*/,
-                                                 const zmq::message_t& /*content*/) const
+    std::string no_xauthentication::sign_impl(const xraw_buffer& /*header*/,
+                                              const xraw_buffer& /*parent_header*/,
+                                              const xraw_buffer& /*meta_data*/,
+                                              const xraw_buffer& /*content*/) const
     {
-        return zmq::message_t(0);
+        return std::string();
     }
 
-    bool no_xauthentication::verify_impl(const zmq::message_t& /*signature*/,
-                                         const zmq::message_t& /*header*/,
-                                         const zmq::message_t& /*parent_header*/,
-                                         const zmq::message_t& /*meta_data*/,
-                                         const zmq::message_t& /*content*/) const
+    bool no_xauthentication::verify_impl(const xraw_buffer& /*signature*/,
+                                         const xraw_buffer& /*header*/,
+                                         const xraw_buffer& /*parent_header*/,
+                                         const xraw_buffer& /*meta_data*/,
+                                         const xraw_buffer& /*content*/) const
     {
         return true;
     }

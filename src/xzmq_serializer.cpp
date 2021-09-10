@@ -18,6 +18,11 @@ namespace xeus
             return check == DELIMITER;
         }
         
+        xraw_buffer make_raw_buffer(zmq::message_t& msg)
+        {
+            return xraw_buffer(msg.data<const unsigned char>(), msg.size());
+        }
+
         void parse_zmq_message(const zmq::message_t& msg, nl::json& json)
         {
             const char* buf = msg.data<const char>();
@@ -39,7 +44,11 @@ namespace xeus
             zmq::message_t parent_header = write_zmq_message(msg.parent_header(), error_handler);
             zmq::message_t metadata = write_zmq_message(msg.metadata(), error_handler);
             zmq::message_t content = write_zmq_message(msg.content(), error_handler);
-            zmq::message_t signature = auth.sign(header, parent_header, metadata, content);
+            std::string sig = auth.sign(make_raw_buffer(header),
+                                        make_raw_buffer(parent_header),
+                                        make_raw_buffer(metadata),
+                                        make_raw_buffer(content));
+            zmq::message_t signature(sig.begin(), sig.end());
 
             wire_msg.add(std::move(signature));
             wire_msg.add(std::move(header));
@@ -48,9 +57,9 @@ namespace xeus
             wire_msg.add(std::move(content));
 
             // was not const and  could only be called on rvalues.
-            for (zmq::message_t& buffer : std::move(msg).buffers())
+            for (const binary_buffer& buffer : std::move(msg).buffers())
             {
-                wire_msg.add(std::move(buffer));
+                wire_msg.add(zmq::message_t(buffer.data(), buffer.size()));
             }
         }
 
@@ -71,11 +80,17 @@ namespace xeus
 
             while (!wire_msg.empty())
             {
-                data.m_buffers.push_back(wire_msg.pop());
+                zmq::message_t msg = wire_msg.pop();
+                const char* buf = msg.data<const char>();
+                data.m_buffers.emplace_back(buf, buf + msg.size());
             }
 
             // TODO: should we verify with buffers
-            if (!auth.verify(signature, header, parent_header, metadata, content))
+            if (!auth.verify(make_raw_buffer(signature),
+                             make_raw_buffer(header),
+                             make_raw_buffer(parent_header),
+                             make_raw_buffer(metadata),
+                             make_raw_buffer(content)))
             {
                 throw std::runtime_error("ERROR: Signatures don't match");
             }
