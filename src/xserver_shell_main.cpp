@@ -48,10 +48,10 @@ namespace xeus
         std::exit(0);
     }
 
-    std::unique_ptr<xserver> make_xserver_shell_main(zmq::context_t& context,
+    std::unique_ptr<xserver> make_xserver_shell_main(xcontext& context,
                                                      const xconfiguration& config,
                                                      nl::json::error_handler_t eh)
     {
-        return std::make_unique<xserver_shell_main>(context, config, eh);
+        return std::make_unique<xserver_shell_main>(context.get_wrapped_context<zmq::context_t>(), config, eh);
     }
 }

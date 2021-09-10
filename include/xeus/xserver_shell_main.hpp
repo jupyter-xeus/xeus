@@ -10,9 +10,10 @@
 #ifndef XEUS_SERVER_SHELL_MAIN_HPP
 #define XEUS_SERVER_SHELL_MAIN_HPP
 
-#include "xeus/xeus.hpp"
-#include "xeus/xserver_zmq_split.hpp"
-#include "xeus/xkernel_configuration.hpp"
+#include "xeus.hpp"
+#include "xeus_context.hpp"
+#include "xserver_zmq_split.hpp"
+#include "xkernel_configuration.hpp"
 
 namespace xeus
 {
@@ -31,7 +32,7 @@ namespace xeus
     };
 
     XEUS_API
-    std::unique_ptr<xserver> make_xserver_shell_main(zmq::context_t& context,
+    std::unique_ptr<xserver> make_xserver_shell_main(xcontext& context,
                                                      const xconfiguration& config,
                                                      nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 }

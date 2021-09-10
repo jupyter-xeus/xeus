@@ -125,6 +125,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xdebugger.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xdebugger_base.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xeus_context.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xguid.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xhistory_manager.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinput.hpp

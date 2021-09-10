@@ -12,10 +12,11 @@
 
 #include "zmq.hpp"
 
-#include "xeus/xeus.hpp"
-#include "xeus/xserver.hpp"
-#include "xeus/xauthentication.hpp"
-#include "xeus/xkernel_configuration.hpp"
+#include "xeus.hpp"
+#include "xeus_context.hpp"
+#include "xserver.hpp"
+#include "xauthentication.hpp"
+#include "xkernel_configuration.hpp"
 
 namespace xeus
 {
@@ -78,7 +79,7 @@ namespace xeus
     };
 
     XEUS_API
-    std::unique_ptr<xserver> make_xserver_zmq(zmq::context_t& context,
+    std::unique_ptr<xserver> make_xserver_zmq(xcontext& context,
                                               const xconfiguration& config,
                                               nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 }

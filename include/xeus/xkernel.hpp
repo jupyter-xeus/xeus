@@ -12,6 +12,7 @@
 
 #include "xdebugger.hpp"
 #include "xeus.hpp"
+#include "xeus_context.hpp"
 #include "xhistory_manager.hpp"
 #include "xinterpreter.hpp"
 #include "xkernel_configuration.hpp"
@@ -31,16 +32,17 @@ namespace xeus
     {
     public:
 
+        using context_ptr = std::unique_ptr<xcontext>;
         using history_manager_ptr = std::unique_ptr<xhistory_manager>;
         using interpreter_ptr = std::unique_ptr<xinterpreter>;
         using kernel_core_ptr = std::unique_ptr<xkernel_core>;
         using logger_ptr = std::unique_ptr<xlogger>;
         using server_ptr = std::unique_ptr<xserver>;
         using debugger_ptr = std::unique_ptr<xdebugger>;
-        using server_builder = server_ptr (*)(zmq::context_t& context,
+        using server_builder = server_ptr (*)(xcontext& context,
                                               const xconfiguration& config,
                                               nl::json::error_handler_t eh);
-        using debugger_builder = debugger_ptr (*)(zmq::context_t& context,
+        using debugger_builder = debugger_ptr (*)(xcontext& context,
                                                   const xconfiguration& config,
                                                   const std::string&,
                                                   const std::string&,
@@ -48,6 +50,7 @@ namespace xeus
 
         xkernel(const xconfiguration& config,
                 const std::string& user_name,
+                context_ptr context,
                 interpreter_ptr interpreter,
                 server_builder sbuilder,
                 history_manager_ptr history_manager = make_in_memory_history_manager(),
@@ -57,6 +60,7 @@ namespace xeus
                 nl::json::error_handler_t eh = nl::json::error_handler_t::strict);
 
         xkernel(const std::string& user_name,
+                context_ptr context,
                 interpreter_ptr interpreter,
                 server_builder sbuilder,
                 history_manager_ptr history_manager = make_in_memory_history_manager(),
@@ -86,7 +90,7 @@ namespace xeus
         server_ptr p_server;
         debugger_builder m_debugger_builder;
         debugger_ptr p_debugger;
-        zmq::context_t m_context;
+        context_ptr p_context;
         kernel_core_ptr p_core;
         nl::json m_debugger_config;
         nl::json::error_handler_t m_error_handler;
