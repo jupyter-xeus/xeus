@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 
     using interpreter_ptr = std::unique_ptr<test_kernel::test_interpreter>;
     interpreter_ptr interpreter = interpreter_ptr(new test_kernel::test_interpreter());
-    xeus::xkernel kernel(config, xeus::get_user_name(), std::move(interpreter), xeus::make_xserver);
+    xeus::xkernel kernel(config, xeus::get_user_name(), std::move(interpreter), xeus::make_xserver_zmq);
     std::cout << "starting kernel" << std::endl;
     kernel.start();
 

@@ -209,9 +209,9 @@ namespace xeus
         (void)m_heartbeat_controller.recv(response);
     }
 
-    std::unique_ptr<xserver> make_xserver(zmq::context_t& context,
-                                          const xconfiguration& config,
-                                          nl::json::error_handler_t eh)
+    std::unique_ptr<xserver> make_xserver_zmq(zmq::context_t& context,
+                                              const xconfiguration& config,
+                                              nl::json::error_handler_t eh)
     {
         return std::make_unique<xserver_zmq>(context, config, eh);
     }
