@@ -40,7 +40,7 @@ namespace xeus
     {
     public:
 
-        using function_type = std::function<void(xcomm&&, const xmessage&)>;
+        using function_type = std::function<void(xcomm&&, xmessage)>;
 
         xtarget();
         xtarget(const std::string& name, const function_type& callback, xcomm_manager* manager);
@@ -49,7 +49,7 @@ namespace xeus
         const std::string& name() const & noexcept;
         std::string name() const && noexcept;
 
-        void operator()(xcomm&& comm, const xmessage& request) const;
+        void operator()(xcomm&& comm, xmessage request) const;
 
         void publish_message(const std::string&, nl::json, nl::json, buffer_sequence) const;
 
@@ -76,7 +76,7 @@ namespace xeus
     {
     public:
 
-        using handler_type = std::function<void(const xmessage&)>;
+        using handler_type = std::function<void(xmessage)>;
 
         xcomm() = delete;
         ~xcomm();
@@ -95,8 +95,8 @@ namespace xeus
         xtarget& target() noexcept;
         const xtarget& target() const noexcept;
 
-        void handle_message(const xmessage& request);
-        void handle_close(const xmessage& request);
+        void handle_message(xmessage request);
+        void handle_close(xmessage request);
 
         xguid id() const noexcept;
 
@@ -157,9 +157,9 @@ namespace xeus
                                   const target_function_type& callback);
         void unregister_comm_target(const std::string& target_name);
 
-        void comm_open(const xmessage& request);
-        void comm_close(const xmessage& request);
-        void comm_msg(const xmessage& request);
+        void comm_open(xmessage request);
+        void comm_close(xmessage request);
+        void comm_msg(xmessage request);
 
         std::map<xguid, xcomm*>& comms() & noexcept;
         const std::map<xguid, xcomm*>& comms() const & noexcept;
@@ -216,9 +216,9 @@ namespace xeus
         return m_name;
     }
 
-    inline void xtarget::operator()(xcomm&& comm, const xmessage& message) const
+    inline void xtarget::operator()(xcomm&& comm, xmessage message) const
     {
-        return m_callback(std::move(comm), message);
+        return m_callback(std::move(comm), std::move(message));
     }
 
     inline void xtarget::register_comm(xguid id, xcomm* comm) const
@@ -245,19 +245,19 @@ namespace xeus
         return *p_target;
     }
 
-    inline void xcomm::handle_close(const xmessage& message)
+    inline void xcomm::handle_close(xmessage message)
     {
         if (m_close_handler)
         {
-            m_close_handler(message);
+            m_close_handler(std::move(message));
         }
     }
 
-    inline void xcomm::handle_message(const xmessage& message)
+    inline void xcomm::handle_message(xmessage message)
     {
         if (m_message_handler)
         {
-            m_message_handler(message);
+            m_message_handler(std::move(message));
         }
     }
 
