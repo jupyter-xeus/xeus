@@ -199,12 +199,13 @@ namespace xeus
         if (handler == nullptr)
         {
             std::cerr << "ERROR: received unknown message" << std::endl;
+            std::cerr << "Message type: msg_type" << std::endl;
         }
         else
         {
             try
             {
-                (this->*handler)(msg, c);
+                (this->*handler)(std::move(msg), c);
             }
             catch (std::exception& e)
             {
@@ -223,7 +224,7 @@ namespace xeus
         return res;
     }
 
-    void xkernel_core::execute_request(const xmessage& request, channel c)
+    void xkernel_core::execute_request(xmessage request, channel c)
     {
         try
         {
@@ -263,7 +264,7 @@ namespace xeus
         }
     }
 
-    void xkernel_core::complete_request(const xmessage& request, channel c)
+    void xkernel_core::complete_request(xmessage request, channel c)
     {
         const nl::json& content = request.content();
         std::string code = content.value("code", "");
@@ -273,7 +274,7 @@ namespace xeus
         send_reply("complete_reply", nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::inspect_request(const xmessage& request, channel c)
+    void xkernel_core::inspect_request(xmessage request, channel c)
     {
         const nl::json& content = request.content();
         std::string code = content.value("code", "");
@@ -284,7 +285,7 @@ namespace xeus
         send_reply("inspect_reply", nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::history_request(const xmessage& request, channel c)
+    void xkernel_core::history_request(xmessage request, channel c)
     {
         const nl::json& content = request.content();
 
@@ -293,7 +294,7 @@ namespace xeus
         send_reply("history_reply", nl::json::object(), std::move(history), c);
     }
 
-    void xkernel_core::is_complete_request(const xmessage& request, channel c)
+    void xkernel_core::is_complete_request(xmessage request, channel c)
     {
         const nl::json& content = request.content();
         std::string code = content.value("code", "");
@@ -302,7 +303,7 @@ namespace xeus
         send_reply("is_complete_reply", nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::comm_info_request(const xmessage& request, channel c)
+    void xkernel_core::comm_info_request(xmessage request, channel c)
     {
         const nl::json& content = request.content();
         std::string target_name = content.is_null() ? "" : content.value("target_name", "");
@@ -323,14 +324,14 @@ namespace xeus
         send_reply("comm_info_reply", nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::kernel_info_request(const xmessage& /* request */, channel c)
+    void xkernel_core::kernel_info_request(xmessage /* request */, channel c)
     {
         nl::json reply = p_interpreter->kernel_info_request();
         reply["protocol_version"] = get_protocol_version();
         send_reply("kernel_info_reply", nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::shutdown_request(const xmessage& request, channel c)
+    void xkernel_core::shutdown_request(xmessage request, channel c)
     {
         const nl::json& content = request.content();
         bool restart = content.value("restart", false);
@@ -342,14 +343,14 @@ namespace xeus
         send_reply("shutdown_reply", nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::interrupt_request(const xmessage&, channel c)
+    void xkernel_core::interrupt_request(xmessage, channel c)
     {
         nl::json reply = nl::json::object();
         publish_message("interrupt", nl::json::object(), nl::json(reply), buffer_sequence(), channel::CONTROL);
         send_reply("interrupt_reply", nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::debug_request(const xmessage& request, channel c)
+    void xkernel_core::debug_request(xmessage request, channel c)
     {
         if(p_debugger)
         {
@@ -463,18 +464,18 @@ namespace xeus
         return m_parent_header[std::size_t(c)];
     }
 
-    void xkernel_core::comm_open(const xmessage& request, channel)
+    void xkernel_core::comm_open(xmessage request, channel)
     {
-        return m_comm_manager.comm_open(request);
+        m_comm_manager.comm_open(std::move(request));
     }
 
-    void xkernel_core::comm_close(const xmessage& request, channel)
+    void xkernel_core::comm_close(xmessage request, channel)
     {
-        return m_comm_manager.comm_close(request);
+        m_comm_manager.comm_close(std::move(request));
     }
 
-    void xkernel_core::comm_msg(const xmessage& request, channel)
+    void xkernel_core::comm_msg(xmessage request, channel)
     {
-        return m_comm_manager.comm_msg(request);
+        m_comm_manager.comm_msg(std::move(request));
     }
 }

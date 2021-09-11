@@ -74,27 +74,27 @@ namespace xeus
 
     private:
 
-        using handler_type = void (xkernel_core::*)(const xmessage&, channel);
+        using handler_type = void (xkernel_core::*)(xmessage, channel);
         using guid_list = xmessage::guid_list;
 
         void dispatch(xmessage msg, channel c);
 
         handler_type get_handler(const std::string& msg_type);
 
-        void execute_request(const xmessage& request, channel c);
-        void complete_request(const xmessage& request, channel c);
-        void inspect_request(const xmessage& request, channel c);
-        void history_request(const xmessage& request, channel c);
-        void is_complete_request(const xmessage& request, channel c);
-        void comm_info_request(const xmessage& request, channel c);
-        void comm_open(const xmessage& request, channel c);
-        void comm_close(const xmessage& request, channel c);
-        void comm_msg(const xmessage& request, channel c);
+        void execute_request(xmessage request, channel c);
+        void complete_request(xmessage request, channel c);
+        void inspect_request(xmessage request, channel c);
+        void history_request(xmessage request, channel c);
+        void is_complete_request(xmessage request, channel c);
+        void comm_info_request(xmessage request, channel c);
+        void comm_open(xmessage request, channel c);
+        void comm_close(xmessage request, channel c);
+        void comm_msg(xmessage request, channel c);
 
-        void kernel_info_request(const xmessage& request, channel c);
-        void shutdown_request(const xmessage& request, channel c);
-        void interrupt_request(const xmessage& request, channel c);
-        void debug_request(const xmessage& request, channel c);
+        void kernel_info_request(xmessage request, channel c);
+        void shutdown_request(xmessage request, channel c);
+        void interrupt_request(xmessage request, channel c);
+        void debug_request(xmessage request, channel c);
 
         void publish_status(const std::string& status, channel c);
 

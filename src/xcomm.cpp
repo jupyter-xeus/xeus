@@ -61,7 +61,7 @@ namespace xeus
         m_comms.erase(id);
     }
 
-    void xcomm_manager::comm_open(const xmessage& request)
+    void xcomm_manager::comm_open(xmessage request)
     {
         const nl::json& content = request.content();
         std::string target_name = content["target_name"];
@@ -76,11 +76,11 @@ namespace xeus
             xtarget& target = position->second;
             xguid id = content["comm_id"];
             xcomm comm = xcomm(&target, id);
-            target(std::move(comm), request);
+            target(std::move(comm), std::move(request));
         }
     }
 
-    void xcomm_manager::comm_close(const xmessage& request)
+    void xcomm_manager::comm_close(xmessage request)
     {
         const nl::json& content = request.content();
         xguid id = content["comm_id"];
@@ -91,12 +91,12 @@ namespace xeus
         }
         else
         {
-            position->second->handle_close(request);
+            position->second->handle_close(std::move(request));
         }
         m_comms.erase(id);
     }
 
-    void xcomm_manager::comm_msg(const xmessage& request)
+    void xcomm_manager::comm_msg(xmessage request)
     {
         const nl::json& content = request.content();
         xguid id = content["comm_id"];
@@ -107,7 +107,7 @@ namespace xeus
         }
         else
         {
-            position->second->handle_message(request);
+            position->second->handle_message(std::move(request));
         }
     }
 }
