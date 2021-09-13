@@ -10,6 +10,8 @@
 #ifndef XEUS_CONTEXT_HPP
 #define XEUS_CONTEXT_HPP
 
+#include <memory>
+
 #include "xeus.hpp"
 
 namespace xeus
@@ -60,6 +62,13 @@ namespace xeus
         auto* impl = dynamic_cast<xcontext_impl<T>*>(this);
         return impl->m_context;
     }
+
+    template <class T, class... U>
+    std::unique_ptr<xcontext_impl<T>> make_context(U&&... u)
+    {
+        return std::unique_ptr<xcontext_impl<T>>(new xcontext_impl<T>(std::forward<U>(u)...));
+    }
+
 }
 
 #endif
