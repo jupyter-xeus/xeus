@@ -21,9 +21,7 @@ int main(int argc, char* argv[])
     std::string file_name = (argc == 1) ? "connection.json" : argv[2];
     xeus::xconfiguration config = xeus::load_configuration(file_name);
 
-    using context_type = xeus::xcontext_impl<zmq::context_t>;
-    using context_ptr = std::unique_ptr<context_type>;
-    context_ptr context = context_ptr(new context_type());
+    auto context = xeus::make_context<zmq::context_t>();
 
     // Create interpreter instance
     using interpreter_ptr = std::unique_ptr<custom::custom_interpreter>;
