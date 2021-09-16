@@ -12,7 +12,7 @@
 
 #include "test_interpreter.hpp"
 
-#include "xeus/xmessage_builder.hpp"
+#include "xeus/xhelper.hpp"
 #include "xeus/xguid.hpp"
 
 namespace nl = nlohmann;

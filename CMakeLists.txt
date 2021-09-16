@@ -138,6 +138,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xkernel_configuration.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xlogger.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xmessage.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xhelper.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xmiddleware.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver_control_main.hpp
@@ -173,6 +174,7 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xlogger_impl.hpp
     ${XEUS_SOURCE_DIR}/xlogger_impl.cpp
     ${XEUS_SOURCE_DIR}/xmessage.cpp
+    ${XEUS_SOURCE_DIR}/xhelper.cpp
     ${XEUS_SOURCE_DIR}/xmock_interpreter.cpp
     ${XEUS_SOURCE_DIR}/xmock_interpreter.hpp
     ${XEUS_SOURCE_DIR}/xmiddleware.cpp
