@@ -14,5 +14,6 @@ dependencies:
   - libopenssl-static=1
   - nlohmann_json
   # Test dependencies
+  - doctest
   - pytest
   - jupyter_kernel_test=0.3.0
