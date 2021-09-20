@@ -48,15 +48,44 @@ if(CMAKE_CXX_COMPILER_ID MATCHES MSVC)
     set(CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO)
 endif()
 
+if(XEUS_DOWNLOAD_GTEST OR GTEST_SRC_DIR)
+    if(XEUS_DOWNLOAD_GTEST)
+        # Download and unpack googletest at configure time
+        configure_file(downloadGTest.cmake.in googletest-download/CMakeLists.txt)
+    else()
+        # Copy local source of googletest at configure time
+        configure_file(copyGTest.cmake.in googletest-download/CMakeLists.txt)
+    endif()
+    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+                    RESULT_VARIABLE result
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+    if(result)
+        message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+    endif()
+    execute_process(COMMAND ${CMAKE_COMMAND} --build .
+                    RESULT_VARIABLE result
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+    if(result)
+        message(FATAL_ERROR "Build step for googletest failed: ${result}")
+    endif()
 
-find_package(doctest REQUIRED)
+    # Add googletest directly to our build. This defines
+    # the gtest and gtest_main targets.
+    add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
+                     ${CMAKE_CURRENT_BINARY_DIR}/googletest-build EXCLUDE_FROM_ALL)
 
+    set(GTEST_INCLUDE_DIRS "${gtest_SOURCE_DIR}/include")
+    set(GTEST_BOTH_LIBRARIES  gtest_main gtest)
+else()
+    find_package(GTest REQUIRED)
+endif()
 
 find_package(Threads)
 
-find_program(PYTEST  
-    NAMES pytest-3 pytest py.test-3 py.test REQUIRED)
+find_program(PYTEST
+    NAMES pytest-3 pytest py.test-3 py.test)
 
+include_directories(${GTEST_INCLUDE_DIRS})
 
 set(XEUS_TESTS
     test_xin_memory_history_manager.cpp
@@ -84,16 +113,27 @@ endif ()
 foreach(filename IN LISTS XEUS_TESTS)
     get_filename_component(targetname ${filename} NAME_WE)
 
-    add_executable(${targetname} test_main.cpp ${filename})
-    target_link_libraries(${targetname} PRIVATE ${xeus_TARGET} doctest::doctest Threads::Threads ${nlohmann_json_TARGET})
-    #target_compile_features(test PRIVATE cxx_std_17)
+    add_executable(${targetname} ${filename})
+    target_link_libraries(${targetname} PRIVATE ${xeus_TARGET} ${GTEST_BOTH_LIBRARIES} Threads::Threads ${nlohmann_json_TARGET})
+    
     add_test(NAME ${targetname} COMMAND ${targetname})
 endforeach()
 
-add_executable(xeus_tests test_main.cpp ${XEUS_TESTS})
-target_link_libraries(xeus_tests PRIVATE ${xeus_TARGET} doctest::doctest Threads::Threads ${nlohmann_json_TARGET})
+if(XEUS_DOWNLOAD_GTEST OR GTEST_SRC_DIR)
+    # https://github.com/jupyter-xeus/xeus/pull/126
+    # This should really just be post gtest and gtest_main targets, but CMake
+    # won't allow us to do that. So do it after the last test (which depends on
+    # those anyway.)
+    if (XEUS_BUILD_SHARED_LIBS)
+        add_custom_command(
+            TARGET ${targetname} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:gtest>" "${CMAKE_CURRENT_BINARY_DIR}/")
 
-
+        add_custom_command(
+            TARGET ${targetname} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:gtest_main>" "${CMAKE_CURRENT_BINARY_DIR}/")
+    endif ()
+endif()
 
 # Test_kernel tests
 # =================
