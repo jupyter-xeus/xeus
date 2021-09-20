@@ -55,6 +55,7 @@ option(XEUS_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
 
 # Test options
 option(XEUS_BUILD_TESTS "xeus test suite" OFF)
+option(XEUS_DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
 
 # Static build configuration
 # ==========================
@@ -351,7 +352,7 @@ endif ()
 
 include(CTest)
 
-if(XEUS_BUILD_TESTS)
+if(XEUS_DOWNLOAD_GTEST OR GTEST_SRC_DIR OR XEUS_BUILD_TESTS)
     set(BUILD_TESTING ON)
     message(STATUS "tests enabled")
 else ()
