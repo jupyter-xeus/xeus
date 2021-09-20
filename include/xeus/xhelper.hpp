@@ -15,7 +15,7 @@
 #include <vector>
 
 #include "xeus/xeus.hpp"
-#include "xeus/xkernel.hpp"
+#include "xeus/xkernel_configuration.hpp"
 
 #include "nlohmann/json.hpp"
 #include "xtl/xvariant.hpp"
@@ -24,7 +24,7 @@ namespace nl = nlohmann;
 
 namespace xeus
 {
-    XEUS_API void print_kernel_config(xkernel* kernel);
+    XEUS_API std::string print_starting_message(xconfiguration& config);
 
     XEUS_API std::string extract_filename(int argc, char* argv[]);
 

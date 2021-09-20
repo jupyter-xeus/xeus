@@ -9,26 +9,25 @@ namespace nl = nlohmann;
 
 namespace xeus
 {
-    void print_kernel_config(xkernel* kernel)
+    std::string print_starting_message(xconfiguration& config)
     {
-    const auto& config = kernel->get_config();
-    std::clog <<
-        "Starting kernel...\n\n"
-        "If you want to connect to this kernel from an other client, just copy"
-        " and paste the following content inside of a `kernel.json` file. And then run for example:\n\n"
-        "# jupyter console --existing kernel.json\n\n"
-        "kernel.json\n```\n{\n"
-        "    \"transport\": \"" + config.m_transport + "\",\n"
-        "    \"ip\": \"" + config.m_ip + "\",\n"
-        "    \"control_port\": " + config.m_control_port + ",\n"
-        "    \"shell_port\": " + config.m_shell_port + ",\n"
-        "    \"stdin_port\": " + config.m_stdin_port + ",\n"
-        "    \"iopub_port\": " + config.m_iopub_port + ",\n"
-        "    \"hb_port\": " + config.m_hb_port + ",\n"
-        "    \"signature_scheme\": \"" + config.m_signature_scheme + "\",\n"
-        "    \"key\": \"" + config.m_key + "\"\n"
-        "}\n```"
-        << std::endl;
+        std::string kernel_info;
+        kernel_info = "Starting kernel...\n\n"
+            "If you want to connect to this kernel from an other client, just copy"
+            " and paste the following content inside of a `kernel.json` file. And then run for example:\n\n"
+            "# jupyter console --existing kernel.json\n\n"
+            "kernel.json\n```\n{\n"
+            "    \"transport\": \"" + config.m_transport + "\",\n"
+            "    \"ip\": \"" + config.m_ip + "\",\n"
+            "    \"control_port\": " + config.m_control_port + ",\n"
+            "    \"shell_port\": " + config.m_shell_port + ",\n"
+            "    \"stdin_port\": " + config.m_stdin_port + ",\n"
+            "    \"iopub_port\": " + config.m_iopub_port + ",\n"
+            "    \"hb_port\": " + config.m_hb_port + ",\n"
+            "    \"signature_scheme\": \"" + config.m_signature_scheme + "\",\n"
+            "    \"key\": \"" + config.m_key + "\"\n"
+            "}\n```";
+        return kernel_info;
     }
 
     std::string extract_filename(int argc, char* argv[])
@@ -49,6 +48,7 @@ namespace xeus
         }
         return res;
     }
+
     bool should_print_version(int argc, char* argv[])
     {
         for (int i = 0; i < argc; ++i)
