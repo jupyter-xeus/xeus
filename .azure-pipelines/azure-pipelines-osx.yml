@@ -2,8 +2,6 @@ jobs:
   - job: 'OSX'
     strategy:
       matrix:
-        macOS_10_14:
-          image_name: 'macOS-10.14'
         macOS_10_15:
           image_name: 'macOS-10.15'
     pool:
@@ -11,13 +9,11 @@ jobs:
     variables:
         CC: clang
         CXX: clang++
-    timeoutInMinutes: 360
+    timeoutInMinutes: 30
     steps:
       - script: |
           echo "Removing homebrew for Azure to avoid conflicts with conda"
-          curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > ~/uninstall_homebrew
-          chmod +x ~/uninstall_homebrew
-          ~/uninstall_homebrew -f -q
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"
         displayName: Remove homebrew
 
       - bash: |
@@ -26,3 +22,5 @@ jobs:
         displayName: Add conda to PATH
 
       - template: unix-build.yml
+        parameters:
+          platform: 'OSX'
