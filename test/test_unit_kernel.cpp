@@ -9,19 +9,66 @@
 #include "doctest/doctest.h"
 
 #include <string>
-#include <iostream>
+#include <memory>
 
 #include "nlohmann/json.hpp"
+
+#include "test_interpreter.hpp"
 
 #include "xeus/xkernel.hpp"
 #include "xeus/xmiddleware.hpp"
 #include "xeus/xsystem.hpp"
+#include "xeus/xeus_context.hpp"
+#include "xeus/xhelper.hpp"
+#include "xeus/xkernel_configuration.hpp"
+#include "xeus/xserver_zmq.hpp"
 
 namespace nl = nlohmann;
 
 namespace xeus
 {
-    TEST_SUITE("kernel") {
+    TEST_SUITE("kernel")
+    {
+        TEST_CASE("print_starting_message")
+        {
+            auto context = make_context<zmq::context_t>();
+
+            using interpreter_ptr = std::unique_ptr<test_kernel::test_interpreter>;
+            interpreter_ptr interpreter = interpreter_ptr(new test_kernel::test_interpreter());
+            xkernel kernel(get_user_name(),
+                         std::move(context),
+                         std::move(interpreter),
+                         make_xserver_zmq);
+            std::string kernel_config = print_starting_message(kernel.get_config());
+            bool found = kernel_config.find(" Starting kernel...\n"
+                                            "\n"
+                                            "If you want to connect to this kernel from an other client, just copy and paste the following content inside of a `kernel.json` file. And then run for example:\n"
+                                            "\n"
+                                            "# jupyter console --existing kernel.json\n"
+                                            "\n"
+                                            "kernel.json\n"
+                                            "```\n"
+                                            "{\n"
+                                            "    \"transport\": \"tcp\",\n");
+            REQUIRE_EQ(found, true);
+        }
+    }
+
+    TEST_CASE("extract_filename")
+    {
+        char** argv = new char*;
+        argv[0] = (char*)"-f";
+        argv[1] = (char*)"connection.json";
+        std::string file_name = extract_filename(3, argv);
+        REQUIRE_EQ(file_name, "connection.json");
+    }
+
+    TEST_CASE("should_print_version")
+    {
+        char** argv = new char*;
+        argv[0] = (char*)"--version";
+        REQUIRE_EQ(should_print_version(1, argv), true);
+    }
 
     TEST_CASE("get_username")
     {
@@ -51,7 +98,7 @@ namespace xeus
         std::string temp_path = get_temp_directory_path();
         std::string path = temp_path + "/intermediate/logs";
         bool res = create_directory(path);
-        REQUIRE_UNARY(res);
+        REQUIRE_EQ(res, true);
     }
 
     TEST_CASE("get_current_pid")
@@ -65,7 +112,6 @@ namespace xeus
         size_t hs = get_tmp_hash_seed();
         size_t expected = static_cast<std::size_t>(0xc70f6907UL);
         REQUIRE_EQ(hs, expected);
-    }
     }
 }
 

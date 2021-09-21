@@ -24,7 +24,7 @@ namespace nl = nlohmann;
 
 namespace xeus
 {
-    XEUS_API std::string print_starting_message(xconfiguration& config);
+    XEUS_API std::string print_starting_message(const xconfiguration& config);
 
     XEUS_API std::string extract_filename(int argc, char* argv[]);
 

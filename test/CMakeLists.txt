@@ -84,7 +84,7 @@ endif ()
 foreach(filename IN LISTS XEUS_TESTS)
     get_filename_component(targetname ${filename} NAME_WE)
 
-    add_executable(${targetname} test_main.cpp ${filename})
+    add_executable(${targetname} test_main.cpp ${filename} test_interpreter.cpp)
     target_link_libraries(${targetname} PRIVATE ${xeus_TARGET} doctest::doctest Threads::Threads ${nlohmann_json_TARGET})
     add_test(NAME ${targetname} COMMAND ${targetname})
 endforeach()
