@@ -34,7 +34,7 @@ install:
   # Build
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -D XEUS_DOWNLOAD_GTEST=ON -Dgtest_force_shared_crt=ON ..
+  - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -D XEUS_BUILD_TESTS=ON  ..
   - nmake install
   # Build example
   - cd ..\example
