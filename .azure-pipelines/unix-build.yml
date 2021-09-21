@@ -25,7 +25,7 @@ steps:
       if [[ $(xeus_build_shared_lib) == '0' ]]; then
         CMAKE_EXTRA_ARGS="$CMAKE_EXTRA_ARGS -DXEUS_BUILD_SHARED_LIBS=OFF";
       fi
-      cmake -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -DXEUS_DOWNLOAD_GTEST=ON -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX $CMAKE_EXTRA_ARGS $(Build.SourcesDirectory)
+      cmake -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -DXEUS_BUILD_TESTS=ON -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX $CMAKE_EXTRA_ARGS $(Build.SourcesDirectory)
     displayName: Configure xeus
     workingDirectory: $(Build.BinariesDirectory)
 
