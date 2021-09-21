@@ -86,7 +86,6 @@ foreach(filename IN LISTS XEUS_TESTS)
 
     add_executable(${targetname} test_main.cpp ${filename})
     target_link_libraries(${targetname} PRIVATE ${xeus_TARGET} doctest::doctest Threads::Threads ${nlohmann_json_TARGET})
-    #target_compile_features(test PRIVATE cxx_std_17)
     add_test(NAME ${targetname} COMMAND ${targetname})
 endforeach()
 
