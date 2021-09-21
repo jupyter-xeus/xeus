@@ -29,7 +29,7 @@ install:
   - conda update -q conda
   - conda info -a
   - conda install mamba -c conda-forge
-  - mamba install cmake cppzmq=4.7.1 zeromq=4.3.2 xtl=0.7 nlohmann_json OpenSSL=1 -c conda-forge
+  - mamba install cmake cppzmq=4.7.1 zeromq=4.3.2 xtl=0.7 nlohmann_json OpenSSL=1 doctest -c conda-forge
   - mamba install pytest jupyter_kernel_test=0.3.0 -c conda-forge
   # Build
   - mkdir build
