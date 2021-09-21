@@ -51,12 +51,13 @@ jobs:
 
       - name: Test xeus (with retry)
         uses: nick-invision/retry@v2
-        timeout_minutes: 2
-        max_attempts: 3
-        shell: bash -l {0}
-        command: |
-          cd build/test
-          ctest --output-on-failure
+        with:
+          timeout_minutes: 2
+          max_attempts: 3
+          shell: bash -l {0}
+          command: |
+            cd build/test
+            ctest --output-on-failure
 
 
       - name: install xeus
@@ -112,14 +113,15 @@ jobs:
 
       - name: ctest
         uses: nick-invision/retry@v2
-        timeout_minutes: 2
-        max_attempts: 3
-        shell: cmd
-        command: |
-          call C:\Users\runneradmin\micromamba\condabin\micromamba.bat activate xeus
-          set PATH=%CONDA_PREFIX%;%CONDA_PREFIX%\\Scripts;%CONDA_PREFIX%\\Library;%CONDA_PREFIX%\\Library\\bin;%PATH%
-          cd build
-          ctest --output-on-failure
+        with:
+          timeout_minutes: 2
+          max_attempts: 3
+          shell: cmd
+          command: |
+            call C:\Users\runneradmin\micromamba\condabin\micromamba.bat activate xeus
+            set PATH=%CONDA_PREFIX%;%CONDA_PREFIX%\\Scripts;%CONDA_PREFIX%\\Library;%CONDA_PREFIX%\\Library\\bin;%PATH%
+            cd build
+            ctest --output-on-failure
 
       - name: build example -- cmake configure
         shell: cmd
