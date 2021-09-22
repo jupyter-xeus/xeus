@@ -56,6 +56,11 @@ option(XEUS_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
 # Test options
 option(XEUS_BUILD_TESTS "xeus test suite" OFF)
 
+
+message(STATUS "XEUS_DISABLE_ARCH_NATIVE: ${XEUS_DISABLE_ARCH_NATIVE}")
+message(STATUS "XEUS_BUILD_SHARED_LIBS:   ${XEUS_BUILD_SHARED_LIBS}")
+message(STATUS "XEUS_BUILD_STATIC_LIBS:   ${XEUS_BUILD_STATIC_LIBS}")
+message(STATUS "XEUS_STATIC_DEPENDENCIES: ${XEUS_STATIC_DEPENDENCIES}")
 # Static build configuration
 # ==========================
 
@@ -311,8 +316,11 @@ macro(xeus_create_target target_name linkage output_name)
         target_compile_definitions(${target_name} PUBLIC -DGUID_LIBUUID)
     endif ()
 
-    if (XEUS_STATIC_DEPENDENCIES AND CMAKE_DL_LIBS)
-        target_link_libraries(${target_name} PRIVATE ${CMAKE_DL_LIBS} util rt)
+    if (XEUS_STATIC_DEPENDENCIES)
+        if(CMAKE_DL_LIBS)
+            target_link_libraries(${target_name} PRIVATE ${CMAKE_DL_LIBS})
+        endif()
+        target_link_libraries(${target_name} PRIVATE  util rt)
     endif ()
 
 endmacro()
