@@ -6,9 +6,10 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "gtest/gtest.h"
+#include "doctest/doctest.h"
 
 #include <string>
+#include <iostream>
 
 #include "nlohmann/json.hpp"
 
@@ -20,48 +21,51 @@ namespace nl = nlohmann;
 
 namespace xeus
 {
-    TEST(kernel, get_username)
+    TEST_SUITE("kernel") {
+
+    TEST_CASE("get_username")
     {
         std::string username;
         username = get_user_name();
-        EXPECT_NE(username, "unspecified user");
+        REQUIRE_NE(username, "unspecified user");
     }
 
-    TEST(kernel, find_free_port)
+    TEST_CASE("find_free_port")
     {
         std::string port = find_free_port();
-        EXPECT_NE(port, "");
-        EXPECT_EQ(port.length(), std::size_t(5));
+        REQUIRE_NE(port, "");
+        REQUIRE_EQ(port.length(), std::size_t(5));
     }
 
-    TEST(kernel, temp_directory_path)
+    TEST_CASE("temp_directory_path")
     {
         std::string path = get_temp_directory_path();
         std::cout << "Temporary directory path: " << path << std::endl;
-        EXPECT_NE(path, "");
-        EXPECT_NE(path.back(), '/');
-        EXPECT_NE(path.back(), '\\');
+        REQUIRE_NE(path, "");
+        REQUIRE_NE(path.back(), '/');
+        REQUIRE_NE(path.back(), '\\');
     }
 
-    TEST(kernel, create_directory)
+    TEST_CASE("create_directory")
     {
         std::string temp_path = get_temp_directory_path();
         std::string path = temp_path + "/intermediate/logs";
         bool res = create_directory(path);
-        EXPECT_TRUE(res);
+        REQUIRE_UNARY(res);
     }
 
-    TEST(kernel, get_current_pid)
+    TEST_CASE("get_current_pid")
     {
         int pid = get_current_pid();
-        EXPECT_NE(pid, -1);
+        REQUIRE_NE(pid, -1);
     }
 
-    TEST(kernel, get_tmp_hash_seed)
+    TEST_CASE("get_tmp_hash_seed")
     {
         size_t hs = get_tmp_hash_seed();
         size_t expected = static_cast<std::size_t>(0xc70f6907UL);
-        EXPECT_EQ(hs, expected);
+        REQUIRE_EQ(hs, expected);
+    }
     }
 }
 

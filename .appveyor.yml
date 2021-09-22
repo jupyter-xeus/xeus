@@ -29,12 +29,12 @@ install:
   - conda update -q conda
   - conda info -a
   - conda install mamba -c conda-forge
-  - mamba install cmake cppzmq=4.7.1 zeromq=4.3.2 xtl=0.7 nlohmann_json OpenSSL=1 -c conda-forge
+  - mamba install cmake cppzmq=4.7.1 zeromq=4.3.2 xtl=0.7 nlohmann_json OpenSSL=1 doctest -c conda-forge
   - mamba install pytest jupyter_kernel_test=0.3.0 -c conda-forge
   # Build
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -D XEUS_DOWNLOAD_GTEST=ON -Dgtest_force_shared_crt=ON ..
+  - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -D XEUS_BUILD_TESTS=ON  ..
   - nmake install
   # Build example
   - cd ..\example
