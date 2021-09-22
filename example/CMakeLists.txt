@@ -69,17 +69,6 @@ set(MY_KERNEL_SRC
 add_executable(${EXECUTABLE_NAME} src/main.cpp ${MY_KERNEL_SRC} )
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE ${xeus_target} Threads::Threads)
 
-if (APPLE)
-    set_target_properties(${EXECUTABLE_NAME} PROPERTIES
-        MACOSX_RPATH ON
-    )
-else()
-    set_target_properties(${EXECUTABLE_NAME} PROPERTIES
-        BUILD_WITH_INSTALL_RPATH 1
-        SKIP_BUILD_RPATH FALSE
-    )
-endif()
-
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES
     INSTALL_RPATH_USE_LINK_PATH TRUE
 )
