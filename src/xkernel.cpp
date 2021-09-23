@@ -82,11 +82,11 @@ namespace xeus
                      nl::json::error_handler_t eh)
         : m_config(config)
         , m_user_name(user_name)
+        , p_context(std::move(context))
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
         , p_logger(std::move(logger))
         , m_debugger_builder(dbuilder)
-        , p_context(std::move(context))
         , m_debugger_config(debugger_config)
         , m_error_handler(eh)
     {
@@ -103,11 +103,11 @@ namespace xeus
                      nl::json debugger_config,
                      nl::json::error_handler_t eh)
         : m_user_name(user_name)
+        , p_context(std::move(context))
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
         , p_logger(std::move(logger))
         , m_debugger_builder(dbuilder)
-        , p_context(std::move(context))
         , m_debugger_config(debugger_config)
         , m_error_handler(eh)
     {

@@ -84,13 +84,16 @@ namespace xeus
         std::string m_kernel_id;
         std::string m_session_id;
         std::string m_user_name;
+        // The context must be declared before any other
+        // middleware component since it must be destroyed
+        // last
+        context_ptr p_context;
         interpreter_ptr p_interpreter;
         history_manager_ptr p_history_manager;
         logger_ptr p_logger;
         server_ptr p_server;
         debugger_builder m_debugger_builder;
         debugger_ptr p_debugger;
-        context_ptr p_context;
         kernel_core_ptr p_core;
         nl::json m_debugger_config;
         nl::json::error_handler_t m_error_handler;
