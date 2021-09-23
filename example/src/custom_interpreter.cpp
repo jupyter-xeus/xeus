@@ -44,7 +44,7 @@ namespace custom
         // publish_execution_error(error_name, error_value, error_traceback);
         publish_execution_error("TypeError", "123", {"!@#$", "*(*"});
 
-        return create_successful_reply();
+        return xeus::create_successful_reply();
     }
 
     void custom_interpreter::configure_impl()
@@ -58,12 +58,12 @@ namespace custom
         // Code starts with 'H', it could be the following completion
         if (code[0] == 'H')
         {
-            return create_complete_reply({"Hello", "Hey", "Howdy"}, 5, cursor_pos);
+            return xeus::create_complete_reply({"Hello", "Hey", "Howdy"}, 5, cursor_pos);
         }
         // No completion result
         else
         {
-            return create_complete_reply({}, cursor_pos, cursor_pos);
+            return xeus::create_complete_reply({}, cursor_pos, cursor_pos);
         }
 
         return result;
@@ -77,12 +77,12 @@ namespace custom
 
         if (code.compare("print") == 0)
         {
-            return create_inspect_reply(true,
-                                        {"text/plain": "Print objects to the text stream file, [...]"});
+            return xeus::create_inspect_reply(true,
+                                              {"text/plain": "Print objects to the text stream file, [...]"});
         }
         else
         {
-            return create_inspect_reply();
+            return xeus::create_inspect_reply();
         }
     }
 
@@ -90,7 +90,7 @@ namespace custom
     {
         // if (is_complete(code))
         // {
-        return create_is_complete_reply("complete");
+        return xeus::create_is_complete_reply("complete");
         // }
         // else
         // {
@@ -101,16 +101,17 @@ namespace custom
 
     nl::json custom_interpreter::kernel_info_request_impl()
     {
-        return create_info_reply("",
-                                 "my_kernel",
-                                 "0.1.0",
-                                 "python",
-                                 "3.7",
-                                 "text/x-python",
-                                 ".py")
+        return xeus::create_info_reply("",
+                                       "my_kernel",
+                                       "0.1.0",
+                                       "python",
+                                       "3.7",
+                                       "text/x-python",
+                                       ".py")
     }
 
-    void custom_interpreter::shutdown_request_impl() {
+    void custom_interpreter::shutdown_request_impl()
+    {
         std::cout << "Bye!!" << std::endl;
     }
 
