@@ -40,7 +40,8 @@ namespace xeus
                          std::move(interpreter),
                          make_xserver_zmq);
             std::string kernel_config = print_starting_message(kernel.get_config());
-            bool found = kernel_config.find(" Starting kernel...\n"
+            std::cout << kernel_config << std::endl;
+            size_t pos = kernel_config.find("Starting kernel...\n"
                                             "\n"
                                             "If you want to connect to this kernel from an other client, just copy and paste the following content inside of a `kernel.json` file. And then run for example:\n"
                                             "\n"
@@ -50,68 +51,68 @@ namespace xeus
                                             "```\n"
                                             "{\n"
                                             "    \"transport\": \"tcp\",\n");
-            REQUIRE_EQ(found, true);
+            REQUIRE_NE(pos, std::string::npos);
         }
-    }
 
-    TEST_CASE("extract_filename")
-    {
-        char** argv = new char*;
-        argv[0] = (char*)"-f";
-        argv[1] = (char*)"connection.json";
-        std::string file_name = extract_filename(3, argv);
-        REQUIRE_EQ(file_name, "connection.json");
-    }
+        TEST_CASE("extract_filename")
+        {
+            char* argv[2];
+            argv[0] = (char*)"-f";
+            argv[1] = (char*)"connection.json";
+            std::string file_name = extract_filename(3, argv);
+            REQUIRE_EQ(file_name, "connection.json");
+        }
 
-    TEST_CASE("should_print_version")
-    {
-        char** argv = new char*;
-        argv[0] = (char*)"--version";
-        REQUIRE_EQ(should_print_version(1, argv), true);
-    }
+        TEST_CASE("should_print_version")
+        {
+            char* argv[2];
+            argv[0] = (char*)"--version";
+            REQUIRE_EQ(should_print_version(1, argv), true);
+        }
 
-    TEST_CASE("get_username")
-    {
-        std::string username;
-        username = get_user_name();
-        REQUIRE_NE(username, "unspecified user");
-    }
+        TEST_CASE("get_username")
+        {
+            std::string username;
+            username = get_user_name();
+            REQUIRE_NE(username, "unspecified user");
+        }
 
-    TEST_CASE("find_free_port")
-    {
-        std::string port = find_free_port();
-        REQUIRE_NE(port, "");
-        REQUIRE_EQ(port.length(), std::size_t(5));
-    }
+        TEST_CASE("find_free_port")
+        {
+            std::string port = find_free_port();
+            REQUIRE_NE(port, "");
+            REQUIRE_EQ(port.length(), std::size_t(5));
+        }
 
-    TEST_CASE("temp_directory_path")
-    {
-        std::string path = get_temp_directory_path();
-        std::cout << "Temporary directory path: " << path << std::endl;
-        REQUIRE_NE(path, "");
-        REQUIRE_NE(path.back(), '/');
-        REQUIRE_NE(path.back(), '\\');
-    }
+        TEST_CASE("temp_directory_path")
+        {
+            std::string path = get_temp_directory_path();
+            std::cout << "Temporary directory path: " << path << std::endl;
+            REQUIRE_NE(path, "");
+            REQUIRE_NE(path.back(), '/');
+            REQUIRE_NE(path.back(), '\\');
+        }
 
-    TEST_CASE("create_directory")
-    {
-        std::string temp_path = get_temp_directory_path();
-        std::string path = temp_path + "/intermediate/logs";
-        bool res = create_directory(path);
-        REQUIRE_EQ(res, true);
-    }
+        TEST_CASE("create_directory")
+        {
+            std::string temp_path = get_temp_directory_path();
+            std::string path = temp_path + "/intermediate/logs";
+            bool res = create_directory(path);
+            REQUIRE_EQ(res, true);
+        }
 
-    TEST_CASE("get_current_pid")
-    {
-        int pid = get_current_pid();
-        REQUIRE_NE(pid, -1);
-    }
+        TEST_CASE("get_current_pid")
+        {
+            int pid = get_current_pid();
+            REQUIRE_NE(pid, -1);
+        }
 
-    TEST_CASE("get_tmp_hash_seed")
-    {
-        size_t hs = get_tmp_hash_seed();
-        size_t expected = static_cast<std::size_t>(0xc70f6907UL);
-        REQUIRE_EQ(hs, expected);
+        TEST_CASE("get_tmp_hash_seed")
+        {
+            size_t hs = get_tmp_hash_seed();
+            size_t expected = static_cast<std::size_t>(0xc70f6907UL);
+            REQUIRE_EQ(hs, expected);
+        }
     }
 }
 

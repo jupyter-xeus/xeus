@@ -18,7 +18,6 @@
 #include "xeus/xkernel_configuration.hpp"
 
 #include "nlohmann/json.hpp"
-#include "xtl/xvariant.hpp"
 
 namespace nl = nlohmann;
 
