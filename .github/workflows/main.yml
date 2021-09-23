@@ -154,3 +154,51 @@ jobs:
           cd build
           set CL=/MP
           nmake
+
+  emscripten_wasm:
+    runs-on: ubuntu-20.04
+    container: emscripten/emsdk:2.0.27
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Verify emscripten
+        run: emcc -v
+
+      - name: Verify cmake
+        run: cmake --version
+
+      - name: "install xtl"
+        run: |
+          mkdir -p /opt/xtl/build 
+          git clone https://github.com/xtensor-stack/xtl.git  /opt/xtl/src
+          cd /opt/xtl/src 
+          git checkout 0.7.2
+          cd /opt/xtl/build 
+          emcmake cmake ../src/ -DCMAKE_INSTALL_PREFIX=/custom_sysroot
+          emmake make -j2 install
+
+      - name: "install nlohmann-json"
+        run: |
+          mkdir -p /opt/nlohmannjson/build 
+          git clone https://github.com/nlohmann/json.git  /opt/nlohmannjson/src
+          cd  /opt/nlohmannjson/src
+          git checkout v3.10.2
+          cd /opt/nlohmannjson/build 
+          emcmake cmake ../src/  -DJSON_BuildTests=OFF -DCMAKE_INSTALL_PREFIX=/custom_sysroot
+          emmake make -j2 install
+
+      - name: "build xeus"
+        run: |
+          mkdir -p build 
+          cd build
+          emcmake cmake .. \
+            -DXEUS_EMSCRIPTEN_WASM_BUILD=ON \
+            -Dxtl_DIR=/custom_sysroot/share/cmake/xtl \
+            -Dnlohmann_json_DIR=/custom_sysroot/lib/cmake/nlohmann_json \
+            -DCMAKE_PREFIX_PATH=/custom_sysroot
+          emmake make -j2
+          emmake make -j2 install

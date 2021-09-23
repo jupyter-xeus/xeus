@@ -16,6 +16,11 @@
 
 namespace xeus
 {
+
+    struct xempty_context_tag
+    {
+    };
+
     template <class T>
     class xcontext_impl;
 
@@ -69,6 +74,12 @@ namespace xeus
         return std::unique_ptr<xcontext_impl<T>>(new xcontext_impl<T>(std::forward<U>(u)...));
     }
 
+    inline std::unique_ptr<xcontext_impl<xempty_context_tag>> make_empty_context()
+    {
+        return std::unique_ptr<xcontext_impl<xempty_context_tag>>(
+            new xcontext_impl<xempty_context_tag>()
+        );
+    }
 }
 
 #endif

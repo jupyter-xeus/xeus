@@ -15,7 +15,6 @@
 #include "nlohmann/json.hpp"
 
 #include "xeus.hpp"
-#include "xauthentication.hpp"
 #include "xmessage.hpp"
 
 namespace nl = nlohmann;
