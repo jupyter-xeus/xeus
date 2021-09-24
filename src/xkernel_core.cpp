@@ -27,7 +27,6 @@ namespace xeus
     xkernel_core::xkernel_core(const std::string& kernel_id,
                                const std::string& user_name,
                                const std::string& session_id,
-                               authentication_ptr auth,
                                logger_ptr logger,
                                server_ptr server,
                                interpreter_ptr interpreter,
@@ -37,7 +36,6 @@ namespace xeus
         : m_kernel_id(std::move(kernel_id))
         , m_user_name(std::move(user_name))
         , m_session_id(std::move(session_id))
-        , p_auth(std::move(auth))
         , m_comm_manager(this)
         , p_logger(logger)
         , p_server(server)

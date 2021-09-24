@@ -20,7 +20,6 @@
 #include "xeus/xinterpreter.hpp"
 #include "xeus/xhistory_manager.hpp"
 #include "xeus/xdebugger.hpp"
-#include "xeus/xauthentication.hpp"
 #include "xeus/xmessage.hpp"
 #include "xeus/xlogger.hpp"
 
@@ -32,7 +31,6 @@ namespace xeus
     {
     public:
 
-        using authentication_ptr = std::unique_ptr<xauthentication>;
         using logger_ptr = xlogger*;
         using server_ptr = xserver*;
         using interpreter_ptr = xinterpreter*;
@@ -42,7 +40,6 @@ namespace xeus
         xkernel_core(const std::string& kernel_id,
                      const std::string& user_name,
                      const std::string& session_id,
-                     authentication_ptr auth,
                      logger_ptr logger,
                      server_ptr server,
                      interpreter_ptr p_interpreter,
@@ -124,7 +121,6 @@ namespace xeus
         std::string m_kernel_id;
         std::string m_user_name;
         std::string m_session_id;
-        authentication_ptr p_auth;
 
         std::map<std::string, handler_type> m_handler;
         xcomm_manager m_comm_manager;
