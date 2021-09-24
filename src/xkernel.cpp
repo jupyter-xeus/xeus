@@ -128,9 +128,6 @@ namespace xeus
             m_config.m_key = new_xguid();
         }
 
-        using authentication_ptr = xkernel_core::authentication_ptr;
-        authentication_ptr auth = make_xauthentication(m_config.m_signature_scheme, m_config.m_key);
-
         if(p_logger == nullptr || std::getenv("XEUS_LOG") == nullptr)
         {
             p_logger = std::make_unique<xlogger_nolog>();
@@ -144,7 +141,6 @@ namespace xeus
         p_core = std::make_unique<xkernel_core>(m_kernel_id,
                                                 m_user_name,
                                                 m_session_id,
-                                                std::move(auth),
                                                 p_logger.get(),
                                                 p_server.get(),
                                                 p_interpreter.get(),
