@@ -65,8 +65,6 @@ namespace custom
         {
             return xeus::create_complete_reply({}, cursor_pos, cursor_pos);
         }
-
-        return result;
     }
 
     nl::json custom_interpreter::inspect_request_impl(const std::string& code,
@@ -88,15 +86,7 @@ namespace custom
 
     nl::json custom_interpreter::is_complete_request_impl(const std::string& /*code*/)
     {
-        // if (is_complete(code))
-        // {
         return xeus::create_is_complete_reply("complete");
-        // }
-        // else
-        // {
-        //    result["status"] = "incomplete";
-        //    result["indent"] = 4;
-        //}
     }
 
     nl::json custom_interpreter::kernel_info_request_impl()
