@@ -9,63 +9,110 @@
 #include "doctest/doctest.h"
 
 #include <string>
-#include <iostream>
+#include <memory>
 
 #include "nlohmann/json.hpp"
+
+#include "test_interpreter.hpp"
 
 #include "xeus/xkernel.hpp"
 #include "xeus/xmiddleware.hpp"
 #include "xeus/xsystem.hpp"
+#include "xeus/xeus_context.hpp"
+#include "xeus/xhelper.hpp"
+#include "xeus/xkernel_configuration.hpp"
+#include "xeus/xserver_zmq.hpp"
 
 namespace nl = nlohmann;
 
 namespace xeus
 {
-    TEST_SUITE("kernel") {
-
-    TEST_CASE("get_username")
+    TEST_SUITE("kernel")
     {
-        std::string username;
-        username = get_user_name();
-        REQUIRE_NE(username, "unspecified user");
-    }
+        TEST_CASE("print_starting_message")
+        {
+            auto context = make_context<zmq::context_t>();
 
-    TEST_CASE("find_free_port")
-    {
-        std::string port = find_free_port();
-        REQUIRE_NE(port, "");
-        REQUIRE_EQ(port.length(), std::size_t(5));
-    }
+            using interpreter_ptr = std::unique_ptr<test_kernel::test_interpreter>;
+            interpreter_ptr interpreter = interpreter_ptr(new test_kernel::test_interpreter());
+            xkernel kernel(get_user_name(),
+                         std::move(context),
+                         std::move(interpreter),
+                         make_xserver_zmq);
+            std::string kernel_config = print_starting_message(kernel.get_config());
+            std::cout << kernel_config << std::endl;
+            size_t pos = kernel_config.find("Starting kernel...\n"
+                                            "\n"
+                                            "If you want to connect to this kernel from an other client, just copy and paste the following content inside of a `kernel.json` file. And then run for example:\n"
+                                            "\n"
+                                            "# jupyter console --existing kernel.json\n"
+                                            "\n"
+                                            "kernel.json\n"
+                                            "```\n"
+                                            "{\n"
+                                            "    \"transport\": \"tcp\",\n");
+            REQUIRE_NE(pos, std::string::npos);
+        }
 
-    TEST_CASE("temp_directory_path")
-    {
-        std::string path = get_temp_directory_path();
-        std::cout << "Temporary directory path: " << path << std::endl;
-        REQUIRE_NE(path, "");
-        REQUIRE_NE(path.back(), '/');
-        REQUIRE_NE(path.back(), '\\');
-    }
+        TEST_CASE("extract_filename")
+        {
+            char* argv[2];
+            argv[0] = (char*)"-f";
+            argv[1] = (char*)"connection.json";
+            std::string file_name = extract_filename(3, argv);
+            REQUIRE_EQ(file_name, "connection.json");
+        }
 
-    TEST_CASE("create_directory")
-    {
-        std::string temp_path = get_temp_directory_path();
-        std::string path = temp_path + "/intermediate/logs";
-        bool res = create_directory(path);
-        REQUIRE_UNARY(res);
-    }
+        TEST_CASE("should_print_version")
+        {
+            char* argv[2];
+            argv[0] = (char*)"--version";
+            REQUIRE_EQ(should_print_version(1, argv), true);
+        }
 
-    TEST_CASE("get_current_pid")
-    {
-        int pid = get_current_pid();
-        REQUIRE_NE(pid, -1);
-    }
+        TEST_CASE("get_username")
+        {
+            std::string username;
+            username = get_user_name();
+            REQUIRE_NE(username, "unspecified user");
+        }
 
-    TEST_CASE("get_tmp_hash_seed")
-    {
-        size_t hs = get_tmp_hash_seed();
-        size_t expected = static_cast<std::size_t>(0xc70f6907UL);
-        REQUIRE_EQ(hs, expected);
-    }
+        TEST_CASE("find_free_port")
+        {
+            std::string port = find_free_port();
+            REQUIRE_NE(port, "");
+            REQUIRE_EQ(port.length(), std::size_t(5));
+        }
+
+        TEST_CASE("temp_directory_path")
+        {
+            std::string path = get_temp_directory_path();
+            std::cout << "Temporary directory path: " << path << std::endl;
+            REQUIRE_NE(path, "");
+            REQUIRE_NE(path.back(), '/');
+            REQUIRE_NE(path.back(), '\\');
+        }
+
+        TEST_CASE("create_directory")
+        {
+            std::string temp_path = get_temp_directory_path();
+            std::string path = temp_path + "/intermediate/logs";
+            bool res = create_directory(path);
+            REQUIRE_EQ(res, true);
+        }
+
+        TEST_CASE("get_current_pid")
+        {
+            int pid = get_current_pid();
+            REQUIRE_NE(pid, -1);
+        }
+
+        TEST_CASE("get_tmp_hash_seed")
+        {
+            size_t hs = get_tmp_hash_seed();
+            size_t expected = static_cast<std::size_t>(0xc70f6907UL);
+            REQUIRE_EQ(hs, expected);
+        }
     }
 }
 
