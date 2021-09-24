@@ -76,7 +76,7 @@ namespace custom
         if (code.compare("print") == 0)
         {
             return xeus::create_inspect_reply(true,
-                                              {"text/plain": "Print objects to the text stream file, [...]"});
+                                              {"text/plain", "Print objects to the text stream file, [...]"});
         }
         else
         {
