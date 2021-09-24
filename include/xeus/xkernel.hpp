@@ -78,7 +78,8 @@ namespace xeus
 
     private:
 
-        void init(server_builder sbuilder);
+        void init(server_builder sbuilder,
+                  debugger_builder dbuilder);
 
         xconfiguration m_config;
         std::string m_kernel_id;
@@ -92,7 +93,6 @@ namespace xeus
         history_manager_ptr p_history_manager;
         logger_ptr p_logger;
         server_ptr p_server;
-        debugger_builder m_debugger_builder;
         debugger_ptr p_debugger;
         kernel_core_ptr p_core;
         nl::json m_debugger_config;

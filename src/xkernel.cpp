@@ -86,11 +86,10 @@ namespace xeus
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
         , p_logger(std::move(logger))
-        , m_debugger_builder(dbuilder)
         , m_debugger_config(debugger_config)
         , m_error_handler(eh)
     {
-        init(sbuilder);
+        init(sbuilder, dbuilder);
     }
 
     xkernel::xkernel(const std::string& user_name,
@@ -107,18 +106,17 @@ namespace xeus
         , p_interpreter(std::move(interpreter))
         , p_history_manager(std::move(history_manager))
         , p_logger(std::move(logger))
-        , m_debugger_builder(dbuilder)
         , m_debugger_config(debugger_config)
         , m_error_handler(eh)
     {
-        init(sbuilder);
+        init(sbuilder, dbuilder);
     }
 
     xkernel::~xkernel()
     {
     }
 
-    void xkernel::init(server_builder sbuilder)
+    void xkernel::init(server_builder sbuilder, debugger_builder dbuilder)
     {
         m_kernel_id = new_xguid();
         m_session_id = new_xguid();
@@ -136,7 +134,7 @@ namespace xeus
         p_server = sbuilder(*p_context, m_config, m_error_handler);
         p_server->update_config(m_config);
 
-        p_debugger = m_debugger_builder(*p_context, m_config, m_user_name, m_session_id, m_debugger_config);
+        p_debugger = dbuilder(*p_context, m_config, m_user_name, m_session_id, m_debugger_config);
 
         p_core = std::make_unique<xkernel_core>(m_kernel_id,
                                                 m_user_name,
