@@ -97,7 +97,7 @@ namespace custom
                                        "python",
                                        "3.7",
                                        "text/x-python",
-                                       ".py")
+                                       ".py");
     }
 
     void custom_interpreter::shutdown_request_impl()
