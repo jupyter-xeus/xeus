@@ -151,5 +151,24 @@ namespace xeus
         return kernel_res;
     }
 
+
+    xinfo_reply:: operator nl::json() const 
+    {
+        return create_info_reply(
+            this->protocol_version,
+            this->implementation,
+            this->implementation_version,
+            this->language_name,
+            this->language_version,
+            this->language_mimetype,
+            this->language_file_extension,
+            this->pygments_lexer,
+            this->language_codemirror_mode,
+            this->language_nbconvert_exporter,
+            this->banner,
+            this->debugger,
+            this->help_links
+        );
+    }
 }
 

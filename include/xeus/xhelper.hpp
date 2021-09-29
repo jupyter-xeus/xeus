@@ -67,6 +67,25 @@ namespace xeus
                                const std::string& banner = std::string(),
                                const bool debugger = false,
                                const nl::json& help_links = nl::json::object());
+
+    struct XEUS_API xinfo_reply
+    {
+      std::string  protocol_version;
+      std::string  implementation;
+      std::string  implementation_version;
+      std::string  language_name;
+      std::string  language_version;
+      std::string  language_mimetype;
+      std::string  language_file_extension;
+      std::string  pygments_lexer;
+      std::string  language_codemirror_mode;
+      std::string  language_nbconvert_exporter;
+      std::string  banner;
+      bool         debugger {false};     
+      nl::json     help_links{ nl::json::object()};
+      
+      operator nl::json() const;
+    };
 }
 
 #endif

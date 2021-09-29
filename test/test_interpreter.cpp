@@ -96,17 +96,20 @@ namespace test_kernel
 
     nl::json test_interpreter::kernel_info_request_impl()
     {
-        return xeus::create_info_reply("",
-                                       "cpp_test",
-                                       "1.0.0",
-                                       "cpp",
-                                       "14.0.0",
-                                       "text/x-c++src",
-                                       ".cpp",
-                                       "",
-                                       "",
-                                       "",
-                                       "test_kernel");
+        xeus::xinfo_reply info_reply;
+        info_reply.protocol_version = "";
+        info_reply.implementation = "cpp_test";
+        info_reply.implementation_version = "1.0.0";
+        info_reply.language_name = "cpp";
+        info_reply.language_version = "14.0.0";
+        info_reply.language_mimetype = "text/c-c++src";
+        info_reply.language_file_extension = ".cpp";
+        info_reply.pygments_lexer = "";
+        info_reply.language_codemirror_mode = "";
+        info_reply.language_nbconvert_exporter = "";
+        info_reply.banner = "test_kernel";
+        info_reply.debugger = false;
+        return info_reply;
     }
 
     void test_interpreter::shutdown_request_impl()

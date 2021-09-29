@@ -61,6 +61,7 @@ find_program(PYTEST
 set(XEUS_TESTS
     test_xin_memory_history_manager.cpp
     test_unit_kernel.cpp
+    test_helper.cpp
 )
 
 if(nlohmann_json_FOUND)
