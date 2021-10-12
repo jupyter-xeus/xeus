@@ -75,7 +75,6 @@ namespace xeus
                                       const nl::json& json_message) const = 0;
 
         xlogger_ptr p_next_logger;
-        const xauthentication* p_authentication;
         xlogger::level m_level;
     };
 

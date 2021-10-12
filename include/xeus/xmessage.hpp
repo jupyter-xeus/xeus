@@ -14,8 +14,6 @@
 #include <vector>
 
 #include "nlohmann/json.hpp"
-
-#include "xauthentication.hpp"
 #include "xeus.hpp"
 
 namespace nl = nlohmann;
