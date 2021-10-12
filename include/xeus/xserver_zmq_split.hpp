@@ -15,6 +15,7 @@
 #include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
 #include "xeus/xkernel_configuration.hpp"
+#include "xeus/xauthentication.hpp"
 
 namespace xeus
 {

@@ -107,14 +107,12 @@ namespace xeus
 
     xlogger_common::xlogger_common(xlogger::level l, xlogger_ptr next_logger)
         : p_next_logger(next_logger != nullptr ? std::move(next_logger) : std::make_unique<xlogger_nolog>())
-        , p_authentication(nullptr)
         , m_level(l)
     {
     }
 
     xlogger_common::~xlogger_common()
     {
-        p_authentication = nullptr;
     }
     
     void xlogger_common::log_received_message_impl(const xmessage& message, xlogger::channel c) const
