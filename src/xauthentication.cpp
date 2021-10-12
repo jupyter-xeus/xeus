@@ -13,7 +13,6 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
-#include <iostream>
 
 #include <openssl/hmac.h>
 #include <openssl/sha.h>

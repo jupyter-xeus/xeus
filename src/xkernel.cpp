@@ -37,9 +37,10 @@
 
 namespace xeus
 {
-    std::string get_user_name()
-    {
-#if (defined(LINUX_PLATFORM) || defined(APPLE_PLATFORM))
+    std::string get_user_name(){
+#if defined(XEUS_EMSCRIPTEN_WASM_BUILD)
+    return "unspecified user";
+#elif (defined(LINUX_PLATFORM) || defined(APPLE_PLATFORM))
         struct passwd* pws;
         pws = getpwuid(geteuid());
         if (pws != nullptr)

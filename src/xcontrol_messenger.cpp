@@ -10,7 +10,6 @@
 #include "nlohmann/json.hpp"
 
 #include "xeus/xcontrol_messenger.hpp"
-#include "xeus/xmiddleware.hpp"
 
 namespace nl = nlohmann;
 
