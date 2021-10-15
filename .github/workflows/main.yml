@@ -186,7 +186,7 @@ jobs:
           mkdir -p /opt/nlohmannjson/build 
           git clone https://github.com/nlohmann/json.git  /opt/nlohmannjson/src
           cd  /opt/nlohmannjson/src
-          git checkout v3.10.2
+          git checkout v3.9.0
           cd /opt/nlohmannjson/build 
           emcmake cmake ../src/  -DJSON_BuildTests=OFF -DCMAKE_INSTALL_PREFIX=/custom_sysroot
           emmake make -j2 install
@@ -197,6 +197,7 @@ jobs:
           cd build
           emcmake cmake .. \
             -DXEUS_EMSCRIPTEN_WASM_BUILD=ON \
+            -DXEUS_BUILD_TESTS=ON\
             -Dxtl_DIR=/custom_sysroot/share/cmake/xtl \
             -Dnlohmann_json_DIR=/custom_sysroot/lib/cmake/nlohmann_json \
             -DCMAKE_PREFIX_PATH=/custom_sysroot
