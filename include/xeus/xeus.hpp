@@ -26,13 +26,13 @@
 
 // Project version
 #define XEUS_VERSION_MAJOR 2
-#define XEUS_VERSION_MINOR 1
-#define XEUS_VERSION_PATCH 1
+#define XEUS_VERSION_MINOR 2
+#define XEUS_VERSION_PATCH 0
 
 // Binary version
-#define XEUS_BINARY_CURRENT 6
+#define XEUS_BINARY_CURRENT 7
 #define XEUS_BINARY_REVISION 0
-#define XEUS_BINARY_AGE 0
+#define XEUS_BINARY_AGE 1
 
 // Kernel protocol version
 #define XEUS_KERNEL_PROTOCOL_VERSION_MAJOR 5
