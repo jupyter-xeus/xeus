@@ -56,7 +56,7 @@ option(XEUS_EMSCRIPTEN_WASM_BUILD  "build for wasm via emscripten" OFF)
 
 # Test options
 option(XEUS_BUILD_TESTS "xeus test suite" OFF)
-
+option(XEUS_EMSCRIPTEN_WASM_TEST_BUILD "indicate that the wasm build is as test build (will use node as environment)" OFF)
 
 # Static build configuration
 # ==========================
@@ -74,17 +74,28 @@ endif()
 if(XEUS_EMSCRIPTEN_WASM_BUILD)
     SET(XEUS_BUILD_SHARED_LIBS OFF)
     SET(XEUS_BUILD_STATIC_LIBS ON)
-
-    include(XeusEmscriptenWasmFlags)
+    # for the test build we need different flags
+    # since we run the test from node and not the browser.
+    # Therefore we need to change the ENVIRONMENT flag
+    if(XEUS_EMSCRIPTEN_WASM_TEST_BUILD)
+        include(XeusTestEmscriptenWasmFlags)
+    else()
+        include(XeusEmscriptenWasmFlags)
+    endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XEUS_EMSCRIPTEN_WASM_FLAGS}")
+    set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}  ${XEUS_EMSCRIPTEN_WASM_FLAGS}")      
 endif()
 
 # print build configuration
 # ==========================
-message(STATUS "XEUS_DISABLE_ARCH_NATIVE:   ${XEUS_DISABLE_ARCH_NATIVE}")
-message(STATUS "XEUS_BUILD_SHARED_LIBS:     ${XEUS_BUILD_SHARED_LIBS}")
-message(STATUS "XEUS_BUILD_STATIC_LIBS:     ${XEUS_BUILD_STATIC_LIBS}")
-message(STATUS "XEUS_STATIC_DEPENDENCIES:   ${XEUS_STATIC_DEPENDENCIES}")  
-message(STATUS "XEUS_EMSCRIPTEN_WASM_BUILD: ${XEUS_EMSCRIPTEN_WASM_BUILD}")
+message(STATUS "XEUS_DISABLE_ARCH_NATIVE:        ${XEUS_DISABLE_ARCH_NATIVE}")
+message(STATUS "XEUS_BUILD_SHARED_LIBS:          ${XEUS_BUILD_SHARED_LIBS}")
+message(STATUS "XEUS_BUILD_STATIC_LIBS:          ${XEUS_BUILD_STATIC_LIBS}")
+message(STATUS "XEUS_STATIC_DEPENDENCIES:        ${XEUS_STATIC_DEPENDENCIES}")  
+message(STATUS "XEUS_EMSCRIPTEN_WASM_BUILD:      ${XEUS_EMSCRIPTEN_WASM_BUILD}")
+message(STATUS "XEUS_BUILD_TESTS:                ${XEUS_BUILD_TESTS}")  
+message(STATUS "XEUS_EMSCRIPTEN_WASM_TEST_BUILD: ${XEUS_EMSCRIPTEN_WASM_TEST_BUILD}")
+
 
 # Dependencies
 # ============
@@ -215,6 +226,7 @@ set(XEUS_SOURCES_ZMQ_SERVER
 
 # sources only related to the emscripten wasm server
 set(XEUS_SOURCES_EMSCRIPTEN_WASM_SERVER
+    ${XEUS_SOURCE_DIR}/xembind.cpp
     ${XEUS_SOURCE_DIR}/xserver_emscripten.cpp
 )
 
@@ -483,6 +495,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
               ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibUUID.cmake
               ${CMAKE_CURRENT_SOURCE_DIR}/cmake/XeusEmscriptenWasmFlags.cmake
+              ${CMAKE_CURRENT_SOURCE_DIR}/cmake/XeusTestEmscriptenWasmFlags.cmake
               DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 install(EXPORT ${PROJECT_NAME}-targets
         FILE ${PROJECT_NAME}Targets.cmake

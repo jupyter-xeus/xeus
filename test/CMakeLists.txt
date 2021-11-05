@@ -180,7 +180,6 @@ if(NOT XEUS_EMSCRIPTEN_WASM_BUILD)
         PROPERTIES
         ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
 else()
-    add_executable(emscripten_wasm_test main_emscripten_wasm.cpp
-    test_interpreter.cpp)
+    add_executable(emscripten_wasm_test main_emscripten_wasm.cpp test_interpreter.cpp)
     target_link_libraries(emscripten_wasm_test PRIVATE xeus-static)
 endif()

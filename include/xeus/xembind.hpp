@@ -15,38 +15,23 @@
 #include "xeus/xkernel.hpp"
 #include "xeus/xeus_context.hpp"
 #include "xeus/xinterpreter.hpp"
+#include "xeus/xmessage.hpp"
 
 namespace nl = nlohmann;
-
+namespace ems = emscripten;
 
 namespace xeus
 {
-    void export_server_emscripten()
-    {
-        using namespace emscripten;
 
-        class_<xserver>("xserver")
-        ;
+    void buffer_sequence_from_js_buffer(buffer_sequence& self, ems::val buffers);
+    xmessage xmessage_from_js_message(ems::val js_message);
+    ems::val js_message_from_xmessage(const xmessage & message, bool copy);
+    ems::val js_message_from_xmessage(const xpub_message & message, bool copy);
 
-        class_<xserver_emscripten,  base<xserver> >("xserver_emscripten")
-            .function("notify_listener" ,     &xserver_emscripten::js_notify_listener)
-            .function("register_js_callback" ,     &xserver_emscripten::register_js_callback)
-        ;
-    }
+    void export_server_emscripten();
+    void export_core();
 
-    void export_core()
-    {
-        using namespace emscripten;
-
-        class_<nl::json>("nl_json")
-        ;
-        export_server_emscripten();
-    }
-
-    xeus::xserver * get_server(xeus::xkernel * kernel)
-    {
-        return &kernel->get_server();
-    }
+    xeus::xserver * get_server(xeus::xkernel * kernel);
 
     template<class interpreter_type>
     std::unique_ptr<xkernel> make_xkernel()
@@ -57,8 +42,8 @@ namespace xeus
         history_manager_ptr hist = xeus::make_in_memory_history_manager();
 
         using interpreter_ptr = std::unique_ptr<interpreter_type>;
+        
         auto interpreter = interpreter_ptr(new interpreter_type());
-
         auto context = xeus::make_empty_context();
 
         xeus::xkernel * kernel = new xeus::xkernel(config,
@@ -75,10 +60,9 @@ namespace xeus
     template<class interpreter_type>
     void export_kernel(const std::string kernel_name)
     {
-        using namespace emscripten;
-        class_<xkernel>(kernel_name.c_str())
+        ems::class_<xkernel>(kernel_name.c_str())
             .constructor<>(&make_xkernel<interpreter_type>)
-            .function("get_server", &get_server, allow_raw_pointers())
+            .function("get_server", &get_server, ems::allow_raw_pointers())
             .function("start", &xkernel::start)
         ;
     }
