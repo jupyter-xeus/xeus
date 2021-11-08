@@ -60,7 +60,8 @@ jobs:
         shell: bash -l {0}
         run: |
           cd build
-          make -j ${{ steps.cpu-cores.outputs.count }}
+          make -j 2 
+          # make -j ${{ steps.cpu-cores.outputs.count }}
 
       - name: Test xeus
         uses: nick-invision/retry@v2
