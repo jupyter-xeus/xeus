@@ -12,5 +12,5 @@ EMSCRIPTEN_BINDINGS(my_module)
 {
     xeus::export_core();
     using interpreter_type =    test_kernel::test_interpreter;
-    xeus::export_kernel<interpreter_type>("test_kernel");
+    xeus::export_kernel<interpreter_type>("xkernel");
 }

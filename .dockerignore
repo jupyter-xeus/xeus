@@ -1,0 +1,5 @@
+test/test_emscripten.sh
+test/emscripten_wasm_test.*
+test/*.js
+test/test_wasm.js
+.dockerignore

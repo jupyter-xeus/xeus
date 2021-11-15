@@ -1,53 +1,20 @@
-
 #include "xeus/xeus.hpp"
 #include "xeus/xserver.hpp"
 #include "xeus/xmessage.hpp"
 #include "xeus/xkernel_configuration.hpp"
 #include "xeus/xserver_emscripten.hpp"
+#include "xeus/xembind.hpp"
 
 #include <iostream>
 #include <emscripten.h>
 
 namespace nl = nlohmann;
+namespace ems = emscripten;
 
 namespace xeus
 {
 
-    std::string serialize_msg(const xmessage & message)
-    {
-        auto json_msg = nl::json::object();
-        json_msg["header"] = message.header();
-        json_msg["parent_header"] = message.parent_header();
-        json_msg["metadata"] = message.metadata();
-        json_msg["content"] = message.content();
-
-        auto buffers = nl::json::array();
-        for(const auto & bb : message.buffers())
-        {   
-            std::string buffer_as_str(bb.begin(), bb.end());
-            buffers.push_back(buffer_as_str);
-        }
-        return json_msg.dump();
-    }
-    
-    std::string serialize_msg(const xpub_message & message)
-    {
-        auto json_msg = nl::json::object();
-        json_msg["header"] = message.header();
-        json_msg["parent_header"] = message.parent_header();
-        json_msg["metadata"] = message.metadata();
-        json_msg["content"] = message.content();
-        json_msg["topic"] = message.topic();
-
-        auto buffers = nl::json::array();
-        for(const auto & bb : message.buffers())
-        {   
-            std::string buffer_as_str(bb.begin(), bb.end());
-            buffers.push_back(buffer_as_str);
-        }
-        return json_msg.dump();
-    }
-
+   
     xtrivial_emscripten_messenger::xtrivial_emscripten_messenger(xserver_emscripten* server)
     : p_server(server)
     {
@@ -77,34 +44,10 @@ namespace xeus
         }
     }
 
-    void xserver_emscripten::js_notify_listener(const std::string & json_str, const std::string & channel)
+    void xserver_emscripten::js_notify_listener(ems::val js_message)
     {
-        auto json_msg = nl::json::parse(json_str);
-        
-        const auto header = json_msg["header"];
-        const auto parent_header = json_msg["parent_header"];
-        const auto metadata = json_msg["metadata"];
-        const auto content = json_msg["content"];
-        auto buffer_sequence = xeus::buffer_sequence();
-        // convert buffer from json-array of strings
-        // to a vector<vector<char>>
-        if (json_msg.find("buffer") != json_msg.end())
-        {
-            const auto buffers = json_msg["buffers"];
-            for(std::string bb : buffers)
-            {
-                buffer_sequence.emplace_back(bb.begin(), bb.end());
-            }
-        }
-        const auto empty_guid_list = xmessage::guid_list();
-
-        xmessage message(empty_guid_list, 
-            header,
-            parent_header,
-            metadata,
-            content,
-            buffer_sequence
-        );
+        const std::string channel = js_message["channel"].as<std::string>();
+        auto message = xmessage_from_js_message(js_message);
 
         if(channel == std::string("shell"))
         {   
@@ -124,6 +67,7 @@ namespace xeus
         }
     }
 
+
     xcontrol_messenger& xserver_emscripten::get_control_messenger_impl() 
     {
         return *p_messenger;
@@ -133,7 +77,7 @@ namespace xeus
     {
         if(p_js_callback != nullptr)
         {
-            (*p_js_callback)(std::string("shell"), 0, serialize_msg(message));
+            (*p_js_callback)(std::string("shell"), 0, js_message_from_xmessage(message, true));
         }
     }
 
@@ -141,7 +85,7 @@ namespace xeus
     {
         if(p_js_callback != nullptr)
         {
-            (*p_js_callback)(std::string("control"), 0, serialize_msg(message));
+            (*p_js_callback)(std::string("control"), 0, js_message_from_xmessage(message, true));
         }
     }
 
@@ -149,7 +93,7 @@ namespace xeus
     {
         if(p_js_callback != nullptr)
         {
-            (*p_js_callback)(std::string("stdin"), 0, serialize_msg(message));
+            (*p_js_callback)(std::string("stdin"), 0, js_message_from_xmessage(message, true));
         }  
     }
 
@@ -157,7 +101,7 @@ namespace xeus
     {
         if(p_js_callback != nullptr)
         {
-            (*p_js_callback)(std::string("publish"), c == channel::SHELL ? 0:1, serialize_msg(message));
+            (*p_js_callback)(std::string("publish"), c == channel::SHELL ? 0:1, js_message_from_xmessage(message, true));
         }        
     }
 
