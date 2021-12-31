@@ -48,7 +48,7 @@ course the ``execute_request_impl`` which executes the code whenever the client 
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 22-50
+   :lines: 22-48
 
 The result and arguments of the execution request are described in the execute_request_ documentation.
 
@@ -81,7 +81,7 @@ for initializing the auto-completion engine.
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 52-55
+   :lines: 50-53
 
 Code Completion
 ~~~~~~~~~~~~~~~
@@ -91,7 +91,7 @@ The ``complete_request_impl`` method allows you to implement the auto-completion
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 57-80
+   :lines: 55-68
 
 The result and arguments of the completion request are described in the complete_request_ documentation.
 
@@ -105,7 +105,7 @@ user wants inspection.
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 82-100
+   :lines: 70-85
 
 The result and arguments of the inspection request are described in the inspect_request_ documentation and the create_inspect_reply_ might be useful to create a reply within specifications.
 
@@ -134,7 +134,7 @@ So the kernel should return "complete".
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 102-117
+   :lines: 87-90
 
 The result and arguments of the completness request are described in the is_complete_request_ documentation. Both create_default_complete_reply_ and create_is_complete_reply_ methods are recommended.
 
@@ -146,7 +146,7 @@ This request allows the client to get information about the kernel: language, la
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 119-129
+   :lines: 92-101
 
 The result and arguments of the kernel info request are described in the kernel_info_request_ documentation. The create_info_reply_ method will help you to provide complete information about your kernel.
 
@@ -158,7 +158,7 @@ This allows you to perform some operations before shutting down the kernel.
 .. literalinclude:: ../../example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 131-133
+   :lines: 103-106
 
 Kernel replies
 --------------
