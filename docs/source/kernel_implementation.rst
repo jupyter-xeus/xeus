@@ -62,7 +62,7 @@ Input request
 
 For input request support, you would need to monkey-patch the language functions that prompt for a user input (``input``
 and ``raw_input`` in Python, ``io.read`` in Lua etc) and call ``xeus::blocking_input_request`` instead. The second parameter
-should be set to False is what the user is typing should not be visible on the screen.
+should be set to False if what the user is typing should not be visible on the screen.
 
 .. code::
 
