@@ -66,7 +66,7 @@ namespace test_kernel
 
         nl::json pub_data;
         pub_data["text/plain"] = code;
-        publish_execution_result(execution_counter, std::move(pub_data), nl::json());
+        publish_execution_result(execution_counter, std::move(pub_data), nl::json::object());
 
         return xeus::create_successful_reply();
     }
