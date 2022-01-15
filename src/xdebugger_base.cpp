@@ -261,8 +261,15 @@ namespace xeus
     void xdebugger_base::continued_event(const nl::json& message)
     {
         std::lock_guard<std::mutex> lock(m_stopped_mutex);
-        int id = message["body"]["threadId"];
-        m_stopped_threads.erase(id);
+        if (message["body"]["allThreadsContinued"])
+        {
+            m_stopped_threads.clear();
+        }
+        else
+        {
+            int id = message["body"]["threadId"];
+            m_stopped_threads.erase(id);
+        }
     }
 
     void xdebugger_base::stopped_event(const nl::json& message)
