@@ -13,9 +13,6 @@ Xeus-based kernels
 xeus-cling
 ~~~~~~~~~~
 
-.. image:: xeus-cling.svg
-   :alt: xeus-cling
-
 The `xeus-cling`_ project is a Jupyter kernel for the C++ programming language
 based on the Cling C++ interpreter from CERN and Xeus, the native
 implementation of the Jupyter protocol.
@@ -25,9 +22,6 @@ implementation of the Jupyter protocol.
 
 xeus-python
 ~~~~~~~~~~~
-
-.. image:: xeus-python.svg
-   :alt: xeus-python
 
 The `xeus-python`_ project is a Jupyter kernel for the Python programming
 language based on the Xeus implementation of the protocol.
@@ -73,9 +67,6 @@ The SlicerJupyter_ project is an integration of the xeus-python kernel in the 3D
 
 xwidgets
 ---------
-
-.. image:: xwidgets.svg
-   :alt: xwidgets
 
 The xwidgets_ project is a C++ implementation of the Jupyter interactive
 widgets protocol. The Python reference implementation is available in the
