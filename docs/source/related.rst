@@ -7,8 +7,11 @@
 Related projects
 ================
 
+Xeus-based kernels
+------------------
+
 xeus-cling
-----------
+~~~~~~~~~~
 
 .. image:: xeus-cling.svg
    :alt: xeus-cling
@@ -21,7 +24,7 @@ implementation of the Jupyter protocol.
    :alt: C++ notebook
 
 xeus-python
------------
+~~~~~~~~~~~
 
 .. image:: xeus-python.svg
    :alt: xeus-python
@@ -33,15 +36,15 @@ language based on the Xeus implementation of the protocol.
    :alt: xeus-python screencast
 
 xeus-sql
---------
+~~~~~~~~
 
 The `xeus-sql`_ is a Jupyter kernel for general SQL implementations based on the native implementation of the Jupyter protocol xeus and SOCI.
 
- .. image:: xeus-sql-screenshot.gif
+ .. image:: xeus-sql-screencast.gif
     :alt: xeus-sql screencast
 
 xeus-sqlite
------------
+~~~~~~~~~~~
 
 The `xeus-sqlite`_ project is a Jupyter kernel for the SQLite.
 
@@ -49,9 +52,19 @@ The `xeus-sqlite`_ project is a Jupyter kernel for the SQLite.
    :alt: xeus-sqlite screenshot
 
 xeus-robot
-----------
+~~~~~~~~~~
 
 The `xeus-robot`_ project is a Jupyter kernel for RobotFramework
+
+xeus-lua
+~~~~~~~~
+
+The `xeus-lua`_ project is a Jupyter kernel for Lua.
+
+xeus-cookiecutter
+-----------------
+
+The `xeus-cookiecutter`_ project can be used to generated xeus-based Jupyter kernels. It provides a base template project including an "hello world" kernel. 
 
 SlicerJupyter
 -------------
@@ -76,24 +89,12 @@ Jupyter interactive widgets without the C++ kernel per se.
 .. image:: xwidgets-screencast.gif
    :alt: xwidgets screencast
 
-JuniperKernel
--------------
-
-.. image:: juniper.png
-   :alt: JuniperKernel
-
-The JuniperKernel_ project is a Jupyter kernel for the R programming language
-built with Xeus and Rcpp_.
-
-.. image:: rwidgets-screenshot.png
-   :alt: rwidgets screenshot
-
 .. _xeus-cling: https://github.com/jupyter-xeus/xeus-cling
 .. _xeus-python: https://github.com/jupyter-xeus/xeus-python
 .. _xeus-sqlite: https://github.com/jupyter-xeus/xeus-sqlite
 .. _xeus-robot: https://github.com/jupyter-xeus/xeus-robot
+.. _xeus-lua: https://github.com/jupyter-xeus/xeus-lua
+.. _xeus-cookiecutter: https://github.com/jupyter-xeus/xeus-cookiecutter
 .. _SlicerJupyter: https://github.com/Slicer/SlicerJupyter
 .. _xwidgets: https://github.com/QuantStack/xwidgets
-.. _JuniperKernel: https://github.com/JuniperKernel/JuniperKernel
-.. _Rcpp: https://github.com/RcppCore/Rcpp
 .. _ipywidgets: https://github.com/jupyter-widgets/ipywidgets
