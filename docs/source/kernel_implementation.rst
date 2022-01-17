@@ -25,6 +25,9 @@ The structure of your project should at least look like the following:
         │               └── kernel.json.in
         └── CMakeLists.txt
 
+
+The `xeus-cookiecutter`_ project provides a template for a xeus-based kernel, and includes the base structure for a xeus-based kernel.
+
 Implementing the interpreter
 ----------------------------
 
@@ -304,6 +307,7 @@ For writing unit-tests for you kernel, you can use the
 `jupyter_kernel_test <https://github.com/jupyter/jupyter_kernel_test>`_ Python library.
 It allows you to test the results of the requests you send to the kernel.
 
+.. _xeus-cookiecutter: https://github.com/jupyter-xeus/xeus-cookiecutter
 .. _execute_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#execute
 .. _complete_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#completion
 .. _inspect_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#introspection
