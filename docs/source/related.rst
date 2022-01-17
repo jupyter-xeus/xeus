@@ -63,7 +63,8 @@ The `xeus-cookiecutter`_ project can be used to generated xeus-based Jupyter ker
 SlicerJupyter
 -------------
 
-The SlicerJupyter_ project is an integration of the xeus-python kernel in the 3D-Slicer desktop application.
+The SlicerJupyter_ project is an integration of the xeus-python kernel in the 3D-Slicer desktop application. SlicerJupyter is an example of application
+taking advantage of xeus to integrate a Jupyter kernel in the event loop of a Desktop application.
 
 xwidgets
 ---------
