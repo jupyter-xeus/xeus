@@ -16,4 +16,4 @@ dependencies:
   # Test dependencies
   - doctest >= 2.4.6
   - pytest
-  - jupyter_kernel_test=0.3.0
+  - jupyter_kernel_test=0.4.3
