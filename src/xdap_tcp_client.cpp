@@ -53,7 +53,31 @@ namespace xeus
 
     void xdap_tcp_client::forward_event(nl::json message)
     {
-        m_event_callback(message);
+        if (message["type"] == "event" && message["event"] == "stopped" && message["body"]["allThreadsStopped"])
+        {
+            int seq = message["seq"].get<int>() + 1;
+            nl::json req = {
+                {"seq", seq},
+                {"type", "request"},
+                {"command", "threads"}
+            };
+            send_dap_request(std::move(req));
+            auto rep = wait_for_message([](const nl::json& msg)
+            {
+                return msg["command"] == "threads";
+            });
+            nl::json new_message = message;
+            new_message["body"]["threadList"] = nl::json::array();
+            for (auto& th: rep["body"]["threads"])
+            {
+                new_message["body"]["threadList"].push_back(th["id"]);
+            }
+            m_event_callback(new_message);
+        }
+        else
+        {
+            m_event_callback(message);
+        }
         nl::json header = xeus::make_header("debug_event", m_user_name, m_session_id);
         nl::json parent_header = m_parent_header.empty() ? nl::json::object() : nl::json::parse(m_parent_header);
         xeus::xpub_message msg("debug_event",
