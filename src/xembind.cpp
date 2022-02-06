@@ -107,7 +107,7 @@ namespace xeus
 
         // the json part 
         // (and clear buffer to avoid costly serialization of  buffers)
-        js_message.set("bufers",ems::val::array());
+        js_message.set("buffers", ems::val::array());
         const auto m = json_from_js_object(js_message);
         message_base_data.m_header        = m["header"];
         message_base_data.m_parent_header = m["parent_header"];
@@ -130,7 +130,7 @@ namespace xeus
 
         // parse string as js message
         ems::val js_json_lib = ems::val::global("JSON");
-        ems::val js_msg  =  js_json_lib.call<ems::val>("parse", json_str_msg);
+        ems::val js_msg = js_json_lib.call<ems::val>("parse", json_str_msg);
 
         // c++  buffers to js arrays
         ems::val js_buffer_array = js_buffer_array_from_buffer_sequence(message.buffers(), copy);
@@ -163,13 +163,11 @@ namespace xeus
     //ems::val js_message_from_xmessage(const )
     void export_server_emscripten()
     {
+        ems::class_<xserver>("xserver");
 
-        ems::class_<xserver>("xserver")
-        ;
-
-        ems::class_<xserver_emscripten,  ems::base<xserver> >("xserver_emscripten")
-            .function("notify_listener" ,     &xserver_emscripten::js_notify_listener)
-            .function("register_js_callback" ,     &xserver_emscripten::register_js_callback)
+        ems::class_<xserver_emscripten, ems::base<xserver> >("xserver_emscripten")
+            .function("notify_listener", &xserver_emscripten::js_notify_listener)
+            .function("register_js_callback", &xserver_emscripten::register_js_callback)
         ;
     }
 

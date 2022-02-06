@@ -42,6 +42,7 @@ namespace xeus
         using xserver::notify_internal_listener;
 
         void register_js_callback(emscripten::val callback);
+
     protected:
 
         xcontrol_messenger& get_control_messenger_impl() override;
@@ -59,7 +60,7 @@ namespace xeus
         using trivial_messenger_ptr = std::unique_ptr<xtrivial_emscripten_messenger>;
         trivial_messenger_ptr p_messenger;
 
-        emscripten::val * p_js_callback;
+        emscripten::val* p_js_callback;
     };
 
 

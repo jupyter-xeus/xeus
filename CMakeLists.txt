@@ -74,7 +74,8 @@ endif()
 if(XEUS_EMSCRIPTEN_WASM_BUILD)
     SET(XEUS_BUILD_SHARED_LIBS OFF)
     SET(XEUS_BUILD_STATIC_LIBS ON)
-    # for the test build we need different flags
+    
+    # For the test build we need different flags
     # since we run the test from node and not the browser.
     # Therefore we need to change the ENVIRONMENT flag
     if(XEUS_EMSCRIPTEN_WASM_TEST_BUILD)
@@ -82,6 +83,11 @@ if(XEUS_EMSCRIPTEN_WASM_BUILD)
     else()
         include(XeusEmscriptenWasmFlags)
     endif()
+
+    set(XEUS_EMSCRIPTEN_WASM_FLAGS "${XEUS_EMSCRIPTEN_WASM_FLAGS} --bind --std=c++17")
+    set(XEUS_EMSCRIPTEN_WASM_FLAGS "${XEUS_EMSCRIPTEN_WASM_FLAGS} -s ASYNCIFY=1 -s 'ASYNCIFY_IMPORTS=[\"get_stdin\"]'")
+    set(XEUS_EMSCRIPTEN_WASM_FLAGS "${XEUS_EMSCRIPTEN_WASM_FLAGS} -s 'ASYNCIFY_STACK_SIZE=100000'")
+
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XEUS_EMSCRIPTEN_WASM_FLAGS}")
     set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}  ${XEUS_EMSCRIPTEN_WASM_FLAGS}")      
 endif()

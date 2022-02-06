@@ -13,8 +13,14 @@ namespace ems = emscripten;
 
 namespace xeus
 {
+    EM_JS(ems::EM_VAL, get_stdin, (), {
+      return Asyncify.handleAsync(() => {
+        return self.get_stdin().then(msg => {
+          return Emval.toHandle(msg);
+        });
+      });
+    });
 
-   
     xtrivial_emscripten_messenger::xtrivial_emscripten_messenger(xserver_emscripten* server)
     : p_server(server)
     {
@@ -33,7 +39,6 @@ namespace xeus
     :    p_messenger(new xtrivial_emscripten_messenger(this)),
     p_js_callback(nullptr)
     {
-
     }
 
     xserver_emscripten::~xserver_emscripten()
@@ -67,7 +72,6 @@ namespace xeus
         }
     }
 
-
     xcontrol_messenger& xserver_emscripten::get_control_messenger_impl() 
     {
         return *p_messenger;
@@ -94,7 +98,18 @@ namespace xeus
         if(p_js_callback != nullptr)
         {
             (*p_js_callback)(std::string("stdin"), 0, js_message_from_xmessage(message, true));
-        }  
+        }
+        // Block until a response to the input request is received.
+        ems::val js_message = ems::val::take_ownership(get_stdin());
+        try
+        {
+            auto reply = xmessage_from_js_message(js_message);
+            xserver::notify_stdin_listener(std::move(reply));
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
     }
 
     void xserver_emscripten::publish_impl(xpub_message message, channel c) 
@@ -113,7 +128,7 @@ namespace xeus
         }
         else
         {
-            throw std::runtime_error("callback is already registerd");
+            throw std::runtime_error("JS callback is already registered");
         }
     }
 
