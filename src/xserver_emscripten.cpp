@@ -15,10 +15,18 @@ namespace xeus
 {
     EM_JS(ems::EM_VAL, get_stdin, (), {
       return Asyncify.handleAsync(() => {
-        return self.get_stdin().then(msg => {
+        return globalThis.get_stdin().then(msg => {
           return Emval.toHandle(msg);
         });
       });
+    });
+
+    EM_JS(void, post_kernel_message, (const char* channel, ems::EM_VAL message_handle), {
+      var message = Emval.toValue(message_handle);
+      message.channel = UTF8ToString(channel);
+      if (typeof self !== 'undefined') {
+        self.postMessage(message);
+      }
     });
 
     xtrivial_emscripten_messenger::xtrivial_emscripten_messenger(xserver_emscripten* server)
@@ -36,17 +44,12 @@ namespace xeus
     }
 
     xserver_emscripten::xserver_emscripten(const xconfiguration& /*config*/)
-    :    p_messenger(new xtrivial_emscripten_messenger(this)),
-    p_js_callback(nullptr)
+    :    p_messenger(new xtrivial_emscripten_messenger(this))
     {
     }
 
     xserver_emscripten::~xserver_emscripten()
     {
-        if(p_js_callback!=nullptr)
-        {
-            delete p_js_callback;
-        }
     }
 
     void xserver_emscripten::js_notify_listener(ems::val js_message)
@@ -54,15 +57,15 @@ namespace xeus
         const std::string channel = js_message["channel"].as<std::string>();
         auto message = xmessage_from_js_message(js_message);
 
-        if(channel == std::string("shell"))
+        if(channel == "shell")
         {   
             this->notify_shell_listener(std::move(message));  
         }
-        else if(channel == std::string("control"))
+        else if(channel == "control")
         {
             this->notify_control_listener(std::move(message));  
         }
-        else if(channel == std::string("stdin"))
+        else if(channel == "stdin")
         {
             this->notify_stdin_listener(std::move(message));  
         }
@@ -79,26 +82,17 @@ namespace xeus
 
     void xserver_emscripten::send_shell_impl(xmessage message) 
     {
-        if(p_js_callback != nullptr)
-        {
-            (*p_js_callback)(std::string("shell"), 0, js_message_from_xmessage(message, true));
-        }
+        post_kernel_message("shell", js_message_from_xmessage(message, true).as_handle());
     }
 
     void xserver_emscripten::send_control_impl(xmessage message) 
     {
-        if(p_js_callback != nullptr)
-        {
-            (*p_js_callback)(std::string("control"), 0, js_message_from_xmessage(message, true));
-        }
+        post_kernel_message("control", js_message_from_xmessage(message, true).as_handle());
     }
 
     void xserver_emscripten::send_stdin_impl(xmessage message) 
     {
-        if(p_js_callback != nullptr)
-        {
-            (*p_js_callback)(std::string("stdin"), 0, js_message_from_xmessage(message, true));
-        }
+        post_kernel_message("stdin", js_message_from_xmessage(message, true).as_handle());
         // Block until a response to the input request is received.
         ems::val js_message = ems::val::take_ownership(get_stdin());
         try
@@ -112,34 +106,17 @@ namespace xeus
         }
     }
 
-    void xserver_emscripten::publish_impl(xpub_message message, channel c) 
+    void xserver_emscripten::publish_impl(xpub_message message, channel) 
     {
-        if(p_js_callback != nullptr)
-        {
-            (*p_js_callback)(std::string("publish"), c == channel::SHELL ? 0:1, js_message_from_xmessage(message, true));
-        }        
-    }
-
-    void xserver_emscripten::register_js_callback(emscripten::val callback)
-    {
-        if(p_js_callback == nullptr)
-        {   
-            p_js_callback = new emscripten::val(std::move(callback));
-        }
-        else
-        {
-            throw std::runtime_error("JS callback is already registered");
-        }
+        post_kernel_message("iopub", js_message_from_xmessage(message, true).as_handle());
     }
 
     void xserver_emscripten::start_impl(xpub_message  /*message*/) 
     {
-      
     }
 
     void xserver_emscripten::abort_queue_impl(const listener& /*l*/, long /*polling_interval*/) 
     {
-
     }
 
     void xserver_emscripten::stop_impl() 
