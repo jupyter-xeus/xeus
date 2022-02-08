@@ -77,6 +77,7 @@ namespace xeus
         zmq::multipart_t wire_msg = xzmq_serializer::serialize(std::move(msg), *p_auth, m_error_handler);
         wire_msg.send(m_stdin);
         zmq::multipart_t wire_reply;
+	// Block until a response to the input request is received.
         wire_reply.recv(m_stdin);
         try
         {
