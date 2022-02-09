@@ -167,7 +167,6 @@ namespace xeus
 
         ems::class_<xserver_emscripten, ems::base<xserver> >("xserver_emscripten")
             .function("notify_listener", &xserver_emscripten::js_notify_listener)
-            .function("register_js_callback", &xserver_emscripten::register_js_callback)
         ;
     }
 
