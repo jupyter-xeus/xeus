@@ -72,6 +72,7 @@ namespace xeus
         ~xkernel();
 
         void start();
+        void stop();
 
         const xconfiguration& get_config();
         xserver& get_server();

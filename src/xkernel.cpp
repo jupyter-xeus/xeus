@@ -165,6 +165,12 @@ namespace xeus
         p_server->start(std::move(start_msg));
     }
 
+    void xkernel::stop()
+    {
+        p_interpreter->shutdown_request();
+        p_server->stop();
+    }
+
     const xconfiguration& xkernel::get_config()
     {
         return m_config;
