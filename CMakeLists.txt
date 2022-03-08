@@ -69,31 +69,25 @@ else()
     set(OPENSSL_USE_STATIC_LIBS OFF CACHE BOOL "Not linking statically with OpenSSL")
 endif()
 
-# emscripten wasm build configuration
-# ==========================
+# Emscripten wasm build configuration
+# ===================================
+
 if(XEUS_EMSCRIPTEN_WASM_BUILD)
     SET(XEUS_BUILD_SHARED_LIBS OFF)
     SET(XEUS_BUILD_STATIC_LIBS ON)
     
-    # For the test build we need different flags
-    # since we run the test from node and not the browser.
-    # Therefore we need to change the ENVIRONMENT flag
+    # Tests are run in Node, while production builds in the browser.
     if(XEUS_EMSCRIPTEN_WASM_TEST_BUILD)
-        include(XeusTestEmscriptenWasmFlags)
+       add_compile_definitions(XEUS_EMSCRIPTEN_WASM_TEST_BUILD)
+       set(XEUS_EMSCRIPTEN_ENVIRONMENT "node")
     else()
-        include(XeusEmscriptenWasmFlags)
+       set(XEUS_EMSCRIPTEN_ENVIRONMENT "web,worker")
     endif()
-
-    set(XEUS_EMSCRIPTEN_WASM_FLAGS "${XEUS_EMSCRIPTEN_WASM_FLAGS} --bind --std=c++17")
-    set(XEUS_EMSCRIPTEN_WASM_FLAGS "${XEUS_EMSCRIPTEN_WASM_FLAGS} -s ASYNCIFY=1 -s 'ASYNCIFY_IMPORTS=[\"get_stdin\"]'")
-    set(XEUS_EMSCRIPTEN_WASM_FLAGS "${XEUS_EMSCRIPTEN_WASM_FLAGS} -s 'ASYNCIFY_STACK_SIZE=100000'")
-
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XEUS_EMSCRIPTEN_WASM_FLAGS}")
-    set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}  ${XEUS_EMSCRIPTEN_WASM_FLAGS}")      
 endif()
 
-# print build configuration
+# Print build configuration
 # ==========================
+
 message(STATUS "XEUS_DISABLE_ARCH_NATIVE:        ${XEUS_DISABLE_ARCH_NATIVE}")
 message(STATUS "XEUS_BUILD_SHARED_LIBS:          ${XEUS_BUILD_SHARED_LIBS}")
 message(STATUS "XEUS_BUILD_STATIC_LIBS:          ${XEUS_BUILD_STATIC_LIBS}")
@@ -101,7 +95,6 @@ message(STATUS "XEUS_STATIC_DEPENDENCIES:        ${XEUS_STATIC_DEPENDENCIES}")
 message(STATUS "XEUS_EMSCRIPTEN_WASM_BUILD:      ${XEUS_EMSCRIPTEN_WASM_BUILD}")
 message(STATUS "XEUS_BUILD_TESTS:                ${XEUS_BUILD_TESTS}")  
 message(STATUS "XEUS_EMSCRIPTEN_WASM_TEST_BUILD: ${XEUS_EMSCRIPTEN_WASM_TEST_BUILD}")
-
 
 # Dependencies
 # ============
@@ -175,7 +168,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xsystem.hpp
 )
 
-# headers only related to the zmq based server
+# Headers related to the zmq-based server
 set(XEUS_HEADERS_ZMQ_SERVER
     ${XEUS_INCLUDE_DIR}/xeus/xauthentication.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xdebugger_base.hpp
@@ -188,8 +181,7 @@ set(XEUS_HEADERS_ZMQ_SERVER
     ${XEUS_INCLUDE_DIR}/xeus/xzmq_serializer.hpp
 )
 
-
-# headers only related to the emscripten wasm server
+# Headers related to the emscripten wasm server
 set(XEUS_HEADERS_EMSCRIPTEN_WASM_SERVER
     ${XEUS_INCLUDE_DIR}/xeus/xembind.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver_emscripten.hpp
@@ -205,7 +197,7 @@ else()
     )
 endif()
 
-# sources only related to the zmq based server
+# Sources only related to the zmq based server
 set(XEUS_SOURCES_ZMQ_SERVER
     ${XEUS_SOURCE_DIR}/xauthentication.cpp
     ${XEUS_SOURCE_DIR}/xcontrol.hpp
@@ -230,13 +222,13 @@ set(XEUS_SOURCES_ZMQ_SERVER
     ${XEUS_SOURCE_DIR}/xtrivial_messenger.cpp
 )
 
-# sources only related to the emscripten wasm server
+# Sources only related to the emscripten wasm server
 set(XEUS_SOURCES_EMSCRIPTEN_WASM_SERVER
     ${XEUS_SOURCE_DIR}/xembind.cpp
     ${XEUS_SOURCE_DIR}/xserver_emscripten.cpp
 )
 
-# sources for both emscripten and zmq based server
+# Sources for both emscripten and zmq based server
 set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xcomm.cpp
     ${XEUS_SOURCE_DIR}/xcontrol_messenger.cpp
@@ -408,10 +400,43 @@ macro(xeus_create_target target_name linkage output_name)
             target_link_libraries(${target_name} PRIVATE ${CMAKE_DL_LIBS})
         endif ()
         if (UNIX AND NOT APPLE)
-            target_link_libraries(${target_name} PRIVATE  util rt)
+            target_link_libraries(${target_name} PRIVATE util rt)
         endif ()
     endif ()
 
+    if (XEUS_EMSCRIPTEN_WASM_BUILD)
+       target_compile_definitions(${target_name} PRIVATE XEUS_EMSCRIPTEN_WASM_BUILD)
+
+       target_compile_options(${target_name}
+         PUBLIC --std=c++17
+         PUBLIC -Wno-deprecated
+         PUBLIC "SHELL: -s USE_PTHREADS=0"
+         PUBLIC "SHELL: -s DISABLE_EXCEPTION_CATCHING=0"
+       )
+
+       target_link_options(${target_name}
+         PUBLIC --bind
+         PUBLIC -Wno-unused-command-line-argument
+         PUBLIC "SHELL: -s MODULARIZE=1"
+         PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
+         PUBLIC "SHELL: -s EXPORT_ES6=0"
+         PUBLIC "SHELL: -s USE_ES6_IMPORT_META=0"
+         PUBLIC "SHELL: -s DEMANGLE_SUPPORT=0"
+         PUBLIC "SHELL: -s ASSERTIONS=0"
+         PUBLIC "SHELL: -s ALLOW_MEMORY_GROWTH=1"
+         PUBLIC "SHELL: -s EXIT_RUNTIME=1"
+         PUBLIC "SHELL: -s WASM=1"
+         PUBLIC "SHELL: -s USE_PTHREADS=0"
+         PUBLIC "SHELL: -s DISABLE_EXCEPTION_CATCHING=0"
+         PUBLIC "SHELL: -s ENVIRONMENT=${XEUS_EMSCRIPTEN_ENVIRONMENT}"
+       )
+
+       target_link_options(${target_name}
+	 INTERFACE "SHELL: -s ASYNCIFY=1"
+	 INTERFACE "SHELL: -s 'ASYNCIFY_IMPORTS=[\"get_stdin\"]'"
+	 INTERFACE "SHELL: -s 'ASYNCIFY_STACK_SIZE=100000'"
+       )
+    endif()
 endmacro()
 
 set(xeus_targets "")
@@ -500,8 +525,6 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Conf
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
               ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibUUID.cmake
-              ${CMAKE_CURRENT_SOURCE_DIR}/cmake/XeusEmscriptenWasmFlags.cmake
-              ${CMAKE_CURRENT_SOURCE_DIR}/cmake/XeusTestEmscriptenWasmFlags.cmake
               DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 install(EXPORT ${PROJECT_NAME}-targets
         FILE ${PROJECT_NAME}Targets.cmake
