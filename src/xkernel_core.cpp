@@ -196,7 +196,7 @@ namespace xeus
         if (handler == nullptr)
         {
             std::cerr << "ERROR: received unknown message" << std::endl;
-            std::cerr << "Message type: msg_type" << std::endl;
+            std::cerr << "Message type: " << msg_type << std::endl;
         }
         else
         {
@@ -207,7 +207,7 @@ namespace xeus
             catch (std::exception& e)
             {
                 std::cerr << "ERROR: received bad message: " << e.what() << std::endl;
-                std::cerr << "Message content: " << msg.content() << std::endl;
+                std::cerr << "Message type: " << msg_type << std::endl;
             }
         }
 
