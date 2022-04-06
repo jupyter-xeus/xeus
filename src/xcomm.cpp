@@ -69,6 +69,13 @@ namespace xeus
 
         if (position == m_targets.end())
         {
+            // Directly close the comm, as specified in the protocol
+            if (p_kernel != nullptr)
+            {
+                p_kernel->publish_message(
+                    "comm_close", nl::json::object(), std::move(content), buffer_sequence(), channel::SHELL
+                );
+            }
             throw std::runtime_error("No such comm target registered: " + target_name);
         }
         else
@@ -87,7 +94,7 @@ namespace xeus
         auto position = m_comms.find(id);
         if (position == m_comms.end())
         {
-            throw std::runtime_error("No such comm registered: " + id);
+            throw std::runtime_error("No such comm registered: " + std::string(id));
         }
         else
         {
@@ -103,7 +110,7 @@ namespace xeus
         auto position = m_comms.find(id);
         if (position == m_comms.end())
         {
-            throw std::runtime_error("No such comm registered: " + id);
+            throw std::runtime_error("No such comm registered: " + std::string(id));
         }
         else
         {
