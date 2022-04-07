@@ -76,7 +76,6 @@ namespace xeus
                     "comm_close", nl::json::object(), std::move(content), buffer_sequence(), channel::SHELL
                 );
             }
-            throw std::runtime_error("No such comm target registered: " + target_name);
         }
         else
         {
