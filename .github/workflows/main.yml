@@ -134,7 +134,7 @@ jobs:
           max_attempts: 4
           shell: cmd
           command: |
-            call C:\Users\runneradmin\micromamba\condabin\micromamba.bat activate xeus
+            call C:\Users\runneradmin\micromamba-root\condabin\micromamba.bat activate xeus
             set PATH=%CONDA_PREFIX%;%CONDA_PREFIX%\\Scripts;%CONDA_PREFIX%\\Library;%CONDA_PREFIX%\\Library\\bin;%PATH%
             cd build
             ctest --output-on-failure
