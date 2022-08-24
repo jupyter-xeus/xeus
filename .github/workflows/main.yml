@@ -10,9 +10,9 @@ on:
 
 jobs:
   unix:
-    
+
     runs-on: ${{ matrix.os }}
-     
+
     strategy:
       fail-fast: false
       matrix:
@@ -54,13 +54,13 @@ jobs:
            -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
            -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
            -DXEUS_STATIC_DEPENDENCIES=${{ matrix.xeus_static_dependencies }} \
-           -DXEUS_BUILD_SHARED_LIBS=${{ matrix.xeus_build_shared_lib }} 
+           -DXEUS_BUILD_SHARED_LIBS=${{ matrix.xeus_build_shared_lib }}
 
       - name: build
         shell: bash -l {0}
         run: |
           cd build
-          make -j 2 
+          make -j 2
           # make -j ${{ steps.cpu-cores.outputs.count }}
 
       - name: Test xeus
@@ -81,7 +81,7 @@ jobs:
           make install
 
   win:
-    
+
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -98,33 +98,34 @@ jobs:
           environment-file: environment-dev.yml
           environment-name: xeus
 
-      - name: install cxx compiler
-        shell: cmd /C call {0}
+      - name: micromamba shell hook
+        shell: powershell
         run: |
-          micromamba activate xeus
-          micromamba install cxx-compiler -c conda-forge -y
+          micromamba shell hook -s cmd.exe -p C:\Users\runneradmin\micromamba-root
+
+      - name: Make build directory
+        run: mkdir build
 
       - name: cmake configure
-        shell: cmd /C call {0}
+        shell: cmd
         run: |
-          micromamba activate xeus
-          mkdir -p build
-          cd build
+          call C:\Users\runneradmin\micromamba-root\condabin\micromamba.bat activate xeus
           cmake .. ^
-           -G "NMake Makefiles" ^
+           -G Ninja ^
            -DCMAKE_BUILD_TYPE=Release ^
            -DXEUS_BUILD_TESTS=ON ^
            -DDEPENDENCY_SEARCH_PREFIX="%CONDA_PREFIX%\Library" ^
            -DCMAKE_PREFIX_PATH="%CONDA_PREFIX%\Library" ^
-           -DCMAKE_INSTALL_PREFIX="%CONDA_PREFIX%" 
+           -DCMAKE_INSTALL_PREFIX="%CONDA_PREFIX%"
+        working-directory: build
 
       - name: build
-        shell: cmd /C call {0}
+        shell: cmd
         run: |
-          micromamba activate xeus
-          cd build
+          call C:\Users\runneradmin\micromamba-root\condabin\micromamba.bat activate xeus
           set CL=/MP
-          nmake install
+          ninja install
+        working-directory: build
 
       - name: ctest
         uses: nick-invision/retry@v2
@@ -139,31 +140,31 @@ jobs:
             ctest --output-on-failure
 
       - name: build example -- cmake configure
-        shell: cmd /C call {0}
+        shell: cmd
         run: |
-          micromamba activate xeus
+          call C:\Users\runneradmin\micromamba-root\condabin\micromamba.bat activate xeus
           cd example
           mkdir -p build
           cd build
           cmake .. ^
-           -G "NMake Makefiles" ^
+           -G Ninja ^
            -DCMAKE_BUILD_TYPE=Release ^
            -DDEPENDENCY_SEARCH_PREFIX="%CONDA_PREFIX%\Library" ^
            -DCMAKE_PREFIX_PATH="%CONDA_PREFIX%\Library"
 
       - name: build example -- build
-        shell: cmd /C call {0}
+        shell: cmd
         run: |
-          micromamba activate xeus
+          call C:\Users\runneradmin\micromamba-root\condabin\micromamba.bat activate xeus
           cd example
           cd build
           set CL=/MP
-          nmake
+          ninja
 
   emscripten_wasm:
 
     runs-on: ubuntu-20.04
-    
+
     strategy:
       fail-fast: false
       matrix:
@@ -174,4 +175,3 @@ jobs:
       - run: |
           chmod +x test/test_emscripten.sh
           ./test/test_emscripten.sh BUILD ${{ matrix.emsdk }}
-

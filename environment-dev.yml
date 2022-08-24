@@ -4,13 +4,15 @@ channels:
 dependencies:
   # Build dependencies
   - cmake
+  - cxx-compiler
+  - ninja
   - pkg-config
   # Host dependencies
   - zeromq=4.3.3
-  - zeromq-static=4.3.3 
+  - zeromq-static=4.3.3
   - cppzmq=4.7.1
   - xtl=0.7
-  - OpenSSL=1 
+  - OpenSSL=1
   - libopenssl-static=1
   - nlohmann_json
   # Test dependencies
