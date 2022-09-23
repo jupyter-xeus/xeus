@@ -55,6 +55,16 @@ xeus-lua
 
 The `xeus-lua`_ project is a Jupyter kernel for Lua.
 
+xeus-octave
+~~~~~~~~~~~
+
+The `xeus-octave`_ project is a Jupyter kernel for GNU Octave.
+
+xeus-wren
+~~~~~~~~~
+
+The `xeus-wren`_ project is a Jupyter kernel for Wren.
+
 xeus-cookiecutter
 -----------------
 
@@ -84,8 +94,11 @@ Jupyter interactive widgets without the C++ kernel per se.
 .. _xeus-cling: https://github.com/jupyter-xeus/xeus-cling
 .. _xeus-python: https://github.com/jupyter-xeus/xeus-python
 .. _xeus-sqlite: https://github.com/jupyter-xeus/xeus-sqlite
+.. _xeus-sql: https://github.com/jupyter-xeus/xeus-sql
 .. _xeus-robot: https://github.com/jupyter-xeus/xeus-robot
 .. _xeus-lua: https://github.com/jupyter-xeus/xeus-lua
+.. _xeus-wren: https://github.com/jupyter-xeus/xeus-wren
+.. _xeus-octave: https://github.com/jupyter-xeus/xeus-octave
 .. _xeus-cookiecutter: https://github.com/jupyter-xeus/xeus-cookiecutter
 .. _SlicerJupyter: https://github.com/Slicer/SlicerJupyter
 .. _xwidgets: https://github.com/QuantStack/xwidgets

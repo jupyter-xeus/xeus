@@ -47,7 +47,6 @@ A dummy kernel is provided as an example_ and a more advanced example kernel can
 You can also find real kernel implementations based on xeus:
   - `xeus-cling <https://github.com/jupyter-xeus/xeus-cling>`_: C++ kernel
   - `xeus-python <https://github.com/jupyter-xeus/xeus-python>`_: Python kernel
-  - `JuniperKernel <https://github.com/JuniperKernel/JuniperKernel>`_: R kernel
 
 .. _example: https://github.com/jupyter-xeus/xeus/tree/master/example
 .. _here: https://github.com/jupyter-xeus/xeus-calc/
