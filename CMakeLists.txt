@@ -270,6 +270,7 @@ endif()
 # ================
 
 include(CheckCXXCompilerFlag)
+include(cmake/CompilerWarnings.cmake)
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 
@@ -367,12 +368,11 @@ macro(xeus_create_target target_name linkage output_name)
     # =================
 
     target_compile_features(${target_name} PRIVATE cxx_std_14)
+    xeus_target_add_compile_warnings(${target_name} OPTION_PREFIX XEUS)
 
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
         CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
         CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-
-        target_compile_options(${target_name} PUBLIC -Wunused-parameter -Wextra -Wreorder)
 
         if (NOT XEUS_DISABLE_ARCH_NATIVE)
             target_compile_options(${target_name} PUBLIC -march=native)
