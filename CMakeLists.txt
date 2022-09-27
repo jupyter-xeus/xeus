@@ -337,6 +337,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
               ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibUUID.cmake
               ${CMAKE_CURRENT_SOURCE_DIR}/cmake/WasmBuildOptions.cmake
+              ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CompilerWarnings.cmake
               DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 install(EXPORT ${PROJECT_NAME}-targets
         FILE ${PROJECT_NAME}Targets.cmake
