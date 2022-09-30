@@ -58,17 +58,6 @@ option(XEUS_EMSCRIPTEN_WASM_BUILD  "build for wasm via emscripten" OFF)
 option(XEUS_BUILD_TESTS "xeus test suite" OFF)
 option(XEUS_EMSCRIPTEN_WASM_TEST_BUILD "indicate that the wasm build is as test build (will use node as environment)" OFF)
 
-# Static build configuration
-# ==========================
-
-if (XEUS_STATIC_DEPENDENCIES)
-    set(CPPZMQ_TARGET_NAME cppzmq-static)
-    set(OPENSSL_USE_STATIC_LIBS ON CACHE BOOL "Linking statically with OpenSSL")
-else()
-    set(CPPZMQ_TARGET_NAME cppzmq)
-    set(OPENSSL_USE_STATIC_LIBS OFF CACHE BOOL "Not linking statically with OpenSSL")
-endif()
-
 # Emscripten wasm build configuration
 # ===================================
 
@@ -101,8 +90,6 @@ message(STATUS "XEUS_EMSCRIPTEN_WASM_TEST_BUILD: ${XEUS_EMSCRIPTEN_WASM_TEST_BUI
 
 set(nlohmann_json_REQUIRED_VERSION 3.2.0)
 set(xtl_REQUIRED_VERSION 0.7)
-set(cppzmq_REQUIRED_VERSION 4.4.1)
-set(zeromq_REQUIRED_VERSION 4.3.2)
 
 if (NOT TARGET nlohmann_json)
     find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
@@ -111,39 +98,6 @@ endif ()
 if (NOT TARGET xtl)
     find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
 endif ()
-
-# for the wasm / emscripten build no zmq is needed 
-if(NOT XEUS_EMSCRIPTEN_WASM_BUILD)
-    if (NOT TARGET cppzmq AND NOT TARGET cppzmq-static)
-        find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
-    endif ()
-
-    if (NOT TARGET libzmq AND NOT TARGET libzmq-static)
-        if (WIN32)
-            find_package(zeromq ${zeromq_REQUIRED_VERSION} REQUIRED)
-        else ()
-            find_package(zeromq ${zeromq_REQUIRED_VERSION} QUIET)
-
-            if (NOT ZeroMQ_FOUND)
-                message(STATUS "CMake libzmq package not found, trying again with pkg-config")
-                find_package(PkgConfig)
-                pkg_check_modules(ZeroMQ libzmq>=${zeromq_REQUIRED_VERSION} REQUIRED)
-                set(ZeroMQ_VERSION ${PC_LIBZMQ_VERSION})
-                find_library(ZeroMQ_LIBRARY NAMES libzmq.so libzmq.dylib libzmq.dll
-                     PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
-                find_library(ZeroMQ_STATIC_LIBRARY NAMES libzmq-static.a libzmq.a libzmq.dll.a
-                     PATHS ${PC_LIBZMQ_LIBDIR} ${PC_LIBZMQ_LIBRARY_DIRS})
-                message(STATUS "STATIC_LIBRARY" {ZeroMQ_LIBRARY})
-                message(STATUS "STATIC_STATIC_LIBRARY" {ZeroMQ_STATIC_LIBRARY})
-             endif ()
-        endif ()
-    endif ()
-
-    if (NOT DEFINED OPENSSL_LIBRARY)
-        set(OPENSSL_ROOT_DIR ${CMAKE_INSTALL_PREFIX})
-        find_package(OpenSSL REQUIRED)
-    endif ()
-endif()
 
 # Source files
 # ============
@@ -166,66 +120,6 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xhelper.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xsystem.hpp
-)
-
-# Headers related to the zmq-based server
-set(XEUS_HEADERS_ZMQ_SERVER
-    ${XEUS_INCLUDE_DIR}/xeus/xauthentication.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xdebugger_base.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xdap_tcp_client.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xserver_control_main.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xmiddleware.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xserver_shell_main.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xserver_zmq_split.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xzmq_serializer.hpp
-)
-
-# Headers related to the emscripten wasm server
-set(XEUS_HEADERS_EMSCRIPTEN_WASM_SERVER
-    ${XEUS_INCLUDE_DIR}/xeus/xembind.hpp
-    ${XEUS_INCLUDE_DIR}/xeus/xserver_emscripten.hpp
-)
-
-if(XEUS_EMSCRIPTEN_WASM_BUILD)
-    set(XEUS_HEADERS ${XEUS_HEADERS} 
-        ${XEUS_HEADERS_EMSCRIPTEN_WASM_SERVER}
-    )
-else()
-    set(XEUS_HEADERS ${XEUS_HEADERS} 
-        ${XEUS_HEADERS_ZMQ_SERVER}
-    )
-endif()
-
-# Sources only related to the zmq based server
-set(XEUS_SOURCES_ZMQ_SERVER
-    ${XEUS_SOURCE_DIR}/xauthentication.cpp
-    ${XEUS_SOURCE_DIR}/xcontrol.hpp
-    ${XEUS_SOURCE_DIR}/xcontrol.cpp
-    ${XEUS_SOURCE_DIR}/xdap_tcp_client.cpp
-    ${XEUS_SOURCE_DIR}/xdebugger_base.cpp
-    ${XEUS_SOURCE_DIR}/xheartbeat.cpp
-    ${XEUS_SOURCE_DIR}/xheartbeat.hpp
-    ${XEUS_SOURCE_DIR}/xzmq_messenger.hpp
-    ${XEUS_SOURCE_DIR}/xzmq_messenger.cpp
-    ${XEUS_SOURCE_DIR}/xzmq_serializer.cpp
-    ${XEUS_SOURCE_DIR}/xmiddleware.cpp
-    ${XEUS_SOURCE_DIR}/xpublisher.cpp
-    ${XEUS_SOURCE_DIR}/xpublisher.hpp
-    ${XEUS_SOURCE_DIR}/xserver_control_main.cpp
-    ${XEUS_SOURCE_DIR}/xserver_shell_main.cpp
-    ${XEUS_SOURCE_DIR}/xserver_zmq.cpp
-    ${XEUS_SOURCE_DIR}/xserver_zmq_split.cpp
-    ${XEUS_SOURCE_DIR}/xshell.hpp
-    ${XEUS_SOURCE_DIR}/xshell.cpp
-    ${XEUS_SOURCE_DIR}/xtrivial_messenger.hpp
-    ${XEUS_SOURCE_DIR}/xtrivial_messenger.cpp
-)
-
-# Sources only related to the emscripten wasm server
-set(XEUS_SOURCES_EMSCRIPTEN_WASM_SERVER
-    ${XEUS_SOURCE_DIR}/xembind.cpp
-    ${XEUS_SOURCE_DIR}/xserver_emscripten.cpp
 )
 
 # Sources for both emscripten and zmq based server
@@ -255,32 +149,12 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xsystem.cpp
 )
 
-if(XEUS_EMSCRIPTEN_WASM_BUILD)
-    set(XEUS_SOURCES ${XEUS_SOURCES} 
-        ${XEUS_SOURCES_EMSCRIPTEN_WASM_SERVER}
-    )
-else()
-    set(XEUS_SOURCES ${XEUS_SOURCES} 
-        ${XEUS_SOURCES_ZMQ_SERVER}
-    )
-endif()
-
-
 # Targets and link
 # ================
 
 include(CheckCXXCompilerFlag)
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
-
-if (XEUS_STATIC_DEPENDENCIES AND NOT MSVC AND NOT APPLE)
-	# Explicitly finds and links with libsodium.a
-	# because it is not exported as a dependency by
-	# the static build of libzmq. Remove this when
-	# it is fixed upstream.
-	set(sodium_USE_STATIC_LIBS ON)
-	find_package(sodium REQUIRED)
-endif ()
 
 macro(xeus_create_target target_name linkage output_name)
     string(TOUPPER "${linkage}" linkage_upper)
@@ -300,21 +174,11 @@ macro(xeus_create_target target_name linkage output_name)
         $<INSTALL_INTERFACE:include>
     )
 
-    if(NOT XEUS_EMSCRIPTEN_WASM_BUILD)  
-        target_link_libraries(
-            ${target_name}
-            PUBLIC ${CPPZMQ_TARGET_NAME}
-            PUBLIC nlohmann_json::nlohmann_json
-            PUBLIC xtl
-        )
-        target_link_libraries(${target_name} PUBLIC OpenSSL::Crypto)
-    else()
-        target_link_libraries(
-            ${target_name}
-            PUBLIC nlohmann_json::nlohmann_json
-            PUBLIC xtl
-        )
-    endif()
+    target_link_libraries(
+        ${target_name}
+        PUBLIC nlohmann_json::nlohmann_json
+        PUBLIC xtl
+    )
 
     if (NOT MSVC AND NOT XEUS_EMSCRIPTEN_WASM_BUILD)
         if (APPLE)
@@ -325,7 +189,6 @@ macro(xeus_create_target target_name linkage output_name)
                 find_library(LIBUUID_LIBRARY libuuid.a)
                 target_include_directories(${target_name} PRIVATE ${LIBUUID_INCLUDE_DIR})
                 target_link_libraries(${target_name} PUBLIC ${LIBUUID_LIBRARY}) 
-                target_link_libraries(${target_name} PUBLIC ${sodium_LIBRARY_RELEASE})
             else ()
                 find_package(LibUUID REQUIRED)
                 target_link_libraries(${target_name} PUBLIC LibUUID::LibUUID)
@@ -443,13 +306,6 @@ set(xeus_targets "")
 
 if (XEUS_BUILD_SHARED_LIBS)
     xeus_create_target(xeus SHARED xeus)
-    if(CMAKE_TARGET_SYSTEM MATCHES "Linux" AND OPENSSL_USE_STATIC_LIBS)
-        # Do not reexport OpenSSL symbols from xeus, for libraries
-        #   Prevents conflicts with other versions of OpenSSL
-        #   loaded in the same process namespace, which can cause
-        #   crashes if the versions are not compatible.
-        set_target_properties(xeus PROPERTIES LINK_FLAGS "-Wl,--exclude-libs,libcrypto.a")
-    endif()
     list(APPEND xeus_targets xeus)
 endif ()
 
@@ -473,7 +329,7 @@ endif ()
 
 include(CTest)
 
-if(XEUS_DOWNLOAD_GTEST OR GTEST_SRC_DIR OR XEUS_BUILD_TESTS)
+if(XEUS_BUILD_TESTS)
     set(BUILD_TESTING ON)
     message(STATUS "tests enabled")
 else ()
@@ -482,7 +338,7 @@ else ()
 endif()
 
 if(BUILD_TESTING)
-    add_subdirectory(test)
+    #add_subdirectory(test)
 endif()
 
 # Installation
