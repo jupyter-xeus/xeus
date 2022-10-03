@@ -14,7 +14,7 @@
 #include <iomanip>
 
 #include "xeus/xguid.hpp"
-#include "xstring_utils.hpp"
+#include "xeus/xstring_utils.hpp"
 
 #ifdef GUID_LIBUUID
 #include <uuid/uuid.h>

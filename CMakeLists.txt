@@ -119,6 +119,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xmessage.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xhelper.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xserver.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xstring_utils.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xsystem.hpp
 )
 
@@ -145,7 +146,6 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xmock_interpreter.cpp
     ${XEUS_SOURCE_DIR}/xmock_interpreter.hpp
     ${XEUS_SOURCE_DIR}/xserver.cpp
-    ${XEUS_SOURCE_DIR}/xstring_utils.hpp
     ${XEUS_SOURCE_DIR}/xsystem.cpp
 )
 
