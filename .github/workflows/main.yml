@@ -138,3 +138,17 @@ jobs:
             cd build
             ctest --output-on-failure
 
+  emscripten_wasm:
+
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        emsdk: ["2.0.32", "latest"]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker-practice/actions-setup-docker@master
+      - run: |
+          chmod +x build_emscripten.sh
+          ./build_emscripten.sh BUILD ${{ matrix.emsdk }}
