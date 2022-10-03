@@ -56,7 +56,6 @@ option(XEUS_EMSCRIPTEN_WASM_BUILD  "build for wasm via emscripten" OFF)
 
 # Test options
 option(XEUS_BUILD_TESTS "xeus test suite" OFF)
-option(XEUS_EMSCRIPTEN_WASM_TEST_BUILD "indicate that the wasm build is as test build (will use node as environment)" OFF)
 
 # Emscripten wasm build configuration
 # ===================================
@@ -64,14 +63,7 @@ option(XEUS_EMSCRIPTEN_WASM_TEST_BUILD "indicate that the wasm build is as test 
 if(XEUS_EMSCRIPTEN_WASM_BUILD)
     SET(XEUS_BUILD_SHARED_LIBS OFF)
     SET(XEUS_BUILD_STATIC_LIBS ON)
-    
-    # Tests are run in Node, while production builds in the browser.
-    if(XEUS_EMSCRIPTEN_WASM_TEST_BUILD)
-       add_compile_definitions(XEUS_EMSCRIPTEN_WASM_TEST_BUILD)
-       set(XEUS_EMSCRIPTEN_ENVIRONMENT "node")
-    else()
-       set(XEUS_EMSCRIPTEN_ENVIRONMENT "web,worker")
-    endif()
+    set(XEUS_EMSCRIPTEN_ENVIRONMENT "web,worker")
 endif()
 
 # Print build configuration
@@ -82,7 +74,6 @@ message(STATUS "XEUS_BUILD_STATIC_LIBS:          ${XEUS_BUILD_STATIC_LIBS}")
 message(STATUS "XEUS_STATIC_DEPENDENCIES:        ${XEUS_STATIC_DEPENDENCIES}")  
 message(STATUS "XEUS_EMSCRIPTEN_WASM_BUILD:      ${XEUS_EMSCRIPTEN_WASM_BUILD}")
 message(STATUS "XEUS_BUILD_TESTS:                ${XEUS_BUILD_TESTS}")  
-message(STATUS "XEUS_EMSCRIPTEN_WASM_TEST_BUILD: ${XEUS_EMSCRIPTEN_WASM_TEST_BUILD}")
 
 # Dependencies
 # ============
