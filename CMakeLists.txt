@@ -77,7 +77,6 @@ endif()
 # Print build configuration
 # ==========================
 
-message(STATUS "XEUS_DISABLE_ARCH_NATIVE:        ${XEUS_DISABLE_ARCH_NATIVE}")
 message(STATUS "XEUS_BUILD_SHARED_LIBS:          ${XEUS_BUILD_SHARED_LIBS}")
 message(STATUS "XEUS_BUILD_STATIC_LIBS:          ${XEUS_BUILD_STATIC_LIBS}")
 message(STATUS "XEUS_STATIC_DEPENDENCIES:        ${XEUS_STATIC_DEPENDENCIES}")  
@@ -234,13 +233,7 @@ macro(xeus_create_target target_name linkage output_name)
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
         CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
         CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-
         target_compile_options(${target_name} PUBLIC -Wunused-parameter -Wextra -Wreorder)
-
-        if (NOT XEUS_DISABLE_ARCH_NATIVE)
-            target_compile_options(${target_name} PUBLIC -march=native)
-        endif ()
-
         message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
     endif()
 
