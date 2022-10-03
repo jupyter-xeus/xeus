@@ -90,13 +90,16 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 ## Building from Source
 
-`xeus` depends on the following libraries: [`ZeroMQ`](https://github.com/zeromq/libzmq),
-[`cppzmq`](https://github.com/zeromq/cppzmq), [`OpenSSL`](https://github.com/openssl/openssl),
-[`nlohmann_json`](https://github.com/nlohmann/json), and [`xtl`](https://github.com/xtensor-stack/xtl).
+`xeus` depends on the following libraries: [`nlohmann_json`](https://github.com/nlohmann/json) and [`xtl`](https://github.com/xtensor-stack/xtl).
+
+Versions prior to version 3 also depend on the following libraries: [`ZeroMQ`](https://github.com/zeromq/libzmq),
+[`cppzmq`](https://github.com/zeromq/cppzmq), and [`OpenSSL`](https://github.com/openssl/openssl).
+
 
 |  xeus   | ZeroMQ  | cppzmq  |   xtl          | nlohmann json | OpenSSL |
 |---------|---------|---------|----------------|---------------|---------|
-| master  |  ^4.2.5 |  ^4.7.1 | >=0.7.0,<0.8.0 |      ^3.2.0   |  ^1.0.1 |
+| master  |    ND   |    ND   | >=0.7.0,<0.8.0 |      ^3.2.0   |    ND   |
+| 3.0.0   |    ND   |    ND   | >=0.7.0,<0.8.0 |      ^3.2.0   |    ND   |
 | 2.4.1   |  ^4.2.5 |  ^4.7.1 | >=0.7.0,<0.8.0 |      ^3.2.0   |  ^1.0.1 |
 | 2.4.0   |  ^4.2.5 |  ^4.7.1 | >=0.7.0,<0.8.0 |      ^3.2.0   |  ^1.0.1 |
 | 2.3.1   |  ^4.2.5 |  ^4.7.1 | >=0.7.0,<0.8.0 |      ^3.2.0   |  ^1.0.1 |
