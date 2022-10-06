@@ -92,7 +92,6 @@ endif ()
 # Source files
 # ============
 
-# headers for both zmq and emscripten based server
 set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xcomm.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xcontrol_messenger.hpp
@@ -113,7 +112,6 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xsystem.hpp
 )
 
-# Sources for both emscripten and zmq based server
 set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xcomm.cpp
     ${XEUS_SOURCE_DIR}/xcontrol_messenger.cpp
