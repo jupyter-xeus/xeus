@@ -14,6 +14,12 @@ function(xeus_target_add_compile_warnings target)
     set(multiValueArgs)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
+    # Setting default value for ARG_OPTION_PREFIX
+    if(NOT DEFINED ARG_OPTION_PREFIX)
+        string(TOUPPER ${CMAKE_PROJECT_NAME} ARG_OPTION_PREFIX)
+        string(REPLACE "-" " _" ${ARG_OPTION_PREFIX} ARG_OPTION_PREFIX)
+    endif()
+
     set(WARNINGS_AS_ERRORS_NAME ${ARG_OPTION_PREFIX}_WARNINGS_AS_ERRORS)
     option(${WARNINGS_AS_ERRORS_NAME} "Treat compiler warnings as errors" OFF)
 

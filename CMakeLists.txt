@@ -220,7 +220,7 @@ macro(xeus_create_target target_name linkage output_name)
     # =================
 
     target_compile_features(${target_name} PRIVATE cxx_std_14)
-    xeus_target_add_compile_warnings(${target_name} OPTION_PREFIX XEUS)
+    xeus_target_add_compile_warnings(${target_name})
 
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
         CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
