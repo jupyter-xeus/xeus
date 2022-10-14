@@ -27,8 +27,6 @@ set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
 
 include(CheckCXXCompilerFlag)
 
-string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
-
 if(nlohmann_json_FOUND)
   add_definitions(-DHAVE_NLOHMANN_JSON)
 endif()
