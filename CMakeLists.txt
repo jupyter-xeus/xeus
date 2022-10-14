@@ -257,28 +257,6 @@ macro(xeus_create_target target_name linkage output_name)
          PUBLIC "SHELL: -s USE_PTHREADS=0"
          PUBLIC "SHELL: -s DISABLE_EXCEPTION_CATCHING=0"
        )
-
-       target_link_options(${target_name}
-         PUBLIC --bind
-         PUBLIC -Wno-unused-command-line-argument
-         PUBLIC "SHELL: -s MODULARIZE=1"
-         PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
-         PUBLIC "SHELL: -s EXPORT_ES6=0"
-         PUBLIC "SHELL: -s USE_ES6_IMPORT_META=0"
-         PUBLIC "SHELL: -s DEMANGLE_SUPPORT=0"
-         PUBLIC "SHELL: -s ASSERTIONS=0"
-         PUBLIC "SHELL: -s ALLOW_MEMORY_GROWTH=1"
-         PUBLIC "SHELL: -s EXIT_RUNTIME=1"
-         PUBLIC "SHELL: -s WASM=1"
-         PUBLIC "SHELL: -s USE_PTHREADS=0"
-         PUBLIC "SHELL: -s DISABLE_EXCEPTION_CATCHING=0"
-       )
-
-       target_link_options(${target_name}
-	 INTERFACE "SHELL: -s ASYNCIFY=1"
-	 INTERFACE "SHELL: -s 'ASYNCIFY_IMPORTS=[\"get_stdin\"]'"
-	 INTERFACE "SHELL: -s 'ASYNCIFY_STACK_SIZE=100000'"
-       )
     endif()
 endmacro()
 
