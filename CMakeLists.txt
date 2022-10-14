@@ -63,7 +63,6 @@ option(XEUS_BUILD_TESTS "xeus test suite" OFF)
 if(XEUS_EMSCRIPTEN_WASM_BUILD)
     SET(XEUS_BUILD_SHARED_LIBS OFF)
     SET(XEUS_BUILD_STATIC_LIBS ON)
-    set(XEUS_EMSCRIPTEN_ENVIRONMENT "web,worker")
 endif()
 
 # Print build configuration
@@ -141,8 +140,7 @@ set(XEUS_SOURCES
 # ================
 
 include(CheckCXXCompilerFlag)
-
-string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
+include(WasmBuildOptions)
 
 macro(xeus_create_target target_name linkage output_name)
     string(TOUPPER "${linkage}" linkage_upper)
@@ -251,36 +249,7 @@ macro(xeus_create_target target_name linkage output_name)
 
     if (XEUS_EMSCRIPTEN_WASM_BUILD)
        target_compile_definitions(${target_name} PRIVATE XEUS_EMSCRIPTEN_WASM_BUILD)
-
-       target_compile_options(${target_name}
-         PUBLIC --std=c++17
-         PUBLIC -Wno-deprecated
-         PUBLIC "SHELL: -s USE_PTHREADS=0"
-         PUBLIC "SHELL: -s DISABLE_EXCEPTION_CATCHING=0"
-       )
-
-       target_link_options(${target_name}
-         PUBLIC --bind
-         PUBLIC -Wno-unused-command-line-argument
-         PUBLIC "SHELL: -s MODULARIZE=1"
-         PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
-         PUBLIC "SHELL: -s EXPORT_ES6=0"
-         PUBLIC "SHELL: -s USE_ES6_IMPORT_META=0"
-         PUBLIC "SHELL: -s DEMANGLE_SUPPORT=0"
-         PUBLIC "SHELL: -s ASSERTIONS=0"
-         PUBLIC "SHELL: -s ALLOW_MEMORY_GROWTH=1"
-         PUBLIC "SHELL: -s EXIT_RUNTIME=1"
-         PUBLIC "SHELL: -s WASM=1"
-         PUBLIC "SHELL: -s USE_PTHREADS=0"
-         PUBLIC "SHELL: -s DISABLE_EXCEPTION_CATCHING=0"
-         PUBLIC "SHELL: -s ENVIRONMENT=${XEUS_EMSCRIPTEN_ENVIRONMENT}"
-       )
-
-       target_link_options(${target_name}
-	 INTERFACE "SHELL: -s ASYNCIFY=1"
-	 INTERFACE "SHELL: -s 'ASYNCIFY_IMPORTS=[\"get_stdin\"]'"
-	 INTERFACE "SHELL: -s 'ASYNCIFY_STACK_SIZE=100000'"
-       )
+       xeus_wasm_compile_options(${target_name})
     endif()
 endmacro()
 
@@ -363,6 +332,7 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Conf
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
               ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibUUID.cmake
+              ${CMAKE_CURRENT_SOURCE_DIR}/cmake/WasmBuildOptions.cmake
               DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 install(EXPORT ${PROJECT_NAME}-targets
         FILE ${PROJECT_NAME}Targets.cmake
