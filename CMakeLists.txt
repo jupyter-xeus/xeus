@@ -63,7 +63,6 @@ option(XEUS_BUILD_TESTS "xeus test suite" OFF)
 if(XEUS_EMSCRIPTEN_WASM_BUILD)
     SET(XEUS_BUILD_SHARED_LIBS OFF)
     SET(XEUS_BUILD_STATIC_LIBS ON)
-    set(XEUS_EMSCRIPTEN_ENVIRONMENT "web,worker")
 endif()
 
 # Print build configuration
@@ -273,7 +272,6 @@ macro(xeus_create_target target_name linkage output_name)
          PUBLIC "SHELL: -s WASM=1"
          PUBLIC "SHELL: -s USE_PTHREADS=0"
          PUBLIC "SHELL: -s DISABLE_EXCEPTION_CATCHING=0"
-         PUBLIC "SHELL: -s ENVIRONMENT=${XEUS_EMSCRIPTEN_ENVIRONMENT}"
        )
 
        target_link_options(${target_name}
