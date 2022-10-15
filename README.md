@@ -95,7 +95,7 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 |  xeus   |   xtl          | nlohmann json |
 |---------|----------------|---------------|
 | master  | >=0.7.0,<0.8.0 |      ^3.2.0   |
-| 3.0.0   | >=0.7.0,<0.8.0 |      ^3.2.0   |
+| 3.x     | >=0.7.0,<0.8.0 |      ^3.2.0   |
 
 Versions prior to version 3 also depend on the following libraries: [`ZeroMQ`](https://github.com/zeromq/libzmq),
 [`cppzmq`](https://github.com/zeromq/cppzmq), and [`OpenSSL`](https://github.com/openssl/openssl).
