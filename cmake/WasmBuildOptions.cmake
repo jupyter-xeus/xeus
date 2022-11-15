@@ -14,7 +14,7 @@ function(xeus_wasm_compile_options target)
         PUBLIC --std=c++17
         PUBLIC -Wno-deprecated
         PUBLIC "SHELL: -s USE_PTHREADS=0"
-        PUBLIC "SHELL: -s DISABLE_EXCEPTION_CATCHING=0"
+        PUBLIC "SHELL: -fwasm-exceptions"
     )
 endfunction()
 
@@ -22,6 +22,7 @@ function(xeus_wasm_link_options target environment)
     target_link_options("${target}"
         PUBLIC --bind
         PUBLIC -Wno-unused-command-line-argument
+        PUBLIC "SHELL: -fwasm-exceptions"
         PUBLIC "SHELL: -s MODULARIZE=1"
         PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
         PUBLIC "SHELL: -s EXPORT_ES6=0"
@@ -32,10 +33,19 @@ function(xeus_wasm_link_options target environment)
         PUBLIC "SHELL: -s EXIT_RUNTIME=1"
         PUBLIC "SHELL: -s WASM=1"
         PUBLIC "SHELL: -s USE_PTHREADS=0"
-        PUBLIC "SHELL: -s DISABLE_EXCEPTION_CATCHING=0"
         PUBLIC "SHELL: -s ENVIRONMENT=${environment}"
+        PUBLIC "SHELL: -s TOTAL_STACK=32mb"
+        PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
     )
+endfunction()
 
+function(xeus_wasm_fs_options target)
+    target_link_options("${target}"
+        PUBLIC "SHELL: -s FORCE_FILESYSTEM"
+    )
+endfunction()
+
+function(xeus_wasm_async_options target)
     target_link_options("${target}"
         INTERFACE "SHELL: -s ASYNCIFY=1"
         INTERFACE "SHELL: -s 'ASYNCIFY_IMPORTS=[\"get_stdin\"]'"
