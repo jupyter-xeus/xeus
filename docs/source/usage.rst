@@ -48,7 +48,7 @@ You can also find real kernel implementations based on xeus:
   - `xeus-cling <https://github.com/jupyter-xeus/xeus-cling>`_: C++ kernel
   - `xeus-python <https://github.com/jupyter-xeus/xeus-python>`_: Python kernel
 
-.. _example: https://github.com/jupyter-xeus/xeus/tree/master/example
+.. _example: https://github.com/jupyter-xeus/xeus-zmq/tree/master/example
 .. _here: https://github.com/jupyter-xeus/xeus-calc/
 .. _execute_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#execute
 .. _complete_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#completion

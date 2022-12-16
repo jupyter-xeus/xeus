@@ -33,7 +33,7 @@ Implementing the interpreter
 
 Let's start by editing the ``custom_interpreter.hpp`` file, it should contain the declaration of your interpreter class:
 
-.. literalinclude:: ../../example/src/custom_interpreter.hpp
+.. literalinclude:: ./example/src/custom_interpreter.hpp
    :language: cpp
 
 .. note::
@@ -48,7 +48,7 @@ Code Execution
 You can implement all the methods described here in the ``custom_interpreter.cpp`` file. The main method is of
 course the ``execute_request_impl`` which executes the code whenever the client is sending an execute request.
 
-.. literalinclude:: ../../example/src/custom_interpreter.cpp
+.. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 22-48
@@ -81,7 +81,7 @@ The ``configure_impl`` method allows you to perform some operations after the ``
 any request. This is optional, but it can be useful, for example it is used in `xeus-python <https://github.com/jupyter-xeus/xeus-python>`_
 for initializing the auto-completion engine.
 
-.. literalinclude:: ../../example/src/custom_interpreter.cpp
+.. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 50-53
@@ -91,7 +91,7 @@ Code Completion
 
 The ``complete_request_impl`` method allows you to implement the auto-completion logic for your kernel.
 
-.. literalinclude:: ../../example/src/custom_interpreter.cpp
+.. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 55-68
@@ -105,7 +105,7 @@ Allows the kernel user to inspect a variable/class/type in the code. It takes th
 it is up to the kernel author to extract the token at the given cursor position in the code in order to know for which name the
 user wants inspection.
 
-.. literalinclude:: ../../example/src/custom_interpreter.cpp
+.. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 70-85
@@ -134,7 +134,7 @@ The following code is considered as complete:
 
 So the kernel should return "complete".
 
-.. literalinclude:: ../../example/src/custom_interpreter.cpp
+.. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 87-90
@@ -146,7 +146,7 @@ Kernel info
 
 This request allows the client to get information about the kernel: language, language version, kernel version, etc.
 
-.. literalinclude:: ../../example/src/custom_interpreter.cpp
+.. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 92-101
@@ -158,7 +158,7 @@ Kernel shutdown
 
 This allows you to perform some operations before shutting down the kernel.
 
-.. literalinclude:: ../../example/src/custom_interpreter.cpp
+.. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
    :lines: 103-106
@@ -187,7 +187,7 @@ Creates a default success reply to the kernel or allows custom input. The signat
     nl:\:json create_successful_reply(const std:\:vector<nl:\:json>& payload,
                                      const nl:\:json& user_expressions)
 
-Where ``payload`` is a way to trigger frontend actions from the kernel (payloads are deprecated but since there are still no replecement for it you might need to use it) more information about the different kinds of payloads in the official docs_. ``data`` is a dictionary which the keys is a ``MIME_type`` (this is the type of data to be shown it must be a valid MIME type, for a list of the possibilities check MDN_, note that you're not limited by these types) and the values are the content of the information intended to be displayed in the frontend. And ``user_expressions`` is a dictionary of strings of arbitrary code, more information about it on the official docs_.
+Where ``payload`` is a way to trigger frontend actions from the kernel (payloads are deprecated but since there are still no replecement for it you might need to use it). You can find more information about the different kinds of payloads in the `official documentation <https://jupyter-client.readthedocs.io/en/stable/messaging.html#payloads-deprecated>`_. ``data`` is a dictionary which the keys is a ``MIME_type`` (this is the type of data to be shown it must be a valid MIME type, for a list of the possibilities check MDN_, note that you're not limited by these types) and the values are the content of the information intended to be displayed in the frontend. And ``user_expressions`` is a dictionary of strings of arbitrary code, more information about it on the `official documentation <https://jupyter-client.readthedocs.io/en/stable/messaging.html#execute>`_.
 
 Complete reply
 ~~~~~~~~~~~~~~
@@ -241,7 +241,7 @@ Implementing the main entry
 Now let's edit the ``main.cpp`` file which is the main entry for the kernel executable.
 
 
-.. literalinclude:: ../../example/src/main.cpp
+.. literalinclude:: ./example/src/main.cpp
    :language: cpp
 
 Kernel file
@@ -262,7 +262,7 @@ This ``json`` file contains:
 You can edit the ``kernel.json.in`` file as following. This file will be used by cmake for generating the actual ``kernel.json``
 file which will be installed.
 
-.. literalinclude:: ../../example/share/jupyter/kernels/my_kernel/kernel.json.in
+.. literalinclude:: ./example/share/jupyter/kernels/my_kernel/kernel.json.in
    :language: json
 
 
@@ -276,7 +276,7 @@ Compiling and installing the kernel
 
 Your ``CMakeLists.txt`` file should look like the following:
 
-.. literalinclude:: ../../example/CMakeLists.txt
+.. literalinclude:: ./example/CMakeLists.txt
    :language: cmake
 
 Now you should be able to install your new kernel and use it with any Jupyter client.
@@ -313,7 +313,7 @@ It allows you to test the results of the requests you send to the kernel.
 .. _inspect_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#introspection
 .. _is_complete_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#code-completeness
 .. _kernel_info_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#kernel-info
-.. _docs: https://jupyter-client.readthedocs.io/en/stable/messaging.html#payloads-deprecated
 .. _MDN: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
-.. _docs: https://jupyter-client.readthedocs.io/en/stable/messaging.html#execute
 .. _docs: https://jupyter-client.readthedocs.io/en/stable/messaging.html#kernel-info
+.. _create_error_reply: https://github.com/jupyter-xeus/xeus/blob/7c6f3f61598b91a4e4a541a9ed7ba2033422af3a/include/xeus/xhelper.hpp#L33
+.. _create_successful_reply: https://github.com/jupyter-xeus/xeus/blob/7c6f3f61598b91a4e4a541a9ed7ba2033422af3a/include/xeus/xhelper.hpp#L38

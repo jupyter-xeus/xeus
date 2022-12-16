@@ -10,11 +10,12 @@ Server
 Public API
 ----------
 
-The server part of `xeus` provides a public API made of:
+The server part of `xeus` provides a public API made in ``xserver.hpp``. This file contains the base
+class ``xserver``, which must be inherited from any class implementing a server. This is the unique
+entry point into the server component used by the kernel core.
 
-- ``xserver.hpp``: This file contains the base class ``xserver``, which must be inherited from any
-  class implementing a server. This is the unique entry point into the server component used by the
-  kernel core.
+`xeus-zmq` provides the following implementations:
+
 - ``xserver_zmq.hpp``: This file contains the interface of the default server implementation, that can
   be used directly or extended in order to override parts of its behavior.
 - ``xserver_control_main.hpp``: This file contains the interface of a server that handles the shell and
