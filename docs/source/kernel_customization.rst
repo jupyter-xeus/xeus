@@ -134,8 +134,10 @@ Server
 ------
 
 The server is the middleware component responsible for sending and receiving the messages. While you will hardly
-have to implement your own, you might need to specify a different server that the default one. ``xeus`` provides
-two types of server:
+have to implement your own, you might need to specify a different server that the default one. The core library
+``xeus`` only provides the interface for the server, implementations are provided by ``xeus-zmq`` and ``xeus-lite``.
+
+``xeus-zmq`` actually provides three different implementations for the server:
 
 - ``xserver_zmq`` is the default server implementation, it runs three thread, one for publishing, one for the
   heartbeat messages, and the main thread handles the shell, control and stdin sockets.
@@ -145,3 +147,5 @@ two types of server:
 - ``xserver_shell_main`` is similar to ``xserver_control_main`` except that the main thread handles the shell and
   the stdin sockets while the additional thread listens to the control socket. This server is required if you want to
   plug a debugger that does not support native threads and requires the code to be run by the main thread.
+
+``xeus-lite`` provides a default implementation only.

@@ -7,21 +7,34 @@
 Installation
 ============
 
-With Mamba or Conda
+ The framework is made of three libraries:
+
+- ``xeus``: The core implementation of the Jupyter protocol
+- ``xeus-zmq``: A library to author kernels that run in dedicated processes
+- ``xeus-lite``: A library to author kernels that run in the browser 
+
+Both ``xeus-zmq`` and ``xeus-lite`` depend on ``xeus``.
+
+Installing xeus-zmq
 -------------------
 
-``xeus`` has been packaged on all platforms for the mamba (or conda) package manager.
+With Mamba or Conda
+~~~~~~~~~~~~~~~~~~~
+
+``xeus`` and ``xeus-zmq`` have been packaged on all platforms for the mamba (or conda) package manager.
 
 .. code::
 
-    mamba install xeus -c conda-forge
+    mamba install xeus-zmq -c conda-forge
 
 From Source
------------
+~~~~~~~~~~~
 
 ``xeus`` depends on the following libraries:
+ - xtl_ and nolhmann_json_
 
- - libzmq_, cppzmq_, OpenSSL_ and xtl_
+``xeus-zmq`` depends on the following libraries:
+ - libzmq_, cppzmq_, OpenSSL_ and `xeus`
 
 On linux platforms, ``xeus`` also requires libuuid, which is available in all linux distributions.
 
@@ -29,7 +42,7 @@ We have packaged all these dependencies on conda-forge. The simplest way to inst
 
 .. code::
 
-    mamba install cmake zeromq cppzmq OpenSSL xtl -c conda-forge
+    mamba install cmake zeromq cppzmq OpenSSL xtl nlohmann_json -c conda-forge
 
 On Linux platform, you will also need:
 
@@ -41,19 +54,25 @@ Once you have installed the dependencies, you can build and install `xeus`:
 
 .. code::
 
-    cmake -D BUILD_EXAMPLES=ON -D CMAKE_BUILD_TYPE=Release .
+    cmake -D CMAKE_BUILD_TYPE=Release .
     make
     make install
 
-If you need the ``xeus`` library only, you can omit the ``BUILD_EXAMPLES`` settings.
+You can then build and install `xeus-zmq`:
+
+.. code::
+
+    cmake -D CMAKE_BUILD_TYPE=Release
+    make
+    make install
 
 Installing the Dependencies from Source
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The dependencies can also be installed from source. Simply clone the directories and run the following cmake and make instructions.
 
-libzmq
-~~~~~~
+- libzmq
+
 
 .. code::
 
@@ -61,8 +80,7 @@ libzmq
     make
     make install
 
-cppzmq
-~~~~~~
+- cppzmq
 
 `cppzmq` is a header only library:
 
@@ -71,13 +89,20 @@ cppzmq
     cmake -D CMAKE_BUILD_TYPE=Release .
     make install
 
-OpenSSL
-~~~~~~~
+- OpenSSL
 
 `OpenSSL` has been packaged for most platforms and package manager. It should generally not be required for the user to build it.
 
-xtl
-~~~
+- nlohmann_json
+
+`nlohmann_jon` is a header only library:
+
+.. code::
+
+    cmake -DCMAKE_BUILD_TYPE=Release .
+    make install
+
+- xtl
 
 `xtl` is a header only library:
 
@@ -86,8 +111,14 @@ xtl
     cmake -DCMAKE_BUILD_TYPE=Release .
     make install
 
+Installing xeus-lite
+--------------------
+
+TODO
+
 .. _libzmq: https://github.com/zeromq/libzmq
 .. _cppzmq: https://github.com/zeromq/cppzmq
 .. _OpenSSL: https://github.com/OpenSSL/OpenSSL
+.. _nlohmann_json: https://github.com/nlohmann/json
 .. _xtl: https://github.com/xtensor-stack/xtl
 
