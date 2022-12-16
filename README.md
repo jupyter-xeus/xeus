@@ -122,7 +122,7 @@ On Linux platforms, `xeus` also requires `libuuid`, which is available in all li
 We have packaged all these dependencies on conda-forge. The simplest way to install them is to run:
 
 ```bash
-mamba install cmake pkg-config zeromq cppzmq xtl OpenSSL nlohmann_json -c conda-forge
+mamba install cmake pkg-config xtl nlohmann_json -c conda-forge
 ```
 
 On Linux platforms, you will also need `libuuid`:
@@ -131,10 +131,11 @@ On Linux platforms, you will also need `libuuid`:
 mamba install libuuid -c conda-forge
 ```
 
-Once you have installed the dependencies, you can build and install `xeus`:
+Once you have installed the dependencies, you can build and install `xeus`.
+From the `build` directory, run:
 
 ```bash
-cmake -D CMAKE_BUILD_TYPE=Release
+cmake -D CMAKE_BUILD_TYPE=Release ..
 make
 make install
 ```
