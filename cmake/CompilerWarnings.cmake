@@ -7,21 +7,20 @@
 
 function(xeus_target_add_compile_warnings target)
     # Names of option parameters (without arguments)
-    set(options)
+    set(options WARNING_AS_ERROR)
     # Names of named parameters with a single argument
-    set(oneValueArgs OPTION_PREFIX)
+    set(oneValueArgs)
     # Names of named parameters with a multiple arguments
     set(multiValueArgs)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    # Setting default value for ARG_OPTION_PREFIX
-    if(NOT DEFINED ARG_OPTION_PREFIX)
-        string(TOUPPER ${CMAKE_PROJECT_NAME} ARG_OPTION_PREFIX)
-        string(REPLACE "-" " _" ${ARG_OPTION_PREFIX} ARG_OPTION_PREFIX)
+    if(ARG_UNPARSED_ARGUMENTS)
+        message(
+            AUTHOR_WARNING
+            "Unrecoginzed options passed to ${CMAKE_CURRENT_FUNCTION}: "
+            "${ARG_UNPARSED_ARGUMENTS}"
+        )
     endif()
-
-    set(WARNINGS_AS_ERRORS_NAME ${ARG_OPTION_PREFIX}_WARNINGS_AS_ERRORS)
-    option(${WARNINGS_AS_ERRORS_NAME} "Treat compiler warnings as errors" OFF)
 
     set(
         msvc_warnings
@@ -109,7 +108,7 @@ function(xeus_target_add_compile_warnings target)
         -Wuninitialized
     )
 
-    if(${WARNINGS_AS_ERRORS_NAME})
+    if(${ARG_WARNING_AS_ERROR})
         set(clang_warnings ${clang_warnings} -Werror)
         set(msvc_warnings ${msvc_warnings} /WX)
     endif()
