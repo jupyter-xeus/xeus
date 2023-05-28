@@ -67,6 +67,10 @@ set(MY_KERNEL_SRC
 add_executable(${EXECUTABLE_NAME} src/main.cpp ${MY_KERNEL_SRC} )
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE ${xeus-zmq_target} Threads::Threads)
 
+set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+    INSTALL_RPATH_USE_LINK_PATH TRUE
+)
+
 # Installation
 # ============
 
