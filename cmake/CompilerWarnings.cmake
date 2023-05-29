@@ -106,6 +106,9 @@ function(xeus_target_add_compile_warnings target)
         -Wunreachable-code
         # Warn if a variable is used before being initialized
         -Wuninitialized
+        # Warn when the order of member initializers given in the code does not match the
+        # order in which they must be executed
+        -Wreorder
     )
 
     if(${ARG_WARNING_AS_ERROR})
