@@ -21,7 +21,7 @@
         #endif
     #endif
 #else
-    #define XEUS_API
+    #define XEUS_API __attribute__((visibility("default")))
 #endif
 
 // Project version

@@ -178,7 +178,7 @@ namespace xeus
             break;
         }
 
-        log_message_impl(socket_info, message);
+        log_json_message(socket_info, message);
         p_next_logger->log_message(socket_info, header, parent_header, metadata, json_content);
     }
 
@@ -191,7 +191,7 @@ namespace xeus
     {
     }
 
-    void xlogger_console::log_message_impl(const std::string& socket_info,
+    void xlogger_console::log_json_message(const std::string& socket_info,
                                            const nl::json& json_message) const
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -210,7 +210,7 @@ namespace xeus
     {
     }
 
-    void xlogger_file::log_message_impl(const std::string& socket_info,
+    void xlogger_file::log_json_message(const std::string& socket_info,
                                         const nl::json& json_message) const
     {
         nl::json log;

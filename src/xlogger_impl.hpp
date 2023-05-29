@@ -71,7 +71,7 @@ namespace xeus
                               const nl::json& metadata,
                               const nl::json& content) const override;
 
-        virtual void log_message_impl(const std::string& socket_info,
+        virtual void log_json_message(const std::string& socket_info,
                                       const nl::json& json_message) const = 0;
 
         xlogger_ptr p_next_logger;
@@ -93,7 +93,7 @@ namespace xeus
 
     private:
 
-        void log_message_impl(const std::string& socket_info,
+        void log_json_message(const std::string& socket_info,
                               const nl::json& json_message) const override;
 
         mutable std::mutex m_mutex;
@@ -116,7 +116,7 @@ namespace xeus
 
     private:
 
-        void log_message_impl(const std::string& socket_info,
+        void log_json_message(const std::string& socket_info,
                               const nl::json& json_message) const override;
 
         std::string m_file_name;

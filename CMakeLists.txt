@@ -196,6 +196,7 @@ macro(xeus_create_target target_name linkage output_name)
             ${target_name}
             PROPERTIES
             PUBLIC_HEADER "${XEUS_HEADERS}"
+            COMPILE_OPTIONS "-fvisibility=hidden"
             COMPILE_DEFINITIONS "XEUS_EXPORTS"
             PREFIX ""
             VERSION "${XEUS_BINARY_COMPATIBLE}.${XEUS_BINARY_REVISION}.${XEUS_BINARY_AGE}"
