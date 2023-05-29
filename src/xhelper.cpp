@@ -9,7 +9,7 @@ namespace nl = nlohmann;
 
 namespace xeus
 {
-    std::string print_starting_message(const xconfiguration& config)
+    std::string get_starting_message(const xconfiguration& config)
     {
         std::string kernel_info;
         kernel_info = "Starting kernel...\n\n"
@@ -28,6 +28,11 @@ namespace xeus
             "    \"key\": \"" + config.m_key + "\"\n"
             "}\n```";
         return kernel_info;
+    }
+
+    std::string print_starting_message(const xconfiguration& config)
+    {
+        return get_starting_message(config);
     }
 
     std::string extract_filename(int argc, char* argv[])
