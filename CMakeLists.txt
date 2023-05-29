@@ -140,7 +140,11 @@ set(XEUS_SOURCES
 # ================
 
 include(CheckCXXCompilerFlag)
+
+include(cmake/CompilerWarnings.cmake)
 include(WasmBuildOptions)
+
+string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 
 macro(xeus_create_target target_name linkage output_name)
     string(TOUPPER "${linkage}" linkage_upper)
@@ -216,11 +220,11 @@ macro(xeus_create_target target_name linkage output_name)
     # =================
 
     target_compile_features(${target_name} PRIVATE cxx_std_14)
+    xeus_target_add_compile_warnings(${target_name})
 
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
         CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
         CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-        target_compile_options(${target_name} PUBLIC -Wunused-parameter -Wextra -Wreorder)
         message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
     endif()
 
@@ -333,6 +337,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
               ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibUUID.cmake
               ${CMAKE_CURRENT_SOURCE_DIR}/cmake/WasmBuildOptions.cmake
+              ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CompilerWarnings.cmake
               DESTINATION ${XEUS_CMAKECONFIG_INSTALL_DIR})
 install(EXPORT ${PROJECT_NAME}-targets
         FILE ${PROJECT_NAME}Targets.cmake
