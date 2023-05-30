@@ -250,8 +250,8 @@ namespace xeus
 
             if (!silent && status == "error" && stop_on_error)
             {
-                long polling_interval = 50;
-                p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), 50);
+                constexpr long polling_interval = 50;
+                p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), polling_interval);
             }
         }
         catch (std::exception& e)
@@ -336,14 +336,14 @@ namespace xeus
         p_server->stop();
         nl::json reply;
         reply["restart"] = restart;
-        publish_message("shutdown", nl::json::object(), nl::json(reply), buffer_sequence(), channel::CONTROL);
+        publish_message("shutdown", nl::json::object(), std::move(reply), buffer_sequence(), channel::CONTROL);
         send_reply("shutdown_reply", nl::json::object(), std::move(reply), c);
     }
 
     void xkernel_core::interrupt_request(xmessage, channel c)
     {
         nl::json reply = nl::json::object();
-        publish_message("interrupt", nl::json::object(), nl::json(reply), buffer_sequence(), channel::CONTROL);
+        publish_message("interrupt", nl::json::object(), std::move(reply), buffer_sequence(), channel::CONTROL);
         send_reply("interrupt_reply", nl::json::object(), std::move(reply), c);
     }
 
