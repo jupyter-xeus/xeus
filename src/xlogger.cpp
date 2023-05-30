@@ -34,13 +34,13 @@ namespace xeus
                               const nl::json& header,
                               const nl::json& parent_header,
                               const nl::json& metadata,
-                              const nl::json& content) const
+                              const nl::json& content_json) const
     {
         log_message_impl(socket_info,
                          header,
                          parent_header,
                          metadata,
-                         content);
+                         content_json);
     }
 }
 

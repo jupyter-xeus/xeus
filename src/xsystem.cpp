@@ -104,7 +104,8 @@ namespace xeus
 
     std::size_t get_tmp_hash_seed()
     {
-        return static_cast<std::size_t>(0xc70f6907UL);
+        std::size_t hash_seed(0xc70f6907UL);
+        return hash_seed;
     }
 
     std::string get_tmp_prefix(const std::string& process_name)
