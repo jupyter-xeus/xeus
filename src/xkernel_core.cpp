@@ -30,8 +30,7 @@ namespace xeus
                                server_ptr server,
                                interpreter_ptr interpreter,
                                history_manager_ptr history_manager,
-                               debugger_ptr debugger,
-                               nl::json::error_handler_t eh)
+                               debugger_ptr debugger)
         : m_kernel_id(std::move(kernel_id))
         , m_user_name(std::move(user_name))
         , m_session_id(std::move(session_id))
@@ -43,7 +42,6 @@ namespace xeus
         , p_debugger(debugger)
         , m_parent_id({guid_list(0), guid_list(0)})
         , m_parent_header({nl::json::object(), nl::json::object()})
-        , m_error_handler(eh)
     {
         // Request handlers
         m_handler["execute_request"] = &xkernel_core::execute_request;

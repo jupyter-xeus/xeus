@@ -144,8 +144,7 @@ namespace xeus
                                                 p_server.get(),
                                                 p_interpreter.get(),
                                                 p_history_manager.get(),
-                                                p_debugger.get(),
-                                                m_error_handler);
+                                                p_debugger.get());
 
         xcontrol_messenger& messenger = p_server->get_control_messenger();
 
