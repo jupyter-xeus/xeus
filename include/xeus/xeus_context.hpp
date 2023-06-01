@@ -17,7 +17,7 @@
 namespace xeus
 {
 
-    struct xempty_context_tag
+    struct [[deprecated]] xempty_context_tag
     {
     };
 
@@ -64,16 +64,19 @@ namespace xeus
     template <class T>
     T& xcontext::get_wrapped_context()
     {
-        auto* impl = dynamic_cast<xcontext_impl<T>*>(this);
+        auto* impl = static_cast<xcontext_impl<T>*>(this);
         return impl->m_context;
     }
 
+    // Deprecated: call the make_xxx_context function from the library providing the
+    // server implementation
     template <class T, class... U>
     std::unique_ptr<xcontext_impl<T>> make_context(U&&... u)
     {
         return std::unique_ptr<xcontext_impl<T>>(new xcontext_impl<T>(std::forward<U>(u)...));
     }
 
+    [[deprecated]]
     inline std::unique_ptr<xcontext_impl<xempty_context_tag>> make_empty_context()
     {
         return std::unique_ptr<xcontext_impl<xempty_context_tag>>(
