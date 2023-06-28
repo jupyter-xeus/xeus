@@ -258,8 +258,8 @@ macro(xeus_create_target target_name linkage output_name)
 
     if (MSVC)
         message(STATUS "XEUS Linkage: ${linkage}")
-        get_target_property(BUILD_FLAGS ${target_name} COMPILE_FLAGS)
-        message(STATUS "BUILD FLAGS: ${BUILD_FLAGS}")
+        get_target_property(LINK_LIB ${target_name} LINK_LIBRARIES)
+        message(STATUS "LINK LIBS: ${LINK_LIB}")
     endif()
 endmacro()
 
