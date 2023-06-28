@@ -258,8 +258,8 @@ macro(xeus_create_target target_name linkage output_name)
 
     if (MSVC)
         message(STATUS "XEUS Linkage: ${linkage}")
-        get_target_property(MSVC_RUNTIME ${target_name} MSVC_RUNTIME_LIBRARY)
-        message(STATUS "MSVC RUNTIME: ${MSVC_RUNTIME}")
+        get_target_property(BUILD_FLAGS ${target_name} COMPILE_OPTIONS)
+        message(STATUS "BUILD FLAGS: ${BUILD_FLAGS}")
     endif()
 endmacro()
 
