@@ -14,7 +14,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 set(XEUS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(XEUS_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
-set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Versionning
 # ===========
@@ -259,7 +258,8 @@ macro(xeus_create_target target_name linkage output_name)
 
     if (MSVC)
         message(STATUS "XEUS Linkage: ${linkage}")
-        message(STATUS "MSVC RUNTIME: ${MSVC_RUNTIME_LIBRARY}")
+        get_target_property(MSVC_RUNTIME ${target_name} MSVC_RUNTIME_LIBRARY)
+        message(STATUS "MSVC RUNTIME: ${MSVC_RUNTIME}")
     endif()
 endmacro()
 
