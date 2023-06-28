@@ -255,6 +255,11 @@ macro(xeus_create_target target_name linkage output_name)
        target_compile_definitions(${target_name} PRIVATE XEUS_EMSCRIPTEN_WASM_BUILD)
        xeus_wasm_compile_options(${target_name})
     endif()
+
+    if (MSVC)
+        message(STATUS "XEUS Linkage: ${linkage}")
+        message(STATUS "MSVC RUNTIME: ${MSVC_RUNTIME_LIBRARY}")
+    endif()
 endmacro()
 
 set(xeus_targets "")
