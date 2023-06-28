@@ -14,7 +14,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 set(XEUS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XEUS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(XEUS_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
-set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
+
 # Versionning
 # ===========
 
@@ -258,8 +258,8 @@ macro(xeus_create_target target_name linkage output_name)
 
     if (MSVC)
         message(STATUS "XEUS Linkage: ${linkage}")
-        get_target_property(LINK_LIB ${target_name} LINK_LIBRARIES)
-        message(STATUS "LINK LIBS: ${LINK_LIB}")
+        message(STATUS "CXX flags: ${CMAKE_CXX_FLAGS}
+        ${CMAKE_CXX_FLAGS_RELEASE}")
     endif()
 endmacro()
 
