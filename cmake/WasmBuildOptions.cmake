@@ -14,7 +14,7 @@ function(xeus_wasm_compile_options target)
         PUBLIC --std=c++17
         PUBLIC -Wno-deprecated
         PUBLIC "SHELL: -s USE_PTHREADS=0"
-        PUBLIC "SHELL: -fwasm-exceptions"
+        PUBLIC "SHELL: -fexceptions"
     )
 endfunction()
 
@@ -22,7 +22,7 @@ function(xeus_wasm_link_options target environment)
     target_link_options("${target}"
         PUBLIC --bind
         PUBLIC -Wno-unused-command-line-argument
-        PUBLIC "SHELL: -fwasm-exceptions"
+        PUBLIC "SHELL: -fexceptions"
         PUBLIC "SHELL: -s MODULARIZE=1"
         PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
         PUBLIC "SHELL: -s EXPORT_ES6=0"
@@ -36,6 +36,7 @@ function(xeus_wasm_link_options target environment)
         PUBLIC "SHELL: -s ENVIRONMENT=${environment}"
         PUBLIC "SHELL: -s TOTAL_STACK=32mb"
         PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
+        PUBLIC "SHELL: -s WASM_BIGINT"
     )
 endfunction()
 
