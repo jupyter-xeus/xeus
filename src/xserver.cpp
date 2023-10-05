@@ -40,9 +40,11 @@ namespace xeus
 
     void xserver::start(xpub_message message)
     {   
+#ifndef EMSCRIPTEN
         std::clog << "Run with XEUS " << XEUS_VERSION_MAJOR << "."
                                       << XEUS_VERSION_MINOR << "."
                                       << XEUS_VERSION_PATCH << std::endl;
+#endif
         start_impl(std::move(message));
     }
 
