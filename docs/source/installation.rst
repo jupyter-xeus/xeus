@@ -31,7 +31,7 @@ From Source
 ~~~~~~~~~~~
 
 ``xeus`` depends on the following libraries:
- - xtl_ and nolhmann_json_
+ - xtl_ and nlohmann_json_
 
 ``xeus-zmq`` depends on the following libraries:
  - libzmq_, cppzmq_, OpenSSL_ and `xeus`
@@ -95,7 +95,7 @@ The dependencies can also be installed from source. Simply clone the directories
 
 - nlohmann_json
 
-`nlohmann_jon` is a header only library:
+`nlohmann_json` is a header only library:
 
 .. code::
 
