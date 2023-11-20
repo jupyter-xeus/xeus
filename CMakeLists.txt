@@ -51,7 +51,7 @@ message(STATUS "xeus binary version: v${XEUS_BINARY_VERSION}")
 option(XEUS_BUILD_SHARED_LIBS "Build xeus shared library." ON)
 option(XEUS_BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." ON)
 option(XEUS_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
-option(XEUS_EMSCRIPTEN_WASM_BUILD  "build for wasm via emscripten" OFF)
+# option(XEUS_EMSCRIPTEN_WASM_BUILD  "build for wasm via emscripten" OFF)
 
 # Test options
 option(XEUS_BUILD_TESTS "xeus test suite" OFF)
@@ -59,7 +59,7 @@ option(XEUS_BUILD_TESTS "xeus test suite" OFF)
 # Emscripten wasm build configuration
 # ===================================
 
-if(XEUS_EMSCRIPTEN_WASM_BUILD)
+if(EMSCRIPTEN)
     SET(XEUS_BUILD_SHARED_LIBS OFF)
     SET(XEUS_BUILD_STATIC_LIBS ON)
 endif()
@@ -70,7 +70,7 @@ endif()
 message(STATUS "XEUS_BUILD_SHARED_LIBS:          ${XEUS_BUILD_SHARED_LIBS}")
 message(STATUS "XEUS_BUILD_STATIC_LIBS:          ${XEUS_BUILD_STATIC_LIBS}")
 message(STATUS "XEUS_STATIC_DEPENDENCIES:        ${XEUS_STATIC_DEPENDENCIES}")  
-message(STATUS "XEUS_EMSCRIPTEN_WASM_BUILD:      ${XEUS_EMSCRIPTEN_WASM_BUILD}")
+message(STATUS "XEUS_EMSCRIPTEN_WASM_BUILD:      ${EMSCRIPTEN}")
 message(STATUS "XEUS_BUILD_TESTS:                ${XEUS_BUILD_TESTS}")  
 
 # Dependencies
@@ -169,7 +169,7 @@ macro(xeus_create_target target_name linkage output_name)
         PUBLIC xtl
     )
 
-    if (NOT MSVC AND NOT XEUS_EMSCRIPTEN_WASM_BUILD)
+    if (NOT MSVC AND NOT EMSCRIPTEN)
         if (APPLE)
             target_link_libraries(${target_name} PUBLIC "-framework CoreFoundation")
         else ()
@@ -251,7 +251,7 @@ macro(xeus_create_target target_name linkage output_name)
         endif ()
     endif ()
 
-    if (XEUS_EMSCRIPTEN_WASM_BUILD)
+    if (EMSCRIPTEN)
        target_compile_definitions(${target_name} PRIVATE XEUS_EMSCRIPTEN_WASM_BUILD)
        xeus_wasm_compile_options(${target_name})
     endif()
