@@ -16,6 +16,7 @@ function(xeus_wasm_compile_options target)
         PUBLIC "SHELL: -s USE_PTHREADS=0"
         PUBLIC "SHELL: -fexceptions"
     )
+    set_property(TARGET ${target} PROPERTY POSITION_INDEPENDENT_CODE ON)
 endfunction()
 
 function(xeus_wasm_link_options target environment)
@@ -39,6 +40,5 @@ function(xeus_wasm_link_options target environment)
         PUBLIC "SHELL: -s WASM_BIGINT"
         PUBLIC "SHELL: -s FORCE_FILESYSTEM"
         PUBLIC "SHELL: -s MAIN_MODULE=1"
-        PUBLIC "SHELL: -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE=\"['\$Browser', '\$ERRNO_CODES']\" "
     )
 endfunction()
