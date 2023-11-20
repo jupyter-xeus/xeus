@@ -37,19 +37,8 @@ function(xeus_wasm_link_options target environment)
         PUBLIC "SHELL: -s TOTAL_STACK=32mb"
         PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
         PUBLIC "SHELL: -s WASM_BIGINT"
-    )
-endfunction()
-
-function(xeus_wasm_fs_options target)
-    target_link_options("${target}"
         PUBLIC "SHELL: -s FORCE_FILESYSTEM"
-    )
-endfunction()
-
-function(xeus_wasm_async_options target)
-    target_link_options("${target}"
-        INTERFACE "SHELL: -s ASYNCIFY=1"
-        INTERFACE "SHELL: -s 'ASYNCIFY_IMPORTS=[\"get_stdin\"]'"
-        INTERFACE "SHELL: -s 'ASYNCIFY_STACK_SIZE=100000'"
+        PUBLIC "SHELL: -s MAIN_MODULE=1"
+        PUBLIC "SHELL: -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE=\"['\$Browser', '\$ERRNO_CODES']\" "
     )
 endfunction()
