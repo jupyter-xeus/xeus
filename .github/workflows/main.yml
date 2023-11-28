@@ -36,7 +36,7 @@ jobs:
       - name: Get number of CPU cores
         uses: SimenB/github-actions-cpu-cores@v1
 
-        - name: Install mamba
+      - name: install mamba
         uses: mamba-org/provision-with-micromamba@main
         with:
           environment-file: environment-dev.yml
