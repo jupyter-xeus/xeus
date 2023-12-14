@@ -227,7 +227,6 @@ namespace xeus
             std::string code = content.value("code", "");
             bool silent = content.value("silent", false);
             bool store_history = content.value("store_history", true);
-            int execution_count = content.value("execution_count", 1);
             store_history = store_history && !silent;
             nl::json user_expression = content.value("user_expressions", nl::json::object());
             bool allow_stdin = content.value("allow_stdin", true);
@@ -237,7 +236,7 @@ namespace xeus
 
             nl::json reply = p_interpreter->execute_request(
                 code, silent, store_history, std::move(user_expression), allow_stdin);
-
+            int execution_count = reply.value("execution_count", 1);
             std::string status = reply.value("status", "error");
             send_reply("execute_reply", std::move(metadata), std::move(reply), c);
 
