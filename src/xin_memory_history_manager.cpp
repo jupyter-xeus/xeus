@@ -87,8 +87,8 @@ namespace xeus
         if (start > stop || start > hist_size)
         {
             reply["status"] = "error";
-            reply["ename"] = "history_request_error";
-            reply["ename"] = "get_range: start is too high given stop or current history";
+            reply["ename"]  = "history_request_error";
+            reply["evalue"] = "get_range: start is too high given stop or current history";
 
             return reply;
         }
