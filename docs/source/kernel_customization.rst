@@ -9,7 +9,7 @@ Customizing the kernel
 
 While it is possible to create a kernel by focusing on the implementation of the interpreter,
 ``xeus`` also offers the possibility to customize some predefined behaviors. This can be done
-via additional arguments of the ``xkernel`` consturctor:
+via additional arguments of the ``xkernel`` constructor:
 
 .. code::
 
