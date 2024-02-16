@@ -64,6 +64,13 @@ namespace xeus
                              buffer_sequence buffers,
                              channel origin);
 
+        void publish_message(const std::string& msg_type,
+                             nl::json parent_header,
+                             nl::json metadata,
+                             nl::json content,
+                             buffer_sequence buffers,
+                             channel origin);
+
         void send_stdin(const std::string& msg_type, nl::json metadata, nl::json content);
 
         xcomm_manager& comm_manager() & noexcept;
@@ -100,8 +107,10 @@ namespace xeus
         void debug_request(xmessage request, channel c);
 
         void publish_status(const std::string& status, channel c);
+        void publish_status(const std::string& status,  nl::json parent_header, channel c);
 
         void publish_execute_input(const std::string& code, int execution_count);
+        void publish_execute_input(const std::string& code, int execution_count, nl::json parent_header);
 
         void send_reply(const std::string& reply_type,
                         nl::json metadata,

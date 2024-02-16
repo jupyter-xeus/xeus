@@ -66,6 +66,8 @@ namespace xeus
         void display_data(nl::json data, nl::json metadata, nl::json transient);
         void update_display_data(nl::json data, nl::json metadata, nl::json transient);
         void publish_execution_input(const std::string& code, int execution_count);
+        //void publish_execution_input(const std::string& code, int execution_count, nl::json parent_header);
+
         void publish_execution_result(int execution_count, nl::json data, nl::json metadata);
         void publish_execution_error(const std::string& ename,
                                      const std::string& evalue,

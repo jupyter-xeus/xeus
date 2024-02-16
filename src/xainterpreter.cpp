@@ -38,24 +38,24 @@ namespace xeus
                                            bool allow_stdin,
                                            xaresponse_sender response_sender)
     {
-        auto execution_count = m_execution_count;
+        
         if (!silent)
         {
             ++m_execution_count;
-            publish_execution_input(code, m_execution_count);
         }
         
+        auto execution_count = m_execution_count;
 
         auto post_send = std::move(response_sender.m_post_send);
-        response_sender.m_post_send = [this,post_send, execution_count](nl::json reply, nl::json meta) {
+        response_sender.m_post_send = [this,post_send, execution_count](nl::json parent, nl::json reply, nl::json meta) {
 
             std::cout<<" in xainterpreter sending reply "<<std::endl;
             reply["execution_count"] = execution_count;
-            post_send(std::move(reply), std::move(meta));
+            post_send(std::move(parent), std::move(reply), std::move(meta));
         };
 
         async_execute_request_impl(
-            m_execution_count, code, silent,
+            execution_count, code, silent,
             store_history, user_expressions, allow_stdin,
             response_sender
         );

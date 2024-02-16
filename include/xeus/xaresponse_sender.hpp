@@ -37,12 +37,18 @@ namespace xeus
             }
            
             std::cout<<" in xaresponse_sender sending reply "<<std::endl;
-            m_post_send(std::move(msg), m_metadata);
+            m_post_send(std::move(m_parent_header), std::move(msg), m_metadata);
 
-        }
         
+        }
+        nl::json parent_header() const
+        {
+            return m_parent_header;
+        }
+        nl::json m_parent_header;
         nl::json m_metadata;
-        std::function<void(nl::json, nl::json)> m_post_send = nullptr;
+        // void(nl::json, nl::json, nl::json) == void(parent, reply, metadata)
+        std::function<void(nl::json, nl::json, nl::json)> m_post_send = nullptr;
     };
 
 } // namespace xeus

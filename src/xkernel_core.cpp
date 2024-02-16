@@ -133,6 +133,7 @@ namespace xeus
     }
 
     void xkernel_core::publish_message(const std::string& msg_type,
+                                       nl::json parent_header,
                                        nl::json metadata,
                                        nl::json content,
                                        buffer_sequence buffers,
@@ -140,12 +141,22 @@ namespace xeus
     {
         xpub_message msg(get_topic(msg_type),
                          make_header(msg_type, m_user_name, m_session_id),
-                         get_parent_header(c),
+                         std::move(parent_header),
                          std::move(metadata),
                          std::move(content),
                          std::move(buffers));
         p_logger->log_iopub_message(msg);
         p_server->publish(std::move(msg), c);
+    }
+
+
+    void xkernel_core::publish_message(const std::string& msg_type,
+                                       nl::json metadata,
+                                       nl::json content,
+                                       buffer_sequence buffers,
+                                       channel c)
+    {
+        publish_message(msg_type, get_parent_header(c), std::move(metadata), std::move(content), std::move(buffers), c);
     }
 
     void xkernel_core::send_stdin(const std::string& msg_type,
@@ -243,11 +254,8 @@ namespace xeus
             const auto parent_header = get_parent_header(c);
 
             p_interpreter->async_execute_request(
-
-
-
                 code, silent, store_history, std::move(user_expression), allow_stdin,
-                xaresponse_sender{std::move(metadata), [=](auto reply, auto meta)
+                xaresponse_sender{std::move(parent_header), std::move(metadata), [=](auto parent, auto reply, auto meta)
                 {
                     std::cout<<"in xkernelcore sender"<<std::endl;
 
@@ -255,11 +263,12 @@ namespace xeus
                     std::string status = reply.value("status", "error");
 
                     std::cout<<"send reply "<<reply.dump(4)<<std::endl;
+                    std::cout<<"parent header "<<parent.dump(4)<<std::endl;
 
                     send_reply(
                         parent_id,
                         "execute_reply", 
-                        parent_header,
+                        parent,
                         std::move(meta), 
                         std::move(reply),
                         c);
@@ -276,7 +285,7 @@ namespace xeus
                     }
 
                     // idle
-                    publish_status("idle", c);
+                    publish_status("idle", parent, c);
                 }}
             );
         }
@@ -383,20 +392,33 @@ namespace xeus
         }
     }
 
-    void xkernel_core::publish_status(const std::string& status, channel c)
+    void xkernel_core::publish_status(const std::string & status, nl::json parent_header, channel c)
     {
         nl::json content;
         content["execution_state"] = status;
-        publish_message("status", nl::json::object(), std::move(content), buffer_sequence(), c);
+        publish_message("status", std::move(parent_header),nl::json::object(), std::move(content), buffer_sequence(), c);
+    }
+    void xkernel_core::publish_status(const std::string& status, channel c)
+    {
+        publish_status(status, get_parent_header(c), c);
     }
 
     void xkernel_core::publish_execute_input(const std::string& code,
                                              int execution_count)
     {
+        publish_execute_input(code, execution_count, get_parent_header(channel::SHELL));
+    }
+
+    void xkernel_core::publish_execute_input(const std::string& code,
+                                             int execution_count,
+                                            nl::json parent_header)
+    {
+        
         nl::json content;
         content["code"] = code;
         content["execution_count"] = execution_count;
         publish_message("execute_input",
+                         std::move(parent_header),
                          nl::json::object(),
                          std::move(content),
                          buffer_sequence(),
