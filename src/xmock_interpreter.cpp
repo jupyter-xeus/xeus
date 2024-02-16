@@ -83,7 +83,7 @@ namespace xeus
         : base_type()
         , m_comm_manager(nullptr)
     {
-        base_type::register_publisher(base_type::publisher_type());
+        base_type::register_publishers(base_type::publisher_type(), base_type::publisher_with_parent_type());
         base_type::register_stdin_sender(base_type::stdin_sender_type());
         base_type::register_comm_manager(&m_comm_manager);
     }

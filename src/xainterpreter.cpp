@@ -90,10 +90,14 @@ namespace xeus
     {
         return internal_request_impl(message);
     }
-
-    void xainterpreter::register_publisher(const publisher_type& publisher)
+    // refactor to use only one publisher
+    void xainterpreter::register_publishers(
+        const publisher_type& publisher,
+        const publisher_with_parent_type& publisher_with_parent
+    )
     {
         m_publisher = publisher;
+        m_publisher_with_parent = publisher_with_parent;
     }
 
     void xainterpreter::publish_stream(const std::string& name, const std::string& text)
@@ -119,6 +123,35 @@ namespace xeus
         }
     }
 
+    void xainterpreter::display_data(nl::json data, nl::json metadata, nl::json transient, nl::json parent_header)
+    {
+        if (m_publisher)
+        {
+            m_publisher_with_parent(
+                "display_data",
+                parent_header,
+                nl::json::object(),
+                build_display_content(std::move(data), std::move(metadata), std::move(transient)),
+                buffer_sequence());
+        }
+    }
+
+    void xainterpreter::publish_stream(const std::string& name, const std::string& text, nl::json parent_header)
+    {
+        if (m_publisher_with_parent)
+        {
+            nl::json content;
+            content["name"] = name;
+            content["text"] = text;
+            m_publisher_with_parent("stream", std::move(parent_header), nl::json::object(), std::move(content), buffer_sequence());
+        }
+    }
+
+
+
+
+
+
     void xainterpreter::update_display_data(nl::json data, nl::json metadata, nl::json transient)
     {
         if (m_publisher)
@@ -131,6 +164,20 @@ namespace xeus
         }
     }
 
+    void xainterpreter::update_display_data(nl::json data, nl::json metadata, nl::json transient, nl::json parent_header)
+    {
+        if (m_publisher)
+        {
+            m_publisher_with_parent(
+                "update_display_data",
+                parent_header,
+                nl::json::object(),
+                build_display_content(std::move(data), std::move(metadata), std::move(transient)),
+                buffer_sequence());
+        }
+    }
+    
+
     void xainterpreter::publish_execution_input(const std::string& code, int execution_count)
     {
         if (m_publisher)
@@ -139,6 +186,17 @@ namespace xeus
             content["code"] = code;
             content["execution_count"] = execution_count;
             m_publisher("execute_input", nl::json::object(), std::move(content), buffer_sequence());
+        }
+    }
+
+    void xainterpreter::publish_execution_input(const std::string& code, int execution_count, nl::json parent_header)
+    {
+        if (m_publisher_with_parent)
+        {
+            nl::json content;
+            content["code"] = code;
+            content["execution_count"] = execution_count;
+            m_publisher_with_parent("execute_input", std::move(parent_header), nl::json::object(), std::move(content), buffer_sequence());
         }
     }
 
@@ -153,6 +211,18 @@ namespace xeus
             m_publisher("execute_result", nl::json::object(), std::move(content), buffer_sequence());
         }
     }
+    void xainterpreter::publish_execution_result(int execution_count, nl::json data, nl::json metadata, nl::json parent_header)
+    {
+        if (m_publisher_with_parent)
+        {
+            nl::json content;
+            content["execution_count"] = execution_count;
+            content["data"] = std::move(data);
+            content["metadata"] = std::move(metadata);
+            m_publisher_with_parent("execute_result",std::move(parent_header), nl::json::object(), std::move(content), buffer_sequence());
+        }
+    }
+
 
     void xainterpreter::publish_execution_error(const std::string& ename,
                                                const std::string& evalue,
@@ -167,6 +237,25 @@ namespace xeus
             m_publisher("error", nl::json::object(), std::move(content), buffer_sequence());
         }
     }
+
+    void xainterpreter::publish_execution_error(const std::string& ename,
+                                               const std::string& evalue,
+                                               const std::vector<std::string>& trace_back,
+                                                  nl::json parent_header)
+    {
+        if (m_publisher_with_parent)
+        {
+            nl::json content;
+            content["ename"] = ename;
+            content["evalue"] = evalue;
+            content["traceback"] = trace_back;
+            m_publisher_with_parent("error", 
+             std::move(parent_header),
+            nl::json::object(), std::move(content), buffer_sequence());
+        }
+    }
+
+
 
     void xainterpreter::clear_output(bool wait)
     {

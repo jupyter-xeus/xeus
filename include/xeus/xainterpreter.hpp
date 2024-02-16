@@ -60,14 +60,29 @@ namespace xeus
 
         // publish(msg_type, metadata, content)
         using publisher_type = std::function<void(const std::string&, nl::json, nl::json, buffer_sequence)>;
-        void register_publisher(const publisher_type& publisher);
+        // publish(msg_type, parent, metadata, content) // refactor to use only one publisher
+        using publisher_with_parent_type = std::function<void(const std::string&,  nl::json, nl::json, nl::json, buffer_sequence)>;
+        void register_publishers(const publisher_type& publisher,
+                                    const publisher_with_parent_type& publisher_with_parent);
+        
+
+
+
+        void publish_stream(const std::string& name, const std::string& text, nl::json parent_header);
+        void display_data(nl::json data, nl::json metadata, nl::json transient, nl::json parent_header);
+        void update_display_data(nl::json data, nl::json metadata, nl::json transient, nl::json parent_header);
+        void publish_execution_input(const std::string& code, int execution_count, nl::json parent_header);
+        void publish_execution_result(int execution_count, nl::json data, nl::json metadata, nl::json parent_header);
+        void publish_execution_error(const std::string& ename,
+                                     const std::string& evalue,
+                                     const std::vector<std::string>& trace_back,
+                                     nl::json parent_header);
+
 
         void publish_stream(const std::string& name, const std::string& text);
         void display_data(nl::json data, nl::json metadata, nl::json transient);
         void update_display_data(nl::json data, nl::json metadata, nl::json transient);
         void publish_execution_input(const std::string& code, int execution_count);
-        //void publish_execution_input(const std::string& code, int execution_count, nl::json parent_header);
-
         void publish_execution_result(int execution_count, nl::json data, nl::json metadata);
         void publish_execution_error(const std::string& ename,
                                      const std::string& evalue,
@@ -130,6 +145,7 @@ namespace xeus
         nl::json build_display_content(nl::json data, nl::json metadata, nl::json transient);
 
         publisher_type m_publisher;
+        publisher_with_parent_type m_publisher_with_parent; // refactor to use only one publisher
         stdin_sender_type m_stdin;
         int m_execution_count;
         xcomm_manager* p_comm_manager;
