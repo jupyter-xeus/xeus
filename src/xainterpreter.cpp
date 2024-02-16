@@ -38,6 +38,7 @@ namespace xeus
                                            bool allow_stdin,
                                            xaresponse_sender response_sender)
     {
+        auto execution_count = m_execution_count;
         if (!silent)
         {
             ++m_execution_count;
@@ -46,10 +47,10 @@ namespace xeus
         
 
         auto post_send = std::move(response_sender.m_post_send);
-        response_sender.m_post_send = [this,post_send](nl::json reply, nl::json meta) {
+        response_sender.m_post_send = [this,post_send, execution_count](nl::json reply, nl::json meta) {
 
             std::cout<<" in xainterpreter sending reply "<<std::endl;
-            reply["execution_count"] = m_execution_count;
+            reply["execution_count"] = execution_count;
             post_send(std::move(reply), std::move(meta));
         };
 

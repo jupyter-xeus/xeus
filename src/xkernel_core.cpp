@@ -238,10 +238,14 @@ namespace xeus
 
             nl::json metadata = get_metadata();
 
-           
 
+            const auto parent_id = get_parent_id(c);
+            const auto parent_header = get_parent_header(c);
 
             p_interpreter->async_execute_request(
+
+
+
                 code, silent, store_history, std::move(user_expression), allow_stdin,
                 xaresponse_sender{std::move(metadata), [=](auto reply, auto meta)
                 {
@@ -249,7 +253,16 @@ namespace xeus
 
                     int execution_count = reply.value("execution_count", 1);
                     std::string status = reply.value("status", "error");
-                    send_reply("execute_reply", std::move(meta), std::move(reply), c);
+
+                    std::cout<<"send reply "<<reply.dump(4)<<std::endl;
+
+                    send_reply(
+                        parent_id,
+                        "execute_reply", 
+                        parent_header,
+                        std::move(meta), 
+                        std::move(reply),
+                        c);
 
                     if (!silent && store_history)
                     {
