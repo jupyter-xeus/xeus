@@ -8,10 +8,16 @@
 ****************************************************************************/
 
 #include "xmock_interpreter.hpp"
+#include "xeus/xainterpreter.hpp"
 
 namespace xeus
 {
     xinterpreter* get_mock_interpreter()
+    {
+        static xmock_interpreter interpreter;
+        return &interpreter;
+    }
+    xainterpreter* get_mock_ainterpreter()
     {
         static xmock_interpreter interpreter;
         return &interpreter;
@@ -21,6 +27,11 @@ namespace xeus
     {
         static xinterpreter* interpreter = nullptr;
         return interpreter;
+    }
+    xainterpreter*& get_registered_ainterpreter()
+    {
+        static xainterpreter* ainterpreter = nullptr;
+        return ainterpreter;
     }
 
     bool register_interpreter(xinterpreter* interpreter)
@@ -37,6 +48,20 @@ namespace xeus
         }
     }
 
+    bool register_ainterpreter(xainterpreter* ainterpreter)
+    {
+        xainterpreter*& ainterp = get_registered_ainterpreter();
+        if (ainterp != nullptr)
+        {
+            return false;
+        }
+        else
+        {
+            ainterp = ainterpreter;
+            return true;
+        }
+    }
+
     xinterpreter& get_interpreter()
     {
         xinterpreter* interp = get_registered_interpreter();
@@ -45,7 +70,15 @@ namespace xeus
         else
             return *get_mock_interpreter();
     }
-
+    xainterpreter& get_ainterpreter()
+    {
+        xainterpreter* ainterp = get_registered_ainterpreter();
+        if (ainterp != nullptr)
+            return *ainterp;
+        else
+            return *get_mock_ainterpreter();
+    }
+    
     xmock_interpreter::xmock_interpreter()
         : base_type()
         , m_comm_manager(nullptr)

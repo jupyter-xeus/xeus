@@ -15,7 +15,7 @@
 #include <tuple>
 
 #include "nlohmann/json.hpp"
-
+#include "xeus/xaresponse_sender.hpp"
 #include "xkernel_core.hpp"
 #include "xeus/xhistory_manager.hpp"
 
@@ -43,20 +43,20 @@ namespace xeus
         , m_parent_id({guid_list(0), guid_list(0)})
         , m_parent_header({nl::json::object(), nl::json::object()})
     {
-        // Request handlers
-        m_handler["execute_request"] = &xkernel_core::execute_request;
-        m_handler["complete_request"] = &xkernel_core::complete_request;
-        m_handler["inspect_request"] = &xkernel_core::inspect_request;
-        m_handler["history_request"] = &xkernel_core::history_request;
-        m_handler["is_complete_request"] = &xkernel_core::is_complete_request;
-        m_handler["comm_info_request"] = &xkernel_core::comm_info_request;
-        m_handler["comm_open"] = &xkernel_core::comm_open;
-        m_handler["comm_close"] = &xkernel_core::comm_close;
-        m_handler["comm_msg"] = &xkernel_core::comm_msg;
-        m_handler["kernel_info_request"] = &xkernel_core::kernel_info_request;
-        m_handler["shutdown_request"] = &xkernel_core::shutdown_request;
-        m_handler["interrupt_request"] = &xkernel_core::interrupt_request;
-        m_handler["debug_request"] = &xkernel_core::debug_request;
+        // Request handlers (all but execute_request are blocking)
+        m_handler["execute_request"] = handler_type{&xkernel_core::execute_request, /*blocking*/ false};
+        m_handler["complete_request"] = handler_type{&xkernel_core::complete_request, true};
+        m_handler["inspect_request"] = handler_type{&xkernel_core::inspect_request, true};
+        m_handler["history_request"] = handler_type{&xkernel_core::history_request, true};
+        m_handler["is_complete_request"] = handler_type{&xkernel_core::is_complete_request, true};
+        m_handler["comm_info_request"] = handler_type{&xkernel_core::comm_info_request, true};
+        m_handler["comm_open"] = handler_type{&xkernel_core::comm_open, true};
+        m_handler["comm_close"] = handler_type{&xkernel_core::comm_close, true};
+        m_handler["comm_msg"] = handler_type{&xkernel_core::comm_msg, true};
+        m_handler["kernel_info_request"] = handler_type{&xkernel_core::kernel_info_request, true};
+        m_handler["shutdown_request"] = handler_type{&xkernel_core::shutdown_request, true};
+        m_handler["interrupt_request"] = handler_type{&xkernel_core::interrupt_request, true};
+        m_handler["debug_request"] = handler_type{&xkernel_core::debug_request, true};
 
         // Server bindings
         p_server->register_shell_listener(std::bind(&xkernel_core::dispatch_shell, this, _1));
@@ -191,7 +191,8 @@ namespace xeus
 
         std::string msg_type = header.value("msg_type", "");
         handler_type handler = get_handler(msg_type);
-        if (handler == nullptr)
+
+        if (handler.fptr == nullptr)
         {
             std::cerr << "ERROR: received unknown message" << std::endl;
             std::cerr << "Message type: " << msg_type << std::endl;
@@ -200,7 +201,7 @@ namespace xeus
         {
             try
             {
-                (this->*handler)(std::move(msg), c);
+                (this->*(handler.fptr))(std::move(msg), c);
             }
             catch (std::exception& e)
             {
@@ -208,14 +209,17 @@ namespace xeus
                 std::cerr << "Message type: " << msg_type << std::endl;
             }
         }
-
-        publish_status("idle", c);
+        // async handlers need to set the idle status themselves
+        if(handler.blocking)
+        {
+            publish_status("idle", c);
+        }
     }
 
     auto xkernel_core::get_handler(const std::string& msg_type) -> handler_type
     {
         auto iter = m_handler.find(msg_type);
-        handler_type res = (iter == m_handler.end()) ? nullptr : iter->second;
+        handler_type res = (iter == m_handler.end()) ? handler_type{nullptr} : iter->second;
         return res;
     }
 
@@ -234,22 +238,34 @@ namespace xeus
 
             nl::json metadata = get_metadata();
 
-            nl::json reply = p_interpreter->execute_request(
-                code, silent, store_history, std::move(user_expression), allow_stdin);
-            int execution_count = reply.value("execution_count", 1);
-            std::string status = reply.value("status", "error");
-            send_reply("execute_reply", std::move(metadata), std::move(reply), c);
+           
 
-            if (!silent && store_history)
-            {
-                p_history_manager->store_inputs(0, execution_count, code);
-            }
 
-            if (!silent && status == "error" && stop_on_error)
-            {
-                constexpr long polling_interval = 50;
-                p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), polling_interval);
-            }
+            p_interpreter->async_execute_request(
+                code, silent, store_history, std::move(user_expression), allow_stdin,
+                xaresponse_sender{std::move(metadata), [=](auto reply, auto meta)
+                {
+                    std::cout<<"in xkernelcore sender"<<std::endl;
+
+                    int execution_count = reply.value("execution_count", 1);
+                    std::string status = reply.value("status", "error");
+                    send_reply("execute_reply", std::move(meta), std::move(reply), c);
+
+                    if (!silent && store_history)
+                    {
+                        p_history_manager->store_inputs(0, execution_count, code);
+                    }
+
+                    if (!silent && status == "error" && stop_on_error)
+                    {
+                        constexpr long polling_interval = 50;
+                        p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), polling_interval);
+                    }
+
+                    // idle
+                    publish_status("idle", c);
+                }}
+            );
         }
         catch (std::exception& e)
         {

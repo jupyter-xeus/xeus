@@ -99,6 +99,8 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xhistory_manager.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinput.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinterpreter.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xainterpreter.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xaresponse_sender.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xkernel.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xkernel_configuration.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xlogger.hpp
@@ -110,6 +112,7 @@ set(XEUS_HEADERS
 )
 
 set(XEUS_SOURCES
+    ${XEUS_SOURCE_DIR}/xaresponse_sender.cpp    
     ${XEUS_SOURCE_DIR}/xcomm.cpp
     ${XEUS_SOURCE_DIR}/xcontrol_messenger.cpp
     ${XEUS_SOURCE_DIR}/xdebugger.cpp
@@ -119,6 +122,7 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xin_memory_history_manager.hpp
     ${XEUS_SOURCE_DIR}/xin_memory_history_manager.cpp
     ${XEUS_SOURCE_DIR}/xinterpreter.cpp
+    ${XEUS_SOURCE_DIR}/xainterpreter.cpp
     ${XEUS_SOURCE_DIR}/xkernel.cpp
     ${XEUS_SOURCE_DIR}/xkernel_configuration.cpp
     ${XEUS_SOURCE_DIR}/xkernel_core.cpp

@@ -17,7 +17,7 @@
 
 #include "xeus/xcomm.hpp"
 #include "xeus/xserver.hpp"
-#include "xeus/xinterpreter.hpp"
+#include "xeus/xainterpreter.hpp"
 #include "xeus/xhistory_manager.hpp"
 #include "xeus/xdebugger.hpp"
 #include "xeus/xmessage.hpp"
@@ -26,14 +26,17 @@
 namespace nl = nlohmann;
 
 namespace xeus
-{
+{   
+
+
+
     class xkernel_core
     {
     public:
 
         using logger_ptr = xlogger*;
         using server_ptr = xserver*;
-        using interpreter_ptr = xinterpreter*;
+        using interpreter_ptr = xainterpreter*;
         using history_manager_ptr = xhistory_manager*;
         using debugger_ptr = xdebugger*;
 
@@ -70,7 +73,11 @@ namespace xeus
 
     private:
 
-        using handler_type = void (xkernel_core::*)(xmessage, channel);
+        using handler_fptr_type = void (xkernel_core::*)(xmessage, channel);
+        struct handler_type{
+            handler_fptr_type fptr = nullptr;
+            bool blocking = true;
+        };
         using guid_list = xmessage::guid_list;
 
         void dispatch(xmessage msg, channel c);

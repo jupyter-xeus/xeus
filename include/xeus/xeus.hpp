@@ -31,7 +31,7 @@
 
 // Binary version
 #define XEUS_BINARY_CURRENT 9
-#define XEUS_BINARY_REVISION 5
+#define XEUS_BINARY_REVISION 6
 #define XEUS_BINARY_AGE 0
 
 // Kernel protocol version

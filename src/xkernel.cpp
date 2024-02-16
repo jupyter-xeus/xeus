@@ -71,6 +71,7 @@ namespace xeus
 #endif
     }
 
+
     xkernel::xkernel(const xconfiguration& config,
                      const std::string& user_name,
                      context_ptr context,

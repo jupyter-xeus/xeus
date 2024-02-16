@@ -14,7 +14,7 @@
 #include "xeus.hpp"
 #include "xeus_context.hpp"
 #include "xhistory_manager.hpp"
-#include "xinterpreter.hpp"
+#include "xainterpreter.hpp"
 #include "xkernel_configuration.hpp"
 #include "xserver.hpp"
 #include "xlogger.hpp"
@@ -34,7 +34,7 @@ namespace xeus
 
         using context_ptr = std::unique_ptr<xcontext>;
         using history_manager_ptr = std::unique_ptr<xhistory_manager>;
-        using interpreter_ptr = std::unique_ptr<xinterpreter>;
+        using interpreter_ptr = std::unique_ptr<xainterpreter>;
         using kernel_core_ptr = std::unique_ptr<xkernel_core>;
         using logger_ptr = std::unique_ptr<xlogger>;
         using server_ptr = std::unique_ptr<xserver>;
