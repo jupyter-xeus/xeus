@@ -20,6 +20,7 @@
 #include "xlogger.hpp"
 #include <memory>
 #include <string>
+#include <functional>
 
 namespace xeus
 {
@@ -39,14 +40,14 @@ namespace xeus
         using logger_ptr = std::unique_ptr<xlogger>;
         using server_ptr = std::unique_ptr<xserver>;
         using debugger_ptr = std::unique_ptr<xdebugger>;
-        using server_builder = server_ptr (*)(xcontext& context,
-                                              const xconfiguration& config,
-                                              nl::json::error_handler_t eh);
-        using debugger_builder = debugger_ptr (*)(xcontext& context,
-                                                  const xconfiguration& config,
-                                                  const std::string&,
-                                                  const std::string&,
-                                                  const nl::json&);
+        using server_builder = std::function<server_ptr(xcontext& context,
+                                             const xconfiguration& config,
+                                             nl::json::error_handler_t eh)>;
+        using debugger_builder = std::function<debugger_ptr(xcontext& context,
+                                                const xconfiguration& config,
+                                                const std::string&,
+                                                const std::string&,
+                                                const nl::json&)>;
 
         xkernel(const xconfiguration& config,
                 const std::string& user_name,
