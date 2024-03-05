@@ -18,6 +18,7 @@
 
 #include "xkernel_core.hpp"
 #include "xeus/xhistory_manager.hpp"
+#include "xeus/xrequest_context.hpp"
 
 using namespace std::placeholders;
 
@@ -233,8 +234,9 @@ namespace xeus
             bool stop_on_error = content.value("stop_on_error", false);
 
             nl::json metadata = get_metadata();
-
+            
             nl::json reply = p_interpreter->execute_request(
+                xrequest_context(request.header(), c, request.identities()),
                 code, silent, store_history, std::move(user_expression), allow_stdin);
             int execution_count = reply.value("execution_count", 1);
             std::string status = reply.value("status", "error");

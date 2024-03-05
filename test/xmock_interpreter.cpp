@@ -29,7 +29,8 @@ namespace xeus
         using function_type = std::function<void(xeus::xcomm&&, const xeus::xmessage&)>;
     }
 
-    nl::json xmock_interpreter::execute_request_impl(int execution_counter,
+    nl::json xmock_interpreter::execute_request_impl(xrequest_context /*request_context*/,
+                                                     int execution_counter,
                                                      const std::string& code,
                                                      bool /* silent */,
                                                      bool /* store_history */,

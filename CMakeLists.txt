@@ -107,6 +107,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xserver.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xstring_utils.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xsystem.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xrequest_context.hpp
 )
 
 set(XEUS_SOURCES
@@ -132,6 +133,7 @@ set(XEUS_SOURCES
     ${XEUS_SOURCE_DIR}/xmock_interpreter.hpp
     ${XEUS_SOURCE_DIR}/xserver.cpp
     ${XEUS_SOURCE_DIR}/xsystem.cpp
+    ${XEUS_SOURCE_DIR}/xrequest_context.cpp
 )
 
 # Targets and link

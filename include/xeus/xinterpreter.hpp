@@ -18,6 +18,7 @@
 #include "xeus.hpp"
 #include "xcontrol_messenger.hpp"
 #include "xhistory_manager.hpp"
+#include "xrequest_context.hpp"
 
 namespace xeus
 {
@@ -41,7 +42,8 @@ namespace xeus
 
         void configure();
 
-        nl::json execute_request(const std::string& code,
+        nl::json execute_request(xrequest_context context,
+                                 const std::string& code,
                                  bool silent,
                                  bool store_history,
                                  nl::json user_expressions,
@@ -102,7 +104,8 @@ namespace xeus
 
         virtual void configure_impl() = 0;
 
-        virtual nl::json execute_request_impl(int execution_counter,
+        virtual nl::json execute_request_impl(xrequest_context request_context,
+                                              int execution_counter,
                                               const std::string& code,
                                               bool silent,
                                               bool store_history,
