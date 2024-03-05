@@ -49,29 +49,29 @@ namespace xeus
             return nl::json();
         }
 
-        nl::json complete_request_impl(const std::string& /*code*/, int /*cursor_pos*/) override
+        nl::json complete_request_impl(xrequest_context /*request_context*/, const std::string& /*code*/, int /*cursor_pos*/) override
         {
             return nl::json();
         }
 
-        nl::json inspect_request_impl(const std::string& /*code*/,
+        nl::json inspect_request_impl(xrequest_context /*request_context*/, const std::string& /*code*/,
                                    int /*cursor_pos*/,
                                    int /*detail_level*/) override
         {
             return nl::json();
         }
 
-        nl::json is_complete_request_impl(const std::string& /*code*/) override
+        nl::json is_complete_request_impl(xrequest_context /*request_context*/, const std::string& /*code*/) override
         {
             return nl::json();
         }
 
-        nl::json kernel_info_request_impl() override
+        nl::json kernel_info_request_impl(xrequest_context /*request_context*/) override
         {
             return nl::json();
         }
 
-        void shutdown_request_impl() override
+        void shutdown_request_impl(xrequest_context /*request_context*/) override
         {
         }
 

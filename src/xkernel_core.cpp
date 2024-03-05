@@ -235,8 +235,8 @@ namespace xeus
 
             nl::json metadata = get_metadata();
             
-            nl::json reply = p_interpreter->execute_request(
-                xrequest_context(request.header(), c, request.identities()),
+            xrequest_context request_context(request.header(), c, request.identities());
+            nl::json reply = p_interpreter->execute_request(std::move(request_context),
                 code, silent, store_history, std::move(user_expression), allow_stdin);
             int execution_count = reply.value("execution_count", 1);
             std::string status = reply.value("status", "error");
@@ -265,8 +265,8 @@ namespace xeus
         const nl::json& content = request.content();
         std::string code = content.value("code", "");
         int cursor_pos = content.value("cursor_pos", -1);
-
-        nl::json reply = p_interpreter->complete_request(code, cursor_pos);
+        xrequest_context request_context(request.header(), c, request.identities());
+        nl::json reply = p_interpreter->complete_request(std::move(request_context), code, cursor_pos);
         send_reply("complete_reply", nl::json::object(), std::move(reply), c);
     }
 
@@ -277,7 +277,8 @@ namespace xeus
         int cursor_pos = content.value("cursor_pos", -1);
         int detail_level = content.value("detail_level", 0);
 
-        nl::json reply = p_interpreter->inspect_request(code, cursor_pos, detail_level);
+        xrequest_context request_context(request.header(), c, request.identities());
+        nl::json reply = p_interpreter->inspect_request(std::move(request_context), code, cursor_pos, detail_level);
         send_reply("inspect_reply", nl::json::object(), std::move(reply), c);
     }
 
@@ -294,8 +295,9 @@ namespace xeus
     {
         const nl::json& content = request.content();
         std::string code = content.value("code", "");
-
-        nl::json reply = p_interpreter->is_complete_request(code);
+        
+        xrequest_context request_context(request.header(), c, request.identities());
+        nl::json reply = p_interpreter->is_complete_request(std::move(request_context), code);
         send_reply("is_complete_reply", nl::json::object(), std::move(reply), c);
     }
 
@@ -320,9 +322,10 @@ namespace xeus
         send_reply("comm_info_reply", nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::kernel_info_request(xmessage /* request */, channel c)
+    void xkernel_core::kernel_info_request(xmessage  request , channel c)
     {
-        nl::json reply = p_interpreter->kernel_info_request();
+        xrequest_context request_context(request.header(), c, request.identities());
+        nl::json reply = p_interpreter->kernel_info_request(std::move(request_context));
         reply["protocol_version"] = get_protocol_version();
         send_reply("kernel_info_reply", nl::json::object(), std::move(reply), c);
     }
@@ -331,7 +334,8 @@ namespace xeus
     {
         const nl::json& content = request.content();
         bool restart = content.value("restart", false);
-        p_interpreter->shutdown_request();
+        xrequest_context request_context(request.header(), c, request.identities());
+        p_interpreter->shutdown_request(std::move(request_context));
         p_server->stop();
         nl::json reply;
         reply["restart"] = restart;

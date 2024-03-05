@@ -52,29 +52,29 @@ namespace xeus
         return reply;
     }
 
-    nl::json xinterpreter::complete_request(const std::string& code, int cursor_pos)
+    nl::json xinterpreter::complete_request(xrequest_context context, const std::string& code, int cursor_pos)
     {
-        return complete_request_impl(code, cursor_pos);
+        return complete_request_impl(std::move(context), code, cursor_pos);
     }
 
-    nl::json xinterpreter::inspect_request(const std::string& code, int cursor_pos, int detail_level)
+    nl::json xinterpreter::inspect_request(xrequest_context context, const std::string& code, int cursor_pos, int detail_level)
     {
-        return inspect_request_impl(code, cursor_pos, detail_level);
+        return inspect_request_impl(std::move(context), code, cursor_pos, detail_level);
     }
 
-    nl::json xinterpreter::is_complete_request(const std::string& code)
+    nl::json xinterpreter::is_complete_request(xrequest_context context, const std::string& code)
     {
-        return is_complete_request_impl(code);
+        return is_complete_request_impl(std::move(context), code);
     }
 
-    nl::json xinterpreter::kernel_info_request()
+    nl::json xinterpreter::kernel_info_request(xrequest_context context)
     {
-        return kernel_info_request_impl();
+        return kernel_info_request_impl(std::move(context));
     }
 
-    void xinterpreter::shutdown_request()
+    void xinterpreter::shutdown_request(xrequest_context context)
     {
-        shutdown_request_impl();
+        shutdown_request_impl(std::move(context));
     }
 
     nl::json xinterpreter::internal_request(const nl::json& message)
@@ -241,7 +241,7 @@ namespace xeus
         }
     }
 
-    nl::json xinterpreter::internal_request_impl(const nl::json&)
+    nl::json xinterpreter::internal_request_impl( const nl::json&)
     {
         nl::json res;
         res["status"] = "error";

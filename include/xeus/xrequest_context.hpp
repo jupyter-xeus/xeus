@@ -25,7 +25,7 @@ namespace xeus
     {
         public:
             using guid_list = xmessage::guid_list;
-
+            xrequest_context() = default;
             xrequest_context(nl::json header, channel origin, guid_list id);    
             const nl::json& header() const; 
             channel origin() const;

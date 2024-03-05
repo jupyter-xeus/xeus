@@ -72,20 +72,20 @@ namespace xeus
         return xeus::create_successful_reply();
     }
 
-    nl::json xmock_interpreter::complete_request_impl(const std::string& /* code */,
+    nl::json xmock_interpreter::complete_request_impl(xrequest_context /*request_context*/, const std::string& /* code */,
                                                      int /* cursor_pos */)
     {
         return xeus::create_complete_reply({"a.test1", "a.test2"}, 2, 6);
     }
 
-    nl::json xmock_interpreter::inspect_request_impl(const std::string& /* code */,
+    nl::json xmock_interpreter::inspect_request_impl(xrequest_context /*request_context*/,const std::string& /* code */,
                                                     int /* cursor_pos */,
                                                     int /* detail_level */)
     {
         return xeus::create_inspect_reply(true, {{"text/plain", ""}}, {{"text/plain", ""}});
     }
 
-    nl::json xmock_interpreter::is_complete_request_impl(const std::string& code)
+    nl::json xmock_interpreter::is_complete_request_impl(xrequest_context /*request_context*/,const std::string& code)
     {
         nl::json result = xeus::create_is_complete_reply(code);
         if (code.compare("incomplete") == 0)
@@ -95,7 +95,7 @@ namespace xeus
         return result;
     }
 
-    nl::json xmock_interpreter::kernel_info_request_impl()
+    nl::json xmock_interpreter::kernel_info_request_impl(xrequest_context /*request_context*/)
     {
         return xeus::create_info_reply("",
                                        "cpp_test",
@@ -110,7 +110,7 @@ namespace xeus
                                        "test_kernel");
     }
 
-    void xmock_interpreter::shutdown_request_impl()
+    void xmock_interpreter::shutdown_request_impl(xrequest_context /*request_context*/)
     {
     }
 }

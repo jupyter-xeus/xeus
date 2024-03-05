@@ -166,7 +166,9 @@ namespace xeus
 
     void xkernel::stop()
     {
-        p_interpreter->shutdown_request();
+        // 
+        xrequest_context context; // empty context
+        p_interpreter->shutdown_request(std::move(context));
         p_server->stop();
     }
 
