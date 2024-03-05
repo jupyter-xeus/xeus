@@ -30,6 +30,11 @@ namespace xeus
             const nl::json& header() const; 
             channel origin() const;
             const guid_list& id() const;
+
+            // is this an empty context / no-context?
+            // (for instance when shutdown_request is called
+            // directly from the kernel.cpp without a request)
+            bool empty() const;
         private:
             
             nl::json m_header;
