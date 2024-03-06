@@ -67,7 +67,7 @@ namespace xeus
 
         nl::json pub_data;
         pub_data["text/plain"] = code;
-        publish_execution_result(execution_counter, std::move(pub_data), nl::json::object());
+        publish_execution_result(request_context, execution_counter, std::move(pub_data), nl::json::object());
 
         return xeus::create_successful_reply();
     }
