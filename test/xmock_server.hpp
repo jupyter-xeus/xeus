@@ -42,10 +42,10 @@ namespace xeus
 
         xmock_server();
         virtual ~xmock_server() = default;
-        
+
         xmock_server(const xmock_server&) = delete;
         xmock_server& operator=(const xmock_server&) = delete;
-        
+
         xmock_server(xmock_server&&) = delete;
         xmock_server& operator=(xmock_server&&) = delete;
 
@@ -58,7 +58,7 @@ namespace xeus
 
         std::size_t control_size() const;
         xmessage read_control();
-        
+
         std::size_t stdin_size() const;
         xmessage read_stdin();
 
@@ -95,6 +95,17 @@ namespace xeus
     std::unique_ptr<xserver> make_mock_server(xcontext& context,
                                               const xconfiguration& config,
                                               nl::json::error_handler_t eh);
+
+    class xmock_context : public xcontext
+    {
+    public:
+
+        xmock_context();
+        ~xmock_context() = default;
+
+    };
+
+    std::unique_ptr<xcontext> make_mock_context();
 }
 
 #endif
