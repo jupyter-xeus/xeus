@@ -77,9 +77,7 @@ namespace xeus
         });
         p_interpreter->register_stdin_sender(std::bind(&xkernel_core::send_stdin, this, _1, _2, _3));
         p_interpreter->register_comm_manager(&m_comm_manager);
-        p_interpreter->register_parent_header([this]() -> const nl::json& {
-            return this->parent_header(channel::SHELL);
-        });
+
     }
 
     xkernel_core::~xkernel_core()

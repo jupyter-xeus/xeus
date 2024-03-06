@@ -88,9 +88,9 @@ namespace xeus
         xcomm_manager& comm_manager() noexcept;
         const xcomm_manager& comm_manager() const noexcept;
 
-        using parent_header_type = std::function<const nl::json&()>;
-        void register_parent_header(const parent_header_type&);
-        const nl::json& parent_header() const noexcept;
+        // using parent_header_type = std::function<const nl::json&()>;
+        // void register_parent_header(const parent_header_type&);
+        // const nl::json& parent_header() const noexcept;
 
         void register_control_messenger(xcontrol_messenger& messenger);
 
@@ -137,7 +137,7 @@ namespace xeus
         stdin_sender_type m_stdin;
         int m_execution_count;
         xcomm_manager* p_comm_manager;
-        parent_header_type m_parent_header;
+        //parent_header_type m_parent_header;
         input_reply_handler_type m_input_reply_handler;
         xcontrol_messenger* p_messenger;
         const xhistory_manager* p_history;
