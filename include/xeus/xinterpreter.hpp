@@ -61,18 +61,19 @@ namespace xeus
         nl::json internal_request(const nl::json& message);
 
         // publish(msg_type, metadata, content)
-        using publisher_type = std::function<void(const std::string&, nl::json, nl::json, buffer_sequence)>;
+        using publisher_type = std::function<void(xrequest_context ,   const std::string&, nl::json, nl::json, buffer_sequence)>;
         void register_publisher(const publisher_type& publisher);
 
-        void publish_stream(const std::string& name, const std::string& text);
-        void display_data(nl::json data, nl::json metadata, nl::json transient);
-        void update_display_data(nl::json data, nl::json metadata, nl::json transient);
-        void publish_execution_input(const std::string& code, int execution_count);
-        void publish_execution_result(int execution_count, nl::json data, nl::json metadata);
-        void publish_execution_error(const std::string& ename,
+        void publish_stream(xrequest_context, const std::string& name, const std::string& text);
+        void display_data(xrequest_context, nl::json data, nl::json metadata, nl::json transient);
+        void update_display_data(xrequest_context, nl::json data, nl::json metadata, nl::json transient);
+        void publish_execution_input(xrequest_context, const std::string& code, int execution_count);
+        void publish_execution_result(xrequest_context, int execution_count, nl::json data, nl::json metadata);
+        void publish_execution_error(xrequest_context, 
+                                     const std::string& ename,
                                      const std::string& evalue,
                                      const std::vector<std::string>& trace_back);
-        void clear_output(bool wait);
+        void clear_output(xrequest_context, bool wait);
 
         // send_stdin(msg_type, metadata, content)
         using stdin_sender_type = std::function<void(const std::string&, nl::json, nl::json)>;

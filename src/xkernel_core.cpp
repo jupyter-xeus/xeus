@@ -66,13 +66,14 @@ namespace xeus
         p_server->register_internal_listener(std::bind(&xkernel_core::dispatch_internal, this, _1));
 
         // Interpreter bindings
-        p_interpreter->register_publisher([this](const std::string& msg_type,
+        p_interpreter->register_publisher([this](xrequest_context request_context,
+                                                 const std::string& msg_type,
                                                  nl::json metadata,
                                                  nl::json content,
                                                  buffer_sequence buffers)
         {
             this->publish_message(msg_type, std::move(metadata), std::move(content), std::move(buffers),
-                                  channel::SHELL);
+                                  channel::SHELL, request_context.header());
         });
         p_interpreter->register_stdin_sender(std::bind(&xkernel_core::send_stdin, this, _1, _2, _3));
         p_interpreter->register_comm_manager(&m_comm_manager);
@@ -137,11 +138,29 @@ namespace xeus
                                        nl::json metadata,
                                        nl::json content,
                                        buffer_sequence buffers,
-                                       channel c)
+                                       channel c
+                                       )
+    {
+        publish_message(msg_type, 
+            std::move(metadata), 
+            std::move(content), 
+            std::move(buffers), 
+            c, 
+            get_parent_header(c)
+        );
+    }
+
+    void xkernel_core::publish_message(const std::string& msg_type,
+                                       nl::json metadata,
+                                       nl::json content,
+                                       buffer_sequence buffers,
+                                       channel c,
+                                       nl::json parent_header
+                                       )
     {
         xpub_message msg(get_topic(msg_type),
                          make_header(msg_type, m_user_name, m_session_id),
-                         get_parent_header(c),
+                         std::move(parent_header),
                          std::move(metadata),
                          std::move(content),
                          std::move(buffers));

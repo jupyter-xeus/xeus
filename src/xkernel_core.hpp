@@ -55,11 +55,21 @@ namespace xeus
         void dispatch_stdin(xmessage msg);
         nl::json dispatch_internal(nl::json msg);
 
+        // TODO REMOVE THIS METHOD
         void publish_message(const std::string& msg_type,
                              nl::json metadata,
                              nl::json content,
                              buffer_sequence buffers,
-                             channel origin);
+                             channel origin
+                             );
+
+        void publish_message(const std::string& msg_type,
+                             nl::json metadata,
+                             nl::json content,
+                             buffer_sequence buffers,
+                             channel origin,
+                             nl::json parent_header
+                             );
 
         void send_stdin(const std::string& msg_type, nl::json metadata, nl::json content);
 
