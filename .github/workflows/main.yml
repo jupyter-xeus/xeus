@@ -33,41 +33,36 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Get number of CPU cores
-        uses: SimenB/github-actions-cpu-cores@v1
 
-      - name: install mamba
+      - name: Get number of CPU cores
+        uses: SimenB/github-actions-cpu-cores@v2
+
+      - name: Install mamba
         uses: mamba-org/setup-micromamba@v1
         with:
           environment-file: environment-dev.yml
           environment-name: xeus
+          create-args: libuuid
 
-      - name: install cxx compiler
-        shell: bash -l {0}
-        run: |
-          $HOME/micromamba-bin/micromamba install cxx-compiler libuuid  -c conda-forge -y
+      - name: Make build directory
+        run: mkdir build
 
-      - name: cmake configure
-        shell: bash -l {0}
+      - name: Configure cmake
         run: |
-          mkdir -p build
-          cd build
           cmake .. \
            -DXEUS_BUILD_TESTS=ON \
            -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
            -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
            -DXEUS_STATIC_DEPENDENCIES=${{ matrix.xeus_static_dependencies }} \
            -DXEUS_BUILD_SHARED_LIBS=${{ matrix.xeus_build_shared_lib }}
+        working-directory: build
 
-      - name: build
-        shell: bash -l {0}
-        run: |
-          cd build
-          make -j 2
-          # make -j ${{ steps.cpu-cores.outputs.count }}
+      - name: Build
+        run: make -j ${{ steps.cpu-cores.outputs.count }}
+        working-directory: build
 
       - name: Test xeus
-        uses: nick-invision/retry@v2
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 4
           max_attempts: 4
@@ -76,19 +71,15 @@ jobs:
             cd build/test
             ctest --output-on-failure
 
-
-      - name: install xeus
-        shell: bash -l {0}
-        run: |
-          cd build
-          make install
+      - name: Install xeus
+        run: make install
+        working-directory: build
 
   win:
 
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        # micromamba activation
         shell: cmd /C call {0}
 
     strategy:
@@ -99,7 +90,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install mamba
+      - name: Install mamba
         uses: mamba-org/setup-micromamba@v1
         with:
           environment-file: environment-dev.yml
@@ -109,7 +100,7 @@ jobs:
       - name: Make build directory
         run: mkdir build
 
-      - name: cmake configure
+      - name: Configure cmake
         run: |
           cmake .. ^
            -G Ninja ^
@@ -120,14 +111,14 @@ jobs:
            -DCMAKE_INSTALL_PREFIX="%CONDA_PREFIX%"
         working-directory: build
 
-      - name: build
+      - name: Build
         run: |
           set CL=/MP
           ninja install
         working-directory: build
 
-      - name: ctest
-        uses: nick-invision/retry@v2
+      - name: Test xeus
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 4
           max_attempts: 4
@@ -139,34 +130,35 @@ jobs:
 
   emscripten_wasm:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
       matrix:
-        emsdk_ver: ["2.0.32", "3.1.2"]
+        emsdk_ver: ["3.1.2", "3.1.45"]
+
     steps:
       - uses: actions/checkout@v4
 
+      - name: Get number of CPU cores
+        uses: SimenB/github-actions-cpu-cores@v2
+
       - name: Install mamba
-        uses: mamba-org/provision-with-micromamba@main
+        uses: mamba-org/setup-micromamba@v1
         with:
           environment-file: environment-wasm-build.yml
           environment-name: xeus-wasm-build
+          create-args: libuuid
 
       - name: Setup emsdk
-        run: |
-          micromamba activate xeus-wasm-build
-          emsdk install ${{matrix.emsdk_ver}}
+        run: emsdk install ${{ matrix.emsdk_ver }}
 
-      - name: Build and pack xeus
+      - name: Build and package xeus
         run: |
-          micromamba activate xeus-wasm-build
-
-          emsdk activate ${{matrix.emsdk_ver}}
+          emsdk activate ${{ matrix.emsdk_ver }}
           source $CONDA_EMSDK_DIR/emsdk_env.sh
 
-          micromamba create -f environment-wasm-host.yml --platform=emscripten-32
+          micromamba create -f environment-wasm-host.yml --platform=emscripten-wasm32
 
           mkdir build
           pushd build
@@ -182,5 +174,4 @@ jobs:
             -DXEUS_EMSCRIPTEN_WASM_BUILD=ON \
             ..
 
-          make -j5
-      
+          make -j${{ steps.cpu-cores.outputs.count }}
