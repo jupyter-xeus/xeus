@@ -55,13 +55,13 @@ namespace xeus
         void dispatch_stdin(xmessage msg);
         nl::json dispatch_internal(nl::json msg);
 
-        // TODO REMOVE THIS METHOD
-        void publish_message(const std::string& msg_type,
-                             nl::json metadata,
-                             nl::json content,
-                             buffer_sequence buffers,
-                             channel origin
-                             );
+        // // TODO REMOVE THIS METHOD
+        // void publish_message(const std::string& msg_type,
+        //                      nl::json metadata,
+        //                      nl::json content,
+        //                      buffer_sequence buffers,
+        //                      channel origin
+        //                      );
 
         void publish_message(const std::string& msg_type,
                              nl::json metadata,
@@ -102,14 +102,14 @@ namespace xeus
         void interrupt_request(xmessage request, channel c);
         void debug_request(xmessage request, channel c);
 
-        void publish_status(const std::string& status, channel c);
+        void publish_status(const std::string& status, channel c, nl::json parent_header);
 
-        void publish_execute_input(const std::string& code, int execution_count);
+        void publish_execute_input(const std::string& code, int execution_count, nl::json parent_header);
 
-        void send_reply(const std::string& reply_type,
-                        nl::json metadata,
-                        nl::json reply_content,
-                        channel c);
+        // void send_reply(const std::string& reply_type,
+        //                 nl::json metadata,
+        //                 nl::json reply_content,
+        //                 channel c);
 
         void send_reply(const guid_list& id_list,
                         const std::string& reply_type,

@@ -88,10 +88,6 @@ namespace xeus
         xcomm_manager& comm_manager() noexcept;
         const xcomm_manager& comm_manager() const noexcept;
 
-        // using parent_header_type = std::function<const nl::json&()>;
-        // void register_parent_header(const parent_header_type&);
-        // const nl::json& parent_header() const noexcept;
-
         void register_control_messenger(xcontrol_messenger& messenger);
 
         void register_history_manager(const xhistory_manager& history);

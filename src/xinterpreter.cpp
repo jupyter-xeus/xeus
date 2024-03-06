@@ -187,24 +187,6 @@ namespace xeus
         p_comm_manager = manager;
     }
 
-    // void xinterpreter::register_parent_header(const parent_header_type& parent_header)
-    // {
-    //     m_parent_header = parent_header;
-    // }
-
-    // const nl::json& xinterpreter::parent_header() const noexcept
-    // {
-    //     static const auto dummy = nl::json::object();
-    //     if (m_parent_header)
-    //     {
-    //         return m_parent_header();
-    //     }
-    //     else
-    //     {
-    //         return dummy;
-    //     }
-    // }
-
     void xinterpreter::register_control_messenger(xcontrol_messenger& messenger)
     {
         p_messenger = &messenger;
