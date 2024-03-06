@@ -25,11 +25,6 @@ namespace xeus
     XEUS_API
     int get_current_pid();
 
-    [[deprecated]] XEUS_API 
-    std::string get_cell_tmp_file(const std::string& prefix,
-                                  int execution_count,
-                                  const std::string& extension);
-
     XEUS_API
     std::size_t get_tmp_hash_seed();
 

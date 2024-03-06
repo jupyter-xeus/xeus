@@ -17,10 +17,6 @@
 namespace xeus
 {
 
-    struct [[deprecated]] xempty_context_tag
-    {
-    };
-
     template <class T>
     class xcontext_impl;
 
@@ -68,21 +64,6 @@ namespace xeus
         return impl->m_context;
     }
 
-    // Deprecated: call the make_xxx_context function from the library providing the
-    // server implementation
-    template <class T, class... U>
-    std::unique_ptr<xcontext_impl<T>> make_context(U&&... u)
-    {
-        return std::unique_ptr<xcontext_impl<T>>(new xcontext_impl<T>(std::forward<U>(u)...));
-    }
-
-    [[deprecated]]
-    inline std::unique_ptr<xcontext_impl<xempty_context_tag>> make_empty_context()
-    {
-        return std::unique_ptr<xcontext_impl<xempty_context_tag>>(
-            new xcontext_impl<xempty_context_tag>()
-        );
-    }
 }
 
 #endif
