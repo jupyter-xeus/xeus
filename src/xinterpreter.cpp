@@ -207,14 +207,14 @@ namespace xeus
         return *p_messenger;
     }
 
-    void xinterpreter::input_request(const std::string& prompt, bool pwd)
+    void xinterpreter::input_request(xrequest_context context, const std::string& prompt, bool pwd)
     {
         if (m_stdin)
         {
             nl::json content;
             content["prompt"] = prompt;
             content["pwd"] = pwd;
-            m_stdin("input_request", nl::json::object(), std::move(content));
+            m_stdin(std::move(context), "input_request", nl::json::object(), std::move(content));
         }
     }
 

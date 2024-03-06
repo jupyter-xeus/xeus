@@ -41,8 +41,6 @@ namespace xeus
         , p_interpreter(interpreter)
         , p_history_manager(history_manager)
         , p_debugger(debugger)
-        , m_parent_id({guid_list(0), guid_list(0)})
-        , m_parent_header({nl::json::object(), nl::json::object()})
     {
         // Request handlers
         m_handler["execute_request"] = &xkernel_core::execute_request;
@@ -75,7 +73,16 @@ namespace xeus
             this->publish_message(msg_type, std::move(metadata), std::move(content), std::move(buffers),
                                   channel::SHELL, request_context.header());
         });
-        p_interpreter->register_stdin_sender(std::bind(&xkernel_core::send_stdin, this, _1, _2, _3));
+
+        p_interpreter->register_stdin_sender([this](xrequest_context request_context,
+                                                   const std::string& msg_type,
+                                                  nl::json metadata,
+                                                  nl::json content)
+        {
+            this->send_stdin(msg_type, request_context.id(), request_context.header(), std::move(metadata), std::move(content));
+        });
+
+
         p_interpreter->register_comm_manager(&m_comm_manager);
 
     }
@@ -132,22 +139,6 @@ namespace xeus
         return rep;
     }
 
-    // void xkernel_core::publish_message(const std::string& msg_type,
-    //                                    nl::json metadata,
-    //                                    nl::json content,
-    //                                    buffer_sequence buffers,
-    //                                    channel c
-    //                                    )
-    // {
-    //     publish_message(msg_type, 
-    //         std::move(metadata), 
-    //         std::move(content), 
-//         std::move(buffers), 
-    //         c, 
-    //         get_parent_header(c)
-    //     );
-    // }
-
     void xkernel_core::publish_message(const std::string& msg_type,
                                        nl::json metadata,
                                        nl::json content,
@@ -167,12 +158,14 @@ namespace xeus
     }
 
     void xkernel_core::send_stdin(const std::string& msg_type,
+                                  const guid_list& id_list,
+                                  nl::json parent_header,
                                   nl::json metadata,
                                   nl::json content)
     {
-        xmessage msg(get_parent_id(channel::SHELL),
+        xmessage msg(id_list,
                      make_header(msg_type, m_user_name, m_session_id),
-                     get_parent_header(channel::SHELL),
+                     std::move(parent_header),
                      std::move(metadata),
                      std::move(content),
                      buffer_sequence());
@@ -195,16 +188,10 @@ namespace xeus
         return m_comm_manager;
     }
 
-    const nl::json& xkernel_core::parent_header(channel c) const noexcept
-    {
-        return m_parent_header[std::size_t(c)];
-    }
-
     void xkernel_core::dispatch(xmessage msg, channel c)
     {
         p_logger->log_received_message(msg, c == channel::SHELL ? xlogger::shell : xlogger::control);
         const nl::json& header = msg.header();
-        set_parent(msg.identities(), header, c);
         publish_status("busy", c, header);
 
         std::string msg_type = header.value("msg_type", "");
@@ -457,25 +444,6 @@ namespace xeus
         nl::json metadata;
         metadata["started"] = iso8601_now();
         return metadata;
-    }
-
-    void xkernel_core::set_parent(const guid_list& parent_id,
-                                  const nl::json& parent_header,
-                                  channel c)
-    {
-        auto idx = static_cast<std::size_t>(c);
-        m_parent_id[idx] = parent_id;
-        m_parent_header[idx] = parent_header;
-    }
-
-    const xkernel_core::guid_list& xkernel_core::get_parent_id(channel c) const
-    {
-        return m_parent_id[std::size_t(c)];
-    }
-
-    nl::json xkernel_core::get_parent_header(channel c) const
-    {
-        return m_parent_header[std::size_t(c)];
     }
 
     void xkernel_core::comm_open(xmessage request, channel)

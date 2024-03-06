@@ -61,7 +61,7 @@ namespace xeus
         nl::json internal_request(const nl::json& message);
 
         // publish(msg_type, metadata, content)
-        using publisher_type = std::function<void(xrequest_context ,   const std::string&, nl::json, nl::json, buffer_sequence)>;
+        using publisher_type = std::function<void(xrequest_context, const std::string&, nl::json, nl::json, buffer_sequence)>;
         void register_publisher(const publisher_type& publisher);
 
         void publish_stream(xrequest_context, const std::string& name, const std::string& text);
@@ -76,12 +76,12 @@ namespace xeus
         void clear_output(xrequest_context, bool wait);
 
         // send_stdin(msg_type, metadata, content)
-        using stdin_sender_type = std::function<void(const std::string&, nl::json, nl::json)>;
+        using stdin_sender_type = std::function<void(xrequest_context, const std::string&, nl::json, nl::json)>;
         void register_stdin_sender(const stdin_sender_type& sender);
         using input_reply_handler_type = std::function<void(const std::string&)>;
         void register_input_handler(const input_reply_handler_type& handler);
 
-        void input_request(const std::string& prompt, bool pwd);
+        void input_request(xrequest_context context, const std::string& prompt, bool pwd);
         void input_reply(const std::string& value);
 
         void register_comm_manager(xcomm_manager* manager);

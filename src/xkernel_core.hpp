@@ -36,6 +36,7 @@ namespace xeus
         using interpreter_ptr = xinterpreter*;
         using history_manager_ptr = xhistory_manager*;
         using debugger_ptr = xdebugger*;
+        using guid_list = xmessage::guid_list;
 
         xkernel_core(const std::string& kernel_id,
                      const std::string& user_name,
@@ -54,15 +55,7 @@ namespace xeus
         void dispatch_control(xmessage msg);
         void dispatch_stdin(xmessage msg);
         nl::json dispatch_internal(nl::json msg);
-
-        // // TODO REMOVE THIS METHOD
-        // void publish_message(const std::string& msg_type,
-        //                      nl::json metadata,
-        //                      nl::json content,
-        //                      buffer_sequence buffers,
-        //                      channel origin
-        //                      );
-
+ 
         void publish_message(const std::string& msg_type,
                              nl::json metadata,
                              nl::json content,
@@ -71,7 +64,7 @@ namespace xeus
                              nl::json parent_header
                              );
 
-        void send_stdin(const std::string& msg_type, nl::json metadata, nl::json content);
+        void send_stdin(const std::string& msg_type, const guid_list& id_list, nl::json parent_header, nl::json metadata, nl::json content);
 
         xcomm_manager& comm_manager() & noexcept;
         const xcomm_manager& comm_manager() const & noexcept;
@@ -81,7 +74,7 @@ namespace xeus
     private:
 
         using handler_type = void (xkernel_core::*)(xmessage, channel);
-        using guid_list = xmessage::guid_list;
+        
 
         void dispatch(xmessage msg, channel c);
 
@@ -106,11 +99,6 @@ namespace xeus
 
         void publish_execute_input(const std::string& code, int execution_count, nl::json parent_header);
 
-        // void send_reply(const std::string& reply_type,
-        //                 nl::json metadata,
-        //                 nl::json reply_content,
-        //                 channel c);
-
         void send_reply(const guid_list& id_list,
                         const std::string& reply_type,
                         nl::json parent_header,
@@ -123,9 +111,6 @@ namespace xeus
         std::string get_topic(const std::string& msg_type) const;
         nl::json get_metadata() const;
 
-        void set_parent(const guid_list& list, const nl::json& parent, channel c);
-        const guid_list& get_parent_id(channel c) const;
-        nl::json get_parent_header(channel c) const;
 
         std::string m_kernel_id;
         std::string m_user_name;
@@ -139,8 +124,8 @@ namespace xeus
         history_manager_ptr p_history_manager;
         debugger_ptr p_debugger;
 
-        std::array<guid_list, 2> m_parent_id;
-        std::array<nl::json, 2> m_parent_header;
+        // std::array<guid_list, 2> m_parent_id;
+        // std::array<nl::json, 2> m_parent_header;
     };
 }
 
