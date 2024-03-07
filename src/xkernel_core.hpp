@@ -121,9 +121,6 @@ namespace xeus
         interpreter_ptr p_interpreter;
         history_manager_ptr p_history_manager;
         debugger_ptr p_debugger;
-
-        // std::array<guid_list, 2> m_parent_id;
-        // std::array<nl::json, 2> m_parent_header;
     };
 }
 

@@ -130,7 +130,6 @@ namespace xeus
         stdin_sender_type m_stdin;
         int m_execution_count;
         xcomm_manager* p_comm_manager;
-        //parent_header_type m_parent_header;
         input_reply_handler_type m_input_reply_handler;
         xcontrol_messenger* p_messenger;
         const xhistory_manager* p_history;
