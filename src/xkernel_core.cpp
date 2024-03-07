@@ -76,8 +76,8 @@ namespace xeus
 
         p_interpreter->register_stdin_sender([this](xrequest_context request_context,
                                                    const std::string& msg_type,
-                                                  nl::json metadata,
-                                                  nl::json content)
+                                                   nl::json metadata,
+                                                   nl::json content)
         {
             this->send_stdin(msg_type, request_context.id(), request_context.header(), std::move(metadata), std::move(content));
         });
