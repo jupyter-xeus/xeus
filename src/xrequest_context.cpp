@@ -21,9 +21,4 @@ namespace xeus
     {
         return m_id;
     }
-
-    bool xrequest_context::empty() const
-    {
-        return m_header.empty();
-    }
 }

@@ -21,20 +21,14 @@ namespace nl = nlohmann;
 namespace xeus
 {
 
-    class XEUS_API xrequest_context
-    {
+    class XEUS_API xrequest_context{
         public:
             using guid_list = xmessage::guid_list;
-            xrequest_context() = default;
             xrequest_context(nl::json header, channel origin, guid_list id);    
             const nl::json& header() const; 
             channel origin() const;
             const guid_list& id() const;
 
-            // is this an empty context / no-context?
-            // (for instance when shutdown_request is called
-            // directly from the kernel.cpp without a request)
-            bool empty() const;
         private:
             
             nl::json m_header;
