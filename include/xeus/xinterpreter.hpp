@@ -49,14 +49,14 @@ namespace xeus
                                  nl::json user_expressions,
                                  bool allow_stdin);
 
-        nl::json complete_request(xrequest_context context, const std::string& code, int cursor_pos);
+        nl::json complete_request(const std::string& code, int cursor_pos);
 
-        nl::json inspect_request(xrequest_context context, const std::string& code, int cursor_pos, int detail_level);
+        nl::json inspect_request(const std::string& code, int cursor_pos, int detail_level);
 
-        nl::json is_complete_request(xrequest_context context, const std::string& code);
-        nl::json kernel_info_request(xrequest_context context);
+        nl::json is_complete_request(const std::string& code);
+        nl::json kernel_info_request();
 
-        void shutdown_request(xrequest_context context);
+        void shutdown_request();
 
         nl::json internal_request(const nl::json& message);
 
@@ -109,21 +109,18 @@ namespace xeus
                                               nl::json user_expressions,
                                               bool allow_stdin) = 0;
 
-        virtual nl::json complete_request_impl(xrequest_context request_context,
-                                               const std::string& code,
+        virtual nl::json complete_request_impl(const std::string& code,
                                                int cursor_pos) = 0;
 
-        virtual nl::json inspect_request_impl(xrequest_context request_context,
-                                              const std::string& code,
+        virtual nl::json inspect_request_impl(const std::string& code,
                                               int cursor_pos,
                                               int detail_level) = 0;
 
-        virtual nl::json is_complete_request_impl(xrequest_context request_context,
-                                                 const std::string& code) = 0;
+        virtual nl::json is_complete_request_impl(const std::string& code) = 0;
 
-        virtual nl::json kernel_info_request_impl(xrequest_context request_context) = 0;
+        virtual nl::json kernel_info_request_impl() = 0;
 
-        virtual void shutdown_request_impl(xrequest_context request_context) = 0;
+        virtual void shutdown_request_impl() = 0;
 
         virtual nl::json internal_request_impl(const nl::json& message);
 
