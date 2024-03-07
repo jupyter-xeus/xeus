@@ -264,7 +264,7 @@ namespace xeus
     }
 
     inline void xcomm::send_comm_message(const std::string& msg_type,
-                                        nl::json parent_header,
+                                         nl::json parent_header,
                                          nl::json metadata,
                                          nl::json data,
                                          buffer_sequence buffers) const
