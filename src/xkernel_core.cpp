@@ -192,7 +192,7 @@ namespace xeus
     {
         p_logger->log_received_message(msg, c == channel::SHELL ? xlogger::shell : xlogger::control);
         const nl::json& header = msg.header();
-        publish_status("busy", c, header);
+        publish_status(header, "busy", c);
 
         std::string msg_type = header.value("msg_type", "");
         handler_type handler = get_handler(msg_type);
@@ -214,7 +214,7 @@ namespace xeus
             }
         }
 
-        publish_status("idle", c, header);
+        publish_status(header, "idle", c);
     }
 
     auto xkernel_core::get_handler(const std::string& msg_type) -> handler_type
@@ -363,17 +363,16 @@ namespace xeus
         }
     }
 
-    void xkernel_core::publish_status(const std::string& status, channel c, nl::json parent_header)
+    void xkernel_core::publish_status( nl::json parent_header, const std::string& status, channel c)
     {
         nl::json content;
         content["execution_state"] = status;
         publish_message("status", nl::json::object(), std::move(content), buffer_sequence(), c, parent_header);
     }
 
-    void xkernel_core::publish_execute_input(const std::string& code,
-                                             int execution_count,
-                                            nl::json parent_header)
-
+    void xkernel_core::publish_execute_input(nl::json parent_header,
+                                             const std::string& code,
+                                             int execution_count)
     {
         nl::json content;
         content["code"] = code;

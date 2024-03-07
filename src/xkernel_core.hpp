@@ -95,9 +95,8 @@ namespace xeus
         void interrupt_request(xmessage request, channel c);
         void debug_request(xmessage request, channel c);
 
-        void publish_status(const std::string& status, channel c, nl::json parent_header);
-
-        void publish_execute_input(const std::string& code, int execution_count, nl::json parent_header);
+        void publish_status(nl::json parent_header, const std::string& status, channel c);
+        void publish_execute_input(nl::json parent_header, const std::string& code, int execution_count);
 
         void send_reply(const guid_list& id_list,
                         const std::string& reply_type,
