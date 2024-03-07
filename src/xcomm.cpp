@@ -24,9 +24,9 @@ namespace xeus
         if (p_manager->p_kernel != nullptr)
         {
             p_manager->p_kernel->publish_message(
-                msg_type, std::move(metadata), std::move(content), 
-                std::move(buffers), channel::SHELL,
-                std::move(parent_header)
+                msg_type, std::move(parent_header),
+                std::move(metadata), std::move(content), 
+                std::move(buffers), channel::SHELL
             );
         }
     }
@@ -77,7 +77,7 @@ namespace xeus
             if (p_kernel != nullptr)
             {
                 p_kernel->publish_message(
-                    "comm_close", nl::json::object(), std::move(content), buffer_sequence(), channel::SHELL, request.header()
+                    "comm_close", request.header(), nl::json::object(), std::move(content), buffer_sequence(), channel::SHELL
                 );
             }
         }

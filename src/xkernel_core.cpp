@@ -70,8 +70,8 @@ namespace xeus
                                                  nl::json content,
                                                  buffer_sequence buffers)
         {
-            this->publish_message(msg_type, std::move(metadata), std::move(content), std::move(buffers),
-                                  channel::SHELL, request_context.header());
+            this->publish_message(msg_type, request_context.header(), std::move(metadata), std::move(content), std::move(buffers),
+                                  channel::SHELL);
         });
 
         p_interpreter->register_stdin_sender([this](xrequest_context request_context,
@@ -140,12 +140,11 @@ namespace xeus
     }
 
     void xkernel_core::publish_message(const std::string& msg_type,
+                                       nl::json parent_header,
                                        nl::json metadata,
                                        nl::json content,
                                        buffer_sequence buffers,
-                                       channel c,
-                                       nl::json parent_header
-                                       )
+                                       channel c)
     {
         xpub_message msg(get_topic(msg_type),
                          make_header(msg_type, m_user_name, m_session_id),
@@ -342,14 +341,14 @@ namespace xeus
         p_server->stop();
         nl::json reply;
         reply["restart"] = restart;
-        publish_message("shutdown", nl::json::object(), std::move(reply), buffer_sequence(), channel::CONTROL, request.header());
+        publish_message("shutdown", request.header(), nl::json::object(), std::move(reply), buffer_sequence(), channel::CONTROL);
         send_reply(request.identities(), "shutdown_reply", request.header(), nl::json::object(), std::move(reply), c);
     }
 
     void xkernel_core::interrupt_request(xmessage request, channel c)
     {
         nl::json reply = nl::json::object();
-        publish_message("interrupt", nl::json::object(), std::move(reply), buffer_sequence(), channel::CONTROL, request.header());
+        publish_message("interrupt", request.header(), nl::json::object(), std::move(reply), buffer_sequence(), channel::CONTROL);
         send_reply(request.identities(), "interrupt_reply", request.header(), nl::json::object(), std::move(reply), c);
     }
 
@@ -367,7 +366,7 @@ namespace xeus
     {
         nl::json content;
         content["execution_state"] = status;
-        publish_message("status", nl::json::object(), std::move(content), buffer_sequence(), c, parent_header);
+        publish_message("status", parent_header, nl::json::object(), std::move(content), buffer_sequence(), c);
     }
 
     void xkernel_core::publish_execute_input(nl::json parent_header,
@@ -378,11 +377,11 @@ namespace xeus
         content["code"] = code;
         content["execution_count"] = execution_count;
         publish_message("execute_input",
+                         std::move(parent_header),
                          nl::json::object(),
                          std::move(content),
                          buffer_sequence(),
-                         channel::SHELL,
-                         std::move(parent_header));
+                         channel::SHELL);
     }
 
     void xkernel_core::send_reply(const guid_list& id_list,
