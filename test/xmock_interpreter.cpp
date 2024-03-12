@@ -29,7 +29,8 @@ namespace xeus
         using function_type = std::function<void(xeus::xcomm&&, const xeus::xmessage&)>;
     }
 
-    nl::json xmock_interpreter::execute_request_impl(int execution_counter,
+    nl::json xmock_interpreter::execute_request_impl(xrequest_context request_context,
+                                                     int execution_counter,
                                                      const std::string& code,
                                                      bool /* silent */,
                                                      bool /* store_history */,
@@ -38,12 +39,12 @@ namespace xeus
     {
         if (code.compare("hello, world") == 0)
         {
-            publish_stream("stdout", code);
+            publish_stream(request_context, "stdout", code);
         }
 
         if (code.compare("error") == 0)
         {
-            publish_stream("stderr", code);
+            publish_stream(request_context, "stderr", code);
         }
 
         if (code.compare("?") == 0)
@@ -66,20 +67,20 @@ namespace xeus
 
         nl::json pub_data;
         pub_data["text/plain"] = code;
-        publish_execution_result(execution_counter, std::move(pub_data), nl::json::object());
+        publish_execution_result(request_context, execution_counter, std::move(pub_data), nl::json::object());
 
         return xeus::create_successful_reply();
     }
 
     nl::json xmock_interpreter::complete_request_impl(const std::string& /* code */,
-                                                     int /* cursor_pos */)
+                                                      int /* cursor_pos */)
     {
         return xeus::create_complete_reply({"a.test1", "a.test2"}, 2, 6);
     }
 
     nl::json xmock_interpreter::inspect_request_impl(const std::string& /* code */,
-                                                    int /* cursor_pos */,
-                                                    int /* detail_level */)
+                                                     int /* cursor_pos */,
+                                                     int /* detail_level */)
     {
         return xeus::create_inspect_reply(true, {{"text/plain", ""}}, {{"text/plain", ""}});
     }

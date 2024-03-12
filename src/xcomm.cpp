@@ -16,6 +16,7 @@
 namespace xeus
 {
     void xtarget::publish_message(const std::string& msg_type,
+                                  nl::json parent_header,
                                   nl::json metadata,
                                   nl::json content,
                                   buffer_sequence buffers) const
@@ -23,7 +24,10 @@ namespace xeus
         if (p_manager->p_kernel != nullptr)
         {
             p_manager->p_kernel->publish_message(
-                msg_type, std::move(metadata), std::move(content), std::move(buffers), channel::SHELL);
+                msg_type, std::move(parent_header),
+                std::move(metadata), std::move(content), 
+                std::move(buffers), channel::SHELL
+            );
         }
     }
 
@@ -73,7 +77,7 @@ namespace xeus
             if (p_kernel != nullptr)
             {
                 p_kernel->publish_message(
-                    "comm_close", nl::json::object(), std::move(content), buffer_sequence(), channel::SHELL
+                    "comm_close", request.header(), nl::json::object(), std::move(content), buffer_sequence(), channel::SHELL
                 );
             }
         }

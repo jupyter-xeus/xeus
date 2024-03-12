@@ -38,7 +38,8 @@ namespace xeus
         {
         }
 
-        nl::json execute_request_impl(int /*execution_counter*/,
+        nl::json execute_request_impl(xrequest_context /*request_context*/,
+                                    int /*execution_counter*/,
                                    const std::string& /*code*/,
                                    bool /*silent*/,
                                    bool /*store_history*/,
