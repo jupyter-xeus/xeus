@@ -30,11 +30,6 @@ namespace xeus
         return kernel_info;
     }
 
-    std::string print_starting_message(const xconfiguration& config)
-    {
-        return get_starting_message(config);
-    }
-
     std::string extract_filename(int argc, char* argv[])
     {
         std::string res = "";

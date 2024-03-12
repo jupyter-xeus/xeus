@@ -28,9 +28,9 @@ namespace xeus
 {
     TEST_SUITE("kernel")
     {
-        TEST_CASE("print_starting_message")
+        TEST_CASE("get_starting_message")
         {
-            auto context = make_empty_context();
+            auto context = make_mock_context();
 
             using interpreter_ptr = std::unique_ptr<xmock_interpreter>;
             interpreter_ptr interpreter = interpreter_ptr(new xmock_interpreter());
@@ -38,7 +38,7 @@ namespace xeus
                          std::move(context),
                          std::move(interpreter),
                          make_mock_server);
-            std::string kernel_config = print_starting_message(kernel.get_config());
+            std::string kernel_config = get_starting_message(kernel.get_config());
             std::cout << kernel_config << std::endl;
             size_t pos = kernel_config.find("Starting kernel...\n"
                                             "\n"
