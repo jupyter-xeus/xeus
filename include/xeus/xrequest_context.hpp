@@ -48,6 +48,9 @@ namespace xeus
         xexecute_request_context(nl::json header, channel origin, guid_list id, std::function<void(const xexecute_request_context&,nl::json)> on_send_reply);
 
         void send_reply(nl::json reply);
+        void set_on_send_callback(std::function<void(const xexecute_request_context&,nl::json)> augment_reply);
+        std::function<void(const xexecute_request_context&, nl::json)> get_on_send_callback() const;
+
         private:
         std::function<void(const xexecute_request_context&, nl::json)> m_on_send_reply;
     };

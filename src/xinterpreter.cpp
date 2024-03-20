@@ -41,6 +41,16 @@ namespace xeus
             ++m_execution_count;
             publish_execution_input(context, code, m_execution_count);
         }
+        // copy m_execution_count in a local variable to capture it in the lambda
+        auto execution_count = m_execution_count;
+
+        auto inner_callback = context.get_on_send_callback();
+        context.set_on_send_callback( [inner_callback, execution_count](const xexecute_request_context& context,nl::json reply)
+        {
+            reply["execution_count"] = execution_count;
+            inner_callback(context, reply);
+        });
+
 
         execute_request_impl(
             std::move(context),
@@ -48,8 +58,6 @@ namespace xeus
             store_history, user_expressions, allow_stdin
         );
 
-        // reply["execution_count"] = m_execution_count;
-        // return reply;
     }
 
     nl::json xinterpreter::complete_request(const std::string& code, int cursor_pos)

@@ -39,4 +39,16 @@ namespace xeus
           m_on_send_reply(std::move(on_send_reply))
     {
     }
+
+    // get and set callback
+    void xexecute_request_context::set_on_send_callback(std::function<void(const xexecute_request_context&,nl::json)> augment_reply)
+    {
+        m_on_send_reply = std::move(augment_reply);
+    }
+
+    // get callback
+    std::function<void(const xexecute_request_context&, nl::json)> xexecute_request_context::get_on_send_callback() const
+    {
+        return m_on_send_reply;
+    }
 }
