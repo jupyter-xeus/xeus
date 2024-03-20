@@ -29,13 +29,12 @@ namespace xeus
         using function_type = std::function<void(xeus::xcomm&&, const xeus::xmessage&)>;
     }
 
-    void xmock_interpreter::execute_request_impl(xexecute_request_context request_context,
-                                                     int execution_counter,
-                                                     const std::string& code,
-                                                     bool /* silent */,
-                                                     bool /* store_history */,
-                                                     nl::json /* user_expressions */,
-                                                     bool /* allow_stdin */)
+    void xmock_interpreter::execute_request_impl(xrequest_context request_context,
+                                                 send_reply_callback cb,
+                                                 int execution_counter,
+                                                 const std::string& code,
+                                                 execute_request_config /*config*/,
+                                                 nl::json /*user_expressions*/)
     {
         if (code.compare("hello, world") == 0)
         {
@@ -62,14 +61,14 @@ namespace xeus
                             {"start", 0}
                         });
 
-            request_context.send_reply(xeus::create_successful_reply(payload));
+            cb(xeus::create_successful_reply(payload));
         }
 
         nl::json pub_data;
         pub_data["text/plain"] = code;
         publish_execution_result(request_context, execution_counter, std::move(pub_data), nl::json::object());
 
-        request_context.send_reply( xeus::create_successful_reply());
+        cb(xeus::create_successful_reply());
     }
 
     nl::json xmock_interpreter::complete_request_impl(const std::string& /* code */,

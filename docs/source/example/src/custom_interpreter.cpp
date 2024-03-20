@@ -19,13 +19,12 @@ namespace nl = nlohmann;
 namespace custom
 {
 
-    nl::json custom_interpreter::execute_request_impl(xrequest_context request_context, // data required by other functions
-                                                      int execution_counter, // Typically the cell number
-                                                      const std::string& /*code*/, // Code to execute
-                                                      bool /*silent*/,
-                                                      bool /*store_history*/,
-                                                      nl::json /*user_expressions*/,
-                                                      bool /*allow_stdin*/)
+    void custom_interpreter::execute_request_impl(xrequest_context request_context,
+                                                  send_reply_callback cb,
+                                                  int execution_counter,
+                                                  const std::string& code,
+                                                  execute_request_config config,
+                                                  nl::json user_expressions)
     {
         // You can use the C-API of your target language for executing the code,
         // e.g. `PyRun_String` for the Python C-API
@@ -45,7 +44,8 @@ namespace custom
         // publish_execution_error(error_name, error_value, error_traceback);
         publish_execution_error(request_context, "TypeError", "123", {"!@#$", "*(*"});
 
-        return xeus::create_successful_reply();
+        // Call the callback parameter to send the reply
+        cb(xeus::create_successful_reply());
     }
 
     void custom_interpreter::configure_impl()

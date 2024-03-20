@@ -239,37 +239,46 @@ namespace xeus
             bool allow_stdin = content.value("allow_stdin", true);
             bool stop_on_error = content.value("stop_on_error", false);
 
-            nl::json metadata = get_metadata();            
-            xexecute_request_context request_context(request.header(), c, request.identities(),
-                [this, silent, store_history, code, stop_on_error](const xexecute_request_context & ctx , nl::json reply)
+            xrequest_context request_context(request.header(), c, request.identities());
+            execute_request_config config { silent, store_history, allow_stdin };
+            int execution_count = 1;
+            std::string status;
+            auto reply_callback = [&](nl::json reply)
+            {
+                execution_count = reply.value("execution_count", 1);
+                status = reply.value("status", "error");
+                nl::json metadata = get_metadata();
+
+                send_reply(
+                    request.identities(),
+                    "execute_reply", 
+                    request.header(),
+                    std::move(metadata), 
+                    std::move(reply), 
+                    c
+                );
+
+                if (!silent && store_history)
                 {
-                    this->send_reply(ctx.id(), "execute_reply", ctx.header(), nl::json::object(), std::move(reply), ctx.origin());
-
-                    int execution_count = reply.value("execution_count", 1);
-                    std::string status = reply.value("status", "error");
-
-                        
-                    if (!silent && store_history)
-                    {
-                        this->p_history_manager->store_inputs(0, execution_count, code);
-                    }
-
-                    if (!silent && status == "error" && stop_on_error)
-                    {
-                        constexpr long polling_interval = 50;
-                        p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), polling_interval);
-                    }
-
-
-                     // idle
-                    publish_status("idle", ctx.header(), ctx.origin());
-
+                    p_history_manager->store_inputs(0, execution_count, code);
                 }
-            );
-           
-            p_interpreter->execute_request(std::move(request_context),
-                code, silent, store_history, std::move(user_expression), allow_stdin);
+                if (!silent && status == "error" && stop_on_error)
+                {
+                    constexpr long polling_interval = 50;
+                    p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), polling_interval);
+                }
 
+                // idle
+                publish_status("idle", request_context.header(), request_context.origin());
+            };
+
+            p_interpreter->execute_request(
+                std::move(request_context),
+                std::move(reply_callback),
+                code,
+                config,
+                std::move(user_expression)
+            );
         }
         catch (std::exception& e)
         {
