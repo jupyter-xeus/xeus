@@ -29,7 +29,7 @@ namespace xeus
         configure_impl();
     }
 
-    nl::json xinterpreter::execute_request(xexecute_request_context context,
+    void xinterpreter::execute_request(xexecute_request_context context,
                                            const std::string& code,
                                            bool silent,
                                            bool store_history,
@@ -42,14 +42,14 @@ namespace xeus
             publish_execution_input(context, code, m_execution_count);
         }
 
-        nl::json reply = execute_request_impl(
+        execute_request_impl(
             std::move(context),
             m_execution_count, code, silent,
             store_history, user_expressions, allow_stdin
         );
 
-        reply["execution_count"] = m_execution_count;
-        return reply;
+        // reply["execution_count"] = m_execution_count;
+        // return reply;
     }
 
     nl::json xinterpreter::complete_request(const std::string& code, int cursor_pos)

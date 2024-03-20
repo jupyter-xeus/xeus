@@ -25,7 +25,7 @@ namespace xeus
 
         void configure_impl() override;
 
-        nl::json execute_request_impl(xexecute_request_context request_context,
+        void execute_request_impl(xexecute_request_context request_context,
                                       int execution_counter,
                                       const std::string& code,
                                       bool silent,
