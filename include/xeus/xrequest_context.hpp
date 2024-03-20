@@ -20,21 +20,23 @@ namespace nl = nlohmann;
 
 namespace xeus
 {
-
-    class XEUS_API xrequest_context{
-        public:
-            using guid_list = xmessage::guid_list;
-            xrequest_context(nl::json header, channel origin, guid_list id);    
-            const nl::json& header() const; 
-            channel origin() const;
-            const guid_list& id() const;
-
-        private:
+    class XEUS_API xrequest_context
+    {
+    public:
+    
+        using guid_list = xmessage::guid_list;
             
-            nl::json m_header;
-            channel m_origin;
-            guid_list m_id;
+        xrequest_context(nl::json header, channel origin, guid_list id);    
         
+        const nl::json& header() const; 
+        channel origin() const;
+        const guid_list& id() const;
+
+    private:
+            
+        nl::json m_header;
+        channel m_origin;
+        guid_list m_id;
     };
 }
 
