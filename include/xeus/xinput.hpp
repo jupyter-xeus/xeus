@@ -12,11 +12,17 @@
 
 #include <string>
 
-#include "xeus.hpp"
+#include "xeus/xeus.hpp"
+#include "xeus/xrequest_context.hpp"
 
 namespace xeus
 {
-    XEUS_API std::string blocking_input_request(const std::string& prompt, bool password);
+    XEUS_API 
+    std::string blocking_input_request(
+        xrequest_context context,
+        const std::string& prompt,
+        bool password
+    );
 }
 
 #endif

@@ -19,7 +19,8 @@ namespace nl = nlohmann;
 namespace custom
 {
 
-    nl::json custom_interpreter::execute_request_impl(int execution_counter, // Typically the cell number
+    nl::json custom_interpreter::execute_request_impl(xrequest_context request_context, // data required by other functions
+                                                      int execution_counter, // Typically the cell number
                                                       const std::string& /*code*/, // Code to execute
                                                       bool /*silent*/,
                                                       bool /*store_history*/,
@@ -37,12 +38,12 @@ namespace custom
         // Replace "Hello World !!" by what you want to be displayed under the execution cell
         nl::json pub_data;
         pub_data["text/plain"] = "Hello World !!";
-        publish_execution_result(execution_counter, std::move(pub_data), nl::json::object());
+        publish_execution_result(request_context, execution_counter, std::move(pub_data), nl::json::object());
 
         // You can also use this method for publishing errors to the client, if the code
         // failed to execute
         // publish_execution_error(error_name, error_value, error_traceback);
-        publish_execution_error("TypeError", "123", {"!@#$", "*(*"});
+        publish_execution_error(request_context, "TypeError", "123", {"!@#$", "*(*"});
 
         return xeus::create_successful_reply();
     }
