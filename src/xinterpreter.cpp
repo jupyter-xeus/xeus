@@ -29,27 +29,34 @@ namespace xeus
         configure_impl();
     }
 
-    nl::json xinterpreter::execute_request(xrequest_context context,
-                                           const std::string& code,
-                                           bool silent,
-                                           bool store_history,
-                                           nl::json user_expressions,
-                                           bool allow_stdin)
+    void xinterpreter::execute_request(xrequest_context context,
+                                       send_reply_callback callback,
+                                       const std::string& code,
+                                       execute_request_config config,
+                                       nl::json user_expressions)
     {
-        if (!silent)
+        if (!config.silent)
         {
             ++m_execution_count;
             publish_execution_input(context, code, m_execution_count);
         }
+        // copy m_execution_count in a local variable to capture it in the lambda
+        auto execution_count = m_execution_count;
 
-        nl::json reply = execute_request_impl(
+        auto callback_impl = [execution_count, callback = std::move(callback)](nl::json reply)
+        {
+            reply["execution_count"] = execution_count;
+            callback(std::move(reply));
+        };
+
+        execute_request_impl(
             std::move(context),
-            m_execution_count, code, silent,
-            store_history, user_expressions, allow_stdin
+            std::move(callback_impl),
+            m_execution_count,
+            code,
+            std::move(config),
+            user_expressions
         );
-
-        reply["execution_count"] = m_execution_count;
-        return reply;
     }
 
     nl::json xinterpreter::complete_request(const std::string& code, int cursor_pos)

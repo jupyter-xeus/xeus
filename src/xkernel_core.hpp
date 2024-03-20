@@ -72,7 +72,12 @@ namespace xeus
 
     private:
 
-        using handler_type = void (xkernel_core::*)(xmessage, channel);
+        using handler_fptr_type = void (xkernel_core::*)(xmessage, channel);
+
+        struct handler_type{
+            handler_fptr_type fptr = nullptr;
+            bool blocking = true;
+        };
         
 
         void dispatch(xmessage msg, channel c);
