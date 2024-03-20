@@ -25,13 +25,13 @@
 #endif
 
 // Project version
-#define XEUS_VERSION_MAJOR 3
-#define XEUS_VERSION_MINOR 2
+#define XEUS_VERSION_MAJOR 4
+#define XEUS_VERSION_MINOR 0
 #define XEUS_VERSION_PATCH 0
 
 // Binary version
-#define XEUS_BINARY_CURRENT 9
-#define XEUS_BINARY_REVISION 5
+#define XEUS_BINARY_CURRENT 10
+#define XEUS_BINARY_REVISION 0
 #define XEUS_BINARY_AGE 0
 
 // Kernel protocol version
