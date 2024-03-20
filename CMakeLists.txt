@@ -75,7 +75,12 @@ message(STATUS "XEUS_BUILD_TESTS:                ${XEUS_BUILD_TESTS}")
 # Dependencies
 # ============
 
-set(nlohmann_json_REQUIRED_VERSION 3.2.0)
+# nlohmann_json requires libraries that exchange json objects to be linked
+# with the same version of nlohmann_json. Therefore this version should be
+# the same in all xeus components; to do so, downstream projects should not
+# search # directly for nlohmann_json, but rely on find_dependency called by
+# find_package(xeus) instead.
+set(nlohmann_json_REQUIRED_VERSION 3.11)
 set(xtl_REQUIRED_VERSION 0.7)
 
 if (NOT TARGET nlohmann_json)

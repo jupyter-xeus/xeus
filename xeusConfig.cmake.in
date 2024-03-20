@@ -23,7 +23,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR};${CMAKE_MODULE_PATH}")
 
 include(CMakeFindDependencyMacro)
 find_dependency(xtl @xtl_REQUIRED_VERSION@)
-find_dependency(nlohmann_json @nlohmann_json_REQUIRED_VERSION@)
+# nlohmann_json requires libraries that exchange json objects to be linked
+# with the same version of nlohmann_json. 
+find_dependency(nlohmann_json @nlohmann_json_REQUIRED_VERSION@ EXACT)
 
 # This is required when linking with the static target
 if(NOT EMSCRIPTEN)
