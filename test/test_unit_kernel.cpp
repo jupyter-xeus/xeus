@@ -28,7 +28,7 @@ namespace xeus
 {
     TEST_SUITE("kernel")
     {
-        TEST_CASE("get_starting_message")
+        TEST_CASE("get_start_message")
         {
             auto context = make_mock_context();
 
@@ -38,7 +38,7 @@ namespace xeus
                          std::move(context),
                          std::move(interpreter),
                          make_mock_server);
-            std::string kernel_config = get_starting_message(kernel.get_config());
+            std::string kernel_config = get_start_message(kernel.get_config());
             std::cout << kernel_config << std::endl;
             size_t pos = kernel_config.find("Starting kernel...\n"
                                             "\n"
