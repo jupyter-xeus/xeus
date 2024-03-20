@@ -42,7 +42,7 @@ namespace xeus
 
         void configure();
 
-        nl::json execute_request(xrequest_context context,
+        nl::json execute_request( xexecute_request_context context,
                                  const std::string& code,
                                  bool silent,
                                  bool store_history,
@@ -101,7 +101,7 @@ namespace xeus
 
         virtual void configure_impl() = 0;
 
-        virtual nl::json execute_request_impl(xrequest_context request_context,
+        virtual nl::json execute_request_impl(xexecute_request_context request_context,
                                               int execution_counter,
                                               const std::string& code,
                                               bool silent,

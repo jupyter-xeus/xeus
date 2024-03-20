@@ -16,6 +16,8 @@
 #include "xeus/xmessage.hpp" // for xmessage::guid_list
 #include "xeus/xserver.hpp"  // for channel
 
+#include <functional>  // for std::function
+
 namespace nl = nlohmann;
 
 namespace xeus
@@ -37,6 +39,17 @@ namespace xeus
         nl::json m_header;
         channel m_origin;
         guid_list m_id;
+    };
+
+
+    class XEUS_API xexecute_request_context : public xrequest_context
+    {
+        public:
+        xexecute_request_context(nl::json header, channel origin, guid_list id, std::function<void(const xexecute_request_context&,nl::json)> on_send_reply);
+
+        void send_reply(nl::json reply);
+        private:
+        std::function<void(const xexecute_request_context&, nl::json)> m_on_send_reply;
     };
 }
 

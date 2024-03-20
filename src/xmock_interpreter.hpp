@@ -38,7 +38,7 @@ namespace xeus
         {
         }
 
-        nl::json execute_request_impl(xrequest_context /*request_context*/,
+        nl::json execute_request_impl(xexecute_request_context request_context,
                                     int /*execution_counter*/,
                                    const std::string& /*code*/,
                                    bool /*silent*/,
@@ -46,7 +46,7 @@ namespace xeus
                                    nl::json /*user_expressions*/,
                                    bool /*allow_stdin*/) override
         {
-            return nl::json();
+            request_context.send_reply(nl::json());
         }
 
         nl::json complete_request_impl(const std::string& /*code*/, int /*cursor_pos*/) override

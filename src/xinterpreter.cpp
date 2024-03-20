@@ -29,7 +29,7 @@ namespace xeus
         configure_impl();
     }
 
-    nl::json xinterpreter::execute_request(xrequest_context context,
+    nl::json xinterpreter::execute_request(xexecute_request_context context,
                                            const std::string& code,
                                            bool silent,
                                            bool store_history,
