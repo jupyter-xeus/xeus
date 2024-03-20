@@ -25,7 +25,7 @@ include(CMakeFindDependencyMacro)
 find_dependency(xtl @xtl_REQUIRED_VERSION@)
 # nlohmann_json requires libraries that exchange json objects to be linked
 # with the same version of nlohmann_json. 
-find_dependency(nlohmann_json @nlohmann_json_REQUIRED_VERSION@ EXACT)
+find_dependency(nlohmann_json @nlohmann_json_VERSION@ EXACT)
 
 # This is required when linking with the static target
 if(NOT EMSCRIPTEN)
