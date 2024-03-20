@@ -38,15 +38,14 @@ namespace xeus
         {
         }
 
-        nl::json execute_request_impl(xrequest_context /*request_context*/,
-                                    int /*execution_counter*/,
-                                   const std::string& /*code*/,
-                                   bool /*silent*/,
-                                   bool /*store_history*/,
-                                   nl::json /*user_expressions*/,
-                                   bool /*allow_stdin*/) override
+        void execute_request_impl(xrequest_context /*request_context*/,
+                                  send_reply_callback cb,
+                                  int /*execution_counter*/,
+                                  const std::string& /*code*/,
+                                  execute_request_config /*config*/,
+                                  nl::json /*user_expressions*/) override
         {
-            return nl::json();
+            cb(nl::json());
         }
 
         nl::json complete_request_impl(const std::string& /*code*/, int /*cursor_pos*/) override

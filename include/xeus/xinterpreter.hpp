@@ -27,6 +27,13 @@ namespace xeus
     XEUS_API bool register_interpreter(xinterpreter* interpreter);
     XEUS_API xinterpreter& get_interpreter();
 
+    struct XEUS_API execute_request_config
+    {
+        bool silent;
+        bool store_history;
+        bool allow_stdin;
+    };
+
     class XEUS_API xinterpreter
     {
     public:
@@ -42,12 +49,12 @@ namespace xeus
 
         void configure();
 
-        nl::json execute_request(xrequest_context context,
-                                 const std::string& code,
-                                 bool silent,
-                                 bool store_history,
-                                 nl::json user_expressions,
-                                 bool allow_stdin);
+        using send_reply_callback = std::function<void(nl::json)>;
+        void execute_request(xrequest_context context,
+                             send_reply_callback callback,
+                             const std::string& code,
+                             execute_request_config config,
+                             nl::json user_expressions);
 
         nl::json complete_request(const std::string& code, int cursor_pos);
 
@@ -101,13 +108,12 @@ namespace xeus
 
         virtual void configure_impl() = 0;
 
-        virtual nl::json execute_request_impl(xrequest_context request_context,
-                                              int execution_counter,
-                                              const std::string& code,
-                                              bool silent,
-                                              bool store_history,
-                                              nl::json user_expressions,
-                                              bool allow_stdin) = 0;
+        virtual void execute_request_impl(xrequest_context request_context,
+                                          send_reply_callback cb,
+                                          int execution_counter,
+                                          const std::string& code,
+                                          execute_request_config config,
+                                          nl::json user_expressions) = 0;
 
         virtual nl::json complete_request_impl(const std::string& code,
                                                int cursor_pos) = 0;

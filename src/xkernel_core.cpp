@@ -236,19 +236,34 @@ namespace xeus
             bool allow_stdin = content.value("allow_stdin", true);
             bool stop_on_error = content.value("stop_on_error", false);
 
-            nl::json metadata = get_metadata();            
             xrequest_context request_context(request.header(), c, request.identities());
-            nl::json reply = p_interpreter->execute_request(std::move(request_context),
-                code, silent, store_history, std::move(user_expression), allow_stdin);
-            int execution_count = reply.value("execution_count", 1);
-            std::string status = reply.value("status", "error");
-            send_reply(
-                request.identities(),
-                "execute_reply", 
-                request.header(),
-                std::move(metadata), 
-                std::move(reply), 
-                c);
+            execute_request_config config { silent, store_history, allow_stdin };
+            int execution_count = 1;
+            std::string status;
+            auto reply_callback = [&](nl::json reply)
+            {
+                execution_count = reply.value("execution_count", 1);
+                status = reply.value("status", "error");
+                nl::json metadata = get_metadata();
+
+                send_reply(
+                    request.identities(),
+                    "execute_reply", 
+                    request.header(),
+                    std::move(metadata), 
+                    std::move(reply), 
+                    c
+                );
+            };
+
+            p_interpreter->execute_request(
+                std::move(request_context),
+                std::move(reply_callback),
+                code,
+                config,
+                std::move(user_expression)
+            );
+
 
             if (!silent && store_history)
             {

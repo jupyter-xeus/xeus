@@ -51,7 +51,7 @@ course the ``execute_request_impl`` which executes the code whenever the client 
 .. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 22-48
+   :lines: 22-49
 
 The result and arguments of the execution request are described in the execute_request_ documentation.
 
