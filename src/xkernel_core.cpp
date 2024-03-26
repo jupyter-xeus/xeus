@@ -241,35 +241,36 @@ namespace xeus
 
             xrequest_context request_context(request.header(), c, request.identities());
             execute_request_config config { silent, store_history, allow_stdin };
-            int execution_count = 1;
-            std::string status;
-            auto reply_callback = [&](nl::json reply)
+            
+            auto reply_callback = [this, request_context, config, stop_on_error, code](nl::json reply)
             {
+                int execution_count = 1;
                 execution_count = reply.value("execution_count", 1);
+                std::string status;
                 status = reply.value("status", "error");
                 nl::json metadata = get_metadata();
 
                 send_reply(
-                    request.identities(),
+                    request_context.id(),
                     "execute_reply", 
-                    request.header(),
+                    request_context.header(),
                     std::move(metadata), 
                     std::move(reply), 
-                    c
+                    request_context.origin()
                 );
 
-                if (!silent && store_history)
+                if (!config.silent && config.store_history)
                 {
                     p_history_manager->store_inputs(0, execution_count, code);
                 }
-                if (!silent && status == "error" && stop_on_error)
+                if (!config.silent && status == "error" && stop_on_error)
                 {
                     constexpr long polling_interval = 50;
                     p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), polling_interval);
                 }
 
                 // idle
-                publish_status("idle", request_context.header(), request_context.origin());
+                publish_status(request_context.header(), "idle", request_context.origin());
             };
 
             p_interpreter->execute_request(
