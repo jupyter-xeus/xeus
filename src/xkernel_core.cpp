@@ -269,7 +269,7 @@ namespace xeus
                 }
 
                 // idle
-                publish_status("idle", request_context.header(), request_context.origin());
+                publish_status(request_context.header(), "idle", request_context.origin());
             };
 
             p_interpreter->execute_request(
