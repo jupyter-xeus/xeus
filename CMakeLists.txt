@@ -85,10 +85,12 @@ set(xtl_REQUIRED_VERSION 0.7)
 
 if (NOT TARGET nlohmann_json)
     find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
+    message(STATUS "Found nlohmann_json ${nlohmann_json_VERSION}")
 endif ()
 
 if (NOT TARGET xtl)
     find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
+    message(STATUS "Found xl ${xtl_VERSION}")
 endif ()
 
 # Source files

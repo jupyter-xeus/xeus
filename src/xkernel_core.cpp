@@ -190,7 +190,9 @@ namespace xeus
     void xkernel_core::dispatch(xmessage msg, channel c)
     {
         p_logger->log_received_message(msg, c == channel::SHELL ? xlogger::shell : xlogger::control);
-        const nl::json& header = msg.header();
+        // Copy because the msg is moved after, and we may need the header
+        // for publishing the status.
+        nl::json header = msg.header();
         publish_status(header, "busy", c);
 
         std::string msg_type = header.value("msg_type", "");
