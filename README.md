@@ -55,7 +55,6 @@ namespace custom
 {
     class custom_interpreter : public xinterpreter
     {
-
     public:
 
         custom_interpreter() = default;
@@ -63,14 +62,14 @@ namespace custom
 
     private:
 
-        void configure() override;
+        void configure_impl() override;
 
-        nl::json execute_request_impl(int execution_counter,
-                                      const std::string& code,
-                                      bool silent,
-                                      bool store_history,
-                                      const nl::json::node_type* user_expressions,
-                                      bool allow_stdin) override;
+        void execute_request_impl(xrequest_context request_context,
+                                  send_reply_callback cb,
+                                  int execution_counter,
+                                  const std::string& code,
+                                  execute_request_config config,
+                                  nl::json user_expressions) override;
 
         nl::json complete_request_impl(const std::string& code,
                                        int cursor_pos) override;
@@ -82,6 +81,8 @@ namespace custom
         nl::json is_complete_request_impl(const std::string& code) override;
 
         nl::json kernel_info_request_impl() override;
+
+        void shutdown_request_impl() override;
     };
 }
 ```
