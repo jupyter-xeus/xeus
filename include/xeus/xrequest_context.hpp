@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "xeus/xeus.hpp"
-#include "nlohmann/json.hpp" 
+#include "xeus/xjson.hpp" 
 #include "xeus/xmessage.hpp" // for xmessage::guid_list
 #include "xeus/xserver.hpp"  // for channel
 

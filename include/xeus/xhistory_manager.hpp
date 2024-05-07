@@ -13,9 +13,8 @@
 #include <string>
 #include <vector>
 
-#include "nlohmann/json.hpp"
-
-#include "xeus.hpp"
+#include "xeus/xeus.hpp"
+#include "xeus/xjson.hpp"
 
 namespace nl = nlohmann;
 

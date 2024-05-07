@@ -12,7 +12,7 @@
 #include <string>
 #include <regex>
 
-#include "nlohmann/json.hpp"
+#include "xeus/xjson.hpp"
 
 #include "xin_memory_history_manager.hpp"
 

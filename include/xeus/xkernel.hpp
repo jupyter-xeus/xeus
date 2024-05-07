@@ -10,17 +10,18 @@
 #ifndef XEUS_KERNEL_HPP
 #define XEUS_KERNEL_HPP
 
-#include "xdebugger.hpp"
-#include "xeus.hpp"
-#include "xeus_context.hpp"
-#include "xhistory_manager.hpp"
-#include "xinterpreter.hpp"
-#include "xkernel_configuration.hpp"
-#include "xserver.hpp"
-#include "xlogger.hpp"
 #include <memory>
 #include <string>
 #include <functional>
+
+#include "xeus/xdebugger.hpp"
+#include "xeus/xeus.hpp"
+#include "xeus/xeus_context.hpp"
+#include "xeus/xhistory_manager.hpp"
+#include "xeus/xinterpreter.hpp"
+#include "xeus/xkernel_configuration.hpp"
+#include "xeus/xserver.hpp"
+#include "xeus/xlogger.hpp"
 
 namespace xeus
 {

@@ -7,35 +7,19 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XEUS_SYSTEM_HPP
-#define XEUS_SYSTEM_HPP
+#ifndef XEUS_JSON_HPP
+#define XEUS_JSON_HPP
 
-#include <string>
-
-#include "xeus/xeus.hpp"
-
-namespace xeus
-{
-    XEUS_API
-    std::string get_temp_directory_path();
-
-    XEUS_API
-    bool create_directory(const std::string& path);
-
-    XEUS_API
-    int get_current_pid();
-
-    XEUS_API
-    std::size_t get_tmp_hash_seed();
-
-    XEUS_API
-    std::string get_tmp_prefix(const std::string& process_name);
-
-    XEUS_API
-    std::string get_cell_tmp_file(const std::string& prefix,
-                                  const std::string& code,
-                                  const std::string& suffix);
-}
+// Remove annoying false positive warning on GCC: json.hpp:1394:23: warning: potential null pointer dereference
+// See https://github.com/nlohmann/json/issues/3525
+#ifdef __GNUC__
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wnull-dereference"
+#   include "nlohmann/json.hpp"
+#   pragma GCC diagnostic pop
+#else
+#   include "nlohmann/json.hpp"
+#endif
 
 #endif
 

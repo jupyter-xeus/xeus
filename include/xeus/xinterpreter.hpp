@@ -14,11 +14,11 @@
 #include <string>
 #include <vector>
 
-#include "xcomm.hpp"
-#include "xeus.hpp"
-#include "xcontrol_messenger.hpp"
-#include "xhistory_manager.hpp"
-#include "xrequest_context.hpp"
+#include "xeus/xcomm.hpp"
+#include "xeus/xeus.hpp"
+#include "xeus/xcontrol_messenger.hpp"
+#include "xeus/xhistory_manager.hpp"
+#include "xeus/xrequest_context.hpp"
 
 namespace xeus
 {

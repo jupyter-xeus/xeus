@@ -12,10 +12,10 @@
 
 #include <functional>
 
-#include "xeus.hpp"
-#include "xkernel_configuration.hpp"
-#include "xcontrol_messenger.hpp"
-#include "xmessage.hpp"
+#include "xeus/xeus.hpp"
+#include "xeus/xkernel_configuration.hpp"
+#include "xeus/xcontrol_messenger.hpp"
+#include "xeus/xmessage.hpp"
 
 namespace xeus
 {

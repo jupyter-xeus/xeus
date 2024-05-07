@@ -12,10 +12,9 @@
 
 #include <memory>
 
-#include "nlohmann/json.hpp"
-
-#include "xeus.hpp"
-#include "xmessage.hpp"
+#include "xeus/xeus.hpp"
+#include "xeus/xjson.hpp"
+#include "xeus/xmessage.hpp"
 
 namespace nl = nlohmann;
 

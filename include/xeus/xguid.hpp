@@ -12,7 +12,7 @@
 
 #include "xtl/xbasic_fixed_string.hpp"
 
-#include "xeus.hpp"
+#include "xeus/xeus.hpp"
 
 namespace xeus
 {

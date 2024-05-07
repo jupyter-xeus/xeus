@@ -10,12 +10,11 @@
 #ifndef XEUS_DEBUGGER_HPP
 #define XEUS_DEBUGGER_HPP
 
-#include "nlohmann/json.hpp"
-
-#include "xeus.hpp"
-#include "xeus_context.hpp"
-#include "xkernel_configuration.hpp"
-#include "xcontrol_messenger.hpp"
+#include "xeus/xeus.hpp"
+#include "xeus/xeus_context.hpp"
+#include "xeus/xjson.hpp"
+#include "xeus/xkernel_configuration.hpp"
+#include "xeus/xcontrol_messenger.hpp"
 
 namespace nl = nlohmann;
 

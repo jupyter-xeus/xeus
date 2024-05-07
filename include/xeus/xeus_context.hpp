@@ -12,7 +12,7 @@
 
 #include <memory>
 
-#include "xeus.hpp"
+#include "xeus/xeus.hpp"
 
 namespace xeus
 {
