@@ -15,9 +15,8 @@
 #include <vector>
 
 #include "xeus/xeus.hpp"
+#include "xeus/xjson.hpp"
 #include "xeus/xkernel_configuration.hpp"
-
-#include "nlohmann/json.hpp"
 
 namespace nl = nlohmann;
 

@@ -68,7 +68,6 @@ namespace xeus
         xcomm_manager& comm_manager() & noexcept;
         const xcomm_manager& comm_manager() const & noexcept;
         xcomm_manager comm_manager() const && noexcept;
-        const nl::json& parent_header(channel c) const noexcept;
 
     private:
 

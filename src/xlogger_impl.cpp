@@ -10,8 +10,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "nlohmann/json.hpp"
-
+#include "xeus/xjson.hpp"
 #include "xeus/xmessage.hpp"
 #include "xlogger_impl.hpp"
 

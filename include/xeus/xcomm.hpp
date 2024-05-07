@@ -16,10 +16,9 @@
 #include <string>
 #include <utility>
 
-#include "nlohmann/json.hpp"
-
-#include "xguid.hpp"
-#include "xmessage.hpp"
+#include "xeus/xguid.hpp"
+#include "xeus/xjson.hpp"
+#include "xeus/xmessage.hpp"
 
 namespace nl = nlohmann;
 

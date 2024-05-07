@@ -106,6 +106,7 @@ set(XEUS_HEADERS
     ${XEUS_INCLUDE_DIR}/xeus/xhistory_manager.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinput.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinterpreter.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xjson.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xkernel.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xkernel_configuration.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xlogger.hpp

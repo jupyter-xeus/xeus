@@ -10,8 +10,7 @@
 #include <fstream>
 #include <string>
 
-#include "nlohmann/json.hpp"
-
+#include "xeus/xjson.hpp"
 #include "xeus/xkernel_configuration.hpp"
 
 namespace nl = nlohmann;
