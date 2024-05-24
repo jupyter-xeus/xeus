@@ -61,13 +61,15 @@ namespace xeus
                              nl::json metadata,
                              nl::json content,
                              buffer_sequence buffers,
-                             channel origin );
+                             channel origin);
 
         void send_stdin(const std::string& msg_type, const guid_list& id_list, nl::json parent_header, nl::json metadata, nl::json content);
 
         xcomm_manager& comm_manager() & noexcept;
         const xcomm_manager& comm_manager() const & noexcept;
         xcomm_manager comm_manager() const && noexcept;
+
+        const nl::json& parent_header() const noexcept;
 
     private:
 
