@@ -34,10 +34,13 @@ http://xeus.readthedocs.io/
 
 The easiest way to get started with a new kernel is to inherit from the base interpreter class `xeus::xinterpreter` and implement the private virtual methods:
 
+- `configure_impl`
 - `execute_request_impl`
 - `complete_request_impl`
 - `inspect_request_impl`
 - `is_complete_request_impl`
+- `kernel_info_request_impl`
+- `shutdown_request_impl`
 
 as seen in the [documentation](http://xeus.readthedocs.io/).
 
@@ -64,8 +67,7 @@ namespace custom
 
         void configure_impl() override;
 
-        void execute_request_impl(xrequest_context request_context,
-                                  send_reply_callback cb,
+        void execute_request_impl(send_reply_callback cb,
                                   int execution_counter,
                                   const std::string& code,
                                   execute_request_config config,
@@ -91,7 +93,14 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 ## Building from Source
 
-`xeus` depends on the following libraries: [`nlohmann_json`](https://github.com/nlohmann/json) and [`xtl`](https://github.com/xtensor-stack/xtl).
+`xeus` depends on [`nlohmann_json`](https://github.com/nlohmann/json).
+
+|  xeus   | nlohmann json |
+|---------|---------------|
+| master  |    ^3.11.0    |
+| 5.x     |    ^3.11.0    |
+
+Versions prior to version 5 depend on the following libraries: [`nlohmann_json`](https://github.com/nlohmann/json) and [`xtl`](https://github.com/xtensor-stack/xtl).
 
 |  xeus   |   xtl          | nlohmann json |
 |---------|----------------|---------------|
