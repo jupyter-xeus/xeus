@@ -49,7 +49,10 @@ find_package(doctest REQUIRED)
 find_package(Threads)
 
 set(XEUS_TESTS
+    test_xbasic_fixed_string.cpp
+    test_xhash.cpp
     test_xin_memory_history_manager.cpp
+    test_xsystem.cpp
     test_unit_kernel.cpp
 )
 
@@ -81,6 +84,7 @@ foreach(filename IN LISTS XEUS_TESTS)
     get_filename_component(targetname ${filename} NAME_WE)
 
     add_executable(${targetname} test_main.cpp ${filename} ${XEUS_TEST_SRCS})
+    target_compile_definitions(${targetname} PRIVATE DOCTEST_CONFIG_TREAT_CHAR_STAR_AS_STRING)
     target_link_libraries(${targetname} PRIVATE ${xeus_TARGET} doctest::doctest Threads::Threads ${nlohmann_json_TARGET})
     add_test(NAME ${targetname} COMMAND ${targetname})
 endforeach()

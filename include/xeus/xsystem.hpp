@@ -35,6 +35,12 @@ namespace xeus
     std::string get_cell_tmp_file(const std::string& prefix,
                                   const std::string& code,
                                   const std::string& suffix);
+
+    XEUS_API
+    std::string executable_path();
+    
+    XEUS_API
+    std::string prefix_path();
 }
 
 #endif
