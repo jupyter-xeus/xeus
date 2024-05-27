@@ -28,8 +28,7 @@ namespace xeus
 
             REQUIRE_NE(prefix.size(), exec_path.size());
             REQUIRE(std::equal(prefix.cbegin(), prefix.cend(), exec_path.cbegin()));
-            bool res = (exec_path.find("test_xtl") != std::string::npos) || (exec_path.find("test_xsystem") != std::string::npos);
-            REQUIRE(res);
+            REQUIRE(exec_path.find("test_xsystem") != std::string::npos);
         }
     }
 }
