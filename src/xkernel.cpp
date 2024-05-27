@@ -7,6 +7,7 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <iostream>
 #include <string>
 #include <random>
 
@@ -119,6 +120,7 @@ namespace xeus
 
     void xkernel::init(server_builder sbuilder, debugger_builder dbuilder)
     {
+        std::clog << "xkernel::init" << std::endl;
         m_kernel_id = new_xguid();
         m_session_id = new_xguid();
 
@@ -135,8 +137,10 @@ namespace xeus
         p_server = sbuilder(*p_context, m_config, m_error_handler);
         p_server->update_config(m_config);
 
+        std::clog << "Before instantiating debugger" << std::endl;
         p_debugger = dbuilder(*p_context, m_config, m_user_name, m_session_id, m_debugger_config);
 
+        std::clog << "Debugger instantiated" << std::endl;
         p_core = std::make_unique<xkernel_core>(m_kernel_id,
                                                 m_user_name,
                                                 m_session_id,
@@ -146,6 +150,7 @@ namespace xeus
                                                 p_history_manager.get(),
                                                 p_debugger.get());
 
+        std::cout << "Core instantiated" << std::endl;
         xcontrol_messenger& messenger = p_server->get_control_messenger();
 
         if(p_debugger != nullptr)

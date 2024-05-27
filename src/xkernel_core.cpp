@@ -187,6 +187,11 @@ namespace xeus
         return m_comm_manager;
     }
 
+    const nl::json& xkernel_core::parent_header() const noexcept
+    {
+        return p_interpreter->parent_header();
+    }
+
     void xkernel_core::dispatch(xmessage msg, channel c)
     {
         p_logger->log_received_message(msg, c == channel::SHELL ? xlogger::shell : xlogger::control);
@@ -228,8 +233,9 @@ namespace xeus
         return res;
     }
 
-    void xkernel_core::execute_request(xmessage request, channel c)
+    void xkernel_core::execute_request(xmessage request, channel)
     {
+        // xeus assumes execute_request will be executed on SHELL only
         try
         {
             const nl::json& content = request.content();
@@ -241,7 +247,7 @@ namespace xeus
             bool allow_stdin = content.value("allow_stdin", true);
             bool stop_on_error = content.value("stop_on_error", false);
 
-            xrequest_context request_context(request.header(), c, request.identities());
+            xrequest_context request_context(request.header(), request.identities());
             execute_request_config config { silent, store_history, allow_stdin };
             
             auto reply_callback = [this, request_context, config, stop_on_error, code](nl::json reply)
@@ -258,7 +264,7 @@ namespace xeus
                     request_context.header(),
                     std::move(metadata), 
                     std::move(reply), 
-                    request_context.origin()
+                    channel::SHELL
                 );
 
                 if (!config.silent && config.store_history)
@@ -272,7 +278,7 @@ namespace xeus
                 }
 
                 // idle
-                publish_status(request_context.header(), "idle", request_context.origin());
+                publish_status(request_context.header(), "idle", channel::SHELL);
             };
 
             p_interpreter->execute_request(
@@ -348,7 +354,7 @@ namespace xeus
         send_reply(request.identities(), "comm_info_reply",request.header(), nl::json::object(), std::move(reply), c);
     }
 
-    void xkernel_core::kernel_info_request(xmessage  request , channel c)
+    void xkernel_core::kernel_info_request(xmessage request, channel c)
     {
         nl::json reply = p_interpreter->kernel_info_request();
         reply["protocol_version"] = get_protocol_version();
@@ -384,7 +390,7 @@ namespace xeus
         }
     }
 
-    void xkernel_core::publish_status( nl::json parent_header, const std::string& status, channel c)
+    void xkernel_core::publish_status(nl::json parent_header, const std::string& status, channel c)
     {
         nl::json content;
         content["execution_state"] = status;

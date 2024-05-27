@@ -15,7 +15,6 @@
 namespace xeus
 {
     std::string blocking_input_request(
-        xrequest_context context,
         const std::string& prompt, 
         bool password
     )
@@ -27,7 +26,7 @@ namespace xeus
         interpreter.register_input_handler([&value](const std::string& v) { value = v; });
 
         // Send the input request
-        interpreter.input_request(std::move(context), prompt, password);
+        interpreter.input_request(prompt, password);
 
         // Remove input handler
         interpreter.register_input_handler(nullptr);

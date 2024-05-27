@@ -38,8 +38,7 @@ namespace xeus
         {
         }
 
-        void execute_request_impl(xrequest_context /*request_context*/,
-                                  send_reply_callback cb,
+        void execute_request_impl(send_reply_callback cb,
                                   int /*execution_counter*/,
                                   const std::string& /*code*/,
                                   execute_request_config /*config*/,

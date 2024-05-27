@@ -14,7 +14,6 @@
 #include "xeus/xeus.hpp"
 #include "xeus/xjson.hpp" 
 #include "xeus/xmessage.hpp" // for xmessage::guid_list
-#include "xeus/xserver.hpp"  // for channel
 
 namespace nl = nlohmann;
 
@@ -26,16 +25,15 @@ namespace xeus
     
         using guid_list = xmessage::guid_list;
             
-        xrequest_context(nl::json header, channel origin, guid_list id);    
+        xrequest_context() = default;
+        xrequest_context(nl::json header, guid_list id);    
         
         const nl::json& header() const; 
-        channel origin() const;
         const guid_list& id() const;
 
     private:
             
-        nl::json m_header;
-        channel m_origin;
+        nl::json m_header = nl::json::object();
         guid_list m_id;
     };
 }
