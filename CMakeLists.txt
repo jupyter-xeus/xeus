@@ -81,28 +81,24 @@ message(STATUS "XEUS_BUILD_TESTS:                ${XEUS_BUILD_TESTS}")
 # search # directly for nlohmann_json, but rely on find_dependency called by
 # find_package(xeus) instead.
 set(nlohmann_json_REQUIRED_VERSION 3.11)
-set(xtl_REQUIRED_VERSION 0.7)
 
 if (NOT TARGET nlohmann_json)
     find_package(nlohmann_json ${nlohmann_json_REQUIRED_VERSION} REQUIRED)
     message(STATUS "Found nlohmann_json ${nlohmann_json_VERSION}")
 endif ()
 
-if (NOT TARGET xtl)
-    find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
-    message(STATUS "Found xl ${xtl_VERSION}")
-endif ()
-
 # Source files
 # ============
 
 set(XEUS_HEADERS
+    ${XEUS_INCLUDE_DIR}/xeus/xbasic_fixed_string.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xcomm.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xcontrol_messenger.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xdebugger.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xeus_context.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xguid.hpp
+    ${XEUS_INCLUDE_DIR}/xeus/xhash.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xhistory_manager.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinput.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xinterpreter.hpp
@@ -175,7 +171,6 @@ macro(xeus_create_target target_name linkage output_name)
     target_link_libraries(
         ${target_name}
         PUBLIC nlohmann_json::nlohmann_json
-        PUBLIC xtl
     )
 
     if (NOT MSVC AND NOT EMSCRIPTEN)

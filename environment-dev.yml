@@ -8,7 +8,6 @@ dependencies:
   - ninja
   - pkg-config
   # Host dependencies
-  - xtl=0.7
   - nlohmann_json
   # Test dependencies
   - doctest >= 2.4.6

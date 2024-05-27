@@ -10,9 +10,8 @@
 #ifndef XEUS_GUID_HPP
 #define XEUS_GUID_HPP
 
-#include "xtl/xbasic_fixed_string.hpp"
-
 #include "xeus/xeus.hpp"
+#include "xeus/xbasic_fixed_string.hpp"
 
 namespace xeus
 {
@@ -24,7 +23,7 @@ namespace xeus
     // multiple of the stackframe alignment (8 or 16 depending on the architecture
     // and compilers).
     // Here we want a size of 64 bytes, which gives room for 55 characters (64 - 8 - 1).
-    using xguid = xtl::xfixed_string<55>;
+    using xguid = xfixed_string<55>;
 
     XEUS_API xguid new_xguid();
 }
