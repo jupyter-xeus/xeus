@@ -91,6 +91,7 @@ endif ()
 # ============
 
 set(XEUS_HEADERS
+    ${XEUS_INCLUDE_DIR}/xeus/xbase64.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xbasic_fixed_string.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xcomm.hpp
     ${XEUS_INCLUDE_DIR}/xeus/xcontrol_messenger.hpp
