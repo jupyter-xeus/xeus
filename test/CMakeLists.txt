@@ -49,6 +49,7 @@ find_package(doctest REQUIRED)
 find_package(Threads)
 
 set(XEUS_TESTS
+    test_xbase64.cpp
     test_xbasic_fixed_string.cpp
     test_xhash.cpp
     test_xin_memory_history_manager.cpp
