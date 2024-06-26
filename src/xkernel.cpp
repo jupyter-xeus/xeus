@@ -120,7 +120,6 @@ namespace xeus
 
     void xkernel::init(server_builder sbuilder, debugger_builder dbuilder)
     {
-        std::clog << "xkernel::init" << std::endl;
         m_kernel_id = new_xguid();
         m_session_id = new_xguid();
 
@@ -137,10 +136,8 @@ namespace xeus
         p_server = sbuilder(*p_context, m_config, m_error_handler);
         p_server->update_config(m_config);
 
-        std::clog << "Before instantiating debugger" << std::endl;
         p_debugger = dbuilder(*p_context, m_config, m_user_name, m_session_id, m_debugger_config);
 
-        std::clog << "Debugger instantiated" << std::endl;
         p_core = std::make_unique<xkernel_core>(m_kernel_id,
                                                 m_user_name,
                                                 m_session_id,
