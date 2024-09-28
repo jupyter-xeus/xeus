@@ -30,7 +30,7 @@ namespace xeus
         return kernel_info;
     }
 
-    std::string extract_filename(int argc, char* argv[])
+    std::string extract_filename(int &argc, char* argv[])
     {
         std::string res = "";
         for (int i = 0; i < argc; ++i)
