@@ -55,11 +55,13 @@ namespace xeus
 
         TEST_CASE("extract_filename")
         {
+            int argc = 3;
             char* argv[2];
             argv[0] = (char*)"-f";
             argv[1] = (char*)"connection.json";
-            std::string file_name = extract_filename(3, argv);
+            std::string file_name = extract_filename(argc, argv);
             REQUIRE_EQ(file_name, "connection.json");
+            REQUIRE_EQ(argc, 1);
         }
 
         TEST_CASE("should_print_version")

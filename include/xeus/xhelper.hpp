@@ -24,7 +24,7 @@ namespace xeus
 {
     XEUS_API std::string get_start_message(const xconfiguration& config);
 
-    XEUS_API std::string extract_filename(int argc, char* argv[]);
+    XEUS_API std::string extract_filename(int &argc, char* argv[]);
 
     XEUS_API bool should_print_version(int argc, char* argv[]);
 
