@@ -93,6 +93,7 @@ jobs:
       - name: Install mamba
         uses: mamba-org/setup-micromamba@v1
         with:
+          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yml
           environment-name: xeus
           init-shell: cmd.exe
