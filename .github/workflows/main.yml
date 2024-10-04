@@ -38,7 +38,7 @@ jobs:
         uses: SimenB/github-actions-cpu-cores@v2
 
       - name: Install mamba
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-dev.yml
           environment-name: xeus
@@ -91,9 +91,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install mamba
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
-          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yml
           environment-name: xeus
           init-shell: cmd.exe
@@ -145,7 +144,7 @@ jobs:
         uses: SimenB/github-actions-cpu-cores@v2
 
       - name: Install mamba
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-wasm-build.yml
           environment-name: xeus-wasm-build
