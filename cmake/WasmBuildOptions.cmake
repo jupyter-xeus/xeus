@@ -36,6 +36,7 @@ function(xeus_wasm_link_options target environment)
         PUBLIC "SHELL: -s STACK_SIZE=32mb"
         PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
         PUBLIC "SHELL: -s WASM_BIGINT"
+        PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"PATH\",\"LDSO\",\"getDylinkMetadata\",\"loadDynamicLibrary\",\"ERRNO_CODES\"]'"
         PUBLIC "SHELL: -s FORCE_FILESYSTEM"
         PUBLIC "SHELL: -s MAIN_MODULE=1"
     )
