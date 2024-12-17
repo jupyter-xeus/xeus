@@ -143,7 +143,7 @@ jobs:
       - name: Get number of CPU cores
         uses: SimenB/github-actions-cpu-cores@v2
 
-      - name: Install mamba
+      - name: Install micromamba
         uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-wasm-build.yml
