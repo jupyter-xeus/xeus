@@ -24,7 +24,16 @@ namespace xeus
 {
     XEUS_API std::string get_start_message(const xconfiguration& config);
 
-    XEUS_API std::string extract_filename(int argc, char* argv[]);
+    /**
+     * @brief Extracts the filename from the command-line arguments and adjusts argc/argv.
+     *
+     * Searches for the "-f" flag in the arguments, extracts the following filename, and
+     * removes both from the argument list. `argc` is updated to reflect the changes.
+     * @param argc Reference to the argument count, modified if "-f" is found.
+     * @param argv Argument list, potentially modified.
+     * @return The extracted filename, or an empty string if not found.
+     */
+    XEUS_API std::string extract_filename(int &argc, char* argv[]);
 
     XEUS_API bool should_print_version(int argc, char* argv[]);
 
