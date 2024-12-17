@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     interpreter_ptr interpreter = interpreter_ptr(new custom::custom_interpreter());
 
     // Create kernel instance and start it
-    xeus::xkernel kernel(config, xeus::get_user_name(), std::move(context), std::move(interpreter), xeus::make_xserver_zmq);
+    xeus::xkernel kernel(config, xeus::get_user_name(), std::move(context), std::move(interpreter), xeus::make_xserver_default);
     kernel.start();
 
     return 0;
