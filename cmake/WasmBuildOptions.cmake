@@ -13,7 +13,6 @@ function(xeus_wasm_compile_options target)
      target_compile_options("${target}"
         PUBLIC --std=c++17
         PUBLIC -Wno-deprecated
-        PUBLIC "SHELL: -s USE_PTHREADS=0"
         PUBLIC "SHELL: -fexceptions"
     )
     set_property(TARGET ${target} PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -33,11 +32,11 @@ function(xeus_wasm_link_options target environment)
         PUBLIC "SHELL: -s ALLOW_MEMORY_GROWTH=1"
         PUBLIC "SHELL: -s EXIT_RUNTIME=1"
         PUBLIC "SHELL: -s WASM=1"
-        PUBLIC "SHELL: -s USE_PTHREADS=0"
         PUBLIC "SHELL: -s ENVIRONMENT=${environment}"
-        PUBLIC "SHELL: -s TOTAL_STACK=32mb"
+        PUBLIC "SHELL: -s STACK_SIZE=32mb"
         PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
         PUBLIC "SHELL: -s WASM_BIGINT"
+        PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"PATH\",\"LDSO\",\"getDylinkMetadata\",\"loadDynamicLibrary\",\"ERRNO_CODES\"]'"
         PUBLIC "SHELL: -s FORCE_FILESYSTEM"
         PUBLIC "SHELL: -s MAIN_MODULE=1"
     )
