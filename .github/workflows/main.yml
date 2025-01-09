@@ -151,28 +151,31 @@ jobs:
           create-args: libuuid
 
       - name: Setup emsdk
-        run: emsdk install ${{ matrix.emsdk_ver }}
+        shell: bash -l {0}
+        run: |
+          cd $HOME
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          ./emsdk install  ${{ matrix.emsdk_ver }}
 
       - name: Build and package xeus
         run: |
-          emsdk activate ${{ matrix.emsdk_ver }}
-          source $CONDA_EMSDK_DIR/emsdk_env.sh
+          $HOME/emsdk/emsdk activate ${{matrix.emsdk_ver}}
+          source $HOME/emsdk/emsdk_env.sh
 
           micromamba create -f environment-wasm-host.yml --platform=emscripten-wasm32
 
           mkdir build
           pushd build
 
-          export EMPACK_PREFIX=$MAMBA_ROOT_PREFIX/envs/xeus-wasm-build
           export PREFIX=$MAMBA_ROOT_PREFIX/envs/xeus-wasm-host
           export CMAKE_PREFIX_PATH=$PREFIX
           export CMAKE_SYSTEM_PREFIX_PATH=$PREFIX
 
           emcmake cmake \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ON \
+            -DCMAKE_FIND_ROOT_PATH=$PREFIX \
             -DXEUS_EMSCRIPTEN_WASM_BUILD=ON \
-            -Dnlohmann_json_DIR=$MAMBA_ROOT_PREFIX/share/cmake/nlohmann_json \
             ..
 
           make -j${{ steps.cpu-cores.outputs.count }}
