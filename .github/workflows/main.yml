@@ -130,12 +130,10 @@ jobs:
 
   emscripten_wasm:
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
-      matrix:
-        emsdk_ver: ["3.1.2", "3.1.45"]
 
     steps:
       - uses: actions/checkout@v4
@@ -150,19 +148,8 @@ jobs:
           environment-name: xeus-wasm-build
           create-args: libuuid
 
-      - name: Setup emsdk
-        shell: bash -l {0}
-        run: |
-          cd $HOME
-          git clone https://github.com/emscripten-core/emsdk.git
-          cd emsdk
-          ./emsdk install  ${{ matrix.emsdk_ver }}
-
       - name: Build and package xeus
         run: |
-          $HOME/emsdk/emsdk activate ${{matrix.emsdk_ver}}
-          source $HOME/emsdk/emsdk_env.sh
-
           micromamba create -f environment-wasm-host.yml --platform=emscripten-wasm32
 
           mkdir build
