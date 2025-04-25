@@ -257,7 +257,7 @@ namespace xeus
         {
             nl::json content;
             content["prompt"] = prompt;
-            content["pwd"] = pwd;
+            content["password"] = pwd;
             m_stdin(
                 get_request_context(),
                 "input_request",
