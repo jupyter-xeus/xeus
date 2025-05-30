@@ -59,8 +59,12 @@ option(XEUS_BUILD_TESTS "xeus test suite" OFF)
 # ===================================
 
 if(EMSCRIPTEN)
-    SET(XEUS_BUILD_SHARED_LIBS OFF)
-    SET(XEUS_BUILD_STATIC_LIBS ON)
+    if (XEUS_BUILD_SHARED_LIBS)
+        set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
+        set(CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS "-s SIDE_MODULE=1")
+        set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "-s SIDE_MODULE=1")
+        set(CMAKE_STRIP FALSE)
+    endif ()
 endif()
 
 # Print build configuration
@@ -258,6 +262,9 @@ macro(xeus_create_target target_name linkage output_name)
 
     if (EMSCRIPTEN)
        target_compile_definitions(${target_name} PRIVATE XEUS_EMSCRIPTEN_WASM_BUILD)
+        if (XEUS_BUILD_SHARED_LIBS)
+            set_target_properties(${target_name} PROPERTIES NO_SONAME 1)
+        endif ()
        xeus_wasm_compile_options(${target_name})
     endif()
 endmacro()
