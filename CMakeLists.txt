@@ -266,7 +266,7 @@ macro(xeus_create_target target_name linkage output_name)
             set_target_properties(${target_name} PROPERTIES NO_SONAME 1)
         endif ()
        xeus_wasm_compile_options(${target_name})
-       xeus_wasm_link_options(${target_name}}
+       xeus_wasm_link_options(${target_name})
     endif()
 endmacro()
 
