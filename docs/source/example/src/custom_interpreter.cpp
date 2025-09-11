@@ -35,14 +35,22 @@ namespace custom
         // the data to publish (mime type data) as second argument and metadata
         // as third argument.
         // Replace "Hello World !!" by what you want to be displayed under the execution cell
-        nl::json pub_data;
-        pub_data["text/plain"] = "Hello World !!";
-        publish_execution_result(request_context, execution_counter, std::move(pub_data), nl::json::object());
+        // Note: this method should not be called if config.silent is true
+        if (!config.silent)
+        {
+            nl::json pub_data;
+            pub_data["text/plain"] = "Hello World !!";
+            publish_execution_result(request_context, execution_counter, std::move(pub_data), nl::json::object());
+        }
 
         // You can also use this method for publishing errors to the client, if the code
         // failed to execute
         // publish_execution_error(error_name, error_value, error_traceback);
-        publish_execution_error(request_context, "TypeError", "123", {"!@#$", "*(*"});
+        // Note: this method should not be called if config.silent is true
+        if (!config.silent)
+        {
+            publish_execution_error(request_context, "TypeError", "123", {"!@#$", "*(*"});
+        }
 
         // Call the callback parameter to send the reply
         cb(xeus::create_successful_reply());
