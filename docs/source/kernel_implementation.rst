@@ -51,7 +51,7 @@ course the ``execute_request_impl`` which executes the code whenever the client 
 .. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 22-49
+   :lines: 22-57
 
 The result and arguments of the execution request are described in the execute_request_ documentation.
 
@@ -235,6 +235,34 @@ Create info reply
                                const nl:\:json& help_links)
 
 Thorough information about the kernel's infos variables can be found in the Jupyter kernel docs_.
+
+Outputs and display
+-------------------
+
+The ``xinterpreter`` class provides several methods for sending data to be displayed
+to the frontend(s), that you can call from the implementation of your interpreter class:
+
+- ``publish_stream``: this method is used to send data that should be print on the standard
+  output streams (``stdout`` and ``stderr`` in Python, ``std::cout`` and ``std::cerr`` in C++).
+  The usual way to have it called when executing user code is to redirect standard streams. This
+  method should not be called when executing code in silent mode (i.e. when ``execute_request_impl``
+  is called with a ``config`` argument whose ``silent`` member is ``true``).
+- ``publish_execution_input``: this method sends the executed code to all the frontends connected
+  to the kernel. Like ``publish_stream``, it should not be called when executing code in silent mode.
+  This method is already called in the ``execute_request`` method of the ``xinterpreter`` class and
+  there should be no need to call it from your implementation. It is provided for backward compatibility
+  purpose.
+- ``publish_exeuction_result``: this sends the result of the execution to all the frontends connected
+  to the kernel. It should be called when the execution is successful, and the code was not executed
+  in silent mode.
+- ``publish_execution_error``: this method sends an execution error to all the frontends. It should be
+  called when the code failed to execute and was not executed in silent mode.
+- ``display_data``: this method sends data to be displayed to all the frontends. It should be called
+  from executing a special function in the user code (``display`` in Python and C++, ``display_data``
+  in MatLab). This function should be called even if the code is executed in silent mode.
+- ``update_diplay_data``: when a ``display_id`` is specified for a display, it can be updated later
+  with a call to this method. Like ``display_data``, this method should be called even if the code
+  is executed in silent mode.
 
 Implementing the main entry
 ---------------------------
