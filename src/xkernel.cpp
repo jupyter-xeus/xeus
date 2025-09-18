@@ -147,7 +147,6 @@ namespace xeus
                                                 p_history_manager.get(),
                                                 p_debugger.get());
 
-        std::cout << "Core instantiated" << std::endl;
         xcontrol_messenger& messenger = p_server->get_control_messenger();
 
         if(p_debugger != nullptr)
