@@ -22,7 +22,7 @@ function(xeus_wasm_link_options target environment)
     target_link_options("${target}"
         PUBLIC --bind
         PUBLIC -Wno-unused-command-line-argument
-        PUBLIC "SHELL: -fexceptions"
+        PUBLIC "SHELL: -fwasm-exceptions"
         PUBLIC "SHELL: -s MODULARIZE=1"
         PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
         PUBLIC "SHELL: -s EXPORT_ES6=0"
