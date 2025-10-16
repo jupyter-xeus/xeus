@@ -13,16 +13,15 @@ function(xeus_wasm_compile_options target)
      target_compile_options("${target}"
         PUBLIC --std=c++17
         PUBLIC -Wno-deprecated
-        PUBLIC "SHELL: -fexceptions"
+        PUBLIC "SHELL: -fwasm-exceptions"
     )
     set_property(TARGET ${target} PROPERTY POSITION_INDEPENDENT_CODE ON)
 endfunction()
 
 function(xeus_wasm_link_options target environment)
     target_link_options("${target}"
-        PUBLIC --bind
         PUBLIC -Wno-unused-command-line-argument
-        PUBLIC "SHELL: -fexceptions"
+        PUBLIC "SHELL: -fwasm-exceptions"
         PUBLIC "SHELL: -s MODULARIZE=1"
         PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
         PUBLIC "SHELL: -s EXPORT_ES6=0"
@@ -34,7 +33,7 @@ function(xeus_wasm_link_options target environment)
         PUBLIC "SHELL: -s STACK_SIZE=32mb"
         PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
         PUBLIC "SHELL: -s WASM_BIGINT"
-        PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"ENV\",\"PATH\",\"LDSO\",\"getDylinkMetadata\",\"loadDynamicLibrary\",\"ERRNO_CODES\"]'"
+        PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"ENV\",\"PATH\",\"LDSO\",\"ERRNO_CODES\"]'"
         PUBLIC "SHELL: -s FORCE_FILESYSTEM"
         PUBLIC "SHELL: -s MAIN_MODULE=1"
     )
