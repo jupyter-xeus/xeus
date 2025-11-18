@@ -14,6 +14,7 @@ function(xeus_wasm_compile_options target)
         PUBLIC --std=c++17
         PUBLIC -Wno-deprecated
         PUBLIC "SHELL: -fwasm-exceptions"
+        PUBLIC "SHELL: -lembind"
     )
     set_property(TARGET ${target} PROPERTY POSITION_INDEPENDENT_CODE ON)
 endfunction()
