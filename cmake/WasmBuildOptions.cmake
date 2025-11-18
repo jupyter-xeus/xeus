@@ -21,6 +21,7 @@ endfunction()
 function(xeus_wasm_link_options target environment)
     target_link_options("${target}"
         PUBLIC -Wno-unused-command-line-argument
+        PUBLIC "SHELL: -lembind"
         PUBLIC "SHELL: -fwasm-exceptions"
         PUBLIC "SHELL: -s MODULARIZE=1"
         PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
