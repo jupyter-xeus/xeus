@@ -27,13 +27,13 @@
 // Project version
 #define XEUS_VERSION_MAJOR 5
 #define XEUS_VERSION_MINOR 2
-#define XEUS_VERSION_PATCH 5
+#define XEUS_VERSION_PATCH 6
 
 // Binary version
 // See the following URL for explanations about the binary versionning
 // https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html#Updating-version-info
 #define XEUS_BINARY_CURRENT 13
-#define XEUS_BINARY_REVISION 3
+#define XEUS_BINARY_REVISION 4
 #define XEUS_BINARY_AGE 0
 
 // Kernel protocol version
