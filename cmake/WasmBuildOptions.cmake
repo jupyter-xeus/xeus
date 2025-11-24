@@ -7,35 +7,68 @@
 # The full license is in the file LICENSE, distributed with this software. #
 ############################################################################
 
-# Module to set compiler and linker options for WASM builds
+if (EMSCRIPTEN_VERSION VERSION_LESS "4.0.0")
+    message(STATUS "Emscripten version < 4.0.0")
+    function(xeus_wasm_compile_options target)
+        target_compile_options("${target}"
+            PUBLIC --std=c++17
+            PUBLIC -Wno-deprecated
+            PUBLIC "SHELL: -fexceptions"
+        )
+        set_property(TARGET ${target} PROPERTY POSITION_INDEPENDENT_CODE ON)
+    endfunction()
 
-function(xeus_wasm_compile_options target)
-     target_compile_options("${target}"
-        PUBLIC --std=c++17
-        PUBLIC -Wno-deprecated
-        PUBLIC "SHELL: -fexceptions"
-    )
-    set_property(TARGET ${target} PROPERTY POSITION_INDEPENDENT_CODE ON)
-endfunction()
+    function(xeus_wasm_link_options target environment)
+        target_link_options("${target}"
+            PUBLIC --bind
+            PUBLIC -Wno-unused-command-line-argument
+            PUBLIC "SHELL: -fexceptions"
+            PUBLIC "SHELL: -s MODULARIZE=1"
+            PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
+            PUBLIC "SHELL: -s EXPORT_ES6=0"
+            PUBLIC "SHELL: -s ASSERTIONS=0"
+            PUBLIC "SHELL: -s ALLOW_MEMORY_GROWTH=1"
+            PUBLIC "SHELL: -s EXIT_RUNTIME=1"
+            PUBLIC "SHELL: -s WASM=1"
+            PUBLIC "SHELL: -s ENVIRONMENT=${environment}"
+            PUBLIC "SHELL: -s STACK_SIZE=32mb"
+            PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
+            PUBLIC "SHELL: -s WASM_BIGINT"
+            PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"ENV\",\"PATH\",\"LDSO\",\"loadDynamicLibrary\",\"ERRNO_CODES\"]'"
+            PUBLIC "SHELL: -s FORCE_FILESYSTEM"
+            PUBLIC "SHELL: -s MAIN_MODULE=1"
+        )
+    endfunction()
+else()
+    message(STATUS "Emscripten version >= 4.0.0")
+    function(xeus_wasm_compile_options target)
+        target_compile_options("${target}"
+            PUBLIC --std=c++17
+            PUBLIC -Wno-deprecated
+            PUBLIC "SHELL: -fwasm-exceptions"
+        )
+        set_property(TARGET ${target} PROPERTY POSITION_INDEPENDENT_CODE ON)
+    endfunction()
 
-function(xeus_wasm_link_options target environment)
-    target_link_options("${target}"
-        PUBLIC --bind
-        PUBLIC -Wno-unused-command-line-argument
-        PUBLIC "SHELL: -fexceptions"
-        PUBLIC "SHELL: -s MODULARIZE=1"
-        PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
-        PUBLIC "SHELL: -s EXPORT_ES6=0"
-        PUBLIC "SHELL: -s ASSERTIONS=0"
-        PUBLIC "SHELL: -s ALLOW_MEMORY_GROWTH=1"
-        PUBLIC "SHELL: -s EXIT_RUNTIME=1"
-        PUBLIC "SHELL: -s WASM=1"
-        PUBLIC "SHELL: -s ENVIRONMENT=${environment}"
-        PUBLIC "SHELL: -s STACK_SIZE=32mb"
-        PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
-        PUBLIC "SHELL: -s WASM_BIGINT"
-        PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"ENV\",\"PATH\",\"LDSO\",\"loadDynamicLibrary\",\"ERRNO_CODES\"]'"
-        PUBLIC "SHELL: -s FORCE_FILESYSTEM"
-        PUBLIC "SHELL: -s MAIN_MODULE=1"
-    )
-endfunction()
+    function(xeus_wasm_link_options target environment)
+        target_link_options("${target}"
+            PUBLIC -Wno-unused-command-line-argument
+            PUBLIC "SHELL: -lembind"
+            PUBLIC "SHELL: -fwasm-exceptions"
+            PUBLIC "SHELL: -s MODULARIZE=1"
+            PUBLIC "SHELL: -s EXPORT_NAME=\"createXeusModule\""
+            PUBLIC "SHELL: -s EXPORT_ES6=0"
+            PUBLIC "SHELL: -s ASSERTIONS=0"
+            PUBLIC "SHELL: -s ALLOW_MEMORY_GROWTH=1"
+            PUBLIC "SHELL: -s EXIT_RUNTIME=1"
+            PUBLIC "SHELL: -s WASM=1"
+            PUBLIC "SHELL: -s ENVIRONMENT=${environment}"
+            PUBLIC "SHELL: -s STACK_SIZE=32mb"
+            PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
+            PUBLIC "SHELL: -s WASM_BIGINT"
+            PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"ENV\",\"PATH\",\"LDSO\",\"ERRNO_CODES\"]'"
+            PUBLIC "SHELL: -s FORCE_FILESYSTEM"
+            PUBLIC "SHELL: -s MAIN_MODULE=1"
+        )
+    endfunction()
+endif()
