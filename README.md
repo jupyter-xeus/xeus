@@ -1,7 +1,7 @@
 # ![xeus](docs/source/xeus.svg)
 [![GithubActions](https://github.com/jupyter-xeus/xeus/actions/workflows/main.yml/badge.svg)](https://github.com/jupyter-xeus/xeus/actions/workflows/main.yml)
 [![Documentation Status](http://readthedocs.org/projects/xeus/badge/?version=latest)](https://xeus.readthedocs.io/en/latest/?badge=latest)
-[![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Zulip](https://img.shields.io/badge/social_chat-zulip-blue.svg)](https://jupyter.zulipchat.com/#narrow/channel/539737-Jupyter-Kernels)
 
 C++ implementation of the Jupyter Kernel protocol
 
