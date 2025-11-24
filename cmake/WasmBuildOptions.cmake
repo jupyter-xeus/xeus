@@ -66,7 +66,7 @@ else()
             PUBLIC "SHELL: -s STACK_SIZE=32mb"
             PUBLIC "SHELL: -s INITIAL_MEMORY=128mb"
             PUBLIC "SHELL: -s WASM_BIGINT"
-            PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"ENV\",\"PATH\",\"LDSO\",\"ERRNO_CODES\"]'"
+            PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"ENV\",\"PATH\",\"ERRNO_CODES\",\"getExceptionMessage\",\"getCppExceptionTag\"]'"
             PUBLIC "SHELL: -s FORCE_FILESYSTEM"
             PUBLIC "SHELL: -s MAIN_MODULE=1"
         )
