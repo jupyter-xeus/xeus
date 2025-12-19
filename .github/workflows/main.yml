@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04, macos-13, macos-14]
+        os: [ubuntu-22.04, ubuntu-24.04, macos-14, macos-15]
         xeus_static_dependencies: [0]
         xeus_build_shared_lib: [1]
         include:

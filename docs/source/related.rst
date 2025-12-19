@@ -40,10 +40,15 @@ The `xeus-sql`_ is a Jupyter kernel for general SQL implementations based on the
 xeus-sqlite
 ~~~~~~~~~~~
 
-The `xeus-sqlite`_ project is a Jupyter kernel for the SQLite.
+The `xeus-sqlite`_ project is a Jupyter kernel for SQLite.
 
 .. image:: xeus-sqlite-screenshot.png
    :alt: xeus-sqlite screenshot
+
+xeus-r
+~~~~~~
+
+The `xeus-r`_ project is a Jupyter kenrel for the R programming language.
 
 xeus-robot
 ~~~~~~~~~~
@@ -94,6 +99,7 @@ Jupyter interactive widgets without the C++ kernel per se.
 .. _xeus-cling: https://github.com/jupyter-xeus/xeus-cling
 .. _xeus-python: https://github.com/jupyter-xeus/xeus-python
 .. _xeus-sqlite: https://github.com/jupyter-xeus/xeus-sqlite
+.. _xeus-r: https://github.com/jupyter-xeus/xeus-r
 .. _xeus-sql: https://github.com/jupyter-xeus/xeus-sql
 .. _xeus-robot: https://github.com/jupyter-xeus/xeus-robot
 .. _xeus-lua: https://github.com/jupyter-xeus/xeus-lua
