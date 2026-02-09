@@ -9,7 +9,7 @@ namespace nl = nlohmann;
 
 namespace xeus
 {
-    std::string get_start_message(const xconfiguration& config)
+    std::string get_start_message(const xkernel_configuration& config)
     {
         std::string kernel_info;
         kernel_info = "Starting kernel...\n\n"
