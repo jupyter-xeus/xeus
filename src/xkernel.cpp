@@ -72,7 +72,7 @@ namespace xeus
 #endif
     }
 
-    xkernel::xkernel(const xconfiguration& config,
+    xkernel::xkernel(xconfiguration config,
                      const std::string& user_name,
                      context_ptr context,
                      interpreter_ptr interpreter,
@@ -82,7 +82,8 @@ namespace xeus
                      debugger_builder dbuilder,
                      nl::json debugger_config,
                      nl::json::error_handler_t eh)
-        : m_config(config)
+        : m_kernel_id(new_xguid())
+        , m_session_id(new_xguid())
         , m_user_name(user_name)
         , p_context(std::move(context))
         , p_interpreter(std::move(interpreter))
@@ -91,49 +92,24 @@ namespace xeus
         , m_debugger_config(debugger_config)
         , m_error_handler(eh)
     {
-        init(sbuilder, dbuilder);
-    }
-
-    xkernel::xkernel(const std::string& user_name,
-                     context_ptr context,
-                     interpreter_ptr interpreter,
-                     server_builder sbuilder,
-                     history_manager_ptr history_manager,
-                     logger_ptr logger,
-                     debugger_builder dbuilder,
-                     nl::json debugger_config,
-                     nl::json::error_handler_t eh)
-        : m_user_name(user_name)
-        , p_context(std::move(context))
-        , p_interpreter(std::move(interpreter))
-        , p_history_manager(std::move(history_manager))
-        , p_logger(std::move(logger))
-        , m_debugger_config(debugger_config)
-        , m_error_handler(eh)
-    {
-        init(sbuilder, dbuilder);
-    }
-
-    xkernel::~xkernel()
-    {
-    }
-
-    void xkernel::init(server_builder sbuilder, debugger_builder dbuilder)
-    {
-        m_kernel_id = new_xguid();
-        m_session_id = new_xguid();
-
-        if (m_config.m_key.size() == 0)
+        std::visit([this](auto& arg)
         {
-            m_config.m_key = new_xguid();
-        }
+            if (arg.m_key.size() == 0)
+            {
+                arg.m_key = new_xguid();
+            }
+            m_config.m_transport = arg.m_transport;
+            m_config.m_ip = arg.m_ip;
+            m_config.m_signature_scheme = arg.m_signature_scheme;
+            m_config.m_key = arg.m_key;
+        }, config);
 
         if(p_logger == nullptr || std::getenv("XEUS_LOG") == nullptr)
         {
             p_logger = std::make_unique<xlogger_nolog>();
         }
 
-        p_server = sbuilder(*p_context, m_config, m_error_handler);
+        p_server = sbuilder(*p_context, config, m_error_handler);
         p_server->update_config(m_config);
 
         p_debugger = dbuilder(*p_context, m_config, m_user_name, m_session_id, m_debugger_config);
@@ -159,6 +135,33 @@ namespace xeus
         p_interpreter->configure();
     }
 
+    xkernel::xkernel(const std::string& user_name,
+                     context_ptr context,
+                     interpreter_ptr interpreter,
+                     server_builder sbuilder,
+                     history_manager_ptr history_manager,
+                     logger_ptr logger,
+                     debugger_builder dbuilder,
+                     nl::json debugger_config,
+                     nl::json::error_handler_t eh)
+        : xkernel(
+            xkernel_configuration{},
+            user_name,
+            std::move(context),
+            std::move(interpreter),
+            std::move(sbuilder),
+            std::move(history_manager),
+            std::move(logger),
+            std::move(dbuilder),
+            debugger_config,
+            eh)
+    {
+    }
+
+    xkernel::~xkernel()
+    {
+    }
+
     void xkernel::start()
     {
         xpub_message start_msg = p_core->build_start_msg();
@@ -171,7 +174,7 @@ namespace xeus
         p_server->stop();
     }
 
-    const xconfiguration& xkernel::get_config()
+    const xkernel_configuration& xkernel::get_config()
     {
         return m_config;
     }

@@ -45,12 +45,12 @@ namespace xeus
                                              const xconfiguration& config,
                                              nl::json::error_handler_t eh)>;
         using debugger_builder = std::function<debugger_ptr(xcontext& context,
-                                                const xconfiguration& config,
+                                                const xkernel_configuration& config,
                                                 const std::string&,
                                                 const std::string&,
                                                 const nl::json&)>;
 
-        xkernel(const xconfiguration& config,
+        xkernel(xconfiguration config,
                 const std::string& user_name,
                 context_ptr context,
                 interpreter_ptr interpreter,
@@ -76,15 +76,12 @@ namespace xeus
         void start();
         void stop();
 
-        const xconfiguration& get_config();
+        const xkernel_configuration& get_config();
         xserver& get_server();
 
     private:
 
-        void init(server_builder sbuilder,
-                  debugger_builder dbuilder);
-
-        xconfiguration m_config;
+        xkernel_configuration m_config;
         std::string m_kernel_id;
         std::string m_session_id;
         std::string m_user_name;

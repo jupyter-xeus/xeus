@@ -22,7 +22,7 @@ namespace nl = nlohmann;
 
 namespace xeus
 {
-    XEUS_API std::string get_start_message(const xconfiguration& config);
+    XEUS_API std::string get_start_message(const xkernel_configuration& config);
 
     /**
      * @brief Extracts the filename from the command-line arguments and adjusts argc/argv.

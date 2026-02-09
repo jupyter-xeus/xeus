@@ -7,7 +7,7 @@
 # The full license is in the file LICENSE, distributed with this software. #
 ############################################################################
 
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(xeus)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
@@ -245,6 +245,13 @@ macro(xeus_create_target target_name linkage output_name)
         target_compile_definitions(${target_name} PUBLIC -DNOMINMAX)
         target_compile_options(${target_name} PUBLIC /DGUID_WINDOWS /MP /bigobj)
         target_compile_options(${target_name} PUBLIC /wd4251 /wd4996)
+        set_target_properties(
+            ${target_name}
+            PROPERTIES
+            CXX_STANDARD 17
+            CXX_STANDARD_REQUIRED YES
+            CXX_EXTENSIONS NO
+        )
     elseif (APPLE)
         target_compile_definitions(${target_name} PUBLIC -DGUID_CFUUID)
     else ()

@@ -58,7 +58,7 @@ namespace xeus
         stop_impl();
     }
 
-    void xserver::update_config(xconfiguration& config) const
+    void xserver::update_config(xkernel_configuration& config) const
     {
         update_config_impl(config);
     }

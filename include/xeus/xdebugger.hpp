@@ -53,7 +53,7 @@ namespace xeus
 
     XEUS_API
     std::unique_ptr<xdebugger> make_null_debugger(xcontext& context,
-                                                  const xconfiguration& kernel_configuration,
+                                                  const xkernel_configuration& kernel_configuration,
                                                   const std::string& user_name,
                                                   const std::string& session_id,
                                                   const nl::json& debugger_config);
