@@ -129,7 +129,7 @@ namespace xeus
     {
     }
 
-    void xmock_server::update_config_impl(xconfiguration&) const
+    void xmock_server::update_config_impl(xkernel_configuration&) const
     {
     }
 
