@@ -38,7 +38,7 @@
 
 // Kernel protocol version
 #define XEUS_KERNEL_PROTOCOL_VERSION_MAJOR 5
-#define XEUS_KERNEL_PROTOCOL_VERSION_MINOR 3
+#define XEUS_KERNEL_PROTOCOL_VERSION_MINOR 5
 
 // Composing the protocol version string from major, and minor
 #define XEUS_CONCATENATE(A, B) XEUS_CONCATENATE_IMPL(A, B)
