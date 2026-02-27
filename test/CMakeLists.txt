@@ -85,6 +85,7 @@ foreach(filename IN LISTS XEUS_TESTS)
     get_filename_component(targetname ${filename} NAME_WE)
 
     add_executable(${targetname} test_main.cpp ${filename} ${XEUS_TEST_SRCS})
+    target_compile_features(${targetname} PRIVATE cxx_std_17)
     target_compile_definitions(${targetname} PRIVATE DOCTEST_CONFIG_TREAT_CHAR_STAR_AS_STRING)
     target_link_libraries(${targetname} PRIVATE ${xeus_TARGET} doctest::doctest Threads::Threads ${nlohmann_json_TARGET})
     add_test(NAME ${targetname} COMMAND ${targetname})

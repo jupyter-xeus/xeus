@@ -42,7 +42,7 @@ namespace xeus
     }
 
     std::unique_ptr<xdebugger> make_null_debugger(xcontext&,
-                                                  const xconfiguration&,
+                                                  const xkernel_configuration&,
                                                   const std::string&,
                                                   const std::string&,
                                                   const nl::json&)
