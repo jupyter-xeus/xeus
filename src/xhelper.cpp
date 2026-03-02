@@ -119,23 +119,22 @@ namespace xeus
         return kernel_res;
     }
 
-    nl::json create_info_reply(const std::string& protocol_version,
-                               const std::string& implementation,
+    nl::json create_info_reply(const std::string& implementation,
                                const std::string& implementation_version,
                                const std::string& language_name,
                                const std::string& language_version,
                                const std::string& language_mimetype,
                                const std::string& language_file_extension,
                                const std::string& language_pygments_lexer,
-                               const std::string& language_codemirror_mode,
+                               codemirror_mode_t language_codemirror_mode,
                                const std::string& language_nbconvert_exporter,
                                const std::string& banner,
-                               const bool debugger,
                                const nl::json& help_links)
     {
         nl::json kernel_res;
+        // kernel_res["protocol_version"] is set in xkernel_core::kernel_info_request
+        // to ensure the same version for all the xeus-based kernels
         kernel_res["status"] = "ok";
-        kernel_res["protocol_version"] = protocol_version;
         kernel_res["implementation"] = implementation;
         kernel_res["implementation_version"] = implementation_version;
         kernel_res["language_info"]["name"] = language_name;
@@ -143,10 +142,12 @@ namespace xeus
         kernel_res["language_info"]["mimetype"] = language_mimetype;
         kernel_res["language_info"]["file_extension"] = language_file_extension;
         kernel_res["language_info"]["pygments_lexer"] = language_pygments_lexer;
-        kernel_res["language_info"]["codemirror_mode"] = language_codemirror_mode;
+        std::visit([&kernel_res](auto&& arg)
+        {
+            kernel_res["language_info"]["codemirror_mode"] = std::move(arg);
+        }, std::move(language_codemirror_mode));
         kernel_res["language_info"]["nbconvert_exporter"] = language_nbconvert_exporter;
         kernel_res["banner"] = banner;
-        kernel_res["debugger"] = debugger;
         kernel_res["help_links"] = help_links;
         return kernel_res;
     }
