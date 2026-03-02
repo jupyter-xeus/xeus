@@ -74,6 +74,11 @@ namespace xeus
             return nl::json();
         }
 
+        nl::json interrupt_request_impl() override
+        {
+            return nl::json();
+        }
+
         xcomm_manager m_comm_manager;
     };
 }

@@ -64,6 +64,7 @@ namespace xeus
         nl::json kernel_info_request();
 
         nl::json shutdown_request(bool restart);
+        nl::json interrupt_request();
 
         nl::json internal_request(const nl::json& message);
 
@@ -127,6 +128,7 @@ namespace xeus
         virtual nl::json kernel_info_request_impl() = 0;
 
         virtual nl::json shutdown_request_impl(bool restart) = 0;
+        virtual nl::json interrupt_request_impl() = 0;
 
         virtual nl::json internal_request_impl(const nl::json& message);
 
