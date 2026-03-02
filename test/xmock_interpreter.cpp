@@ -112,4 +112,9 @@ namespace xeus
     {
         return xeus::create_shutdown_reply(restart);
     }
+
+    nl::json xmock_interpreter::interrupt_request_impl()
+    {
+        return xeus::create_interrupt_reply();
+    }
 }

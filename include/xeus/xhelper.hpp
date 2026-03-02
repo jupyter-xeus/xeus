@@ -79,6 +79,9 @@ namespace xeus
 
     XEUS_API
     nl::json create_shutdown_reply(bool restart);
+
+    XEUS_API
+    nl::json create_interrupt_reply();
 }
 
 #endif

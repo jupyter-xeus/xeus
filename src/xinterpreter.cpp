@@ -84,6 +84,11 @@ namespace xeus
         return shutdown_request_impl(restart);
     }
 
+    nl::json xinterpreter::interrupt_request()
+    {
+        return interrupt_request_impl();
+    }
+
     nl::json xinterpreter::internal_request(const nl::json& message)
     {
         return internal_request_impl(message);
