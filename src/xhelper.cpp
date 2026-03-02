@@ -152,5 +152,12 @@ namespace xeus
         return kernel_res;
     }
 
+    nl::json create_shutdown_reply(bool restart)
+    {
+        nl::json kernel_res;
+        kernel_res["status"] = "ok";
+        kernel_res["restart"] = restart;
+        return kernel_res;
+    }
 }
 

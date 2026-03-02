@@ -76,6 +76,9 @@ namespace xeus
                                const std::string& language_nbconvert_exporter = std::string(),
                                const std::string& banner = std::string(),
                                const nl::json& help_links = nl::json::array());
+
+    XEUS_API
+    nl::json create_shutdown_reply(bool restart);
 }
 
 #endif

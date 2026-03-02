@@ -69,8 +69,9 @@ namespace xeus
             return nl::json();
         }
 
-        void shutdown_request_impl() override
+        nl::json shutdown_request_impl(bool /*restart*/) override
         {
+            return nl::json();
         }
 
         xcomm_manager m_comm_manager;

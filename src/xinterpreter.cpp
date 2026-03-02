@@ -79,9 +79,9 @@ namespace xeus
         return kernel_info_request_impl();
     }
 
-    void xinterpreter::shutdown_request()
+    nl::json xinterpreter::shutdown_request(bool restart)
     {
-        shutdown_request_impl();
+        return shutdown_request_impl(restart);
     }
 
     nl::json xinterpreter::internal_request(const nl::json& message)
