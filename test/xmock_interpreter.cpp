@@ -108,7 +108,8 @@ namespace xeus
                                        "test_kernel");
     }
 
-    void xmock_interpreter::shutdown_request_impl()
+    nl::json xmock_interpreter::shutdown_request_impl(bool restart)
     {
+        return xeus::create_shutdown_reply(restart);
     }
 }

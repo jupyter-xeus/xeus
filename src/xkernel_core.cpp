@@ -365,12 +365,10 @@ namespace xeus
     {
         const nl::json& content = request.content();
         bool restart = content.value("restart", false);
-        p_interpreter->shutdown_request();
-        p_server->stop();
-        nl::json reply;
-        reply["restart"] = restart;
-        publish_message("shutdown", request.header(), nl::json::object(), std::move(reply), buffer_sequence(), channel::CONTROL);
+        nl::json reply = p_interpreter->shutdown_request(restart);
+        publish_message("shutdown", request.header(), nl::json::object(), reply, buffer_sequence(), channel::CONTROL);
         send_reply(request.identities(), "shutdown_reply", request.header(), nl::json::object(), std::move(reply), c);
+        p_server->stop();
     }
 
     void xkernel_core::interrupt_request(xmessage request, channel c)

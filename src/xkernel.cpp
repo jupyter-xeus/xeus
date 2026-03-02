@@ -170,7 +170,7 @@ namespace xeus
 
     void xkernel::stop()
     {
-        p_interpreter->shutdown_request();
+        p_interpreter->shutdown_request(false);
         p_server->stop();
     }
 
