@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <string>
+#include <variant>
 #include <vector>
 
 #include "xeus/xeus.hpp"
@@ -61,19 +62,19 @@ namespace xeus
     nl::json create_is_complete_reply(const std::string& status = std::string(),
                                       const std::string& indent = std::string(""));
 
+    using codemirror_mode_t = std::variant<std::string, nl::json>;
+
     XEUS_API
-    nl::json create_info_reply(const std::string& protocol_version = std::string(),
-                               const std::string& implementation = std::string(),
+    nl::json create_info_reply(const std::string& implementation = std::string(),
                                const std::string& implementation_version = std::string(),
                                const std::string& language_name = std::string(),
                                const std::string& language_version = std::string(),
                                const std::string& language_mimetype = std::string(),
                                const std::string& language_file_extension = std::string(),
                                const std::string& pygments_lexer = std::string(),
-                               const std::string& language_codemirror_mode = std::string(),
+                               codemirror_mode_t language_codemirror_mode = std::string(),
                                const std::string& language_nbconvert_exporter = std::string(),
                                const std::string& banner = std::string(),
-                               const bool debugger = false,
                                const nl::json& help_links = nl::json::array());
 }
 

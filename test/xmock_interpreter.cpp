@@ -102,7 +102,7 @@ namespace xeus
                                        "14.0.0",
                                        "text/x-c++src",
                                        ".cpp",
-                                       "",
+                                       std::string(""),
                                        "",
                                        "",
                                        "test_kernel");
