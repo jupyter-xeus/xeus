@@ -10,9 +10,10 @@
 #ifndef XEUS_IN_MEMORY_HISTORY_MANAGER_HPP
 #define XEUS_IN_MEMORY_HISTORY_MANAGER_HPP
 
-#include <list>
 #include <array>
+#include <list>
 #include <string>
+#include <utility>
 
 #include "nlohmann/json.hpp"
 
@@ -27,9 +28,10 @@ namespace xeus
     {
     public:
 
-        using entry = std::array<std::string, 4>;
+        using string_pair = std::pair<std::string, std::string>;
+        using entry = std::tuple<int, int, string_pair>;
         using history_type = std::list<entry>;
-        using short_entry = std::array<std::string, 3>;
+        using short_entry = std::tuple<int, int, std::string>;
         using short_history_type = std::list<short_entry>;
 
         xin_memory_history_manager();

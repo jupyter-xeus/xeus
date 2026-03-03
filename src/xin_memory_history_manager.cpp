@@ -37,12 +37,12 @@ namespace xeus
                                                        const std::string& input,
                                                        const std::string& output)
     {
-        m_history.push_back({ std::to_string(session), std::to_string(line_num), input, output });
+        m_history.push_back({ session, line_num, { input, output }});
     }
 
-    std::array<std::string, 3> make_short_entry(const std::array<std::string, 4>& in)
+    xin_memory_history_manager::short_entry make_short_entry(const xin_memory_history_manager::entry& in)
     {
-        std::array<std::string, 3> res = { in[0], in[1], in[2] };
+        xin_memory_history_manager::short_entry res = { std::get<0>(in), std::get<1>(in), std::get<2>(in).first };
         return res;
     }
 
@@ -58,7 +58,7 @@ namespace xeus
             std::copy(m_history.rbegin(), 
                       std::next(m_history.rbegin(), count),
                       std::front_inserter(history));
-        
+
             reply["history"] = history;
         }
         else
@@ -166,7 +166,7 @@ namespace xeus
         std::regex regex(regex_pattern);
         std::cmatch m;
 
-        auto regex_lambda = [&m, &regex](const auto& item) { return std::regex_search(item[2].c_str(), m, regex); };
+        auto regex_lambda = [&m, &regex](const auto& item) { return std::regex_search(std::get<2>(item).first.c_str(), m, regex); };
         if (output)
         {
             history_type history;
