@@ -49,7 +49,11 @@ namespace custom
 
         nl::json kernel_info_request_impl() override;
 
-        void shutdown_request_impl() override;
+        nl::json shutdown_request_impl(bool restart) override;
+
+        nl::json interrupt_request_impl() override;
+
+
     };
 }
 

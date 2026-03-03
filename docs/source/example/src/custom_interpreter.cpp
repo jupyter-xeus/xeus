@@ -109,9 +109,13 @@ namespace custom
                                        ".py");
     }
 
-    void custom_interpreter::shutdown_request_impl()
+    void custom_interpreter::shutdown_request_impl(bool restart)
     {
-        std::cout << "Bye!!" << std::endl;
+        return xeus::create_shutdown_reply(restart);
     }
 
+    void custom_interpreter::interrupt_request_impl()
+    {
+        return xeux::create_interrupt_reply();
+    }
 }
