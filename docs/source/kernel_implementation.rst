@@ -58,7 +58,7 @@ The result and arguments of the execution request are described in the execute_r
 .. note::
     The other methods are all optional, but we encourage you to implement them in order to have a fully-featured kernel.
 
-Within this method the use of create_error_reply_ and create_successful_reply_ might be useful.
+Within this method the use of ``create_error_reply`` and ``create_successful_reply`` might be useful.
 
 Input request
 ~~~~~~~~~~~~~
@@ -85,7 +85,7 @@ for initializing the auto-completion engine.
 .. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 50-53
+   :lines: 59-62
 
 Code Completion
 ~~~~~~~~~~~~~~~
@@ -95,7 +95,7 @@ The ``complete_request_impl`` method allows you to implement the auto-completion
 .. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 55-68
+   :lines: 64-77
 
 The result and arguments of the completion request are described in the complete_request_ documentation.
 
@@ -109,9 +109,9 @@ user wants inspection.
 .. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 70-85
+   :lines: 79-94
 
-The result and arguments of the inspection request are described in the inspect_request_ documentation and the create_inspect_reply_ might be useful to create a reply within specifications.
+The result and arguments of the inspection request are described in the inspect_request_ documentation and the``create_inspect_reply`` might be useful to create a reply within specifications.
 
 Code Completeness
 ~~~~~~~~~~~~~~~~~
@@ -138,9 +138,9 @@ So the kernel should return "complete".
 .. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 87-90
+   :lines: 96-99
 
-The result and arguments of the completness request are described in the is_complete_request_ documentation. Both create_default_complete_reply_ and create_is_complete_reply_ methods are recommended.
+The result and arguments of the completness request are described in the is_complete_request_ documentation. Both ``create_default_complete_reply`` and ``create_is_complete_reply`` methods are recommended.
 
 Kernel info
 ~~~~~~~~~~~
@@ -150,9 +150,9 @@ This request allows the client to get information about the kernel: language, la
 .. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 92-101
+   :lines: 101-110
 
-The result and arguments of the kernel info request are described in the kernel_info_request_ documentation. The create_info_reply_ method will help you to provide complete information about your kernel.
+The result and arguments of the kernel info request are described in the kernel_info_request_ documentation. The ``create_info_reply`` method will help you to provide complete information about your kernel.
 
 Kernel shutdown
 ~~~~~~~~~~~~~~~
@@ -162,7 +162,18 @@ This allows you to perform some operations before shutting down the kernel.
 .. literalinclude:: ./example/src/custom_interpreter.cpp
    :language: cpp
    :dedent: 4
-   :lines: 103-106
+   :lines: 112-115
+
+Kernel interrupt
+~~~~~~~~~~~~~~~~
+
+This allows you to interrupt the kernel if it can not catch operating system interrupt signals. For this to work,
+the kernel's kernelspec must set ``interrupt_mode`` to ``message``.
+
+.. literalinclude:: ./example/src/custom_interpreter.cpp
+   :language: cpp
+   :dedent: 4
+   :lines: 117-120
 
 Kernel replies
 --------------
@@ -172,10 +183,11 @@ Error reply
 
 Creates a default error reply to the kernel or allows custom input. The signature of the method is the following:
 
-.. code::
-     nl:\:json create_error_reply(const std:\:string& ename,
-                                  const std:\:string& evalue,
-                                  const std:\:vector<std:\:string>& trace_back)
+.. code-block:: cpp
+
+   nl::json create_error_reply(const std::string& ename,
+                               const std::string& evalue,
+                               const std::vector<std::string>& trace_back)
 
 Where ``evalue`` is exception value, ``ename`` is exception name and ``trace_back`` a vector of strings with the exception stack.
 
@@ -184,9 +196,10 @@ Successful reply
 
 Creates a default success reply to the kernel or allows custom input. The signature of the method is the following:
 
-.. code::
-    nl:\:json create_successful_reply(const std:\:vector<nl:\:json>& payload,
-                                     const nl:\:json& user_expressions)
+.. code-block:: cpp
+
+   nl::json create_successful_reply(const std::vector<nl::json>& payload,
+                                    const nl::json& user_expressions)
 
 Where ``payload`` is a way to trigger frontend actions from the kernel (payloads are deprecated but since there are still no replecement for it you might need to use it). You can find more information about the different kinds of payloads in the `official documentation <https://jupyter-client.readthedocs.io/en/stable/messaging.html#payloads-deprecated>`_. ``data`` is a dictionary which the keys is a ``MIME_type`` (this is the type of data to be shown it must be a valid MIME type, for a list of the possibilities check MDN_, note that you're not limited by these types) and the values are the content of the information intended to be displayed in the frontend. And ``user_expressions`` is a dictionary of strings of arbitrary code, more information about it on the `official documentation <https://jupyter-client.readthedocs.io/en/stable/messaging.html#execute>`_.
 
@@ -195,11 +208,12 @@ Complete reply
 
 Creates a custom completion reply to the kernel. The signature of the method is the following:
 
-.. code::
-    nl:\:json create_complete_reply(const std:\:vector<std:\:string>& matches,
-                                   const int cursor_start,
-                                   const int cursor_end,
-                                   const nl:\:json metadata)
+.. code-block:: cpp
+
+   nl::json create_complete_reply(const std::vector<std::string>& matches,
+                                  const int cursor_start,
+                                  const int cursor_end,
+                                  const nl::json metadata)
 
 Where ``matches`` the list of all matches to the completion request, it's a mandatory argument. ``cursor_start`` and ``cursor_end`` mark the range of text that should be replaced by the above matches when a completion is accepted, typically ``cursor_end`` is the same as ``cursor_pos`` in the request and both these arguments are mandatory for the implementation of the method. ``metadata`` a dictionary of strings that contains information that frontend plugins might use for extra display information about completions.
 
@@ -210,29 +224,31 @@ Is complete reply
 
 Creates a default is complete reply to the kernel or allows custom input. The signature of the method is the following:
 
-.. code::
-    nl:\:json create_is_complete_reply(const std:\:string& status,
-                                        const std:\:string& indent)
+.. code-block:: cpp
+
+   nl::json create_is_complete_reply(const std::string& status,
+                                     const std::string& indent)
 
 ``status`` one of the following 'complete', 'incomplete', 'invalid', 'unknown'. ``indent`` if status is 'incomplete', indent should contain the characters to use to indent the next line. This is only a hint: frontends may ignore it and use their own autoindentation rules. For other statuses, this field does not exist.
 
 Create info reply
 ~~~~~~~~~~~~~~~~~
 
-.. code::
-    nl:\:json create_info_reply(const std:\:string& protocol_version,
-                               const std:\:string& implementation,
-                               const std:\:string& implementation_version,
-                               const std:\:string& language_name,
-                               const std:\:string& language_version,
-                               const std:\:string& language_mimetype,
-                               const std:\:string& language_file_extension,
-                               const std:\:string& language_pygments_lexer,
-                               const std:\:string& language_codemirror_mode,
-                               const std:\:string& language_nbconvert_exporter,
-                               const std:\:string& banner,
-                               const bool& debugger,
-                               const nl:\:json& help_links)
+.. code-block:: cpp
+
+   nl::json create_info_reply(const std::string& protocol_version,
+                              const std::string& implementation,
+                              const std::string& implementation_version,
+                              const std::string& language_name,
+                              const std::string& language_version,
+                              const std::string& language_mimetype,
+                              const std::string& language_file_extension,
+                              const std::string& language_pygments_lexer,
+                              const std::string& language_codemirror_mode,
+                              const std::string& language_nbconvert_exporter,
+                              const std::string& banner,
+                              const bool& debugger,
+                              const nl::json& help_links)
 
 Thorough information about the kernel's infos variables can be found in the Jupyter kernel docs_.
 
@@ -344,5 +360,3 @@ It allows you to test the results of the requests you send to the kernel.
 .. _kernel_info_request: https://jupyter-client.readthedocs.io/en/stable/messaging.html#kernel-info
 .. _MDN: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
 .. _docs: https://jupyter-client.readthedocs.io/en/stable/messaging.html#kernel-info
-.. _create_error_reply: https://github.com/jupyter-xeus/xeus/blob/7c6f3f61598b91a4e4a541a9ed7ba2033422af3a/include/xeus/xhelper.hpp#L33
-.. _create_successful_reply: https://github.com/jupyter-xeus/xeus/blob/7c6f3f61598b91a4e4a541a9ed7ba2033422af3a/include/xeus/xhelper.hpp#L38

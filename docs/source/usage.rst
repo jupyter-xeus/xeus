@@ -45,8 +45,8 @@ The easiest way to get started with a new kernel is to create a class inheriting
 
 A dummy kernel is provided as an example_ and a more advanced example kernel can be found here_.
 You can also find real kernel implementations based on xeus:
-  - `xeus-cling <https://github.com/jupyter-xeus/xeus-cling>`_: C++ kernel
-  - `xeus-python <https://github.com/jupyter-xeus/xeus-python>`_: Python kernel
+- `xeus-cling <https://github.com/jupyter-xeus/xeus-cling>`_: C++ kernel
+- `xeus-python <https://github.com/jupyter-xeus/xeus-python>`_: Python kernel
 
 .. _example: https://github.com/jupyter-xeus/xeus-zmq/tree/master/example
 .. _here: https://github.com/jupyter-xeus/xeus-calc/

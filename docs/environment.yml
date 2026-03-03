@@ -4,6 +4,7 @@ channels:
   - conda-forge
 
 dependencies:
+  - doxygen
   - breathe
   - sphinx_rtd_theme
-  - sphinx=6.*
+  - sphinx

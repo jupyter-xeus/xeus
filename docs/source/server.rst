@@ -28,7 +28,7 @@ Before we dive into the details of the server implementation, let's have a look 
 .. literalinclude:: ../../include/xeus/xserver.hpp
    :language: cpp
    :dedent: 4
-   :lines: 21-73
+   :lines: 21-88
 
 First thing to notice is the ``xserver`` class makes use of the Non-Virtual Interface pattern. This
 allows a clear separation between the client interface (the public methods) and the interface for
