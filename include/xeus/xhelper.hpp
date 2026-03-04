@@ -75,7 +75,8 @@ namespace xeus
                                codemirror_mode_t language_codemirror_mode = std::string(),
                                const std::string& language_nbconvert_exporter = std::string(),
                                const std::string& banner = std::string(),
-                               const nl::json& help_links = nl::json::array());
+                               const nl::json& help_links = nl::json::array(),
+                               const std::vector<std::string>& supported_features = std::vector<std::string>());
 
     XEUS_API
     nl::json create_shutdown_reply(bool restart);
