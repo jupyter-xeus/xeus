@@ -84,7 +84,9 @@ namespace custom
 
         nl::json kernel_info_request_impl() override;
 
-        void shutdown_request_impl() override;
+        nl::json shutdown_request_impl(bool restart) override;
+
+        nl::json interrupt_request_impl() override;
     };
 }
 ```
@@ -97,7 +99,8 @@ Kernel authors can then rebind to the native APIs of the interpreter that is bei
 
 |  xeus   | nlohmann json |
 |---------|---------------|
-| master  |    ^3.11.0    |
+| master  |    ^3.12.0    |
+| 6.x     |    ^3.12.0    |
 | 5.x     |    ^3.11.0    |
 
 Versions prior to version 5 depend on the following libraries: [`nlohmann_json`](https://github.com/nlohmann/json) and [`xtl`](https://github.com/xtensor-stack/xtl).

@@ -25,20 +25,20 @@
 #endif
 
 // Project version
-#define XEUS_VERSION_MAJOR 5
-#define XEUS_VERSION_MINOR 2
-#define XEUS_VERSION_PATCH 8
+#define XEUS_VERSION_MAJOR 6
+#define XEUS_VERSION_MINOR 0
+#define XEUS_VERSION_PATCH 0
 
 // Binary version
 // See the following URL for explanations about the binary versionning
 // https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html#Updating-version-info
-#define XEUS_BINARY_CURRENT 13
-#define XEUS_BINARY_REVISION 6
+#define XEUS_BINARY_CURRENT 14
+#define XEUS_BINARY_REVISION 0
 #define XEUS_BINARY_AGE 0
 
 // Kernel protocol version
 #define XEUS_KERNEL_PROTOCOL_VERSION_MAJOR 5
-#define XEUS_KERNEL_PROTOCOL_VERSION_MINOR 5
+#define XEUS_KERNEL_PROTOCOL_VERSION_MINOR 6
 
 // Composing the protocol version string from major, and minor
 #define XEUS_CONCATENATE(A, B) XEUS_CONCATENATE_IMPL(A, B)
