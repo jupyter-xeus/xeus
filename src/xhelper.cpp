@@ -129,7 +129,8 @@ namespace xeus
                                codemirror_mode_t language_codemirror_mode,
                                const std::string& language_nbconvert_exporter,
                                const std::string& banner,
-                               const nl::json& help_links)
+                               const nl::json& help_links,
+                               const std::vector<std::string>& supported_features)
     {
         nl::json kernel_res;
         // kernel_res["protocol_version"] is set in xkernel_core::kernel_info_request
@@ -149,6 +150,7 @@ namespace xeus
         kernel_res["language_info"]["nbconvert_exporter"] = language_nbconvert_exporter;
         kernel_res["banner"] = banner;
         kernel_res["help_links"] = help_links;
+        kernel_res["supported_features"] = supported_features;
         return kernel_res;
     }
 
