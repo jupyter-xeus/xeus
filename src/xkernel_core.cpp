@@ -366,9 +366,10 @@ namespace xeus
         const nl::json& content = request.content();
         bool restart = content.value("restart", false);
         nl::json reply = p_interpreter->shutdown_request(restart);
+        std::string reply_status = reply["status"];
         publish_message("shutdown", request.header(), nl::json::object(), reply, buffer_sequence(), channel::CONTROL);
         send_reply(request.identities(), "shutdown_reply", request.header(), nl::json::object(), std::move(reply), c);
-        if (reply["status"] == "ok")
+        if (reply_status == "ok")
         {
             p_server->stop();
         }
@@ -377,9 +378,10 @@ namespace xeus
     void xkernel_core::interrupt_request(xmessage request, channel c)
     {
         nl::json reply = p_interpreter->interrupt_request();
+        std::string reply_status = reply["status"];
         publish_message("interrupt", request.header(), nl::json::object(), reply, buffer_sequence(), channel::CONTROL);
         send_reply(request.identities(), "interrupt_reply", request.header(), nl::json::object(), std::move(reply), c);
-        if (reply["status"] == "ok")
+        if (reply_status == "ok")
         {
             p_server->stop();
         }
