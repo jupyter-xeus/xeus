@@ -95,15 +95,14 @@ namespace xeus
 
     nl::json xmock_interpreter::kernel_info_request_impl()
     {
-        return xeus::create_info_reply("",
-                                       "cpp_test",
+        return xeus::create_info_reply("cpp_test",
                                        "1.0.0",
                                        "cpp",
                                        "14.0.0",
                                        "text/x-c++src",
                                        ".cpp",
-                                       std::string(""),
                                        "",
+                                       std::string(""),
                                        "",
                                        "test_kernel");
     }
