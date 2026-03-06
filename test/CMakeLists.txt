@@ -9,7 +9,7 @@
 
 # Unit tests
 # ==========
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 
 if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     project(xeus-test)
@@ -52,6 +52,7 @@ set(XEUS_TESTS
     test_xbase64.cpp
     test_xbasic_fixed_string.cpp
     test_xhash.cpp
+    test_xhelper.cpp
     test_xin_memory_history_manager.cpp
     test_xsystem.cpp
     test_unit_kernel.cpp
