@@ -62,8 +62,8 @@ namespace xeus
     }
 
     // Helpers that create replies to the server
-    nl::json create_error_reply(const std::string& evalue,
-                                const std::string& ename,
+    nl::json create_error_reply(const std::string& ename,
+                                const std::string& evalue,
                                 const nl::json& trace_back)
     {
         nl::json kernel_res;

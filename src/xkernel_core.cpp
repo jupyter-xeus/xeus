@@ -249,7 +249,7 @@ namespace xeus
 
             xrequest_context request_context(request.header(), request.identities());
             execute_request_config config { silent, store_history, allow_stdin };
-            
+
             auto reply_callback = [this, request_context, config, stop_on_error, code](nl::json reply)
             {
                 int execution_count = 1;
