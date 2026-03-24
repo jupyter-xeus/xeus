@@ -52,6 +52,8 @@ option(XEUS_BUILD_SHARED_LIBS "Build xeus shared library." ON)
 option(XEUS_BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." ON)
 option(XEUS_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
 
+option(XEUS_SANITIZE_ADDRESS "Enable address sanitizer" OFF)
+
 # Test options
 option(XEUS_BUILD_TESTS "xeus test suite" OFF)
 
@@ -235,6 +237,10 @@ macro(xeus_create_target target_name linkage output_name)
         CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR
         CMAKE_CXX_COMPILER_ID MATCHES "Intel")
         message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+        if (XEUS_SANITIZE_ADDRESS)
+            target_compile_options(${target_name} PUBLIC -fsanitize=address -fno-omit-frame-pointer)
+            target_link_options(${target_name} PUBLIC -fsanitize=address)
+        endif ()
     endif()
 
     if (${linkage_upper} STREQUAL "STATIC")
