@@ -385,10 +385,6 @@ namespace xeus
         std::string reply_status = reply["status"];
         publish_message("interrupt", request.header(), nl::json::object(), reply, buffer_sequence(), channel::CONTROL);
         send_reply(request.identities(), "interrupt_reply", request.header(), nl::json::object(), std::move(reply), c);
-        if (reply_status == "ok")
-        {
-            p_server->stop();
-        }
     }
 
     void xkernel_core::debug_request(xmessage request, channel c)
