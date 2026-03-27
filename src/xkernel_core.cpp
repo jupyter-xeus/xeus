@@ -336,7 +336,11 @@ namespace xeus
     void xkernel_core::comm_info_request(xmessage request, channel c)
     {
         const nl::json& content = request.content();
-        std::string target_name = content.is_null() ? "" : content.value("target_name", "");
+        std::string target_name = "";
+        if (!content.is_null() && content.contains("target_name") && !content["target_name"].is_null())
+        {
+            target_name = content["target_name"];
+        }
         auto comms = nl::json::object();
         for (auto it = m_comm_manager.comms().cbegin(); it != m_comm_manager.comms().cend(); ++it)
         {
