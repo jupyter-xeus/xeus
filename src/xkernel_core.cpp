@@ -219,11 +219,8 @@ namespace xeus
                 std::cerr << "Message type: " << msg_type << std::endl;
             }
         }
-        // async handlers need to set the idle status themselves
-        if(handler.blocking)
-        {
-            publish_status(header, "idle", c);
-        }
+        
+        publish_status(header, "idle", c);
     }
 
     auto xkernel_core::get_handler(const std::string& msg_type) -> handler_type
@@ -276,9 +273,6 @@ namespace xeus
                     constexpr long polling_interval = 50;
                     p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), polling_interval);
                 }
-
-                // idle
-                publish_status(request_context.header(), "idle", channel::SHELL);
             };
 
             p_interpreter->execute_request(
