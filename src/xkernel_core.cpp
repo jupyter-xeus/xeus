@@ -219,7 +219,6 @@ namespace xeus
                 std::cerr << "Message type: " << msg_type << std::endl;
             }
         }
-        
         publish_status(header, "idle", c);
     }
 
