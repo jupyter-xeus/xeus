@@ -219,22 +219,12 @@ namespace xeus
                 std::cerr << "Message type: " << msg_type << std::endl;
             }
         }
-#ifndef EMSCRIPTEN
+
         // async handlers need to set the idle status themselves
         if(handler.blocking)
         {
             publish_status(header, "idle", c);
         }
-#else
-        // TODO: this is not compliant to the Jupyter Kernel protocol in
-        // the case of async kernels, since an idle status message will
-        // be sent before the request has completed and has finished
-        // publishing all the associated IOPub messages (see
-        // https://jupyter-client.readthedocs.io/en/stable/messaging.html#kernel-status).
-        // However, for now this is the only way to get the widgets work
-        // in Jupyter Lite.
-        publish_status(header, "idle", c);
-#endif
     }
 
     auto xkernel_core::get_handler(const std::string& msg_type) -> handler_type
@@ -287,10 +277,9 @@ namespace xeus
                     constexpr long polling_interval = 50;
                     p_server->abort_queue(std::bind(&xkernel_core::abort_request, this, _1), polling_interval);
                 }
-#ifndef EMSCRIPTEN 
+
                 // idle
                 publish_status(request_context.header(), "idle", channel::SHELL);
-#endif
             };
 
             p_interpreter->execute_request(
