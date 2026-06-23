@@ -32,6 +32,11 @@ namespace xeus
             {
                 res.m_key = "";
             }
+            res.m_curve_public_key = doc.value("curve_publickey", "");
+            if (res.m_curve_public_key != "")
+            {
+                res.m_curve_secret_key = doc["curve_secretkey"].get<std::string>();
+            }
         }
 
         xkernel_configuration load_kernel_configuration(const nl::json& doc)
