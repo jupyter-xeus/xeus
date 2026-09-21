@@ -25,7 +25,6 @@ else()
     message(WARNING "Unknown WebAssembly pointer size")
 endif()
 
-message(STATUS "Emscripten version >= 4.0.0")
 function(xeus_wasm_compile_options target)
     target_compile_options("${target}"
         PUBLIC --std=c++17
