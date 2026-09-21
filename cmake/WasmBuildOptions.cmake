@@ -7,6 +7,10 @@
 # The full license is in the file LICENSE, distributed with this software. #
 ############################################################################
 
+if(NOT EMSCRIPTEN)
+    message(FATAL_ERROR "Emscripten is required for WebAssembly build")
+endif()
+
 if (EMSCRIPTEN_VERSION VERSION_LESS "4.0.0")
    message(FATAL_ERROR "Emscripten version must be >= 4.0.0")
 endif()
