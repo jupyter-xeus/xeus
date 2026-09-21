@@ -4,5 +4,5 @@ channels:
   - conda-forge
 dependencies:
   - cmake
-  - emscripten_emscripten-wasm32>=4.0.0
+  - emscripten_emscripten-wasm32>=4.0.0,<5.0.0
 
