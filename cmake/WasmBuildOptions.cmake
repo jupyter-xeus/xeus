@@ -47,7 +47,6 @@ function(xeus_wasm_link_options target environment)
         PUBLIC "SHELL: -s STACK_SIZE=32mb"
         PUBLIC "SHELL: -s INITIAL_MEMORY=64MB"
         PUBLIC "SHELL: -s MAXIMUM_MEMORY=${MAX_MEM}"
-        PUBLIC "SHELL: -s WASM_BIGINT"
         PUBLIC "SHELL: -s EXPORTED_RUNTIME_METHODS='[\"FS\",\"ENV\",\"PATH\",\"ERRNO_CODES\",\"getExceptionMessage\",\"getCppExceptionTag\"]'"
         PUBLIC "SHELL: -s FORCE_FILESYSTEM"
         PUBLIC "SHELL: -s MAIN_MODULE=1"
