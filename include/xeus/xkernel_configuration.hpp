@@ -23,6 +23,8 @@ namespace xeus
         std::string m_ip = "127.0.0.1";
         std::string m_signature_scheme = "hmac-sha256";
         std::string m_key;
+        std::string m_curve_public_key = "";
+        std::string m_curve_secret_key = "";
     };
 
     struct XEUS_API xkernel_configuration : xcommon_configuration
