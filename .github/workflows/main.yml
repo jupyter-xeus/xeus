@@ -42,7 +42,7 @@ jobs:
         with:
           environment-file: environment-dev.yml
           environment-name: xeus
-          create-args: libuuid
+          create-args: libuuid=2.42.3
 
       - name: Make build directory
         run: mkdir build
