@@ -8,6 +8,7 @@ dependencies:
   - ninja
   - pkg-config
   # Host dependencies
+  - libuuid
   - nlohmann_json
   # Test dependencies
   - doctest >= 2.4.6
