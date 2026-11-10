@@ -213,7 +213,7 @@ macro(xeus_create_target target_name linkage output_name)
             COMPILE_OPTIONS "-fvisibility=hidden"
             COMPILE_DEFINITIONS "XEUS_EXPORTS"
             PREFIX ""
-            VERSION "${XEUS_BINARY_COMPATIBLE}.${XEUS_BINARY_REVISION}.${XEUS_BINARY_AGE}"
+            VERSION "${XEUS_BINARY_COMPATIBLE}.${XEUS_BINARY_AGE}.${XEUS_BINARY_REVISION}"
             SOVERSION ${XEUS_BINARY_COMPATIBLE}
             OUTPUT_NAME "lib${output_name}"
         )
