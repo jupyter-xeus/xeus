@@ -150,7 +150,7 @@ jobs:
 
       - name: Build and package xeus
         run: |
-          micromamba create -f environment-wasm-host.yml --platform=emscripten-wasm32
+          micromamba create -f environment-wasm-host.yml --platform=emscripten-wasm64
 
           mkdir build
           pushd build
@@ -161,6 +161,8 @@ jobs:
 
           emcmake cmake \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_FLAGS=-m64 \
+            -DCMAKE_CXX_FLAGS=-m64 \
             -DCMAKE_FIND_ROOT_PATH=$PREFIX \
             -DXEUS_EMSCRIPTEN_WASM_BUILD=ON \
             -DXEUS_BUILD_STATIC_LIBS=ON \

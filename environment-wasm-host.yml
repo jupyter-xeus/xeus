@@ -1,7 +1,7 @@
 name: xeus-wasm-host
 channels:
-  - https://repo.prefix.dev/emscripten-forge-dev
-  - https://repo.mamba.pm/conda-forge
+  - https://prefix.dev/emscripten-forge/6x
+  - https://prefix.dev/conda-forge
 dependencies:
   - nlohmann_json
 
