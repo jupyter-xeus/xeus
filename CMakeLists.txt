@@ -155,7 +155,7 @@ include(CheckCXXCompilerFlag)
 include(cmake/CompilerWarnings.cmake)
 
 if(EMSCRIPTEN)
-include(WasmBuildOptions)
+    include(WasmBuildOptions)
 endif()
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
