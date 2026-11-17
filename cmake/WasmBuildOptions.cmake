@@ -27,7 +27,6 @@ endif()
 
 function(xeus_wasm_compile_options target)
     target_compile_options("${target}"
-        PUBLIC --std=c++17
         PUBLIC -Wno-deprecated
         PUBLIC "SHELL: -fwasm-exceptions"
     )
